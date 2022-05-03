@@ -4,13 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Stack;
-import java.util.StringTokenizer;
 
 public class Main {
-
-    static final boolean IS_NOT_PRIME = true;
-    static final boolean IS_PRIME = false;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int testCaseNum = Integer.parseInt(br.readLine());
@@ -29,6 +24,7 @@ public class Main {
         //Stack 생성
         Stack<Character> stack = new Stack<>();
 
+        //String을 비교하기 좋게 CharArray로 변경
         char[] inputChars = inputString.toCharArray();
 
         //처음부터 ) 이 들어오면 잘못된 문자열 => "NO"
@@ -37,6 +33,7 @@ public class Main {
             return;
         }
 
+        //CharArray를 for문으로 비교하자
         for(int i = 0; i < inputChars.length; i++) {
             // ( 이 들어오면 무조건 push
             if(inputChars[i] == '('){
