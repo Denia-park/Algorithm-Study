@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -51,6 +52,14 @@ public class StreamExample {
         //Java 8의 Random 클래스는 난수를 가지고 세 가지 타입의 스트림을 만들어낼수있다. (IntStream, LongStream, DoubleStream)
         //쉽게 난수 스트림을 생성해서 여러가지 후속 작업을 취할 수 있어 유용함
         DoubleStream doubleStream = new Random().doubles(3);//난수 3개 생성
+
+        //스트링을 이용해서 스트림 생성도 가능하다.
+        //그래도 스트링의 각 문자 (char)를 IntStream으로 변환한 예제
+        //char는 문자 but 본질적으로 숫자
+        IntStream charStream = "Stream".chars(); // [83, 116, 114, 101, 97, 109]
+        //정규표현식(RegEx)을 이용해서 문자열을 자르고, 각 요소들로 스트림을 만든 예제
+        Stream<String> stringStream = Pattern.compile(", ").splitAsStream("Eric, Elena, Java");
+        // [Eric, Elena, Java]
     }
 
     public Stream<String> streamOf(List<String> list){
