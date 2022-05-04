@@ -15,6 +15,12 @@ public class StreamExample {
         List<String> list = Arrays.asList("a", "b", "c");
         Stream<String> stream2 = list.stream();
         Stream<String> parallelStream = list.parallelStream(); // 병렬 처리 스트림
+
+        Stream<String> builderStream = Stream.<String>builder()
+                .add("Eric")
+                .add("Elena")
+                .add("Java")
+                .build(); // [Eric, Elena, Java]
     }
 
     public Stream<String> streamOf(List<String> list){
