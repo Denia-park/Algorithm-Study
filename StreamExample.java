@@ -3,6 +3,10 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 //Stream
@@ -35,6 +39,18 @@ public class StreamExample {
         //이 방법도 스트림의 사이즈가 무한하기 때문에 특정 사이즈로 제한해야함
         Stream<Integer> iterateStream =
                 Stream.iterate(30, n -> n + 2).limit(5);//[30,32,34,36,38]
+
+        //제네릭을 사용하지 않고 직접적으로 해당 타입의 스트림을 다룰수도 있다.
+        //range 와 rangeClosed는 범위의 차이.
+        //두번째 인자인 종료지점이 포함되느냐 안되느냐의 차이
+        IntStream intStream = IntStream.range(1, 5);//[1,2,3,4]
+        LongStream longStream = LongStream.rangeClosed(1, 5);//[1,2,3,4,5]
+        //제네릭을 사용하지 않기 때문에 불필요한 오토박싱이 일어나짐 않음
+        //필요한 경우 boxed 메소드를 이용해서 박싱할 수 있다.
+        Stream<Integer> boxedIntStream = IntStream.range(1, 5).boxed();
+        //Java 8의 Random 클래스는 난수를 가지고 세 가지 타입의 스트림을 만들어낼수있다. (IntStream, LongStream, DoubleStream)
+        //쉽게 난수 스트림을 생성해서 여러가지 후속 작업을 취할 수 있어 유용함
+        DoubleStream doubleStream = new Random().doubles(3);//난수 3개 생성
     }
 
     public Stream<String> streamOf(List<String> list){
