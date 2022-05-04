@@ -1,5 +1,10 @@
 package com.company;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,13 +17,13 @@ import java.util.stream.Stream;
 
 //Stream
 public class StreamExample {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String[] arr = new String[]{"a", "b", "c"};
         Stream<String> stream = Arrays.stream(arr);
         Stream<String> streamOfArrayPart = Arrays.stream(arr, 1, 3);
 
         List<String> list = Arrays.asList("a", "b", "c");
-        Stream<String> stream2 = list.stream();
+        Stream<String> listStream = list.stream();
         Stream<String> parallelStream = list.parallelStream(); // 병렬 처리 스트림
 
         Stream<String> builderStream = Stream.<String>builder()
@@ -60,6 +65,15 @@ public class StreamExample {
         //정규표현식(RegEx)을 이용해서 문자열을 자르고, 각 요소들로 스트림을 만든 예제
         Stream<String> stringStream = Pattern.compile(", ").splitAsStream("Eric, Elena, Java");
         // [Eric, Elena, Java]
+
+        //자바 NIO의 Files 클래스의 lines 메소드는 해당 파일의 각 라인을 스트링 타입의 스트림으로 만든다.
+        Stream<String> lineStream = Files.lines(Paths.get("file.txt"), StandardCharsets.UTF_8);
+
+        //스트림 연결하기
+        //Stream.concat 메소드를 이용하면 2개의 스트림을 연결 -> 새로운 스트림 생성
+        Stream<String> stream1 = Stream.of("Java", "Scala", "Groovy");
+        Stream<String> stream2 = Stream.of("Python", "Go", "Swift");
+        Stream<String> concat = Stream.concat(stream1, stream2); // [Java, Scala, Groovy, Python, Go, Swift]
     }
 
     public Stream<String> streamOf(List<String> list){
