@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,5 +16,11 @@ public class StreamExample {
         Stream<String> stream2 = list.stream();
         Stream<String> parallelStream = list.parallelStream(); // 병렬 처리 스트림
     }
+
+    public Stream<String> streamOf(List<String> list){
+        return list == null || list.isEmpty()
+                ? Stream.empty() // 비어있으면 empty Stream
+                : list.stream(); // list 가 존재하면 Stream을 생성한다.
     }
+
 }
