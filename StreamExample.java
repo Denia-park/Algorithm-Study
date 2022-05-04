@@ -16,12 +16,15 @@ public class StreamExample {
         // 여러 작업을 이어 붙여서 (chaining) 작성 가능
         List<String> names = Arrays.asList("Eric", "Elena", "Java");
 
-        //Filtering
-        //필터는 스트림 내 요소들을 하나씩 평가해서 걸러냄
-        //인자로 받는 Predicate 는 Boolean을 리턴하는 함수형 인터페이스로 평가식이 들어간다.
-        Stream<String> streamFilterEaxm = names.stream().filter(name -> name.contains("a"));
-        System.out.println(Arrays.toString(streamFilterEaxm.toArray()));
+        //Mapping
+        //맵(map)은 스트림 내 요소들을 하나씩 특정값으로 변환
+        //이 때 값을 변환하기 위한 람다를 인자로 받는다.
+        //스트림에 들어가 있는 값이 Input이 되어서 특정 로직을 거친 후 outptut이 되어 새로운 스트림에 담긴다. => 맵핑
+        //스트림 내 String의 toUppterCase 메소드를 실행해서 대문자로 변환한 값들이 담긴 스트림을 리턴
+        Stream<String> streamMappingEaxm =
+                names.stream().map(name -> name.toUpperCase());
 
+        System.out.println(Arrays.toString(streamMappingEaxm.toArray()));
     }
 
 }
