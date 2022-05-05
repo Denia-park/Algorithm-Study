@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -18,13 +19,23 @@ public class StreamExample {
 
         //Mapping
         //맵(map)은 스트림 내 요소들을 하나씩 특정값으로 변환
-        //이 때 값을 변환하기 위한 람다를 인자로 받는다.
-        //스트림에 들어가 있는 값이 Input이 되어서 특정 로직을 거친 후 outptut이 되어 새로운 스트림에 담긴다. => 맵핑
-        //스트림 내 String의 toUppterCase 메소드를 실행해서 대문자로 변환한 값들이 담긴 스트림을 리턴
-        Stream<String> streamMappingEaxm =
-                names.stream().map(name -> name.toUpperCase());
 
-        System.out.println(Arrays.toString(streamMappingEaxm.toArray()));
+        //flatMap
+        //return Type 이 Stream
+        //즉, 새로운 스트림을 생성해서 리턴하는 람다를 넘겨야한다.
+        //flatMap은 중첩 구조를 한단계 제거하고 단일 컬렉션으로 만들어주는 역할을 한다. = 플래트링 (flattening)
+        List<List<String>> list =
+                Arrays.asList(Arrays.asList("a","c"),
+                        Arrays.asList("b","d"));// [[a,c], [b,d]]
+//        List<String> flatList =
+        Object[] flatList =
+                list.stream()
+//                        .map(String::toUpperCase)
+                        .flatMap(Collection::stream)
+                        .toArray();
+
+        System.out.println(Arrays.toString(flatList));
+
     }
 
 }
