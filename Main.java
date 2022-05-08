@@ -3,74 +3,35 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.PriorityQueue;
 import java.util.Stack;
 
 public class Main {
+
+    static PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int testCase = Integer.parseInt(br.readLine());
 
-        // "." 이 나올때까지 돌아야함
-        while(true) {
-            String inputStr = br.readLine();
-            if(inputStr.equals(".")){
-                break;
-            }
-            solveProblem(inputStr);
+        for (int i = 0; i < testCase; i++) {
+            solveProblem(Integer.parseInt(br.readLine()));
         }
     }
 
-    static private void solveProblem(String inputString) {
-        //Stack 생성
-        Stack<Character> stack = new Stack<>();
+    static private void solveProblem(int input) {
+        if (input == 0) {
+            Integer rtVal = pq.poll();
+            if(rtVal == null)
+                System.out.println(0);
+            else
+                System.out.println(rtVal);
+        }else {
+        pq.add(input);
 
-        //String을 비교하기 좋게 CharArray로 변경
-        char[] inputChars = inputString.toCharArray();
-
-        //CharArray를 for문으로 비교하자
-        for(int i = 0; i < inputChars.length; i++) {
-            if(isNotBraket(inputChars[i])){
-                continue;
-            }
-            // (  , [이 들어오면 무조건 push
-            if(inputChars[i] == '(' || inputChars[i] == '['){
-                stack.push(inputChars[i]);
-            }
-            // ) 이 들어오면 무조건 pop한다. empty 라면 잘못된 문자열 => "no"
-            else{
-                if(stack.empty()){
-                    System.out.println("no");
-                    return;
-                }
-                else{
-                    if(inputChars[i] == ')'){
-                        if(stack.pop() != '('){
-                            System.out.println("no");
-                            return;
-                        }
-                    }else if(inputChars[i] == ']'){
-                        if(stack.pop() != '['){
-                            System.out.println("no");
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
-        //문자열을 한바퀴 돌렸는데 남는게 없으면 정상 , 남아있으면 잘못된 문자열 => "no"
-        if(stack.empty()){
-            System.out.println("yes");
-        }else{
-            System.out.println("no");
         }
     }
 
-    private static boolean isNotBraket(char inputChar) {
-        return inputChar != '(' &&
-                inputChar != ')' &&
-                inputChar != '[' &&
-                inputChar != ']';
-    }
 }
 
 
