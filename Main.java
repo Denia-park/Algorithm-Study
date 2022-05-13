@@ -10,11 +10,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        //사람의 수
+        // N의 진짜 약수의 개수
         int testCase = Integer.parseInt(br.readLine());
         int[] inputArray = new int[testCase];
 
-        //각 사람이 돈을 인출하는데 걸리는 시간
+        // N의 진짜 약수
         StringTokenizer st;
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < testCase; i++) {
@@ -25,33 +25,16 @@ public class Main {
     }
 
     static private void solveProblem(int[] inputArray) {
-        int rtVal = 0;
         int arrSize = inputArray.length;
-        //inpuntArray = [3 1 4 3 2]
+        //arrSzie == 1
+        //제곱값 이므로 그냥 제곱 하고 끝
 
-        //최소 시간을 구하려면 제일 짧게 걸리는 값들을 앞에 배치해야함 = 정렬이 필요
+        //arrSize != 1
+        //약수들을 정렬하고 약수중에 제일 작은 값 * 제일 큰 값을 하면 어떤 수 N이 나옴
+        //12의 약수 => [1, 2, 3, 4, 6, 12]
         Arrays.sort(inputArray);
 
-        //inpuntArray = [1 2 3 3 4]
-
-        // 앞에 있는 사람의 시간은 중복되서 뒷 사람의 시간에 더해지므로
-        // 자기 포함 뒤에 기다리는 사람 수 만큼 곱하고 나온 값들 계속해서 다 더하면 최소 시간의 합이다.
-
-        //1
-        //1 2
-        //1 2 3
-        //1 2 3 3
-        //1 2 3 3 4
-
-        // (해당 걸리는 시간 * (뒤에 기다리는 사람 수 + 1) ) 의 총합
-        // (1 * 5) + (2 * 4) + (3 * 3) + (3 * 2) + (4 * 1)
-
-        for (int j : inputArray) {
-            rtVal += arrSize * j;
-            arrSize--;
-        }
-
-        System.out.println(rtVal);
+        System.out.println(inputArray[0] * inputArray[arrSize - 1]);
     }
 }
 //안쓰는 코드 모음
@@ -79,5 +62,16 @@ public class Main {
 //        String[] testCase = new String[testCaseNum];
 //        for (int i = 0; i < testCaseNum; i++) {
 //            testCase[i] = br.readLine();
+//        }
+
+//    // N의 진짜 약수의 개수
+//    int testCase = Integer.parseInt(br.readLine());
+//    int[] inputArray = new int[testCase];
+//
+//    // N의 진짜 약수
+//    StringTokenizer st;
+//        st = new StringTokenizer(br.readLine());
+//                for (int i = 0; i < testCase; i++) {
+//        inputArray[i] = Integer.parseInt(st.nextToken());
 //        }
 
