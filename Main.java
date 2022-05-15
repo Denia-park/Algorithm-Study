@@ -1,37 +1,27 @@
 package com.company;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.IOException;
 
 public class Main {
-
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
-        int coinNum = 0;
-        int targetPrice = 0;
-        int count = 0;
-        while (st.hasMoreTokens()) {
-            if(count++ == 0)
-                coinNum = Integer.parseInt(st.nextToken());
-            else
-                targetPrice = Integer.parseInt(st.nextToken());
+        int num = 666;
+        int count = 1;
+
+        while(count != N) {
+            num++;
+            if(String.valueOf(num).contains("666")) {
+                count++;
+            }
         }
-
-        int[] coinArray = new int[coinNum];
-
-        for (int i = 0; i < coinNum; i++) {
-            coinArray[i] = Integer.parseInt(br.readLine());
-        }
-
-        solveProblem(targetPrice,coinArray);
+        System.out.println(num);
     }
+
 
     static private void solveProblem(int targetPrice ,int[] coinArray) {
         int rtCount = 0;
