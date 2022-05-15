@@ -11,36 +11,43 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String calculation = br.readLine();
+        StringTokenizer st;
+        st = new StringTokenizer(br.readLine());
 
-        solveProblem(calculation);
+        int coinNum = 0;
+        int targetPrice = 0;
+        int count = 0;
+        while (st.hasMoreTokens()) {
+            if(count++ == 0)
+                coinNum = Integer.parseInt(st.nextToken());
+            else
+                targetPrice = Integer.parseInt(st.nextToken());
+        }
+
+        int[] coinArray = new int[coinNum];
+
+        for (int i = 0; i < coinNum; i++) {
+            coinArray[i] = Integer.parseInt(br.readLine());
+        }
+
+        solveProblem(targetPrice,coinArray);
     }
 
-    static private void solveProblem(String intputString) {
-        char[] chars = intputString.toCharArray();
-        int[] numArr = new int[50];
-        int numIndex = 0;
-        int numArrIndex = 0;
-        int symbol = 1; // plus 1 , minus -1
+    static private void solveProblem(int targetPrice ,int[] coinArray) {
+        int rtCount = 0;
+        int temp = targetPrice;
+        for (int i = coinArray.length - 1; i >= 0; i--) {
+            if(targetPrice == 0)
+                break;
 
-        for (int i = 0; i < chars.length; i++) {
-            if(chars[i] == '+' || chars[i] == '-'){
-                String temp = intputString.substring(numIndex, i);
-                numArr[numArrIndex++] = symbol * Integer.parseInt(temp);
-                numIndex = i + 1;
-                if(chars[i] == '-')
-                    symbol = -1;
+            if(targetPrice >= coinArray[i]){
+                targetPrice = temp % coinArray[i];
+                rtCount += temp / coinArray[i];
+                temp = targetPrice;
             }
         }
-        String temp = intputString.substring(numIndex, chars.length);
-        numArr[numArrIndex++] = symbol * Integer.parseInt(temp);
 
-        int totalSum = 0;
-        for (int i = 0; i < 50 ; i ++){
-            totalSum += (numArr[i]);
-        }
-
-        System.out.println(totalSum);
+        System.out.println(rtCount);
     }
 }
 //안쓰는 코드 모음
