@@ -18,8 +18,25 @@ public class Main{
         }
 
         cache[1] = f[1];
+
+        if(T == 1){
+            System.out.println(cache[1]);
+            return;
+        }
+
         cache[2] = f[2]+f[1];
+
+        if(T == 2){
+            System.out.println(cache[2]);
+            return;
+        }
+
         cache[3]= Math.max(f[1]+f[3], f[2]+f[3]);
+
+        if(T == 3){
+            System.out.println(cache[3]);
+            return;
+        }
 
         for(int i=4; i<=T; i++){
             cache[i] = Math.max(cache[i-3]+f[i]+f[i-1], cache[i-2]+f[i]);
