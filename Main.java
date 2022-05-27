@@ -3,64 +3,55 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main{
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int cordiNum = Integer.parseInt(br.readLine());
+
         StringTokenizer st;
-        st = new StringTokenizer(br.readLine());
-        int treeNum = Integer.parseInt(st.nextToken());
-        int needLength = Integer.parseInt(st.nextToken());
 
-        int[] trees = new int[treeNum];
+        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
 
-        st = new StringTokenizer(br.readLine());
-
-        int min = 0;
-        int max = 0;
-        int mid = 0;
-
-        for(int i = 0; i<trees.length; i++){
-            trees[i] = Integer.parseInt(st.nextToken());
-            if(max < trees[i])
-                max = trees[i];
+        for(int i = 0; i<cordiNum; i++){
+            st = new StringTokenizer(br.readLine());
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
+            coordinateList.add(new Coordinate(x, y));
         }
 
-        //그냥 풀면 시간 초과 걸리므로
-        //이분 탐색으로 풀어야 된다.
-        //처음에 min < max로 넣었다가 틀렸는데 테스트케이스를 보고 이유를 알았다.
-        //tc 1 . 2 5
-        //       7 9
-        //min == max 일때 값을 확인해서 값이 맞지 않으면 다시 한번 더 처리를 해줘야함
-        while(min <= max){
-            mid = (min + max) / 2;
-            long totalLength = 0;
+        Collections.sort(coordinateList);
 
-            //자른 나무의 총 길이 구하는 코드
-            for (int i = 0; i < treeNum; i++) {
-                if(trees[i] > mid)
-                    totalLength += trees[i] - mid;
-            }
-
-            //범위를 넘겼다는건 너무 많이 잘랏다는 뜻
-            //조금만 자르게 min 값을 수정하자.
-            if(totalLength > needLength){
-                min = mid + 1;
-            }
-            //정답 이므로 mid 값을 제출
-            else if (totalLength == needLength){
-                System.out.println(mid);
-                return;
-            }
-            //범위에 못미친다는건 너무 적게 잘랏다는 뜻
-            //많이 자르게 max 값을 수정하자.
-            else {
-                max = mid - 1;
-            }
+        for (Coordinate coordinate : coordinateList) {
+            System.out.println(coordinate.toString());
         }
-        System.out.println(max);
+    }
+}
+
+class Coordinate implements Comparable<Coordinate>{
+    int x , y;
+
+    @Override
+    public int compareTo(Coordinate o) {
+        if(this.y > o.y){
+            return 1;
+        }else if(this.y == o.y){
+            if(this.x > o.x)
+                return 1;
+        }
+        return -1;
+    }
+
+    public Coordinate(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "" + x + " " + y;
     }
 }
 
