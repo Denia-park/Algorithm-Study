@@ -34,7 +34,7 @@ public class StreamExample {
                         .flatMap(Collection::stream)
                         .toArray();
 
-        System.out.println(Arrays.toString(flatList));
+        System.out.println(Arrays.toString(flatList)); // [a , c , b , d]
 
     }
 
