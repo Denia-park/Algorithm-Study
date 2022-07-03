@@ -28,7 +28,7 @@ class Solution {
         for (String completion : completions) {
             diffMap.put(completion, diffMap.get(completion) - 1);
         }
-
+        
         //get 값이 0이 아닌 참가자가 완주하지 못한 참가자
         for(String participant : participants) {
             if(diffMap.get(participant) > 0 ){
