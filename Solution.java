@@ -28,6 +28,7 @@ class Solution {
             }
 //            Arrays.sort(notSortingArr); // 기존 라이브러리 사용
             sort(notSortingArr,true);
+//            sort(notSortingArr,false);
             System.out.println(Arrays.toString(notSortingArr));
 
             answer[index] = notSortingArr[answerIndex - 1];
@@ -37,26 +38,36 @@ class Solution {
         return answer;
     }
 
-    //선택정렬
-    //선택 정렬은 N-1 만큼 가장 작은 수를 찾아서 맨 앞으로 보내야 한다.
-    //또한 매번 가장 작은 수를 찾기 위해 비교 연산이 필요
-    //빅오 표기법 O(N^2)
+    //삽입정렬
+    //선택 정렬에 비해 실행 시간 측면에서 더 효율적, 필요할 때만 위치를 바꾸므로 데이터가 거의 정렬되어 있을 때 더욱 효과적
+    //삽입 정렬은 특정한 데이터가 적절한 위치에 들어가기 이전에, 그 앞까지의 데이터는 이미 정렬되어 있다고 가정
+    //삽입 정렬이 이루워진 원소는 항상 오름차순을 유지
+    //삽입 정렬에서 특정한 데이터가 삽입될 위치를 선정할 때 , 삽입될 데이터보다 작은 데이터를 만나면 더 이상 데이터를 살펴볼 필요없이 그 위치에서 멈춤
+    //반복문이 2번 중첩 사용 , 시간 복잡도 : 빅오 표기법 O(N^2)
+    //★현재 리스트의 데이터가 거의 정렬되어 있는 상태라면 매우 빠르게 동작하고 ,최상의 경우 O(N)의 시간복잡도
+    //★거의 정렬되어 있는 상황에서는 퀵 정렬 알고리즘보다 강력
+
+    // 3 5 2 7
     static private void sort(int[] arr , boolean ascending){
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = i + 1; j < arr.length; j++) {
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = i; j >= 1; j--) {
                 if(ascending) {
-                    if(arr[i] > arr[j]){
-                        int temp = arr[i];
-                        arr[i] = arr[j];
-                        arr[j] = temp;
+                    if(arr[j] < arr[j-1]){
+                        int temp = arr[j];
+                        arr[j] = arr[j-1];
+                        arr[j-1] = temp;
                     }
+                    else
+                        break;
                 }
                 else{
-                    if (arr[i] < arr[j]) {
-                        int temp = arr[i];
-                        arr[i] = arr[j];
-                        arr[j] = temp;
+                    if (arr[j] > arr[j-1]) {
+                        int temp = arr[j];
+                        arr[j] = arr[j-1];
+                        arr[j-1] = temp;
                     }
+                    else
+                        break;
                 }
             }
         }
