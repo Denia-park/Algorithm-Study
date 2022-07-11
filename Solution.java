@@ -27,7 +27,7 @@ class Solution {
                 notSortingArr[j] = numbers[i];
             }
 //            Arrays.sort(notSortingArr); // 기존 라이브러리 사용
-            sort(notSortingArr,true);
+            sort(notSortingArr,0, notSortingArr.length -1, true);
 //            sort(notSortingArr,false);
             System.out.println(Arrays.toString(notSortingArr));
 
@@ -38,39 +38,51 @@ class Solution {
         return answer;
     }
 
-    //삽입정렬
-    //선택 정렬에 비해 실행 시간 측면에서 더 효율적, 필요할 때만 위치를 바꾸므로 데이터가 거의 정렬되어 있을 때 더욱 효과적
-    //삽입 정렬은 특정한 데이터가 적절한 위치에 들어가기 이전에, 그 앞까지의 데이터는 이미 정렬되어 있다고 가정
-    //삽입 정렬이 이루워진 원소는 항상 오름차순을 유지
-    //삽입 정렬에서 특정한 데이터가 삽입될 위치를 선정할 때 , 삽입될 데이터보다 작은 데이터를 만나면 더 이상 데이터를 살펴볼 필요없이 그 위치에서 멈춤
-    //반복문이 2번 중첩 사용 , 시간 복잡도 : 빅오 표기법 O(N^2)
-    //★현재 리스트의 데이터가 거의 정렬되어 있는 상태라면 매우 빠르게 동작하고 ,최상의 경우 O(N)의 시간복잡도
-    //★거의 정렬되어 있는 상황에서는 퀵 정렬 알고리즘보다 강력
+    //퀵정렬
+    //가장 많이 사용되는 정렬 알고리즘
+    //대부분의 프로그래밍 언어의 정렬 라이브러리의 근간이 되는 알고리즘
+    //퀵정렬은 기준을 설정한 다음 큰 수 와 작은 수를 교환한 후 리스트를 반으로 나누는 방식으로 동작
+    //이러한 교환을 위한 기준을 '피벗' 이라고 한다.
+    //퀵 정렬의 평균 시간 복잡도 O(NlogN)이고 , 최악의 경우 O(N^2)이다.
 
-    // 3 5 2 7
-    static private void sort(int[] arr , boolean ascending){
-        for (int i = 1; i < arr.length; i++) {
-            for (int j = i; j >= 1; j--) {
-                if(ascending) {
-                    if(arr[j] < arr[j-1]){
-                        int temp = arr[j];
-                        arr[j] = arr[j-1];
-                        arr[j-1] = temp;
-                    }
-                    else
-                        break;
-                }
-                else{
-                    if (arr[j] > arr[j-1]) {
-                        int temp = arr[j];
-                        arr[j] = arr[j-1];
-                        arr[j-1] = temp;
-                    }
-                    else
-                        break;
-                }
-            }
+    static private void sort(int[] arr, int start, int end, boolean ascending) {
+        //원소가 1개인 경우 종료한다.
+        if (start >= end) {
+            return;
         }
+
+        int pivot = start; //피벗은 첫 번째 원소
+        int left = start + 1;
+        int right = end;
+
+        while (left <= right) {
+
+            //피벗보다 큰 데이터를 찾을 때 까지 반복
+            while(left <= end && arr[left] <= arr[pivot])
+                left = left + 1;
+
+            //피벗보다 작은 데이터를 찾을 때 까지 반복
+            while(right > start && arr[right] >= arr[pivot])
+                right = right - 1;
+
+            //엇갈렸다면 작은 데이터와 피벗을 교체
+            //right가 작은 데이터가 되는 이유 : 멈췄다는 거는 작으니까 멈췄다 라는 의미. , 중간에 안 멈추고 start까지 갔다는 것은 피벗보다 작은 데이터가 없다는 뜻이므로 피벗이랑 right를 서로 교환한다. (본인과 본인의 교환) => 다음 퀵소트 재귀함수에서 해당 데이터는 고정된다.
+            if(left > right){
+                int temp = arr[right];
+                arr[right] = arr[pivot];
+                arr[pivot] = temp;
+            }
+            //엇갈리지 않았다면 작은 데이터 와 큰 데이터를 교체
+            else{
+                int temp = arr[right];
+                arr[right] = arr[left];
+                arr[left] = temp;
+            }
+
+            sort(arr, start, right - 1,true);
+            sort(arr, right + 1, end, true);
+        }
+
     }
 }
 
