@@ -47,16 +47,17 @@ class Solution {
 
     static private int[] sort(int[] arr, boolean ascending) {
         //모든 원소의 값이 0보다 크거나 같다고 가정
+        int arrSize = 100;
 
         //모든 범위를 포함하는 리스트 선언 (모든 값은 0으로 초기화)
-        int[] count = new int[10];
+        int[] count = new int[arrSize];
 
         for (int k : arr) {
             count[k]++; //각 데이터에 해당하는 인덱스의 값 증가
         }
 
         int[] answer = new int[arr.length];
-        for (int i = 0 , j = 0; i < 10; ) {
+        for (int i = 0 , j = 0; i < arrSize; ) {
             if(count[i] != 0){
                 answer[j] = i;
                 count[i]--;
