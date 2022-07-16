@@ -31,6 +31,7 @@ class Solution {
                     //인형을 꺼내므로 해당 자리에 인형이 없다는 의미에 0을 넣음
                     boardRow[index] = 0;
                     //인형을 꺼내고 stack에 넣기전에 비교 , 맨 위의 인형이랑 동일한 인형이면 "터트리고" answer 를 +2 하자
+                    //, 기존에 인형이 없는 경우에는 peek 할 수 없으므로 stack.empty()를 확인해야함 [안하면 EmptyStackException발생]
                     if(!stack.empty() && stack.peek() == doll){
                         stack.pop(); // 기존 인형 터트리기 , 새로 뽑은 인형은 넣지도 않는다
                         answer += 2; // answer 값 +2 시키기
