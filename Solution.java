@@ -1,6 +1,6 @@
 package com.company;
 
-import java.util.Stack;
+import java.util.HashMap;
 
 class Solution {
     static public void main(String[] args) {
@@ -17,21 +17,17 @@ class Solution {
     static public int solution(int[] nums) {
         int answer = 0;
 
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
 
-        //폰켓몬 종류는 1~20만 이하의 자연수
-        int[] countingArray = new int[200_001];
-
-        //계수정렬 사용
+        //해시맵 사용
+        //폰켓몬의 종류를 알기위해서 HashMap을 사용함
         for (int i = 0; i < nums.length; i++) {
-            countingArray[nums[i]]++;
+            hashMap.put(nums[i], 1);
         }
 
-        //0이 아닌 값을 센다  => 폰켓몬의 종류를 세는 것
-        for (int i = 0; i < countingArray.length; i++) {
-            if(countingArray[i] != 0){
-                answer++;
-            }
-        }
+        //Hash에 들어간 Key의 수 확인 : Size 메서드
+        //=> 폰켓몬의 종류가 몇개인지 확인하는 과정
+        answer = hashMap.size();
 
         //1차원 배열의 반 만큼만 폰켓몬을 선택할 수 있다.
         int poketmonSelectNumber = nums.length / 2;
