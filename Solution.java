@@ -1,53 +1,44 @@
 package com.company;
 
-import java.util.Stack;
+import java.util.HashMap;
 
 class Solution {
     static public void main(String[] args) {
-        int[][] board = {{0,0,0,0,0},{0,0,1,0,3},{0,2,5,0,1},{4,2,4,4,2},{3,5,1,3,1}};
-        int[] moves = {1,5,3,5,1,2,1,4};
+        int[] nums1 = {3,1,2,3};
+        int[] nums2 = {3,3,3,2,2,4};
+        int[] nums3 = {3,3,3,2,2,2};
 
-        System.out.println(solution(board, moves));
+        System.out.println(solution(nums1)==2);
+        System.out.println(solution(nums2)==3);
+        System.out.println(solution(nums3)==2);
     }
 
-    static public int solution(int[][] board, int[] moves) {
-        //초기값 지정
+    //nums : 폰켓몬 종류 번호가 담긴 1차원 배열 , 1~10_000까지 항상 짝수
+    static public int solution(int[] nums) {
         int answer = 0;
-        //인형을 넣을 스택을 만들어준다.
-        Stack<Integer> stack = new Stack<Integer>();
 
-        //moves 처리 , for문 돌면서 1개 1개 확인
-        for (int move : moves) {
-            //배열이기 때문에 index는 -1이 필요함
-            int index = move - 1;
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
 
-            //2차원 배열이므로 1차원 배열을 꺼내서 확인한다/
-            for (int[] boardRow : board) {
-                //Board 해당 Row에서 Index를 확인하면 인형을 확인가능
-                int doll = boardRow[index];
-
-                //인형이 존재하는 경우
-                if(doll != 0){
-                    //인형을 꺼내므로 해당 자리에 인형이 없다는 의미에 0을 넣음
-                    boardRow[index] = 0;
-                    //인형을 꺼내고 stack에 넣기전에 비교 , 맨 위의 인형이랑 동일한 인형이면 "터트리고" answer 를 +2 하자
-                    //, 기존에 인형이 없는 경우에는 peek 할 수 없으므로 stack.empty()를 확인해야함 [안하면 EmptyStackException발생]
-                    if(!stack.empty() && stack.peek() == doll){
-                        stack.pop(); // 기존 인형 터트리기 , 새로 뽑은 인형은 넣지도 않는다
-                        answer += 2; // answer 값 +2 시키기
-                    }
-                    //인형이 동일하지 않으면 쌓기
-                    else {
-                        stack.push(doll);
-                    }
-
-                    //인형을 찾았으므로 break 문으로 빠져나온다.
-                    break;
-                }
-            }
+        //해시맵 사용
+        //폰켓몬의 종류를 알기위해서 HashMap을 사용함
+        for (int i = 0; i < nums.length; i++) {
+            hashMap.put(nums[i], 1);
         }
 
-        return answer;
+        //Hash에 들어간 Key의 수 확인 : Size 메서드
+        //=> 폰켓몬의 종류가 몇개인지 확인하는 과정
+        answer = hashMap.size();
+
+        //1차원 배열의 반 만큼만 폰켓몬을 선택할 수 있다.
+        int poketmonSelectNumber = nums.length / 2;
+
+        //선택할수있는 폰켓몬의 종류(answer 값)가 poketmonSelectNumber 보다 작으면 폰켓몬의 종류를 return
+        //poketmonSelectNumber가 선택할 수 있는 폰켓몬의 종류(answer 값) 보다 작으면 poketmonSelectNumber을 return
+        if(answer<poketmonSelectNumber){
+            return  answer;
+        }else{
+            return poketmonSelectNumber;
+        }
     }
 }
 
