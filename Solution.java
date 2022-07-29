@@ -1,85 +1,49 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class Solution {
     static public void main(String[] args) {
-        int n1 = 3;
-        int m1 = 12;
-        int n2 = 2;
-        int m2 = 5;
 
-        System.out.println(Arrays.toString(solution(n1, m1)));
-        System.out.println(Arrays.toString(solution(n2, m2)));
-        System.out.println(Arrays.toString(solution(4, 8)));
-        System.out.println(Arrays.toString(solution(5, 10)));
-        System.out.println(Arrays.toString(solution(9, 15)));
-        System.out.println(Arrays.toString(solution(18, 30)));
-        
+        System.out.println(solution("aabbaccc")); //2a2ba3c
+
     }
 
-    static public int[] solution(int n, int m){
-        //사이즈가 2인 배열로 Return 해야함
-        int[] answer = {0,0};
+    static public int solution(String s) {
+        //처음에 받아온 글자 수보다는 무조건 작어져야 하니까,
+        // 처음에는 그냥 받아온 문자열의 글자수를 넣는다.
+        int answer = s.length();
+        //압축한 String을 담아둘 변수
+        StringBuilder compressString= new StringBuilder();
+        //동일 글자를 판단하고 몇번 중복됐는지 담아둘 변수, 잘랐다는 것은 1번은 있다는 소리니까 1을 넣는다.
+        int repeatCharNumber = 1;
+        //처음에는 1글자씩 쪼개는 것으로 시작
+        int charNumCount = 1;
+        //for문을 위한 Index
+        int forIndex = 0;
 
-        //n의 공약수를 담는 배열
-        List<Integer> nArray = new ArrayList<Integer>();
-        //m의 공약수를 담는 배열
-        List<Integer> mArray = new ArrayList<Integer>();
-        //공통된 공약수를 담는 배열
-        List<Integer> divisorsList = new ArrayList<Integer>();
+        //그리디 방식으로 진행을 해야할 것 같다.
+            //while 문안에 for문을 구현하는 방식.
+        while (charNumCount < s.length()) {
+            System.out.println("쪼개는 글자수 : " + charNumCount);
+            System.out.println("시작하는 Index : " + forIndex);
 
-        //nArray 구하는 과정
-        for (int i = 1; i <= n; i++) {
-            if(n % i == 0) {
-                nArray.add(i);
+            //임시 String
+            String tempString= s.substring(forIndex,forIndex + charNumCount);
+            //반복되는 글자 수 초기화
+            repeatCharNumber = 1;
+
+            for (; forIndex < s.length(); forIndex++) {
+                if (tempString.equals(s.substring(forIndex, forIndex + charNumCount))) {
+                    repeatCharNumber++;
+                }else{
+                    compressString.append(repeatCharNumber).append(tempString);
+                    break;
+                }
             }
+
+            charNumCount++;
         }
 
-        //mArray 구하는 과정
-        for (int i = 1; i <= m; i++) {
-            if(m % i == 0) {
-                mArray.add(i);
-            }
-        }
-
-        //공통된 약수 배열 구하는 과정
-        for (int divisor : nArray) {
-            if(mArray.contains(divisor)){
-                divisorsList.add(divisor);
-            }
-        }
-
-        //최대 공약수 (오름차순으로 배열에 들어가므로 마지막 Index에 있는 원소값이 최대 공약수)
-        answer[0] = divisorsList.get(divisorsList.size() - 1);
-
-        //최소 공배수 구하기
-        int shareOfN = n / answer[0];
-        int shareOfM = m / answer[0];
-        answer[1] = answer[0] * shareOfN * shareOfM;
-
+        System.out.println(compressString.toString());
         return answer;
     }
-
-    //내가 구한 로직보다 더 짧게 잘 구한 코드가 있어서 가져옴
-    
-//    public long[] solution(int n, int m) {
-//        long[] answer = new long [2];
-//
-//        if(m%n==0){
-//            answer[0] = n;
-//            answer[1] = m;
-//        }else{
-//            for(int i = 1; i <= m; i++){
-//                if(n%i==0 && m%i==0){
-//                    answer[0] = i;
-//                }
-//            }
-//            answer[1] = n*m/answer[0];
-//        }
-//        //System.out.println(Arrays.toString(answer));
-//        return answer;
-//    }
 }
