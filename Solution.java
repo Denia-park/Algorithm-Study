@@ -77,10 +77,10 @@ public class Solution {
         timeToMillList.sort(null);
 
 //        System.out.println(Arrays.deepToString(splitDateTimeArray));
-        System.out.println(Arrays.deepToString(splitTimeArray));
-        System.out.println(Arrays.toString(processingTimeArray));
-        System.out.println(Arrays.deepToString(timeToMillArray));
-        System.out.println(timeToMillList);
+//        System.out.println(Arrays.deepToString(splitTimeArray));
+//        System.out.println(Arrays.toString(processingTimeArray));
+//        System.out.println(Arrays.deepToString(timeToMillArray));
+//        System.out.println(timeToMillList);
 
         for (long tempMillSecTime = timeToMillList.get(0); tempMillSecTime < timeToMillList.get(timeToMillList.size() - 1); tempMillSecTime++ ) {
             int tempVal = 0;
@@ -110,6 +110,10 @@ public class Solution {
 
         //1을 더해주는 이유 : 처리시간은 시작시간과 끝시간을 포함하기 때문에 마지막에 millSec 1초를 더해줘야함
         answer = convertStringToMillSecTime(dateStrings) - (long)(processingTime * 1000) + 1;
+
+        if (answer < 0) {
+            answer = 0;
+        }
 
         return answer;
     }
