@@ -1,9 +1,5 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class Solution {
     static public void main(String[] args) {
         String[] quiz1 = new String[]{
@@ -36,13 +32,11 @@ public class Solution {
             return 1;
 
         int answer = 0;
-        int nMF = 1_000_000; // nanoMultiplierFactor
 
         String[][] splitDateTimeArray = new String[lines.length][];
         String[][] splitTimeArray = new String[lines.length][];
         float[] processingTimeArray = new float[lines.length];
         long[][] timeToMillArray = new long[lines.length][2];
-        long minTime = 0;
 
         //년월일 , 시간 , 처리시간 나누기
         int index = 0;
@@ -66,36 +60,30 @@ public class Solution {
             timeToMillArray[i][1] = getMillSecTime(splitTimeArray[i]);
         }
 
-        // for문을 돌릴때 필요한 범위를 구하기 위해서 List를 만들고  timeToMillArray 의 모든 요소를 넣은 다음
-        // 정렬을 한다.
-        List<Long> timeToMillList = new ArrayList<Long>();
-        for (long[] longs : timeToMillArray) {
-            timeToMillList.add(longs[0]);
-            timeToMillList.add(longs[1]);
+        // 1초 구간의 시작 목록을 아래처럼 로그 각각의 시작 또는 끝으로 지정
+        for (long[] timeRange : timeToMillArray) {
+            for (long i = timeRange[0]; i <= timeRange[1] ; i++) {
+                int tempVal = 0;
+
+                for (int j = 0; j < timeToMillArray.length; j++) {
+                    //1초안에 해당하는 최대 처리량 이므로 시작하는 시간을 포함하므로 999를 더하는게 맞다.
+                    if ((i <= timeToMillArray[j][0] && timeToMillArray[j][0] <= (i + 999))
+                            || (i <= timeToMillArray[j][1] && timeToMillArray[j][1] <= (i + 999))) {
+                        tempVal++;
+                    }
+                }
+
+                if(answer < tempVal)
+                    answer = tempVal;
+            }
         }
 
-        timeToMillList.sort(null);
 
 //        System.out.println(Arrays.deepToString(splitDateTimeArray));
 //        System.out.println(Arrays.deepToString(splitTimeArray));
 //        System.out.println(Arrays.toString(processingTimeArray));
 //        System.out.println(Arrays.deepToString(timeToMillArray));
 //        System.out.println(timeToMillList);
-
-        for (long tempMillSecTime = timeToMillList.get(0); tempMillSecTime < timeToMillList.get(timeToMillList.size() - 1); tempMillSecTime++ ) {
-            int tempVal = 0;
-
-            for (int j = 0; j < timeToMillArray.length; j++) {
-                //1초안에 해당하는 최대 처리량 이므로 시작하는 시간을 포함하므로 999를 더하는게 맞다.
-                if ((tempMillSecTime <= timeToMillArray[j][0] && timeToMillArray[j][0] <= (tempMillSecTime + 999))
-                        || (tempMillSecTime <= timeToMillArray[j][1] && timeToMillArray[j][1] <= (tempMillSecTime + 999))) {
-                    tempVal++;
-                }
-            }
-
-            if(answer < tempVal)
-                answer = tempVal;
-        }
 
         return answer;
     }
