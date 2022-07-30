@@ -67,8 +67,12 @@ public class Solution {
 
                 for (int j = 0; j < timeToMillArray.length; j++) {
                     //1초안에 해당하는 최대 처리량 이므로 시작하는 시간을 포함하므로 999를 더하는게 맞다.
-                    if ((i <= timeToMillArray[j][0] && timeToMillArray[j][0] <= (i + 999))
-                            || (i <= timeToMillArray[j][1] && timeToMillArray[j][1] <= (i + 999))) {
+                        //1.시작시간이 내가 정한 1초 사이에 있는 경우
+                        //2.끝시간이 내가 정한 1초 사이에 있는 경우
+                        //3.해당 로그 간격이 1초보다 커서 1초가 해당 로그 안에 포함되는 경우(시작시간이 1초보다 작고 , 끝시간이 1초보다 크다)
+                    if ((i <= timeToMillArray[j][0] && timeToMillArray[j][0] <= (i + 999)) ||
+                    (i <= timeToMillArray[j][1] && timeToMillArray[j][1] <= (i + 999)) ||
+                    (timeToMillArray[j][0] <= i && (i + 999) <= timeToMillArray[j][1]) ) {
                         tempVal++;
                     }
                 }
