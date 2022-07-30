@@ -5,6 +5,8 @@ public class Solution {
         String[] quiz1 = new String[]{
                 "2016-09-15 01:00:04.001 2.0s",
                 "2016-09-15 01:00:07.000 2s"};
+        String[] quiz11 = new String[]{
+                "2016-09-15 00:00:00.000 2.3s", "2016-09-15 23:59:59.999 0.1s"};
         String[] quiz2 = new String[]{
                 "2016-09-15 01:00:04.002 2.0s",
                 "2016-09-15 01:00:07.000 2s"};
@@ -19,12 +21,9 @@ public class Solution {
                 "2016-09-15 21:00:00.748 2.31s",
                 "2016-09-15 21:00:00.966 0.381s",
                 "2016-09-15 21:00:02.066 2.62s"};
-        System.out.println(solution(quiz1));
-//        System.out.println(solution(quiz1) == 1);
-        System.out.println(solution(quiz2));
-//        System.out.println(solution(quiz2) == 2);
-        System.out.println(solution(quiz3));
-//        System.out.println(solution(quiz3) == 7);
+        System.out.println(solution(quiz1) == 1);
+        System.out.println(solution(quiz2) == 2);
+        System.out.println(solution(quiz3) == 7);
     }
 
     static public int solution(String[] lines) {
@@ -60,40 +59,36 @@ public class Solution {
             timeToMillArray[i][1] = getMillSecTime(splitTimeArray[i]);
         }
 
-        // 1초 구간의 시작 목록을 아래처럼 로그 각각의 시작 또는 끝으로 지정
+        // 1초 구간을 비교할때 로그의 끝이 들어가있는 경우가 가장 최대 처리값이 될 것이므로
+        // 로그의 끝시간들을 기준으로 1초만큼 플러스 시켜서 비교를 함
         for (long[] timeRange : timeToMillArray) {
-            for (long i = timeRange[0]; i <= timeRange[1] ; i++) {
-                int tempVal = 0;
+            //로그의 끝 시간을 기준으로 비교를 한다.
+            long referTime = timeRange[1];
+            //몇개가 겹치는지 비교할때 쓸 변수
+            int tempVal = 0;
 
-                for (int j = 0; j < timeToMillArray.length; j++) {
-                    //1초안에 해당하는 최대 처리량 이므로 시작하는 시간을 포함하므로 999를 더하는게 맞다.
-                        //1.시작시간이 내가 정한 1초 사이에 있는 경우
-                        //2.끝시간이 내가 정한 1초 사이에 있는 경우
-                        //3.해당 로그 간격이 1초보다 커서 1초가 해당 로그 안에 포함되는 경우(시작시간이 1초보다 작고 , 끝시간이 1초보다 크다)
-                    if ((i <= timeToMillArray[j][0] && timeToMillArray[j][0] <= (i + 999)) ||
-                    (i <= timeToMillArray[j][1] && timeToMillArray[j][1] <= (i + 999)) ||
-                    (timeToMillArray[j][0] <= i && (i + 999) <= timeToMillArray[j][1]) ) {
-                        tempVal++;
-                    }
+            //기준 시간이 정해졌으면 모든 로그 시간을 비교해서 answer를 구한다.
+            for (int j = 0; j < timeToMillArray.length; j++) {
+                //1초안에 해당하는 최대 처리량 이므로 시작하는 시간을 포함하므로 999를 더하는게 맞다.
+                    //1.시작시간이 내가 정한 1초 사이에 있는 경우
+                    //2.끝시간이 내가 정한 1초 사이에 있는 경우
+                    //3.해당 로그 간격이 1초보다 커서 1초가 해당 로그 안에 포함되는 경우(시작시간이 1초보다 작고 , 끝시간이 1초보다 크다)
+                if ((referTime <= timeToMillArray[j][0] && timeToMillArray[j][0] <= (referTime + 999)) ||
+                (referTime <= timeToMillArray[j][1] && timeToMillArray[j][1] <= (referTime + 999)) ||
+                (timeToMillArray[j][0] <= referTime && (referTime + 999) <= timeToMillArray[j][1]) ) {
+                    tempVal++;
                 }
-
-                if(answer < tempVal)
-                    answer = tempVal;
             }
+
+            //answer보다 tempVal이 크면 answer을 변경한다.
+            if(answer < tempVal)
+                answer = tempVal;
         }
-
-
-//        System.out.println(Arrays.deepToString(splitDateTimeArray));
-//        System.out.println(Arrays.deepToString(splitTimeArray));
-//        System.out.println(Arrays.toString(processingTimeArray));
-//        System.out.println(Arrays.deepToString(timeToMillArray));
-//        System.out.println(timeToMillList);
 
         return answer;
     }
 
-    //getMillSecTime 에 processingTime 이 매개변수로 들어가면 처리시간이 빠진 MilSecTime 이 나온다.
-    //processingTime 이 빠졌으면 처리시간을 고려하지 않은 MilSecTime 이 나온다.
+    //getMillSecTime 에 processingTime 이 매개변수로 들어가면 처리시간이 마이너스 된 MilSecTime 이 나온다.
     //매개변수의 예상 데이터
         // dateStrings: [01:00:04, 001], [01:00:07, 000]
         // processingTime:  2.0, 2.0
@@ -103,13 +98,10 @@ public class Solution {
         //1을 더해주는 이유 : 처리시간은 시작시간과 끝시간을 포함하기 때문에 마지막에 millSec 1초를 더해줘야함
         answer = convertStringToMillSecTime(dateStrings) - (long)(processingTime * 1000) + 1;
 
-        if (answer < 0) {
-            answer = 0;
-        }
-
         return answer;
     }
 
+    //getMillSecTime 에 processingTime 이 들어가지 않으면 처리시간을 고려하지 않은 MilSecTime 이 나온다.
     private static long getMillSecTime(String[] dateStrings) {
 
         return convertStringToMillSecTime(dateStrings);
@@ -127,7 +119,7 @@ public class Solution {
         long sec = Long.parseLong(tempTimeStringArray[2]);
         long millSec = Long.parseLong(dateStrings[1]);
 
-        //Milsec -> hour * 3600000 + minute * 60000 + second*1000 + millisecond
+        //Millsec -> hour * 3600000 + minute * 60000 + second*1000 + millisecond
         answer = (hour * 3600 + min * 60 + sec) * 1000 + millSec;
 
         return answer;
