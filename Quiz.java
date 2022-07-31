@@ -26,9 +26,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Quiz {
-    //전역변수 graph를 설정하고 모든 값을 0으로 초기화
-    static int n , m;
-    static int[][] graph = new int[1000][1000];
+    //전역변수 graph 를 설정하고 모든 값을 0으로 초기화
+    static int n , m; //y , x
+    static int[][] graph = new int[5][5]; // 필요하면 필요한 사이즈만큼 크기를 늘리기
 
     public static void main(String[] args) {
         n = 4; //y
@@ -55,77 +55,86 @@ public class Quiz {
             index++;
         }
 
+        System.out.println(Arrays.deepToString(graph));
+
         //모든 노드(위치)에 관해서 음료수 채우기
         for (int y = 0; y < n; y++) {
             for (int x = 0; x < m; x++) {
-//                if(bfs(x,y))
+//                if(bfs(y,x))
 //                    answer++;
                 if(dfs(y,x))
                     answer++;
             }
         }
 
-//        System.out.println(Arrays.deepToString(graph));
+        System.out.println(Arrays.deepToString(graph));
 
         return answer;
     }
 
      static class Coordinates {
-        int x, y;
+        int y, x;
 
-        Coordinates(int x, int y) {
-            this.x = x;
+        Coordinates(int y, int x) {
             this.y = y;
+            this.x = x;
         }
     }
-//    private static boolean bfs(int y, int x) {
-//        //범위를 벗어났을 때 바로 나올 수 있게 조건 설정
-//        if (x < 0 || y < 0 || x >= n || y >= m) {
-//            return false;
-//        }
-//
-//        //Queue 만들기
-//        Queue<Coordinates> queue = new LinkedList<>();
-//
-//        //노드 집어넣기
-//        queue.add(new Coordinates(x, y));
-//
-//        //노드 방문처리
-//        graph[x][y] = 1;
-//
-//        //Queue를 비우면서 bfs 처리하기
-//        while (!queue.isEmpty()) {
-//            //Queue의 원소를 1개 뽑기
-//            Coordinates coordinates = queue.poll();
-//
-//            //해당 원소와 연결된, 아직 방문하지 않은 원소들을 큐에 삽입
-//            //끝에 도달한 좌표일 경우 OutOfRangeError 를 일으키므로 제외시킴
-//
-//            //상 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
-//            if ((coordinates.y - 1 >= 0) && (graph[coordinates.x][coordinates.y - 1] != 1)){
-//                graph[coordinates.x][coordinates.y - 1] = 1;
-//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
-//            }
-//            //우 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
-//            if ((coordinates.x + 1 <= m 0) && (graph[coordinates.x + 1][coordinates.y] != 1)){
-//                graph[coordinates.x + 1][coordinates.y] = 1;
-//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
-//            }
-//            //하 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
-//            if ((coordinates.y - 1 >= 0) && (graph[coordinates.x][coordinates.y + 1] != 1)){
-//                graph[coordinates.x][coordinates.y + 1] = 1;
-//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
-//            }
-//            //좌 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
-//            if ((coordinates.y - 1 >= 0) && (graph[coordinates.x - 1][coordinates.y] != 1)){
-//                graph[coordinates.x - 1][coordinates.y] = 1;
-//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
-//            }
-//        }
-//
-//
-//        return false;
-//    }
+    private static boolean bfs(int y, int x) {
+        //범위를 벗어났을 때 바로 나올 수 있게 조건 설정
+        if (x < 0 || y < 0 || x >= m || y >= n) {
+            return false;
+        }
+
+        if(graph[y][x] == 1){
+            return false;
+        }
+
+        //Queue 만들기
+        Queue<Coordinates> queue = new LinkedList<>();
+
+        //노드 집어넣기
+        queue.add(new Coordinates(y, x));
+
+        //노드 방문처리
+        graph[y][x] = 1;
+
+        //Queue를 비우면서 bfs 처리하기
+        while (!queue.isEmpty()) {
+            //Queue의 원소를 1개 뽑기
+            Coordinates coordinates = queue.poll();
+
+            //coordinates 이름을 다 붙이기에는 너무 길어서 임시 변수 생성
+            int tempX = coordinates.x;
+            int tempY = coordinates.y;
+
+            //해당 원소와 연결된, 아직 방문하지 않은 원소들을 큐에 삽입
+            //끝에 도달한 좌표일 경우 OutOfRangeError 를 일으키므로 제외시킴
+
+            //상 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+            if ((tempY - 1 >= 0) && (graph[tempY - 1][tempX] != 1)){
+                graph[tempY - 1][tempX] = 1;
+                queue.add(new Coordinates(tempY - 1,tempX));
+            }
+            //우 : x + 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+            if ((tempX + 1 <= m - 1 ) && (graph[tempY][tempX + 1] != 1)){
+                graph[tempY][tempX + 1] = 1;
+                queue.add(new Coordinates(tempY ,tempX + 1 ));
+            }
+            //하 : y + 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+            if ((tempY + 1 <= n - 1) && (graph[tempY + 1][tempX] != 1)){
+                graph[tempY + 1][tempX] = 1;
+                queue.add(new Coordinates(tempY + 1, tempX ));
+            }
+            //좌 : x - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+            if ((tempX - 1 >= 0) && (graph[tempY][tempX - 1] != 1)){
+                graph[tempY][tempX - 1] = 1;
+                queue.add(new Coordinates(tempY, tempX - 1));
+            }
+        }
+
+        return true;
+    }
 
     //DFS로 특정 노드를 방문
     //연결된 모든 노드도 같이 방문
