@@ -61,13 +61,13 @@ public class DFS_And_BFS {
         }
     }
 
-    public static void main(String[] args) {
-        makeGraph(graph);
-
-        //둘 중에 1개만 사용
-        dfs(1);
-        bfs(1);
-    }
+//    public static void main(String[] args) {
+//        makeGraph(graph);
+//
+//        //둘 중에 1개만 사용
+//        dfs(1);
+//        bfs(1);
+//    }
 
     private static void makeGraph(ArrayList<ArrayList<Integer>> graph) {
         // 그래프 초기화
