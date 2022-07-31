@@ -42,6 +42,7 @@ public class DFS_And_BFS {
     //  6 : 거리가 3
     public static void bfs(int start) {
         Queue<Integer> q = new LinkedList<>();
+        //Queue 에다가 노드를 집어넣기.
         q.offer(start);
         // 현재 노드를 방문 처리
         visited[start] = true;

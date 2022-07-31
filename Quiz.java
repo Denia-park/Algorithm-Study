@@ -22,6 +22,8 @@ package com.company;
 // 00000
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Quiz {
     //전역변수 graph를 설정하고 모든 값을 0으로 초기화
@@ -29,8 +31,8 @@ public class Quiz {
     static int[][] graph = new int[1000][1000];
 
     public static void main(String[] args) {
-        n = 4;
-        m = 5;
+        n = 4; //y
+        m = 5; //x
         String[] iceFrame = {
                 "00110",
                 "00011",
@@ -54,9 +56,11 @@ public class Quiz {
         }
 
         //모든 노드(위치)에 관해서 음료수 채우기
-        for (int x = 0; x < n; x++) {
-            for (int y = 0; y < m; y++) {
-                if(dfs(x,y))
+        for (int y = 0; y < n; y++) {
+            for (int x = 0; x < m; x++) {
+//                if(bfs(x,y))
+//                    answer++;
+                if(dfs(y,x))
                     answer++;
             }
         }
@@ -66,27 +70,84 @@ public class Quiz {
         return answer;
     }
 
+     static class Coordinates {
+        int x, y;
+
+        Coordinates(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+//    private static boolean bfs(int y, int x) {
+//        //범위를 벗어났을 때 바로 나올 수 있게 조건 설정
+//        if (x < 0 || y < 0 || x >= n || y >= m) {
+//            return false;
+//        }
+//
+//        //Queue 만들기
+//        Queue<Coordinates> queue = new LinkedList<>();
+//
+//        //노드 집어넣기
+//        queue.add(new Coordinates(x, y));
+//
+//        //노드 방문처리
+//        graph[x][y] = 1;
+//
+//        //Queue를 비우면서 bfs 처리하기
+//        while (!queue.isEmpty()) {
+//            //Queue의 원소를 1개 뽑기
+//            Coordinates coordinates = queue.poll();
+//
+//            //해당 원소와 연결된, 아직 방문하지 않은 원소들을 큐에 삽입
+//            //끝에 도달한 좌표일 경우 OutOfRangeError 를 일으키므로 제외시킴
+//
+//            //상 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+//            if ((coordinates.y - 1 >= 0) && (graph[coordinates.x][coordinates.y - 1] != 1)){
+//                graph[coordinates.x][coordinates.y - 1] = 1;
+//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
+//            }
+//            //우 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+//            if ((coordinates.x + 1 <= m 0) && (graph[coordinates.x + 1][coordinates.y] != 1)){
+//                graph[coordinates.x + 1][coordinates.y] = 1;
+//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
+//            }
+//            //하 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+//            if ((coordinates.y - 1 >= 0) && (graph[coordinates.x][coordinates.y + 1] != 1)){
+//                graph[coordinates.x][coordinates.y + 1] = 1;
+//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
+//            }
+//            //좌 : y - 1 이 좌표 조건에서 벗어나지 않고 , 방문하지 않은 좌표면 스택에 넣고 방문처리한다.
+//            if ((coordinates.y - 1 >= 0) && (graph[coordinates.x - 1][coordinates.y] != 1)){
+//                graph[coordinates.x - 1][coordinates.y] = 1;
+//                queue.add(new Coordinates(coordinates.x, coordinates.y - 1));
+//            }
+//        }
+//
+//
+//        return false;
+//    }
+
     //DFS로 특정 노드를 방문
     //연결된 모든 노드도 같이 방문
     //방문 했으면 1을 기입하는 것으로 방문했음을 표시함
     //x , y는 좌표처럼 생각하자
-    private static boolean dfs(int x, int y) {
+    private static boolean dfs(int y, int x) {
         //범위를 벗어났을 때 바로 나올 수 있게 조건 설정
-        if (x < 0 || y < 0 || x >= n || y >= m) {
+        if (x < 0 || y < 0 || x >= m || y >= n) {
             return false;
         }
 
         //방문한 좌표가 1 이 아닌 경우만 1을 넣고 dfs를 이어간다.
             // => 아직 방문하지 않은 곳이라면 방문한다 는 개념
-        if(graph[x][y] != 1){
-            graph[x][y] = 1;
+        if(graph[y][x] != 1){
+            graph[y][x] = 1;
             //상 , 하 , 좌 , 우 에 있는 모든 위치들도 방문한다.
             //나는 시계방향으로 돌았다.
-            dfs(x, y - 1); // 상
-            dfs(x + 1, y); // 우
-            dfs(x, y + 1); // 하
-            dfs(x - 1, y); // 좌
-            
+            dfs(y - 1, x); // 상
+            dfs(y, x + 1); // 우
+            dfs(y + 1, x); // 하
+            dfs(y, x - 1); // 좌
+
             //방문을 새로 한 곳이므로 true 를 반환하여 answer 값을 올리도록 한다.
             return true;
         }
