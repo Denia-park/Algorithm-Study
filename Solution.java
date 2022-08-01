@@ -22,7 +22,6 @@ public class Solution {
 
 
 
-
         int[] answer = new int[2];
         answer[0] = numberOfArea;
         answer[1] = maxSizeOfOneArea;
