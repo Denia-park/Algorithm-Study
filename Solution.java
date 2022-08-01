@@ -37,30 +37,40 @@ public class Solution {
         //BFS를 수행할때 필요한 Queue를 생성
         Queue<Number> queue = new LinkedList<Number>();
 
-        queue.add(new Number(numbers[index], index));
-        queue.add(new Number(-numbers[index], index));
+        //index가 0인 (=너비가 제일 안쪽인 ) 노드들을 Queue에 추가
+        queue.add(new Number(numbers[index], index)); // + 기호일때
+        queue.add(new Number(-numbers[index], index)); // - 기호일때
 
+        // Queue가 빌때까지 while문을 수행
         while (!queue.isEmpty()) {
+            //Queue에 있는 첫번째 노드를 꺼냄
             Number tempNumber = queue.poll();
 
-            //Visited 확인
+            //해당 노드의 Index를 확인
+            //Final Index 면 제일 바깥까지 너비를 확인한 경우이므로 Node의 Value가 Target가 일치하는지 확인
             if(tempNumber.index == FINAL_INDEX){
+                //Node의 Value가 Target가 일치하는지 확인 => 일치한다면 옳은 경우 이므로 tempAnswer를 ++ 한다.
                 if (tempNumber.value == target) {
                     tempAnswer++;
                 }
             }else{
+                //해당 노드의 Index가 Final Index가 아니면 아직 마지막까지 가지 못했으므로 index를 ++ 해주고 Visted 처리
                 tempNumber.index += 1;
-                queue.add(new Number(tempNumber.value + numbers[tempNumber.index], tempNumber.index));
-                queue.add(new Number(tempNumber.value - numbers[tempNumber.index], tempNumber.index));
+                //index를 올려주면서 numbers에 해당하는 값을 더해주거나 빼준다.
+                queue.add(new Number(tempNumber.value + numbers[tempNumber.index], tempNumber.index)); // + 기호일때
+                queue.add(new Number(tempNumber.value - numbers[tempNumber.index], tempNumber.index)); // - 기호일때
             }
         }
-
+        //while문을 돌면서 다 더해진 tempAnswer를 Return
         return tempAnswer;
     }
 }
 
+//BFS 에서 사용할 Number Class를 만들어 준다.
 class Number {
+    //numbers에 값들을 더하거나 빼서 가지고 있을 value
     int value;
+    //해당 Node의 index가 몇인지 확인해줄 index 변수
     int index;
 
     public Number(int value, int index) {
