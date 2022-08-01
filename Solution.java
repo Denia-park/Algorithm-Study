@@ -1,5 +1,8 @@
 package com.company;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Solution {
     static public void main(String[] args) {
         int[] quiz1 = { 1, 1, 1, 1, 1 };
@@ -11,49 +14,57 @@ public class Solution {
         System.out.println(solution(quiz2, quizTarget2) == 2);
     }
 
-    //dfs 에서 값을 계산할떄 사용이 되어야 하므로 전역변수로 설정
-    static char[] operators = {'+','-'};
-    //dfs 에서 값을 계산할떄 사용이 되어야 하므로 전역변수로 설정
+    //bfs 에서 값을 계산할떄 사용이 되어야 하므로 전역변수로 설정
     static int[] numbers;
 
     static public int solution(int[] quizNumbers, int target) {
         int answer = 0;
         numbers = quizNumbers;
-        //깊이 우선 탐색으로 진행을 할때 visited를 확인해야 하는데 index를 사용해서 대신 확인 , 처음에는 0으로 설정
+        //너비 우선 탐색으로 진행을 할때 visited를 확인해야 하는데 index를 사용해서 대신 확인 , 처음에는 0으로 설정
         int index = 0;
 
-        //numbers 숫자 앞에 각각 + , - 를 넣어보면서 target이 되는지 확인을 해야하므로 for문을 사용하여 시작노드를 정한다.
-        for (char operator : operators) {
-            answer += dfs(operator,index,target);
-        }
+        answer = bfs(index, target);
 
         return answer;
     }
 
-    private static int dfs(char op, int index, int quizTarget) {
+    private static int bfs(int index, int target) {
+        //answer 에 값을 넘기기 전에 임시로 값을 가지고 있을 임시 변수
         int tempAnswer = 0;
+        //너비 우선 탐색시에 사용되는 계산을 마무리 지을 최종 인덱스
+        final int FINAL_INDEX = numbers.length - 1;
 
-        if (op == '+') {
-            quizTarget = quizTarget - numbers[index];
-        } else { //op == '-'
-            quizTarget = quizTarget + numbers[index];
-        }
+        //BFS를 수행할때 필요한 Queue를 생성
+        Queue<Number> queue = new LinkedList<Number>();
 
-        //index를 사용해서 깊이의 정도를 확인함
-        index++;
-        //재귀함수 타기
-        //dfs에서 해당 재귀함수가 깊이가 끝에 도달했는지 확인을 해서 아직 덜 도달했으면 계속해서 재귀함수를 실행한다.
-        if (index != numbers.length) {
-            for (char operator : operators) {
-                tempAnswer += dfs(operator, index, quizTarget);
+        queue.add(new Number(numbers[index], index));
+        queue.add(new Number(-numbers[index], index));
+
+        while (!queue.isEmpty()) {
+            Number tempNumber = queue.poll();
+
+            //Visited 확인
+            if(tempNumber.index == FINAL_INDEX){
+                if (tempNumber.value == target) {
+                    tempAnswer++;
+                }
+            }else{
+                tempNumber.index += 1;
+                queue.add(new Number(tempNumber.value + numbers[tempNumber.index], tempNumber.index));
+                queue.add(new Number(tempNumber.value - numbers[tempNumber.index], tempNumber.index));
             }
-        } else {
-            if (quizTarget == 0)
-                return 1;
-            else
-                return 0;
         }
 
         return tempAnswer;
+    }
+}
+
+class Number {
+    int value;
+    int index;
+
+    public Number(int value, int index) {
+        this.value = value;
+        this.index = index;
     }
 }
