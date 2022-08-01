@@ -31,16 +31,13 @@ public class Quiz4 {
         };
 
         System.out.println(solution(quiz1, target1) == 5);
-//        System.out.println(solution(quiz2, target2) == -1);
+        System.out.println(solution(quiz2, target2) == -1);
     }
 
     static int[][] startBoard;
 
     static public int solution ( int[][] beginning, int[][] target){
         int answer = 0;
-        int diffVal = 0;
-        int diffValMax = 0;
-        int changeIndex = 0;
         startBoard = beginning;
 
         int whileCount = 0;
@@ -48,43 +45,25 @@ public class Quiz4 {
         while(!Arrays.deepEquals(startBoard, target)){
             //row 비교
             for (int i = 0; i < beginning.length; i++) {
-                diffVal = 0;
-                for (int j = 0; j < beginning[i].length; j++) {
-                    if(beginning[i][j] != target[i][j]){
-                        diffVal++;
-                    }
-                }
-                if(diffValMax < diffVal){
-                    diffValMax = diffVal;
-                    changeIndex = i;
+                if(beginning[i][0] != target[i][0]){
+                    reverseRow(i);
+                    answer++;
                 }
             }
-
-            reverseRow(changeIndex);
-
-            diffValMax = 0;
 
             //column 비교
             for (int i = 0; i < beginning[0].length; i++) {
-                diffVal = 0;
-                for (int j = 0; j < beginning[i].length; j++) {
-                    if(beginning[j][i] != target[j][i]){
-                        diffVal++;
-                    }
-                }
-                if(diffValMax < diffVal){
-                    diffValMax = diffVal;
-                    changeIndex = i;
+                if(beginning[0][i] != target[0][i]){
+                    reverseColumn(i);
+                    answer++;
                 }
             }
-
-            reverseColumn(changeIndex);
 
             whileCount ++;
 
             if(whileCount > 10){
                 System.out.println("해당 알고리즘은 실패 ㅠㅠ");
-                break;
+                return -1;
             }
         }
 
