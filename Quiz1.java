@@ -24,7 +24,7 @@ public class Quiz1 {
     }
 
     static public String solution(String X, String Y) {
-        String answer = "";
+        StringBuilder answer = new StringBuilder();
 
         int[] xNumberArray = new int[10];
         int[] yNumberArray = new int[10];
@@ -57,7 +57,7 @@ public class Quiz1 {
         while (commonNumberCount > 0) {
             for (int i = 9; i >= 0; i--) {
                 if(commonNumberArray[i] != 0){
-                    answer += String.valueOf(i);
+                    answer.append(String.valueOf(i));
                     commonNumberArray[i] --;
                     break;
                 }
@@ -66,10 +66,10 @@ public class Quiz1 {
             commonNumberCount--;
         }
 
-        if(answer.split("0").length == 0){
+        if(answer.toString().split("0").length == 0){
             return "0";
         }
 
-        return answer;
+        return answer.toString();
     }
 }
