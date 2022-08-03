@@ -40,21 +40,24 @@ public class Solution {
                     tempWidthValue = 0; // 해당 영역의 너비를 구할때 사용할 임시 변수
                     standardValue = pictureGraph[y][x]; // 같은 영역인지 판단을 해줄 변수 , 내가 처음에 진입하는 그 좌표의 값을 할당한다. , 좌표의 값과 같은 부분들만 영역으로 인정한다.
                     dfs(y, x);
-                    maxSizeOfOneArea = Math.max(maxSizeOfOneArea, tempWidthValue); //위에서 정의했던 checkValue를 사용하여 지금까지 최대 영역을 구해서 대입
+                    maxSizeOfOneArea = Math.max(maxSizeOfOneArea, tempWidthValue); //위에서 정의했던 tempWidthValue를 사용하여 지금까지 최대 영역을 구해서 대입
                 }
             }
         }
 
+        //위에서 구한 값들을 할당
         answer[0] = numberOfArea;
         answer[1] = maxSizeOfOneArea;
         return answer;
     }
 
     private static void dfs(int y, int x) {
+        //해당 조건에 걸리면 정상적으로 프로그램이 진행되지 않으므로 예외처리 필요
         if (y < 0 || x < 0 || x >= pictureWidth || y >= pictureHeight || pictureGraph[y][x] == 0) {
             return;
         }
 
+        //처음에 설정한 standardValue에 해당하는 좌표면 영역으로 인정을 해야 하므로 tempWidthValue 를 1 올려준다.
         if(pictureGraph[y][x] == standardValue){
             tempWidthValue++;
         }else{
@@ -64,6 +67,7 @@ public class Solution {
         //Visited 처리
         pictureGraph[y][x] = 0;
 
+        //상 , 우 , 하 , 좌 [시계 방향으로 돌면서 DFS 를 진행한다.]
         dfs(y-1, x);
         dfs(y, x+1);
         dfs(y+1, x);
