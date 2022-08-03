@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class Quiz {
+public class DFS_And_BFS_Quiz1 {
     //전역변수 graph 를 설정하고 모든 값을 0으로 초기화
     static int n , m; //y , x
     static int[][] graph = new int[5][5]; // 필요하면 필요한 사이즈만큼 크기를 늘리기
