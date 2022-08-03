@@ -1,57 +1,75 @@
-//package com.company;
+package com.company;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class Quiz2 {
+
+    static public void main(String[] args) {
+        int[] topping1 = {1, 2, 1, 3, 1, 4, 1, 2};
+        int[] topping2 = {1, 2, 3, 1, 4};
+
+        System.out.println(solution(topping1) == 2);
+        System.out.println(solution(topping2) == 0);
+    }
+
 //
-//import java.util.HashMap;
-//
-//public class Quiz2 {
-//
-//    static public void main(String[] args) {
-//        String[] quizWant1 = {"banana", "apple", "rice", "pork", "pot"};
-//        int[] quizNum1 = {3, 2, 2, 2, 1};
-//        String[] quizDiscount1 = {"chicken", "apple", "apple", "banana", "rice", "apple", "pork", "banana", "pork", "rice", "pot", "banana", "apple", "banana"};
-//
-//        String[] quizWant2 = {"apple"};
-//        int[] quizNum2 = {10};
-//        String[] quizDiscount2 = {"banana", "banana", "banana", "banana", "banana", "banana", "banana", "banana", "banana", "banana"};
-//
-//        System.out.println(solution(quizWant1, quizNum1, quizDiscount1) == 3);
-//        System.out.println(solution(quizWant2, quizNum2, quizDiscount2) == 0);
-//    }
-//
-//
-//    static public int solution(String[] want, int[] number, String[] discount) {
+//    static public int solution(int[] topping) {
 //        int answer = 0;
+//        Set<Integer> answerSet1 = new HashSet<Integer>();
+//        Set<Integer> answerSet2 = new HashSet<Integer>();
 //
-//        //HashMap 생성
-//        HashMap<String, Integer> wantHashMap = new HashMap<String, Integer>();
+//        for (int i = 1; i < topping.length; i++) {
+//            answerSet1.clear();
+//            answerSet2.clear();
 //
-//        //hashMap에 필요한 물품의 수량을 저장
-//        for (int i = 0; i < want.length; i++) {
-//            wantHashMap.put(want[i], number[i]);
-//        }
-//
-//        //discount 를 for문으로 10개씩만 돌면서 내가 원하는 수량만큼 있는지 비교하기.
-//        for (int i = 0; i <= discount.length - 10; i++) {
-//            HashMap<String, Integer> discountHashMap = new HashMap<String, Integer>();
-//            int tempCount = 0;
-//
-//            for (int j = i; j < i + 10; j++) {
-//                discountHashMap.put(discount[j], discountHashMap.getOrDefault(discount[j], 0) + 1);
+//            for (int j = 0; j < i; j++) {
+//                answerSet1.add(topping[j]);
 //            }
-//
-//            for (String st : want ) {
-//                if(wantHashMap.get(st) == discountHashMap.get(st)){
-//                    tempCount++;
-//                }else{
-//                    break;
-//                }
+//            for (int j = i; j < topping.length; j++) {
+//                answerSet2.add(topping[j]);
 //            }
-//
-//            if (tempCount == want.length)
+//            if(answerSet1.size() == answerSet2.size()){
 //                answer++;
+//            }
 //        }
-//
 //        return answer;
 //    }
-//}
-//
-//
+
+    static public int solution(int[] topping) {
+        int answer = 0;
+
+        for (int i = 1; i < topping.length; i++) {
+            int[] answerArray1 = new int[10001];
+            int typeCount1 = 0;
+            int[] answerArray2 = new int[10001];
+            int typeCount2 = 0;
+
+            for (int j = 0; j < i; j++) {
+                if(answerArray1[topping[j]] == 0){
+                    typeCount1++;
+
+                    answerArray1[topping[j]]++;
+                }
+            }
+
+            for (int j = i; j < topping.length; j++) {
+                if(answerArray2[topping[j]] == 0){
+                    typeCount2++;
+                    answerArray2[topping[j]]++;
+
+                    if(typeCount1 < typeCount2){
+                        break;
+                    }
+                }
+            }
+
+            if(typeCount1 == typeCount2){
+                answer++;
+            }
+        }
+        return answer;
+    }
+}
+
+
