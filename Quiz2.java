@@ -1,7 +1,7 @@
 package com.company;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Quiz2 {
 
@@ -13,61 +13,34 @@ public class Quiz2 {
         System.out.println(solution(topping2) == 0);
     }
 
-//
-//    static public int solution(int[] topping) {
-//        int answer = 0;
-//        Set<Integer> answerSet1 = new HashSet<Integer>();
-//        Set<Integer> answerSet2 = new HashSet<Integer>();
-//
-//        for (int i = 1; i < topping.length; i++) {
-//            answerSet1.clear();
-//            answerSet2.clear();
-//
-//            for (int j = 0; j < i; j++) {
-//                answerSet1.add(topping[j]);
-//            }
-//            for (int j = i; j < topping.length; j++) {
-//                answerSet2.add(topping[j]);
-//            }
-//            if(answerSet1.size() == answerSet2.size()){
-//                answer++;
-//            }
-//        }
-//        return answer;
-//    }
-
+    //https://congsoony.tistory.com/283?category=961402 참고
     static public int solution(int[] topping) {
         int answer = 0;
+        Map<Integer,Integer> answerMap1 = new HashMap<>();
+        Map<Integer,Integer> answerMap2 = new HashMap<>();
 
-        for (int i = 1; i < topping.length; i++) {
-            int[] answerArray1 = new int[10001];
-            int typeCount1 = 0;
-            int[] answerArray2 = new int[10001];
-            int typeCount2 = 0;
+        //전체의 종류를 구하기.
+        for (int topp : topping) {
+            answerMap1.put(topp, answerMap1.getOrDefault(topp, 0) + 1);
+        }
 
-            for (int j = 0; j < i; j++) {
-                if(answerArray1[topping[j]] == 0){
-                    typeCount1++;
-
-                    answerArray1[topping[j]]++;
-                }
+        //1개씩 다른 Map 으로 옮기면서 (answerMap1 -> answerMap2) 사이즈를 비교하고 같으면 answer 를 ++ 시키자.
+        for (int topp : topping) {
+            if(answerMap1.getOrDefault(topp,0) != 0){
+                int tempValue = answerMap1.get(topp);
+                if(tempValue - 1 == 0)
+                    answerMap1.remove(topp);
+                else
+                    answerMap1.put(topp, tempValue - 1);
             }
 
-            for (int j = i; j < topping.length; j++) {
-                if(answerArray2[topping[j]] == 0){
-                    typeCount2++;
-                    answerArray2[topping[j]]++;
+            answerMap2.put(topp, answerMap2.getOrDefault(topp, 0) + 1);
 
-                    if(typeCount1 < typeCount2){
-                        break;
-                    }
-                }
-            }
-
-            if(typeCount1 == typeCount2){
+            if(answerMap1.size() == answerMap2.size()){
                 answer++;
             }
         }
+
         return answer;
     }
 }
