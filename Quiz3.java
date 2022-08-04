@@ -23,11 +23,11 @@ public class Quiz3 {
 
         dest = destination;
 
-        graph = new ArrayList<ArrayList<Integer>>(n);
+        graph = new ArrayList<ArrayList<Integer>>();
 
         //그래프 초기화 (node랑 Index랑 맞추기 위해서 + 1 해줌)
         for (int i = 0; i < n+1; i++) {
-            graph.add(new ArrayList<Integer>(2000));
+            graph.add(new ArrayList<Integer>());
         }
         //그래프 내용 업데이트, 서로 연결이기 때문에 양쪽으로 연결해준다.
         for (int[] road : roads) {
