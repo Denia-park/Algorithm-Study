@@ -2,6 +2,8 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Quiz3 {
     static public void main(String[] args) {
@@ -24,11 +26,11 @@ public class Quiz3 {
         }
         dest = destination;
 
-        graph = new ArrayList<ArrayList<Integer>>();
+        graph = new ArrayList<ArrayList<Integer>>(n);
 
         //그래프 초기화 (node랑 Index랑 맞추기 위해서 + 1 해줌)
         for (int i = 0; i < n+1; i++) {
-            graph.add(new ArrayList<Integer>());
+            graph.add(new ArrayList<Integer>(2000));
         }
         //그래프 내용 업데이트, 서로 연결이기 때문에 양쪽으로 연결해준다.
         for (int[] road : roads) {
@@ -38,46 +40,54 @@ public class Quiz3 {
 
         answerArrIndex = 0;
         for (int source : sources) {
-            if(source == dest){
+            int distance = 0;
+            visited = new boolean[n + 1];
+
+            if(source == dest)
                 answer[answerArrIndex] = 0;
+            else
+                bfs(source, distance);
 
-            }else {
-                for (int i = 0; i < graph.get(source).size(); i++) {
-                    int tempStepCount = 0;
-                    visited = new boolean[n+1];
-
-                    int node = graph.get(source).get(i);
-                    //방문하지 않은 곳만 방문한다.
-                    if(!visited[node]){
-                        dfs(node, tempStepCount + 1);
-                    }
-                }
-            }
             answerArrIndex++;
         }
 
         return answer;
     }
 
-    private static void dfs(int source, int tempStepCount) {
-        if(source == dest){
-            if(answer[answerArrIndex] == -1){
-                answer[answerArrIndex] = tempStepCount;
-            }else {
-                answer[answerArrIndex] = Math.min(answer[answerArrIndex], tempStepCount);
-            }
-            return;
-        }
+    private static void bfs(int source, int distance) {
+        Queue<Node> queue = new LinkedList<Node>();
 
-        //visited 처리 해준다.
+        //집어넣기
+        queue.add(new Node(source, distance));
+        // visited
         visited[source] = true;
 
-        for (int i = 0; i < graph.get(source).size(); i++) {
-            int node = graph.get(source).get(i);
-            //방문하지 않은 곳만 방문한다.
-            if(!visited[node]){
-                dfs(node, tempStepCount + 1);
+        while (!queue.isEmpty()) {
+            Node tempNode = queue.poll();
+
+            ArrayList<Integer> graphOfEachSource = graph.get(tempNode.source);
+
+            if (tempNode.source == dest) {
+                answer[answerArrIndex] = tempNode.distance;
+                return ;
+            }
+
+            for (Integer eachSource : graphOfEachSource) {
+                if (!visited[eachSource]) {
+                    queue.add(new Node(eachSource, tempNode.distance + 1));
+                    visited[eachSource] = true;
+                }
             }
         }
+    }
+}
+
+class Node {
+    int source;
+    int distance;
+
+    public Node(int source, int distance) {
+        this.source = source;
+        this.distance = distance;
     }
 }
