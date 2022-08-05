@@ -1,4 +1,4 @@
-package com.company;
+package com.company.Stream;
 
 import java.io.IOException;
 import java.util.Arrays;
