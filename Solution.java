@@ -1,77 +1,87 @@
 package com.company;
 
-import java.util.Arrays;
-
 public class Solution {
     static public void main(String[] args) {
+        int n1 = 2;
+        String[] data1 = { "N~F=0", "R~T>2" };
+        int n2 = 2;
+        String[] data2 = {"M~C<2", "C~M>1"};
 
-        int m = 6;
-        int n = 4;
-        int[][] picture = {{1, 1, 1, 0},{1, 2, 2, 0},{1, 0, 0, 1},{0, 0, 0, 1},{0, 0, 0, 3},{0, 0, 0, 3} };
-
-        System.out.println(Arrays.toString(solution(m, n, picture)));
+        System.out.println(solution(n1, data1) == 3648);
+        System.out.println(solution(n2, data2) == 0);
     }
 
-    static int numberOfArea;
-    static int maxSizeOfOneArea;
-    static int pictureHeight;
-    static int pictureWidth;
-    static int[][] pictureGraph;
-    static int standardValue;
-    static int tempWidthValue;
+    //https://youngest-programming.tistory.com/586 참조
 
-    static public int[] solution(int height, int width, int[][] picture) {
-        numberOfArea = 0;
-        maxSizeOfOneArea = 0;
-        pictureGraph = new int[picture.length][picture[0].length];
-        for (int i = 0; i < picture.length; i++) {
-            System.arraycopy(picture[i], 0, pictureGraph[i], 0, picture[i].length);
+    static String[] conditions;
+    static int answer;
+    static boolean[] isVisited;
+    static String[] friends = {"A", "C", "F", "J", "M", "N", "R", "T"};
+
+    static public int solution(int n, String[] data) {
+        //visited 를 가질 boolean 배열을 정의
+        isVisited = new boolean[friends.length];
+        //data 는 변경되지 않으므로 전역변수 사용하고 할당한다.
+        conditions = data;
+        //answer 초기화
+        answer = 0;
+
+        //DFS를 이용하여 완전 순회를 이용할 계획
+        dfs("");
+
+        return answer;
+    }
+
+    private static void dfs(String curMemberPicture) {
+        // curMemberPicture.length() == 8 이면 8명 다 제대로 자리에 섯다는 의미기 때문에 조건에 맞는지 검사
+        if(curMemberPicture.length() == 8){
+            // 조건을 검사해서 true 가 나오면 answer 를 1 올려준다.
+            if (checkCondition(curMemberPicture)) {
+                answer++;
+            }
+            return;
         }
-        System.out.println(Arrays.deepToString(pictureGraph));
-        pictureHeight = height;
-        pictureWidth = width;
-        tempWidthValue = 0; // 이름 변경하기 임시로 너비의 값을 가지고 있다는 것으로
-        int[] answer = new int[2];
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if(pictureGraph[y][x] != 0 ){
-                    numberOfArea++; // 해당 if문에 들어올때마다 영역의 수 ++ , 연결된 영역은 한번에 다 visited 처리를 할 것이므로 또 방문하지 않기 때문에
-                    tempWidthValue = 0; // 해당 영역의 너비를 구할때 사용할 임시 변수
-                    standardValue = pictureGraph[y][x]; // 같은 영역인지 판단을 해줄 변수 , 내가 처음에 진입하는 그 좌표의 값을 할당한다. , 좌표의 값과 같은 부분들만 영역으로 인정한다.
-                    dfs(y, x);
-                    maxSizeOfOneArea = Math.max(maxSizeOfOneArea, tempWidthValue); //위에서 정의했던 tempWidthValue를 사용하여 지금까지 최대 영역을 구해서 대입
+        // 순서대로 자리를 서게 만들기 위해서 for문을 이용
+        for (int i = 0; i < friends.length; i++) {
+            //자리에 서지 않은 친구만 자리에 서게한다.
+            if(!isVisited[i]) {
+                //자리에 섯으므로 true
+                isVisited[i] = true;
+                // 자리에 섯으므로 curMemberPicture 에 friends 를 붙인다.
+                dfs(curMemberPicture + friends[i]);
+                //모든 경우의 수를 구해야 하므로 isVisited 값을 false 로 만들어서 다시 자리에 서는 경우를 구한다.
+                isVisited[i] = false;
+            }
+        }
+    }
+
+    private static boolean checkCondition(String memberPicture) {
+        //모든 조건에 해당하는지 확인해야 하므로  for문 이용
+        for (String condition : conditions) {
+            char member1 = condition.charAt(0); //charAt 을 이용하여 condition 에서 어떤 멤버의 조건이지 확인
+            char member2 = condition.charAt(2); //charAt 을 이용하여 condition 에서 어떤 멤버의 조건이지 확인
+            char operator = condition.charAt(3); //charAt 을 이용하여 condition 에서 어떤 연산자인지 확인
+            int compareValue = condition.charAt(4) - '0' + 1; //charAt 을 이용하여 condition 에서 간격 확인 , , 간격을 구하기 위해서는 + 1 을 해야함 Ex)바로 붙어있으면 index 는 1 이지만 간격은 0이다.
+            int absOfPositionDiffValueInMemberPicture = Math.abs(memberPicture.indexOf(member1) - memberPicture.indexOf(member2)); // 간격을 쉽게 구하기 위해서 Math.abs를 이용
+
+            //중간에 조건을 한번이라도 실패하면 더 이상 볼 필요가 없으므로 return false 한다.
+            if (operator == '=') {
+                if (!(absOfPositionDiffValueInMemberPicture == compareValue)) {
+                    return false;
+                }
+            } else if (operator == '<') {
+                if (!(absOfPositionDiffValueInMemberPicture < compareValue)) {
+                    return false;
+                }
+            } else if (operator == '>') {
+                if (!(absOfPositionDiffValueInMemberPicture > compareValue)) {
+                    return false;
                 }
             }
         }
 
-        //위에서 구한 값들을 할당
-        answer[0] = numberOfArea;
-        answer[1] = maxSizeOfOneArea;
-        return answer;
-    }
-
-    private static void dfs(int y, int x) {
-        //해당 조건에 걸리면 정상적으로 프로그램이 진행되지 않으므로 예외처리 필요
-        if (y < 0 || x < 0 || x >= pictureWidth || y >= pictureHeight || pictureGraph[y][x] == 0) {
-            return;
-        }
-
-        //처음에 설정한 standardValue에 해당하는 좌표면 영역으로 인정을 해야 하므로 tempWidthValue 를 1 올려준다.
-        if(pictureGraph[y][x] == standardValue){
-            tempWidthValue++;
-        }else{
-            return;
-        }
-
-        //Visited 처리
-        pictureGraph[y][x] = 0;
-
-        //상 , 우 , 하 , 좌 [시계 방향으로 돌면서 DFS 를 진행한다.]
-        dfs(y-1, x);
-        dfs(y, x+1);
-        dfs(y+1, x);
-        dfs(y, x-1);
+        //모든 조건에 관해서 통과를 했으면 true를 반환
+        return true;
     }
 }
-
