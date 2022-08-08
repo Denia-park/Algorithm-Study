@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Stack;
+
 public class Solution {
     static public void main(String[] args) {
         String str1 = "baabaa";
@@ -9,23 +11,20 @@ public class Solution {
         System.out.println(solution(str2));
     }
 
-    static public int solution(String str)
-    {
-        while (true) {
-            String afterStr = str;
+    static public int solution(String str) {
+        Stack<Character> stack = new Stack<Character>();
 
-            for (char c = 'a'; c <= 'z'; c++) {
-                String tempStr = "" + c + c;
-                str = str.replace(tempStr, "");
-            }
-
-            if(afterStr.equals(str)){
-                return 0;
-            }
-
-            if(str.length() == 0) {
-                return 1;
+        for (int i = 0; i < str.length(); i++) {
+            char tempChar = str.charAt(i);
+            if(!stack.isEmpty() && stack.peek().equals(tempChar)){
+                stack.pop();
+            }else{
+                stack.push(tempChar);
             }
         }
+
+        if(stack.isEmpty()) return 1;
+
+        return 0;
     }
 }
