@@ -1,37 +1,68 @@
 package com.company;
 
-import java.util.Stack;
+import java.util.*;
 
 public class Solution {
     static public void main(String[] args) {
+        int[] progresses1 = {93, 30, 55};
+        int[] speeds1 = {1, 30, 5};
 
-        System.out.println(solution(3,5));
-        System.out.println(solution(8,12));
+        int[] progresses2 = {95, 90, 99, 99, 80, 99};
+        int[] speeds2 = {1, 1, 1, 1, 1, 1};
+
+
+        System.out.println(Arrays.toString(solution(progresses1, speeds1)));
+        System.out.println(Arrays.toString(solution(progresses2, speeds2)));
     }
 
-    // 해당 문제의 자세한 풀이는 다음 사이트 내용을 참조함 [https://school.programmers.co.kr/questions/11306]
+    static public Integer[] solution(int[] progresses, int[] speeds) {
+        //answer를 Integer[] 로 설정한 이유 : answerList.toArray(answer) 를 쓰기 위해서
+        Integer[] answer = {};
+        //정답을 담아두기 위해서 List 생성
+        List<Integer> answerList = new ArrayList<Integer>();
+        //앞에서부터 처리해야 하므로 FIFO인 Queue 생성
+        Queue<Integer> answerQueue = new LinkedList<>();
+        //전체적인 처리과정을 알 수 있게 Index 변수 생성
+        int progressIndex = 0;
+        //총 몇개가 처리 되었는지 알 수 있게 Count 변수 생성
+        int totalCount = 0;
 
-    //우선 w와 h가 공약수가 있다면 문제를 공약수를 나눈 w' 와 h'로 축소시킬수있습니다.
-    //w'와 h'가 서로소라 가정했을때 대각선은 반대쪽 코너에 도달하기전 w'-1 세로선과 h'-1 가로선을 지나고
-    //지날때마다 새로운 정사각형이 추가됩니다.
-    // 그래서 첫 정사각형을 포함 1 + (w'-1) + (h'-1) = w' + h' - 1개의 정사각형을 지나게 되므로
-    // 공약수를 다시 곱해주면 w + h - gcd(w,h)개의 정사각형을 지나는것을 찾을수있습니다.
+        // progresses의 길이 만큼 전체 작업이 처리 되지 않았으면 계속해서 while 문을 돈다.
+        while (totalCount != progresses.length) {
+            //오늘 처리한 작업량을 계산할 변수
+            int todayCompleteCount = 0;
 
-    //gcd 메서드는 최대 공약수를 구하는 메서드 이며 유클리드 호제법을 사용함
-    static public long solution(int w, int h) {
-        long answer = 0;
+            //기존에 사용했던 Queue 내용을 초기화
+            answerQueue.clear();
 
-        long totalRect = (long) w * h;
+            //progresses의 내용을 하루 하루 지남에 따라 업데이트 , Queue 에 넣어준다.
+            for (int i = progressIndex; i < progresses.length; i++) {
+                progresses[i] = progresses[i] + speeds[i];
+                answerQueue.add(progresses[i]);
+            }
 
-        answer = totalRect - (w + h - gcd(w, h));
+            //Queue에 넣어준 데이터를 하나 하나 꺼내면서 값을 확인한다.
+            while (!answerQueue.isEmpty()) {
+                //작업량이 100 넘었으면 poll 해주고 오늘 작업량 + 1 , progressIndex 를 + 1 해준다.
+                if(answerQueue.peek() >= 100){
+                    answerQueue.poll(); // 완료된 작업은 꺼낸다.
+                    todayCompleteCount++; // 오늘 작업량 + 1
+                    progressIndex++; // progressIndex + 1
+                }
+                // 작업이 100프로가 아니면 break
+                else{
+                    break;
+                }
+            }
 
-        return answer;
+            //오늘 작업량이 0개가 아니면 answerList 에 추가해준다. , 전체 작업량도 내용으 업데이트
+            if(todayCompleteCount != 0){
+                answerList.add(todayCompleteCount); // answerList 에 내용 추가
+                totalCount = totalCount + todayCompleteCount; // 전체 작업량도 내용을 업데이트
+            }
+        }
+
+        // answerList 를 Array 로 만들어서 반환
+        return answerList.toArray(answer);
     }
-
-    //유클리드 호제법 을 사용하여 최대공약수를 구함
-    private static int gcd(int a, int b) {
-        if(b == 0) return a;
-        return gcd(b, a%b);
-    }
-
 }
