@@ -4,65 +4,63 @@ import java.util.*;
 
 public class Solution {
     static public void main(String[] args) {
-        int[] progresses1 = {93, 30, 55};
-        int[] speeds1 = {1, 30, 5};
+        String quiz1 = "{{2},{2,1},{2,1,3},{2,1,3,4}}"	;
+        String quiz2 = "{{1,2,3},{2,1},{1,2,4,3},{2}}"	;
+        String quiz3 = "{{20,111},{111}}";
+        String quiz4 = "{{123}}";
+        String quiz5 = "{{4,2,3},{3},{2,3,4,1},{2,3}}";
 
-        int[] progresses2 = {95, 90, 99, 99, 80, 99};
-        int[] speeds2 = {1, 1, 1, 1, 1, 1};
 
-
-        System.out.println(Arrays.toString(solution(progresses1, speeds1)));
-        System.out.println(Arrays.toString(solution(progresses2, speeds2)));
+        System.out.println(Arrays.toString(solution(quiz1)));
+        System.out.println(Arrays.toString(solution(quiz2)));
+        System.out.println(Arrays.toString(solution(quiz3)));
+        System.out.println(Arrays.toString(solution(quiz4)));
+        System.out.println(Arrays.toString(solution(quiz5)));
     }
 
-    static public Integer[] solution(int[] progresses, int[] speeds) {
-        //answer를 Integer[] 로 설정한 이유 : answerList.toArray(answer) 를 쓰기 위해서
+    static public Integer[] solution(String s) {
         Integer[] answer = {};
-        //정답을 담아두기 위해서 List 생성
-        List<Integer> answerList = new ArrayList<Integer>();
-        //앞에서부터 처리해야 하므로 FIFO인 Queue 생성
-        Queue<Integer> answerQueue = new LinkedList<>();
-        //전체적인 처리과정을 알 수 있게 Index 변수 생성
-        int progressIndex = 0;
-        //총 몇개가 처리 되었는지 알 수 있게 Count 변수 생성
-        int totalCount = 0;
+        //Set 자료 구조 사용 - 등록한 순서를 유지하기 위해서 LinkedHashSet를 사용함
+        Set<Integer> set = new LinkedHashSet<>();
 
-        // progresses의 길이 만큼 전체 작업이 처리 되지 않았으면 계속해서 while 문을 돈다.
-        while (totalCount != progresses.length) {
-            //오늘 처리한 작업량을 계산할 변수
-            int todayCompleteCount = 0;
+        //브라켓 지우고 String 리턴
+        String deletedBracketString = getDeletedBracketString(s);
 
-            //기존에 사용했던 Queue 내용을 초기화
-            answerQueue.clear();
+        //중간에 문자열을 화이트 스페이스로 교체 후 화이트 스페이스 기준으로 split
+        String[] strArray = deletedBracketString.replace("},{"," ").split(" ");
 
-            //progresses의 내용을 하루 하루 지남에 따라 업데이트 , Queue 에 넣어준다.
-            for (int i = progressIndex; i < progresses.length; i++) {
-                progresses[i] = progresses[i] + speeds[i];
-                answerQueue.add(progresses[i]);
-            }
+        //문자열 길이를 기준으로 Sort
+        Arrays.sort(strArray,new MyComparator());
 
-            //Queue에 넣어준 데이터를 하나 하나 꺼내면서 값을 확인한다.
-            while (!answerQueue.isEmpty()) {
-                //작업량이 100 넘었으면 poll 해주고 오늘 작업량 + 1 , progressIndex 를 + 1 해준다.
-                if(answerQueue.peek() >= 100){
-                    answerQueue.poll(); // 완료된 작업은 꺼낸다.
-                    todayCompleteCount++; // 오늘 작업량 + 1
-                    progressIndex++; // progressIndex + 1
-                }
-                // 작업이 100프로가 아니면 break
-                else{
-                    break;
-                }
-            }
-
-            //오늘 작업량이 0개가 아니면 answerList 에 추가해준다. , 전체 작업량도 내용으 업데이트
-            if(todayCompleteCount != 0){
-                answerList.add(todayCompleteCount); // answerList 에 내용 추가
-                totalCount = totalCount + todayCompleteCount; // 전체 작업량도 내용을 업데이트
+        //짧은 문자열을 기준으로 내부 원소들을 Set에 하나씩 추가
+        for (String str : strArray) {
+            //strArray에서 str을 받아오면 ,로 원소들이 묶여있어서 ","를 기준으로 분해 후 하나씩 추가해줄 것
+            //문자열 짧은 "튜플"이 처음부터 있는 원소이기 때문에 개네들을 먼저 추가해줘야함
+            //먼저 추가해준 애들은 뒤에 또 추가해줘도 Set 자료형 이기 때문에 문제가 없다
+            for(String str2: str.split(",")){
+                set.add(Integer.parseInt(str2));
             }
         }
 
-        // answerList 를 Array 로 만들어서 반환
-        return answerList.toArray(answer);
+        return set.toArray(answer);
+    }
+
+    //브라켓 지워지는 메서드
+    private static String getDeletedBracketString(String str) {
+        return str.substring(2,str.length()-2);
     }
 }
+
+//Comparator 구현 : String 의 길이를 비교해서 짧은 것을 앞에 오도록 배치
+class MyComparator implements Comparator<String> {
+
+    @Override
+    public int compare(String o1, String o2) {
+        //String 의 길이를 비교해서 짧은 것을 앞에 오도록 배치
+        if(o1.length() < o2.length())
+            return -1;
+
+        return 1;
+    }
+}
+
