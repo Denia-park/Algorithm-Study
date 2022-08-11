@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
+// 전보 문제
+// 노드의 개수가 많아서 플로이드 워셜은 ㄴㄴ
+// 다익스트라 를 이용해야 하며 , 우선순위 큐를 이용해야 시간제한에 걸리지 않는다.
+
 public class ShortestPath1 {
     public static final int INF = (int) 1e9; // 무한을 의미하는 값으로 10억을 설정
     // 각 노드에 연결되어 있는 노드에 대한 정보를 담는 배열
