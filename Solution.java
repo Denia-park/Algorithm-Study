@@ -1,6 +1,8 @@
 package com.company;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Solution {
     static public void main(String[] args) {
@@ -19,19 +21,19 @@ public class Solution {
     }
 
     public boolean solution(String[] phone_book) {
-        boolean answer = true;
+        // 해쉬를 사용한 방법 - HashSet 에 모든 phone_book 데이터를 넣는다.
+        Set<String> set = new HashSet<String>(Arrays.asList(phone_book));
 
-        //정렬 - 문자열 정렬이므로 사전순으로 정렬됨
-        Arrays.sort(phone_book);
-
-        // 사전순 정렬이면 비슷한 단어끼리 정렬이 되고
-        // 길이가 짧은 문자열이 무조건 앞에 오므로
-        // 앞에 있는 문자열이 뒤에 있는 문자열의 시작문자 인지 확인만 하면 된다.
-        for (int i = 0; i < phone_book.length - 1; i++) {
-            if(i + 1 < phone_book.length && phone_book[i + 1].startsWith(phone_book[i]))
-                return false;
+        //phone_book 데이터 하나씩 꺼내서 substring 으로 글자를 쪼개면서
+        //쪼갠 글자가 HashSet 안에 있는지 확인한다. 있으면 return false
+        //이렇게 해도 시간이 짧게 걸리는 이유는 ?
+            // Hash를 사용할 경우 탐색 , 조회 의 시간 복잡도가 O(1) 이기 때문에 가능
+        for (String phone : phone_book) {
+            for (int i = 1; i < phone.length(); i++) {
+                if(set.contains(phone.substring(0, i))) return false;
+            }
         }
 
-        return answer;
+        return true;
     }
 }
