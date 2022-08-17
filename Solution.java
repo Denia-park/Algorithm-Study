@@ -27,7 +27,7 @@ public class Solution {
         //phone_book 데이터 하나씩 꺼내서 substring 으로 글자를 쪼개면서
         //쪼갠 글자가 HashSet 안에 있는지 확인한다. 있으면 return false
         //이렇게 해도 시간이 짧게 걸리는 이유는 ?
-            // Hash를 사용할 경우 탐색 , 조회 의 시간 복잡도가 O(1) 이기 때문에 가능
+            // Hash를 사용할 경우 삽입, 검색 의 시간 복잡도가 O(1) 이기 때문에 가능
         for (String phone : phone_book) {
             for (int i = 1; i < phone.length(); i++) {
                 if(set.contains(phone.substring(0, i))) return false;
