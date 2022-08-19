@@ -1,87 +1,21 @@
 package com.company;
 
+// https://yummy0102.tistory.com/359 참고함
 class Solution {
-    char[] quizCharArr;
-    int curIndex;
-    int answer;
-    public int solution(String quizString) {
-        int strLen = quizString.length();
-        int minAnswer = Integer.MAX_VALUE;
+    public int solution(String name) {
+        int answer = 0;
+        int index;
+        int move = name.length()-1;
 
-        for (int i = 0; i < strLen; i++) {
-            curIndex = i;
-            answer = 0;
-            quizCharArr = quizString.toCharArray();
+        for(int i=0;i<name.length();i++) {
+            answer += Math.min(name.charAt(i) - 'A', ('Z' + 1) - name.charAt(i));
 
-            String answerString = "";
-
-            for (int j = 0; j < strLen; j++)
-                answerString += "A";
-
-            while (!String.valueOf(quizCharArr).equals(answerString)) {
-                if(quizCharArr[curIndex] == 'A'){
-                    curIndex = findNextIndex();
-                }else{
-                    changeCurCharToA();
-                }
+            index = i+1;
+            while(index<name.length() && name.charAt(index) == 'A') {
+                index++;
             }
-            minAnswer = Math.min(minAnswer, answer);
+            move = Math.min(move, Math.min(i*2+name.length()-index,(name.length()-index)*2 + i));
         }
-
-        return minAnswer;
-    }
-
-    private void changeCurCharToA() {
-        answer += Math.min((quizCharArr[curIndex] - 'A'), ('Z' + 1) - quizCharArr[curIndex]);
-        quizCharArr[curIndex] = 'A';
-    }
-    private int findNextIndex() {
-        int plusAmount = 0;
-        boolean plusGetFlag = false;
-        int minusAmount = 0;
-        boolean minusGetFlag = false;
-
-        //현재 인덱스에서 양수로 옮기면서 A 아닌 값을 확인
-        for (int i = curIndex ; i < quizCharArr.length; i++) {
-            if(quizCharArr[i] != 'A'){
-                plusGetFlag = true;
-                break;
-            }
-            plusAmount ++;
-        }
-        if(!plusGetFlag){
-            for (int i = 0; i < curIndex; i++) {
-                if(quizCharArr[i] != 'A'){
-                    break;
-                }
-                plusAmount ++;
-            }
-        }
-
-        //현재 인덱스에서 음수로 옮기면서 A 아닌 값을  확인
-        for (int i = curIndex; i >= 0; i--) {
-            if(quizCharArr[i] != 'A'){
-                plusGetFlag = true;
-                break;
-            }
-            minusAmount++;
-        }
-        if(!minusGetFlag){
-            for (int i = quizCharArr.length - 1; i > curIndex; i--) {
-                if(quizCharArr[i] != 'A'){
-                    break;
-                }
-                minusAmount++;
-            }
-        }
-
-        if(plusAmount <= minusAmount){
-            answer += plusAmount;
-            return (curIndex + plusAmount) % quizCharArr.length;
-        }
-        else{
-            answer += minusAmount;
-            return (curIndex + quizCharArr.length - minusAmount) % quizCharArr.length;
-        }
+        return answer + move;
     }
 }
