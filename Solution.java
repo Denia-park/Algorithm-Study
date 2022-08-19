@@ -6,24 +6,29 @@ class Solution {
     int answer;
     public int solution(String quizString) {
         int strLen = quizString.length();
-        String answerString = "";
+        int minAnswer = Integer.MAX_VALUE;
 
-        curIndex = strLen-1;
-        answer = 0;
-        quizCharArr = quizString.toCharArray();
+        for (int i = 0; i < strLen; i++) {
+            curIndex = i;
+            answer = 0;
+            quizCharArr = quizString.toCharArray();
 
-        for (int i = 0; i < strLen; i++)
-            answerString += "A";
+            String answerString = "";
 
-        while (!String.valueOf(quizCharArr).equals(answerString)) {
-            if(quizCharArr[curIndex] == 'A'){
-                curIndex = findNextIndex();
-            }else{
-                changeCurCharToA();
+            for (int j = 0; j < strLen; j++)
+                answerString += "A";
+
+            while (!String.valueOf(quizCharArr).equals(answerString)) {
+                if(quizCharArr[curIndex] == 'A'){
+                    curIndex = findNextIndex();
+                }else{
+                    changeCurCharToA();
+                }
             }
+            minAnswer = Math.min(minAnswer, answer);
         }
 
-        return answer;
+        return minAnswer;
     }
 
     private void changeCurCharToA() {

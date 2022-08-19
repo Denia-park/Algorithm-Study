@@ -11,11 +11,11 @@ public class Main {
 
 //        System.out.println(testSolution.solution("JEROEN") == 56);
 //        System.out.println(testSolution.solution("JAN") == 23);
-//        System.out.println(testSolution.solution("JEROEN"));
-//        System.out.println(testSolution.solution("JAN"));
-//        System.out.println(testSolution.solution("JAZ"));
-//        System.out.println(testSolution.solution("AAB"));
-        System.out.println(testSolution.solution("ABAAABB"));
+        System.out.println(testSolution.solution("JEROEN"));
+        System.out.println(testSolution.solution("JAN"));
+        System.out.println(testSolution.solution("JAZ"));
+        System.out.println(testSolution.solution("AAB"));
+//        System.out.println(testSolution.solution("ABAAABB"));
 //        System.out.println(testSolution.solution("BBABAAAABBBAAAABABB"));
 //        System.out.println(testSolution.solution("BBAAAAAABBBAAAAAABB"));
 //        System.out.println(testSolution.solution("BBBAAAAAAAB"));
