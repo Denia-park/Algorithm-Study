@@ -1,21 +1,63 @@
 package com.company;
 
-// https://yummy0102.tistory.com/359 참고함
+import java.util.Arrays;
+import java.util.Comparator;
+
 class Solution {
-    public int solution(String name) {
-        int answer = 0;
-        int index;
-        int move = name.length()-1;
+    public String solution(int[] numbers) {
+        StringBuilder answer = new StringBuilder();
 
-        for(int i=0;i<name.length();i++) {
-            answer += Math.min(name.charAt(i) - 'A', ('Z' + 1) - name.charAt(i));
+        Integer[] numbersInt = new Integer[numbers.length];
 
-            index = i+1;
-            while(index<name.length() && name.charAt(index) == 'A') {
-                index++;
-            }
-            move = Math.min(move, Math.min(i*2+name.length()-index,(name.length()-index)*2 + i));
+        Arrays.setAll(numbersInt , index -> numbers[index]);
+
+        Arrays.sort(numbersInt, new MyComparator());
+
+        for (Integer i : numbersInt) {
+            answer.append(i);
         }
-        return answer + move;
+        return answer.toString();
+    }
+
+    //앞자리 수가 큰게 맨 앞으로 와야함
+    //총 자리수가 작은게 먼저 앞으로 와야함
+    class MyComparator implements Comparator<Integer>{
+        @Override
+        public int compare(Integer a, Integer b) {
+            int tempA = a;
+            int tempB = b;
+            int aLen = String.valueOf(tempA).length();
+            int bLen = String.valueOf(tempB).length();
+            int aDivideNum = (int) Math.pow(10,aLen-1);
+            int bDivideNum = (int) Math.pow(10,bLen-1);
+            int aFirstNum = a / (int) Math.pow(10,aLen-1);
+            int bFirstNum = b / (int) Math.pow(10,bLen-1);
+            if(aLen == bLen){
+                if(tempA>tempB) return -1;
+            }else{
+                for (int i = 0; i < Math.max(aLen,bLen); i++) {
+                    if(tempA != 0 && tempB != 0){
+                        if((tempA / aDivideNum) > (tempB / bDivideNum)){
+                            return -1;
+                        }
+                        tempA %= aDivideNum;
+                        tempB %= bDivideNum;
+                        aDivideNum /= 10;
+                        bDivideNum /= 10;
+                    }else{
+                        if(aDivideNum == 0){
+                            int bRestNum = tempB / bDivideNum;
+                            if(aFirstNum > bRestNum) return -1;
+                            else return 1;
+                        }else{ //aDivideNum == 0
+                            int aRestNum = tempA / aDivideNum;
+                            if(aRestNum < bFirstNum) return 1;
+                            else return -1;
+                        }
+                    }
+                }
+            }
+            return 0;
+        }
     }
 }

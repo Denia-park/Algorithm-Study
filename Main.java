@@ -5,21 +5,17 @@ public class Main {
         Solution testSolution = new Solution();
 
 //        String[] quizArr1_a = {"AN", "CF", "MJ", "RT", "NA"};
-//        int[] quizArr1_b = {5, 3, 2, 7, 5};
+        int[] quizArr1_b = {6, 10, 2};
 //        String[] quizArr2_a = {"TR", "RT", "TR"};
-//        int[] quizArr2_b = {7,1,3};
+        int[] quizArr2_b = {3, 30, 34, 5, 9};
+        int[] quizArr3_b = {3, 30, 34};
 
-//        System.out.println(testSolution.solution("JEROEN") == 56);
-//        System.out.println(testSolution.solution("JAN") == 23);
-//        System.out.println(testSolution.solution("JEROEN"));
-//        System.out.println(testSolution.solution("JAN"));
-//        System.out.println(testSolution.solution("JAZ"));
-//        System.out.println(testSolution.solution("ABABAABA"));
-        System.out.println(testSolution.solution("AABAAAAABBB"));
-//        System.out.println(testSolution.solution("ABAAABB"));
-//        System.out.println(testSolution.solution("BBABAAAABBBAAAABABB"));
-//        System.out.println(testSolution.solution("BBAAAAAABBBAAAAAABB"));
-//        System.out.println(testSolution.solution("BBBAAAAAAAB"));
-//        System.out.println(testSolution.solution("ABAAAAAAAAABB"));
+//        System.out.println(testSolution.solution(quizArr1_b).equals("6210"));
+//        System.out.println(testSolution.solution(quizArr2_b).equals("9534330"));
+//        System.out.println(testSolution.solution(quizArr1_b));
+//        System.out.println(testSolution.solution(quizArr2_b));
+//        System.out.println(testSolution.solution(new int[]{1,10 ,11, 110, 1110,0}));
+        System.out.println(testSolution.solution(new int[]{1,11,110}));
+
     }
 }
