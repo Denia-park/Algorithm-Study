@@ -24,38 +24,18 @@ class Solution {
     class MyComparator implements Comparator<Integer>{
         @Override
         public int compare(Integer a, Integer b) {
-            int tempA = a;
-            int tempB = b;
-            int aLen = String.valueOf(tempA).length();
-            int bLen = String.valueOf(tempB).length();
-            int aDivideNum = (int) Math.pow(10,aLen-1);
-            int bDivideNum = (int) Math.pow(10,bLen-1);
-            int aFirstNum = a / (int) Math.pow(10,aLen-1);
-            int bFirstNum = b / (int) Math.pow(10,bLen-1);
-            if(aLen == bLen){
-                if(tempA>tempB) return -1;
-            }else{
-                for (int i = 0; i < Math.max(aLen,bLen); i++) {
-                    if(tempA != 0 && tempB != 0){
-                        if((tempA / aDivideNum) > (tempB / bDivideNum)){
-                            return -1;
-                        }
-                        tempA %= aDivideNum;
-                        tempB %= bDivideNum;
-                        aDivideNum /= 10;
-                        bDivideNum /= 10;
-                    }else{
-                        if(aDivideNum == 0){
-                            int bRestNum = tempB / bDivideNum;
-                            if(aFirstNum > bRestNum) return -1;
-                            else return 1;
-                        }else{ //aDivideNum == 0
-                            int aRestNum = tempA / aDivideNum;
-                            if(aRestNum < bFirstNum) return 1;
-                            else return -1;
-                        }
-                    }
-                }
+            char[] aChars = a.toString().toCharArray();
+            char[] bChars = b.toString().toCharArray();
+
+            int aIndex = 0;
+            int bIndex = 0;
+            for (int i = 0; i < Math.max(aChars.length, bChars.length); i++) {
+                if(aChars[aIndex] > bChars[bIndex]) return -1;
+                else if(aChars[aIndex] < bChars[bIndex])return 1;
+
+                //Index 이므로 -1까지만 증가를 해야함
+                if(aIndex < aChars.length -1) aIndex++;
+                if(bIndex < bChars.length -1) bIndex++;
             }
             return 0;
         }
