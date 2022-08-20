@@ -16,7 +16,8 @@ class Solution {
         for (Integer i : numbersInt) {
             answer.append(i);
         }
-        return answer.toString();
+
+        return answer.toString().charAt(0) == '0' ? "0" : answer.toString() ;
     }
 
     //앞자리 수가 큰게 맨 앞으로 와야함
