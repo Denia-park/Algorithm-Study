@@ -15,8 +15,9 @@ public class Main {
 //        System.out.println(testSolution.solution(quizArr1_b));
 //        System.out.println(testSolution.solution(quizArr2_b));
 //        System.out.println(testSolution.solution(new int[]{1,10 ,11, 110, 1110,0}));
-        System.out.println(testSolution.solution(new int[]{101, 10, 232, 23}));
-        System.out.println(testSolution.solution(new int[]{0,0,0}));
+//        System.out.println(testSolution.solution(new int[]{101, 10, 232, 23}));
+//        System.out.println(testSolution.solution(new int[]{978, 97}));
+        System.out.println(testSolution.solution(new int[]{98, 991, 990, 989, 988, 987}));
 
     }
 }
