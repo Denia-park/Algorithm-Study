@@ -54,10 +54,10 @@ class Solution {
         tempPrimeNumArray[0] = false;
         tempPrimeNumArray[1] = false;
 
-        for (int i = 0; i < Math.sqrt(maxValue + 1); i++) {
+        for (int i = 0; i <= Math.sqrt(maxValue); i++) {
             if(tempPrimeNumArray[i]){
                 if(isPrimeNum(i)){
-                    for (int j = i*2; j < maxValue + 1; j += i) {
+                    for (int j = i*2; j <= maxValue; j += i) {
                         tempPrimeNumArray[j] = false;
                     }
                 }else{
