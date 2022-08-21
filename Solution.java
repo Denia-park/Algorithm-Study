@@ -23,7 +23,6 @@ class Solution {
         permuSet = new HashSet<Integer>();
         //방문처리를 확인할 booleanArr 생성
         isVisited = new boolean[numbers.length()];
-
         //maxValue 이므로 0으로 초기화
         maxValue = 0;
 
@@ -47,42 +46,28 @@ class Solution {
 
         return answer;
     }
-
+    //에라스토테네스의 채 이용해서 소수 배열 구하기.
     private boolean[] getPrimeNumCount(int maxValue) {
         boolean[] tempPrimeNumArray = new boolean[maxValue + 1]; // maxValue 까지 포함해야 하므로 + 1
+        //모든 원소가 소수라고 초기값을 주고 시작
         Arrays.fill(tempPrimeNumArray, true);
+        //0 ,1 은 소수가 아니므로 false
         tempPrimeNumArray[0] = false;
         tempPrimeNumArray[1] = false;
 
+        //제곱근까지만 포함해서 소수의 배수들을 제외시켜주면 소수 배열이 나온다.
+        // (제곱근도 값에 포함이 되야하므로 = 필요함)
         for (int i = 0; i <= Math.sqrt(maxValue); i++) {
+            //소수인 애들만 꼭 집어서 개네들의 배수들을 소수에서 제외시켜준다.
             if(tempPrimeNumArray[i]){
-                if(isPrimeNum(i)){
-                    for (int j = i*2; j <= maxValue; j += i) {
-                        tempPrimeNumArray[j] = false;
-                    }
-                }else{
-                    tempPrimeNumArray[i] = false;
+                //마지막값도 포함을 해야하므로 = 포함시키기.
+                for (int j = i*2; j <= maxValue; j += i) {
+                    tempPrimeNumArray[j] = false;
                 }
             }
         }
 
         return tempPrimeNumArray;
-    }
-
-    //소수인지 판단
-    private boolean isPrimeNum(int num) {
-        // 0 1은 소수가 아님
-        if(num == 0 || num == 1 ){
-            return false;
-        }
-
-        //2부터 체크한다.
-        for (int i = 2; i < num; i++) {
-            if(num % i == 0)
-                return false;
-        }
-
-        return true;
     }
 
     //DFS를 통해 모든 순열을 구한다.
