@@ -38,20 +38,21 @@ class Solution {
         halfTotalSum = (totalSum / 2);
 
         int arrLength = totalArray.length;
+        int queueFirstIndex = 0;
         int queueLength = queue1.length;
 
-        for (int i = 0; i < arrLength/2 - 1; i++) {
-            arrSum = 0;
-            for (int j = i; j < i + queueLength; j++) {
-                arrSum += totalArray[j];
-            }
+        arrSum = sum1;
+
+        for (int i = 0; i < arrLength/2; i++) {
             if(arrSum == halfTotalSum){
                 return answer;
             }else if(arrSum > halfTotalSum){
+                arrSum -= totalArray[queueFirstIndex];
                 queueLength -= 1;
+                queueFirstIndex ++;
             }else{
+                arrSum += totalArray[queueFirstIndex + queueLength];
                 queueLength += 1;
-                i -= 1;
             }
             answer++;
         }
