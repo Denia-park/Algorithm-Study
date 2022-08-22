@@ -15,8 +15,8 @@ public class Main {
 //        int[] quizArr2_b = {1, 10, 1, 2};
 //        int[] quizArr3_a = {1, 1};
 //        int[] quizArr3_b = {1, 5};
-        int[] quizArr3_a = {1, 2,3,4};
-        int[] quizArr3_b = {5,6,7,8};
+        int[] quizArr3_a = {3,6,9,12};
+        int[] quizArr3_b = {2,2,2,2};
 
 
 //        System.out.println(testSolution.solution(quizArr1_a, quizArr1_b));

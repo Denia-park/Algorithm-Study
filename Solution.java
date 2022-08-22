@@ -7,10 +7,10 @@ class Solution {
     long halfTotalSum;
     public int solution(int[] queue1, int[] queue2) {
         int answer = 0;
-
-        long totalSum = 0;
         long sum1 = 0;
         long sum2 = 0;
+        long totalSum = 0;
+        halfTotalSum = 0;
 
         Queue<Integer> newQueue1 = new LinkedList<>();
         for (int i : queue1) {
@@ -29,40 +29,36 @@ class Solution {
         if (totalSum % 2 != 0) return -1;
 
         halfTotalSum = (totalSum / 2);
-        while (!((sum1 == halfTotalSum) && (sum2 == halfTotalSum))) {
-            if (sum1 > halfTotalSum) {
-                if(moveValueToAnotherQueue(newQueue1, newQueue2))
+        while (sum1 != sum2) {
+            if (sum1 > sum2) {
+                int movingValue = moveValueToAnotherQueue(newQueue1, newQueue2);
+                if(movingValue != -1){
+                    sum1 -= movingValue;
+                    sum2 += movingValue;
                     answer ++;
+                }
                 else
                     return -1;
             }
-            else if (sum2 > halfTotalSum) {
-                if(moveValueToAnotherQueue(newQueue2, newQueue1))
+            else{
+                int movingValue = moveValueToAnotherQueue(newQueue2, newQueue1);
+                if(movingValue != -1){
+                    sum2 -= movingValue;
+                    sum1 += movingValue;
                     answer ++;
+                }
                 else
                     return -1;
             }
-
-            sum1 = getSum(newQueue1);
-            sum2 = getSum(newQueue2);
         }
 
         return answer;
     }
 
-    private boolean moveValueToAnotherQueue(Queue<Integer> sourceQueue, Queue<Integer> destQueue) {
-        boolean rtVal = true;
+    private int moveValueToAnotherQueue(Queue<Integer> sourceQueue, Queue<Integer> destQueue) {
         int sourceFirstValue = sourceQueue.poll();
-        if(sourceFirstValue > halfTotalSum) return false;
+        if(sourceFirstValue > halfTotalSum) return -1;
         destQueue.add(sourceFirstValue);
-        return rtVal;
-    }
-
-    private long getSum(Queue<Integer> queue) {
-        long rtVal = 0;
-        for (int i : queue) {
-            rtVal += i;
-        }
-        return rtVal;
+        return sourceFirstValue;
     }
 }
