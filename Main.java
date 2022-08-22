@@ -15,12 +15,12 @@ public class Main {
         int[] quizArr2_b = {1, 10, 1, 2};
 //        int[] quizArr3_a = {1, 1};
 //        int[] quizArr3_b = {1, 5};
-        int[] quizArr3_a = {1,1,1,1,1};
-        int[] quizArr3_b = {1,1,1,2,2};
+        int[] quizArr3_a = {1,1,1,8,10,9};
+        int[] quizArr3_b = {1,1,1,1,1,1};
 
 
-        System.out.println(testSolution.solution(quizArr1_a, quizArr1_b));
-        System.out.println(testSolution.solution(quizArr2_a,quizArr2_b ));
+//        System.out.println(testSolution.solution(quizArr1_a, quizArr1_b));
+//        System.out.println(testSolution.solution(quizArr2_a,quizArr2_b ));
         System.out.println(testSolution.solution(quizArr3_a, quizArr3_b));
 
     }
