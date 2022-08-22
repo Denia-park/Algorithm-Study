@@ -1,97 +1,78 @@
 package com.company;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Solution {
-    //순열을 모아두기 위한 Set 생성
-    Set<Integer> permuSet;
-    //순열조합시 나올수있는 길이를 저장
-    int length;
-    //에라스토테네스의 채를 구할때 사용할 maxValue
-    int maxValue;
-    //받아온 numbers를 char[] 로 저장
-    char[] numbersCharArr;
-    //DFS 사용시에 방문처리르 확인
-    boolean[] isVisited;
-    public int solution(String numbers) {
+    long halfTotalSum;
+    public int solution(int[] queue1, int[] queue2) {
         int answer = 0;
-        //charArr 로 변환
-        numbersCharArr = numbers.toCharArray();
-        //set 생성
-        permuSet = new HashSet<Integer>();
-        //방문처리를 확인할 booleanArr 생성
-        isVisited = new boolean[numbers.length()];
-        //maxValue 이므로 0으로 초기화
-        maxValue = 0;
+        long sum1 = 0;
+        long sum2 = 0;
+        long totalSum = 0;
+        halfTotalSum = 0;
 
-        // 모든 순열 찾기
-        for (int i = 1; i <= numbers.length(); i++) {
-            //길이를 지정
-            length = i;
-            //DFS를 통해 모든 순열을 찾는다.
-            findAllPermutationByDFS("");
+        //Queue1 을 생성하고 값을 입력 후 sum1 을 계산
+        Queue<Integer> newQueue1 = new LinkedList<>();
+        for (int i : queue1) {
+            sum1 += i;
+            newQueue1.add(i);
         }
 
-        //에라스토테네스의 채 이용해서 소수 배열 구하기.
-        boolean[] primeNumArray = getPrimeNumCount(maxValue);
+        //Queue2 을 생성하고 값을 입력 후 sum2 을 계산
+        Queue<Integer> newQueue2 = new LinkedList<>();
+        for (int i : queue2) {
+            sum2 += i;
+            newQueue2.add(i);
+        }
 
-        //순열 Set을 돌면서 해당 숫자가 소수인지 판별
-        for (Integer integer : permuSet) {
-            //소수가 맞으면 answer 에 + 1
-            if(primeNumArray[integer])
-                answer++;
+        //TotalSum 계산
+        totalSum = sum1 + sum2;
+
+        //totalSum 이 홀수라면 바로 return -1
+        if (totalSum % 2 != 0) return -1;
+
+        //전체 값의 절반을 구한다.
+        halfTotalSum = (totalSum / 2);
+
+        //sum1 , sum2 다르면 while 루프 실행
+        while (sum1 != sum2) {
+            //버퍼를 아무리 움직여도 queue1.length * 3 이상 움직인 경우는 더 이상 옮겨도 답을 구할 수 없으므로 -1을 return 한다.
+            if(answer > queue1.length * 3) return -1;
+
+            //Sum1 이 크면 Queue1 의 poll 하고 Queue2 에 Add
+            if (sum1 > sum2) {
+                int movingValue = moveValueToAnotherQueue(newQueue1, newQueue2);
+                if(movingValue != -1){
+                    sum1 -= movingValue;
+                    sum2 += movingValue;
+                    answer ++;
+                }
+                else
+                    return -1;
+            }
+            //Sum2 이 크면 Queue2 의 poll 하고 Queue1 에 Add
+            else{
+                int movingValue = moveValueToAnotherQueue(newQueue2, newQueue1);
+                if(movingValue != -1){
+                    sum2 -= movingValue;
+                    sum1 += movingValue;
+                    answer ++;
+                }
+                else
+                    return -1;
+            }
         }
 
         return answer;
     }
-    //에라스토테네스의 채 이용해서 소수 배열 구하기.
-    private boolean[] getPrimeNumCount(int maxValue) {
-        boolean[] tempPrimeNumArray = new boolean[maxValue + 1]; // maxValue 까지 포함해야 하므로 + 1
-        //모든 원소가 소수라고 초기값을 주고 시작
-        Arrays.fill(tempPrimeNumArray, true);
-        //0 ,1 은 소수가 아니므로 false
-        tempPrimeNumArray[0] = false;
-        tempPrimeNumArray[1] = false;
 
-        //제곱근까지만 포함해서 소수의 배수들을 제외시켜주면 소수 배열이 나온다.
-        // (제곱근도 값에 포함이 되야하므로 = 필요함)
-        for (int i = 0; i <= Math.sqrt(maxValue); i++) {
-            //소수인 애들만 꼭 집어서 개네들의 배수들을 소수에서 제외시켜준다.
-            if(tempPrimeNumArray[i]){
-                //마지막값도 포함을 해야하므로 = 포함시키기.
-                for (int j = i*2; j <= maxValue; j += i) {
-                    tempPrimeNumArray[j] = false;
-                }
-            }
-        }
-
-        return tempPrimeNumArray;
-    }
-
-    //DFS를 통해 모든 순열을 구한다.
-    //savedStr 를 통해 재귀함수에서 현재까지 완성된 String 을 확인한다.
-    private void findAllPermutationByDFS(String savedStr) {
-        //전역변수 length 를 통해서 길이에 맞으면 set에 저장
-        if(savedStr.length() == length){
-            //set 저장시에 maxValue 를 구하기 위해서 tempValue 사용
-            int tempValue = Integer.parseInt(savedStr);
-            maxValue = Math.max(maxValue, tempValue);
-            permuSet.add(tempValue);
-        }
-
-        //아직 방문처리 되지 않은 숫자들을 돌면서 순열을 생성 , 재귀함수 사용
-        for (int i = 0; i < numbersCharArr.length; i++) {
-            //방문처리 안되었으면 방문
-            if(!isVisited[i]){
-                //재귀함수 타기전 방문 처리
-                isVisited[i] = true;
-                //재귀함수 돌입
-                findAllPermutationByDFS(savedStr + numbersCharArr[i]);
-                //재귀함수에서 빠져 나왔으면 방문 처리 취소
-                isVisited[i] = false;
-            }
-        }
+    private int moveValueToAnotherQueue(Queue<Integer> sourceQueue, Queue<Integer> destQueue) {
+        int sourceFirstValue = sourceQueue.poll();
+        //poll 한 값이 halfTotalSum 보다 크면 아무리 계산해도 큐의 합을 맞출 수 없으므로 -1을 return 하고
+        //해당 메서드 외부에서 해당 메서드의 return 값이 -1 이 나오면 solution 메서드의 값을 -1로 return 하게 만듬
+        if(sourceFirstValue > halfTotalSum) return -1;
+        destQueue.add(sourceFirstValue);
+        return sourceFirstValue;
     }
 }
