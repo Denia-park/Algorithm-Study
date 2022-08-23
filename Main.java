@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Arrays;
+
 public class Main {
     static public void main(String[] args) {
         Solution testSolution = new Solution();
@@ -9,19 +11,14 @@ public class Main {
 //        String[] quizArr2_a = {"TR", "RT", "TR"};
 //        int[] quizArr2_b = {3, 30, 34, 5, 9};
 
-        int[] quizArr1_a = {3, 2, 7, 2};
-        int[] quizArr1_b = {4, 6, 5, 1};
-        int[] quizArr2_a = {1, 2, 1, 2};
-        int[] quizArr2_b = {1, 10, 1, 2};
-//        int[] quizArr3_a = {1, 1};
-//        int[] quizArr3_b = {1, 5};
-        int[] quizArr3_a = {1,1,1,8,10,9};
-        int[] quizArr3_b = {1,1,1,1,1,1};
+        String [] quizArr1_a = {"SL","LR"};
+        String [] quizArr2_a = {"S"};
+        String [] quizArr3_a = {"R","R"};
 
 
-//        System.out.println(testSolution.solution(quizArr1_a, quizArr1_b));
-//        System.out.println(testSolution.solution(quizArr2_a,quizArr2_b ));
-        System.out.println(testSolution.solution(quizArr3_a, quizArr3_b));
+        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a)));
+//        System.out.println(Arrays.toString(testSolution.solution(quizArr2_a)));
+        System.out.println(Arrays.toString(testSolution.solution(quizArr3_a)));
 
     }
 }
