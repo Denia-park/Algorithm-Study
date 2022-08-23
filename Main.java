@@ -16,9 +16,9 @@ public class Main {
         String [] quizArr3_a = {"R","R"};
 
 
-//        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a)));
-        System.out.println(Arrays.toString(testSolution.solution(quizArr2_a)));
-//        System.out.println(Arrays.toString(testSolution.solution(quizArr3_a)));
+        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a)));
+//        System.out.println(Arrays.toString(testSolution.solution(quizArr2_a)));
+        System.out.println(Arrays.toString(testSolution.solution(quizArr3_a)));
 
     }
 }
