@@ -11,14 +11,10 @@ public class Main {
 //        String[] quizArr2_a = {"TR", "RT", "TR"};
 //        int[] quizArr2_b = {3, 30, 34, 5, 9};
 
-        String [] quizArr1_a = {"SL","LR"};
-        String [] quizArr2_a = {"S"};
-        String [] quizArr3_a = {"R","R"};
 
-
-        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a)));
-//        System.out.println(Arrays.toString(testSolution.solution(quizArr2_a)));
-        System.out.println(Arrays.toString(testSolution.solution(quizArr3_a)));
+        System.out.println(testSolution.solution("(()())()").equals("(()())()"));
+        System.out.println(testSolution.solution(")(").equals("()"));
+        System.out.println(testSolution.solution("()))((()").equals( "()(())()"));
 
     }
 }
