@@ -10,11 +10,17 @@ public class Main {
 //        int[] quizArr1_b = {6, 10, 2};
 //        String[] quizArr2_a = {"TR", "RT", "TR"};
 //        int[] quizArr2_b = {3, 30, 34, 5, 9};
+        String[][] places =
+                {
+                        {"POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"},
+                        {"POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"},
+                        {"PXOPX", "OXOXP", "OXPOX", "OXXOP", "PXPOX"},
+                        {"OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"},
+                        {"PXPXP", "XPXPX", "PXPXP", "XPXPX", "PXPXP"}
+                };
 
 
-        System.out.println(testSolution.solution("(()())()").equals("(()())()"));
-        System.out.println(testSolution.solution(")(").equals("()"));
-        System.out.println(testSolution.solution("()))((()").equals( "()(())()"));
+        System.out.println(Arrays.toString(testSolution.solution(places)));
 
     }
 }
