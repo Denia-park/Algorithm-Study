@@ -15,6 +15,7 @@ class Solution {
             Map<Integer, Integer> maxValueMap = new HashMap<Integer, Integer>();
 
             for (String order : orders) {
+                if(order.length() < courseNum) continue;
                 tempGlobalSet = new HashSet<>();
                 dfsString = order;
                 isVisited = new boolean[dfsString.length()];
