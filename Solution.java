@@ -3,7 +3,7 @@ package com.company;
 import java.util.*;
 
 class Solution {
-    String dfsString;
+    String bfsString;
     Set<String> tempGlobalSet;
     boolean[] isVisited;
 
@@ -15,10 +15,19 @@ class Solution {
 
         for (String order : orders) {
             tempGlobalSet = new HashSet<>();
-            dfsString = order;
+            char[] tempCharArr = order.toCharArray();
+            Arrays.sort(tempCharArr);
 
-            isVisited = new boolean[dfsString.length()];
-            dfs("");
+            for (int i = 0; i < order.length(); i++) {
+                bfsString = String.valueOf(tempCharArr).substring(i);
+                // i = 0 일때는 제외 , 왜냐 1글자는 필요없어서
+                for (int j = 1; j < bfsString.length(); j++) {
+                    String bfsSubString = bfsString.substring(0, j);
+                    for (int k = j; k < bfsString.length(); k++) {
+                        tempGlobalSet.add("" + bfsSubString + bfsString.charAt(k));
+                    }
+                }
+            }
 
             for (String element : tempGlobalSet) {
                 int elementLen = element.length();
@@ -27,44 +36,34 @@ class Solution {
             }
         }
 
-        for (String str : orderCountMap.keySet()) {
-            if (orderCountMap.get(str) != 1 && Objects.equals(courseAndMaxValueMap.get(str.length()), orderCountMap.get(str))) {
-                answer.add(str);
+        for (int i = 0; i < course.length; i++) {
+            int courseMaxCount = courseAndMaxValueMap.getOrDefault(course[i],-1);
+            if(courseMaxCount == -1) continue;
+
+            for (String str : orderCountMap.keySet()) {
+                if(str.length() == course[i] && courseAndMaxValueMap.get(str.length()) == orderCountMap.get(str) && orderCountMap.get(str) != 1)
+                    answer.add(str);
             }
         }
 
         answer.sort(null);
 
-        tempGlobalSet = new HashSet<>();
-
-        for (String str : answer) {
-            char[] tempStr = str.toCharArray();
-            Arrays.sort(tempStr);
-            tempGlobalSet.add(String.valueOf(tempStr));
-        }
-
-        String[] answerArr = tempGlobalSet.toArray(new String[0]);
-
-        Arrays.sort(answerArr);
-
-        return answerArr;
-    }
-
-    private void dfs(String str) {
-        if (str.length() > 1) {
-            tempGlobalSet.add(str);
-            if(str.length() == dfsString.length())
-                return;
-        }
-
-        for (int i = 0; i < dfsString.length(); i++) {
-            if (!isVisited[i]) {
-                isVisited[i] = true;
-                dfs(str + dfsString.charAt(i));
-                isVisited[i] = false;
-            }
-        }
+        return answer.toArray(new String[0]);
     }
 }
 
-
+//        for (int i = 1; i < bfsString.length(); i++) {
+//            tempGlobalSet.add("" + bfsString.substring(0,1) + bfsString.charAt(i));
+//        }
+//
+//        for (int i = 2; i < bfsString.length(); i++) {
+//            tempGlobalSet.add("" + bfsString.substring(0,2) + bfsString.charAt(i));
+//        }
+//
+//        for (int i = 3; i < bfsString.length(); i++) {
+//            tempGlobalSet.add("" + bfsString.substring(0,3) + bfsString.charAt(i));
+//        }
+//
+//        for (int i = 4; i < bfsString.length(); i++) {
+//            tempGlobalSet.add("" + bfsString.substring(0,4) + bfsString.charAt(i));
+//        }

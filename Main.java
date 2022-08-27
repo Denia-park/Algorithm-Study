@@ -13,9 +13,9 @@ public class Main {
         String[] quizArr3_a = {"XYZ", "XWY", "WXA"};
         int[] quizArr3_b = {2, 3, 4};
 
-        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
+//        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
         System.out.println(Arrays.toString(testSolution.solution(quizArr2_a, quizArr2_b)));
-        System.out.println(Arrays.toString(testSolution.solution(quizArr3_a, quizArr3_b)));
+//        System.out.println(Arrays.toString(testSolution.solution(quizArr3_a, quizArr3_b)));
 
     }
 }
