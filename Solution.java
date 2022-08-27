@@ -35,7 +35,8 @@ class Solution {
             // 8. 각 사람들의 조합을 구하기 위해 탐색.
             for (String order : orders) {
                 dfsString = order;
-                dfs("",0,courseNum);
+                StringBuilder sb = new StringBuilder();
+                dfs(sb,0,courseNum);
             }
 
             for (Map.Entry<String, Integer> entry : answerMap.entrySet()) {
@@ -56,18 +57,20 @@ class Solution {
     }
 
     // 13. 조합을 구하는 메소드 (한 사람의 메뉴구성, 조합을 구할 StringBuilder, 조합을 위한 idx, 코스요리 개수에 따른 종료조건을 위한 cnt와 n)
-    public void dfs(String curStr, int idx, int strLenLimit) {
+    public void dfs(StringBuilder curStr, int idx, int strLenLimit) {
         // 14. 각 코스요리의 개수만큼 조합이 되면,
         if (curStr.length() == strLenLimit) {
             // 15. map에 해당 조합을 삽입 및 카운팅.
-            answerMap.put(curStr, answerMap.getOrDefault(curStr, 0) + 1);
+            answerMap.put(curStr.toString(), answerMap.getOrDefault(curStr.toString(), 0) + 1);
             return;
         }
 
         // 16. idx부터 시작함으로써 조합을 구할 수 있다.
         for (int i = idx; i < dfsString.length(); i++) {
             // 18. 재귀호출.
-            dfs(curStr + dfsString.charAt(i), i + 1, strLenLimit);
+            curStr.append(dfsString.charAt(i));
+            dfs(curStr, i + 1, strLenLimit);
+            curStr.deleteCharAt(curStr.length()-1);
         }
     }
 }
