@@ -15,9 +15,8 @@ class Solution {
         minCourseValue = course[0];
         maxCourseValue = course[course.length - 1];
 
-        int[] courseMaxValue = new int[course.length];
-
         Map<String, Integer> answerMap = new HashMap<String, Integer>();
+        Map<Integer, Integer> maxValueMap = new HashMap<Integer, Integer>();
 
         for (String order : orders) {
 
@@ -30,17 +29,26 @@ class Solution {
 
             for (String element : tempGlobalSet) {
                 answerMap.put(element, answerMap.getOrDefault(element, 0) + 1);
-                for (int i = 0; i < course.length; i++) {
-                    if (element.length() == course[i]) {
-                        courseMaxValue[i] = Math.max(courseMaxValue[i], answerMap.get(element));
-                    }
+                if(maxValueMap.getOrDefault(element.length(),0) < answerMap.get(element)){
+                    maxValueMap.put(element.length(),answerMap.get(element));
                 }
             }
         }
 
+        for (String str : answerMap.keySet()) {
+            if(answerMap.get(str) == 1)
+                answer.add(str);
+        }
+
+        for (String str : answer) {
+            answerMap.remove(str);
+        }
+
+        answer.clear();
+
         for (int i = 0; i < course.length; i++) {
             for (String str : answerMap.keySet()) {
-                if (answerMap.get(str) != 1 && str.length() == course[i] && answerMap.get(str) == courseMaxValue[i]) {
+                if (str.length() == course[i] && Objects.equals(answerMap.get(str), maxValueMap.get(str.length()))) {
                     answer.add(str);
                 }
             }
