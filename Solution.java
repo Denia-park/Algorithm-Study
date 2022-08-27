@@ -6,28 +6,27 @@ class Solution {
     String dfsString;
     Set<String> tempGlobalSet;
     boolean[] isVisited;
+    int minCourseValue;
+    int maxCourseValue;
 
     public String[] solution(String[] orders, int[] course) {
         List<String> answer = new ArrayList<String>();
 
-        char[] orderChars;
+        minCourseValue = course[0];
+        maxCourseValue = course[course.length - 1];
+
         int[] courseMaxValue = new int[course.length];
 
         Map<String, Integer> answerMap = new HashMap<String, Integer>();
 
         for (String order : orders) {
-            orderChars = order.toCharArray();
-
-            Arrays.sort(orderChars);
 
             tempGlobalSet = new HashSet<>();
 
-            //최소 2글자를 저장해야 하므로 length -1 까지만 확인한다.
-            for (int i = 0; i < orderChars.length - 1; i++) {
-                dfsString = String.valueOf(orderChars).substring(i);
-                isVisited = new boolean[dfsString.length()];
-                dfs("", 0);
-            }
+            dfsString = order;
+            isVisited = new boolean[dfsString.length()];
+
+            dfs("");
 
             for (String element : tempGlobalSet) {
                 answerMap.put(element, answerMap.getOrDefault(element, 0) + 1);
@@ -52,24 +51,18 @@ class Solution {
         return answer.toArray(new String[0]);
     }
 
-    private void dfs(String str, int depth) {
-        if (str.length() == dfsString.length()) {
+    private void dfs(String str) {
+        if (str.length() >= minCourseValue && maxCourseValue >= str.length()){
             char[] chars = str.toCharArray();
             Arrays.sort(chars);
             tempGlobalSet.add(String.valueOf(chars));
-            return;
-        } else {
-            if (str.length() > 1) {
-                char[] chars = str.toCharArray();
-                Arrays.sort(chars);
-                tempGlobalSet.add(String.valueOf(chars));
-            }
         }
+        if(str.length() == dfsString.length()) return;
 
         for (int i = 0; i < dfsString.length(); i++) {
             if (!isVisited[i]) {
                 isVisited[i] = true;
-                dfs(str + dfsString.charAt(i), depth + 1);
+                dfs(str + dfsString.charAt(i));
                 isVisited[i] = false;
             }
         }
