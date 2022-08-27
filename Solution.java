@@ -10,40 +10,31 @@ class Solution {
     public String[] solution(String[] orders, int[] course) {
         List<String> answer = new ArrayList<String>();
 
-        char[] orderChars;
         int[] courseMaxValue = new int[course.length];
 
-        Map<String, Integer> answerMap = new HashMap<String, Integer>();
+        Map<String, Integer> orderCountMap = new HashMap<String, Integer>();
+        Map<Integer, Integer> courseAndMaxValueMap = new HashMap<Integer, Integer>();
 
         for (String order : orders) {
-            orderChars = order.toCharArray();
-
-            Arrays.sort(orderChars);
-
             tempGlobalSet = new HashSet<>();
 
             //최소 2글자를 저장해야 하므로 length -1 까지만 확인한다.
-            for (int i = 0; i < orderChars.length - 1; i++) {
-                dfsString = String.valueOf(orderChars).substring(i);
+            for (int i = 0; i < order.length() - 1; i++) {
+                dfsString = order.substring(i);
                 isVisited = new boolean[dfsString.length()];
-                dfs("", 0);
+                dfs("");
             }
 
             for (String element : tempGlobalSet) {
-                answerMap.put(element, answerMap.getOrDefault(element, 0) + 1);
-                for (int i = 0; i < course.length; i++) {
-                    if (element.length() == course[i]) {
-                        courseMaxValue[i] = Math.max(courseMaxValue[i], answerMap.get(element));
-                    }
-                }
+                int elementLen = element.length();
+                orderCountMap.put(element, orderCountMap.getOrDefault(element, 0) + 1);
+                courseAndMaxValueMap.put(elementLen,Math.max(courseAndMaxValueMap.getOrDefault(elementLen,0), orderCountMap.get(element)));
             }
         }
 
-        for (int i = 0; i < course.length; i++) {
-            for (String str : answerMap.keySet()) {
-                if (answerMap.get(str) != 1 && str.length() == course[i] && answerMap.get(str) == courseMaxValue[i]) {
-                    answer.add(str);
-                }
+        for (String str : orderCountMap.keySet()) {
+            if (orderCountMap.get(str) != 1 && Objects.equals(courseAndMaxValueMap.get(str.length()), orderCountMap.get(str))) {
+                answer.add(str);
             }
         }
 
@@ -52,7 +43,7 @@ class Solution {
         return answer.toArray(new String[0]);
     }
 
-    private void dfs(String str, int depth) {
+    private void dfs(String str) {
         if (str.length() == dfsString.length()) {
             char[] chars = str.toCharArray();
             Arrays.sort(chars);
@@ -69,7 +60,7 @@ class Solution {
         for (int i = 0; i < dfsString.length(); i++) {
             if (!isVisited[i]) {
                 isVisited[i] = true;
-                dfs(str + dfsString.charAt(i), depth + 1);
+                dfs(str + dfsString.charAt(i));
                 isVisited[i] = false;
             }
         }
