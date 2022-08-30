@@ -3,13 +3,11 @@ package com.company;
 import java.util.*;
 
 class Solution {
-    int answer;
     int columnNumber;
-    int rowNumber;
     List<String> combinationList;
     public int solution(String[][] relation) {
-        answer = 0;
-        rowNumber = relation.length;
+        int answer = 0;
+        int rowNumber = relation.length;
         columnNumber = relation[0].length;
         combinationList = new ArrayList<>();
         List<List<Integer>> completeIndexList = new LinkedList<>();
@@ -39,7 +37,7 @@ class Solution {
                 boolean addFlag = true;
 
                 for (List<Integer> eachList : completeIndexList) {
-                    if ((indexList).containsAll(eachList)) {
+                    if (indexList.containsAll(eachList)) {
                         addFlag = false;
                         break;
                     }
@@ -48,7 +46,6 @@ class Solution {
                 if(!addFlag) continue;
 
                 completeIndexList.add(indexList);
-//                System.out.println("tempList : " + indexList);
                 answer++;
             }
         }
@@ -77,6 +74,9 @@ class MyComparator implements Comparator<String> {
     public int compare(String o1, String o2) {
         if(o1.length() < o2.length())
             return -1;
-        else return 0;
+        else if(o1.length() > o2.length())
+            return 1;
+        else
+            return o1.compareTo(o2);
     }
 }

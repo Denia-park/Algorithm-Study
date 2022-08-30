@@ -32,6 +32,12 @@ public class Main {
                         {"c","1","aaa","d","ng"},
                         {"d","2","bbb","d","ng"}
                 };
+        String[][] quizArr6_a =
+                {
+                        {"a", "1", "4"},
+                        {"2", "1", "5"},
+                        {"a", "2", "4"},
+                };
 
 
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
@@ -39,5 +45,6 @@ public class Main {
 //        System.out.println(testSolution.solution(quizArr3_a));
         System.out.println(testSolution.solution(quizArr4_a));
         System.out.println(testSolution.solution(quizArr5_a));
+        System.out.println(testSolution.solution(quizArr6_a));
     }
 }
