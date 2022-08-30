@@ -9,17 +9,19 @@ public class Main {
 //        String[] quizArr1_a = {"ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"};
 //        int[] quizArr1_b = {2,3,4};
 //        String[][] quizArr2_a = {{"yellow_hat", "headgear"}, {"blue_sunglasses", "eyewear"}, {"green_turban", "headgear"}};
-//        String[][] quizArr3_a = {{"crow_mask", "face"}, {"blue_sunglasses", "face"}, {"smoky_makeup", "face"}};
+        String[][] quizArr3_a =
+                {
+                        {"100", "ryan", "music", "2"},
+                        {"200", "apeach", "math", "2"},
+                        {"300", "tube", "computer", "3"},
+                        {"400", "con", "computer", "4"},
+                        {"500", "muzi", "music", "3"},
+                        {"600", "apeach", "music", "2"}
+                };
 
 
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
-//        System.out.println(testSolution.solution(new int[]{3, 0, 6, 1, 5}));
-//        System.out.println(testSolution.solution(new int[]{1, 2, 4, 7, 8, 9, 10, 11}));
-//        System.out.println(testSolution.solution(new int[]{1, 2, 2,2,3,3,3,4}));
-//        System.out.println(testSolution.solution(new int[]{9,8,7,7,6,4,4,3,2,1}));
-//        System.out.println(testSolution.solution(new int[]{3, 0, 6, 1, 5}));
-//        System.out.println(testSolution.solution(new int[]{20, 21, 22, 23}));
-//        System.out.println(testSolution.solution(new int[]{12, 11, 10, 9, 8, 1}));
-        System.out.println(testSolution.solution(new int[]{0, 1, 1, 1, 1, 3, 3, 4}));
+
+        System.out.println(testSolution.solution(quizArr3_a));
     }
 }
