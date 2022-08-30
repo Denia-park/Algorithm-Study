@@ -14,14 +14,13 @@ class Solution {
         columnNumber = relation[0].length;
         isVisited = new boolean[columnNumber];
         combinationList = new ArrayList<>();
-        Set<String> tempAnswerSet = new HashSet<>();
+        Set<List<Integer>> tempAnswerSet = new HashSet<>();
 
         dfs(null,0);
 
         combinationList.sort(new MyComparator());
 
         for (String str : combinationList) {
-            String stringNoSpace = str.replace(" ", "");
             String[] split = str.split(" ");
             List<Integer> tempList = new ArrayList<>();
             Set<String> tempSet = new HashSet<>();
@@ -42,15 +41,23 @@ class Solution {
 
             if(tempSet.size() == rowNumber){
                 boolean tempFlag = false;
-                for (String str3 : tempAnswerSet) {
-                    if(stringNoSpace.contains(str3)){
+
+                for (List<Integer> tempIntList : tempAnswerSet) {
+                    int tempTempValue = 0;
+                    for (Integer tempInt : tempIntList){
+                        if(tempList.contains(tempInt)){
+                            tempTempValue++;
+                        }
+                    }
+                    if(tempTempValue == tempIntList.size()){
                         tempFlag = true;
                         break;
                     }
                 }
+
                 if(tempFlag) continue;
-                tempAnswerSet.add(stringNoSpace);
-//                System.out.println("tempList : " + tempList);
+                tempAnswerSet.add(tempList);
+                System.out.println("tempList : " + tempList);
                 answer++;
             }
         }

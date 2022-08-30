@@ -25,11 +25,19 @@ public class Main {
                         {"c", "1", "aaa", "d", "ng"},
                         {"d", "2", "bbb", "d", "ng"}
                 };
+        String[][] quizArr5_a =
+                {
+                        {"a","1","aaa","c","ng"},
+                        {"a","1","bbb","e","g"},
+                        {"c","1","aaa","d","ng"},
+                        {"d","2","bbb","d","ng"}
+                };
 
 
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
         System.out.println(testSolution.solution(quizArr4_a));
+        System.out.println(testSolution.solution(quizArr5_a));
     }
 }
