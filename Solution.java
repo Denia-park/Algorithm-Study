@@ -4,7 +4,6 @@ import java.util.*;
 
 class Solution {
     int answer;
-    boolean[] isVisited;
     int columnNumber;
     int rowNumber;
     List<String> combinationList;
@@ -12,62 +11,55 @@ class Solution {
         answer = 0;
         rowNumber = relation.length;
         columnNumber = relation[0].length;
-        isVisited = new boolean[columnNumber];
         combinationList = new ArrayList<>();
-        Set<List<Integer>> tempAnswerSet = new HashSet<>();
+        List<List<Integer>> completeIndexList = new LinkedList<>();
 
         dfs(null,0);
 
         combinationList.sort(new MyComparator());
 
         for (String str : combinationList) {
-            String[] split = str.split(" ");
-            List<Integer> tempList = new ArrayList<>();
-            Set<String> tempSet = new HashSet<>();
+            String[] splitArr = str.split(" ");
+            List<Integer> indexList = new ArrayList<>();
+            Set<String> checkDupliSet = new HashSet<>();
 
-            for (String str2 : split) {
-                tempList.add(Integer.valueOf(str2));
+            for (String str2 : splitArr) {
+                indexList.add(Integer.valueOf(str2));
             }
 
             for (int i = 0; i < rowNumber; i++) {
                 String tempStr = "";
-                for (Integer temp : tempList) {
-                    if(!isVisited[temp]){
-                        tempStr += relation[i][temp];
-                    }
+                for (Integer temp : indexList) {
+                    tempStr += relation[i][temp];
                 }
-                tempSet.add(tempStr);
+                checkDupliSet.add(tempStr);
             }
 
-            if(tempSet.size() == rowNumber){
-                boolean tempFlag = false;
+            if(checkDupliSet.size() == rowNumber){
+                boolean addFlag = true;
 
-                for (List<Integer> tempIntList : tempAnswerSet) {
-                    int tempTempValue = 0;
-                    for (Integer tempInt : tempIntList){
-                        if(tempList.contains(tempInt)){
-                            tempTempValue++;
-                        }
-                    }
-                    if(tempTempValue == tempIntList.size()){
-                        tempFlag = true;
+                for (List<Integer> eachList : completeIndexList) {
+                    if ((indexList).containsAll(eachList)) {
+                        addFlag = false;
                         break;
                     }
                 }
 
-                if(tempFlag) continue;
-                tempAnswerSet.add(tempList);
-                System.out.println("tempList : " + tempList);
+                if(!addFlag) continue;
+
+                completeIndexList.add(indexList);
+//                System.out.println("tempList : " + indexList);
                 answer++;
             }
         }
+
+        System.out.println(completeIndexList);
 
         return answer;
     }
 
     private void dfs(String str, int index) {
         for (int i = index; i < columnNumber; i++) {
-            if(!isVisited[i]){
                 String tempStr;
                 if(str == null)
                     tempStr = "" + i;
@@ -76,7 +68,6 @@ class Solution {
 
                 combinationList.add(tempStr);
                 dfs(tempStr, i + 1);
-            }
         }
     }
 }
