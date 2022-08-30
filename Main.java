@@ -18,10 +18,18 @@ public class Main {
                         {"500", "muzi", "music", "3"},
                         {"600", "apeach", "music", "2"}
                 };
+        String[][] quizArr4_a =
+                {
+                        {"a", "1", "aaa", "c", "ng"},
+                        {"b", "1", "bbb", "c", "g"},
+                        {"c", "1", "aaa", "d", "ng"},
+                        {"d", "2", "bbb", "d", "ng"}
+                };
 
 
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
-        System.out.println(testSolution.solution(quizArr3_a));
+//        System.out.println(testSolution.solution(quizArr3_a));
+        System.out.println(testSolution.solution(quizArr4_a));
     }
 }
