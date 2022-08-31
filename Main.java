@@ -16,13 +16,17 @@ public class Main {
         int k2 = 3;
         String number3 = "4177252841";
         int k3 = 3;
+        String number4 = "192345678";
+        int k4 = 3;
 
 
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
         System.out.println(testSolution.solution(number1,k1));
+        System.out.println(testSolution.solution("1921",k1));
         System.out.println(testSolution.solution(number2,k2));
         System.out.println(testSolution.solution(number3,k3));
+        System.out.println(testSolution.solution(number4,k4));
     }
 }
