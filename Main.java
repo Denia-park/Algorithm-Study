@@ -22,7 +22,7 @@ public class Main {
 
 //        System.out.println(testSolution.solution(quizArr3_a));
         System.out.println(testSolution.solution(number1,k1));
-//        System.out.println(testSolution.solution(number2,k2));
-//        System.out.println(testSolution.solution(number3,k3));
+        System.out.println(testSolution.solution(number2,k2));
+        System.out.println(testSolution.solution(number3,k3));
     }
 }
