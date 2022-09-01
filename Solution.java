@@ -1,39 +1,36 @@
 package com.company;
 
-// 출처 : https://cyk0825.tistory.com/35
-
 class Solution {
-    public String solution(String number, int k) {
-        //문자열을 합해야 하므로 StringBuilder 사용
-        StringBuilder sb = new StringBuilder();
-        //시작 index를 저장하기 위해 변수 생성
-        int startIndex = 0;
+    public int[] solution(int brown, int yellow) {
+        //정답 출력을 위한 int 배열 생성
+        int[] answer = new int[2];
 
-        /*
-         * 주어진 숫자 n에서 k개의 숫자를 빼서 가장 큰 수를 찾아라
-         * n의 자릿 수 - k = 가장 큰 수의 길이
-         *
-         * 가장 큰 수의 첫번째 자리에 올 수 있는 수는 n에서 인덱스가 0~k까지
-         * 두번째 자리에 올 수 있는 수는 n에서 인데스가 1~k+1에 해당하는 수
-         * 세번째 자리에 올 수 있는 수는 n에서 인데스가 2~k+2에 해당하는 수 ...
-         * 이런식으로 해당 자리에 오는 수 중 가장 큰 수를 하나씩 찾는데 그 전수 보다 앞자리에 올 수 는 없기 때문에
-         * 마지막으로 찾은 자리 수의 인덱스 +1부터 자리에 올 수 있는 가장 마지막 수의 인덱스 까지 비교하며 찾는다.
-        */
+        //전체 타일의 수를 구함
+        int totalTiles = brown + yellow;
+        //전체 타일의 제곱근을 구한다.
+        int sqrtValue = (int) Math.sqrt(totalTiles);
+        //제곱근을 구해서 딱 떨어지며 정사각형 이므로 startIndex 를 제곱근 값을 하고 아닌 경우 + 1 을 한다.
+        //가로 가 무조건 세로보다 길기 때문에 제곱근을 기준으로 가로의 시작 길이를 정했다.
+        int startIndex = totalTiles / sqrtValue == sqrtValue ? sqrtValue : sqrtValue + 1;
 
-        //for문을 돌면서 확인을 해야함
-        for (int i = 0; i < number.length() - k; i++) {
-            int maxValue = Integer.MIN_VALUE;
-            for (int j = startIndex; j <= i + k ; j++) {
-                int tempChar = number.charAt(j) - '0';
-                if(tempChar > maxValue){
-                    maxValue = tempChar;
-                    startIndex = j + 1;
-                }
-            }
+        //가로 세로를 정함
+        int width = 0;
+        int height = 0;
 
-            sb.append(maxValue);
+        //위에서 정한 startIndex 를 기준으로 시작
+        for (int i = startIndex; i < totalTiles; i++) {
+            //나누어 떨어지지 않으면 continue
+            if(totalTiles % i != 0) continue;
+            //나누어 떨어지는 경우 계산을 통해 yellow 와 갯수가 같으면 해당 값이 올바른 가로, 세로의 값 이므로 break
+            width = i;
+            height = totalTiles / width;
+            if((width - 2) * (height - 2) == yellow)
+                break;
         }
 
-        return sb.toString();
+        answer[0] = width;
+        answer[1] = height;
+
+        return answer;
     }
 }
