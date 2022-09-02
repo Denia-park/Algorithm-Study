@@ -1,7 +1,5 @@
 package com.company;
 
-import java.util.Arrays;
-
 public class Main {
     static public void main(String[] args) {
         Solution testSolution = new Solution();
@@ -13,8 +11,7 @@ public class Main {
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
-//        System.out.println(Arrays.toString(testSolution.solution(10, 2)));
-//        System.out.println(Arrays.toString(testSolution.solution(8, 1)));
-        System.out.println(Arrays.toString(testSolution.solution(24, 24)));
+        System.out.println(testSolution.solution(5, new int[][]{{1, 2, 1}, {2, 3, 3}, {5, 2, 2}, {1, 4, 2}, {5, 3, 1}, {5, 4, 2}}, 3));
+        System.out.println(testSolution.solution(6, new int[][]{{1, 2, 1}, {1, 3, 2}, {2, 3, 2}, {3, 4, 3}, {3, 5, 2}, {3, 5, 3}, {5, 6, 1}}, 4));
     }
 }
