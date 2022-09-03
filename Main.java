@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Arrays;
+
 public class Main {
     static public void main(String[] args) {
         Solution testSolution = new Solution();
@@ -11,7 +13,23 @@ public class Main {
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
-        System.out.println(testSolution.solution(5, new int[][]{{1, 2, 1}, {2, 3, 3}, {5, 2, 2}, {1, 4, 2}, {5, 3, 1}, {5, 4, 2}}, 3));
-        System.out.println(testSolution.solution(6, new int[][]{{1, 2, 1}, {1, 3, 2}, {2, 3, 2}, {3, 4, 3}, {3, 5, 2}, {3, 5, 3}, {5, 6, 1}}, 4));
+        String[] info = {
+                "java backend junior pizza 150",
+                "python frontend senior chicken 210",
+                "python frontend senior chicken 150",
+                "cpp backend senior pizza 260",
+                "java backend junior chicken 80",
+                "python backend senior chicken 50",
+        "python frontend senior chicken 100000"};
+        String[] query = {
+                "java and frontend and junior and pizza 100",
+                "python and frontend and senior and chicken 200",
+                "cpp and - and senior and pizza 250",
+                "- and backend and senior and - 150",
+                "- and - and - and chicken 100",
+                "cpp and - and senior and - 150",
+                "- and - and - and - 10"};
+
+        System.out.println(Arrays.toString(testSolution.solution(info, query)));
     }
 }
