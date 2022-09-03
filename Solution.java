@@ -5,36 +5,31 @@ import java.util.*;
 class Solution {
     public int[] solution(String[] info, String[] query) {
         List<Integer> answer = new ArrayList<Integer>();
-        Map<String, List<Integer>> map = new HashMap<>();
+        Map<Set<String>, List<Integer>> map = new HashMap<>();
         for (String str : info) {
             int splitIndex = str.lastIndexOf(" ");
-            String key = str.substring(0, splitIndex);
+            String[] keys = str.substring(0, splitIndex).split(" ");
+            Set<String> set = new HashSet<>(Arrays.asList(keys));
+
             Integer value = Integer.valueOf(str.substring(splitIndex + 1));
-            List<Integer> list = map.getOrDefault(key, new ArrayList<>());
+            List<Integer> list = map.getOrDefault(set, new ArrayList<>());
             list.add(value);
-            map.put(key, list);
+            map.put(set, list);
         }
 
         for (String str : query) {
-            String[] queryElements =  str.replace(" and ", " ").split(" ");
-            StringBuilder tempQueryKey = new StringBuilder();
-            int targetScore = Integer.parseInt(queryElements[queryElements.length - 1]);
+            String[] queryStrings =  str.replace(" and ", " ").split(" ");
+            int targetScore = Integer.parseInt(queryStrings[queryStrings.length - 1]);
+            Set<String> set = new HashSet<>();
 
-            for (int i = 0; i < queryElements.length - 1; i++) {
-                String condition = queryElements[i];
-                if(condition.equals("-")) continue;
-                tempQueryKey.append(condition).append(" ");
+            for (int i = 0; i < queryStrings.length - 1; i++) {
+                if(!queryStrings[i].equals("-")) set.add(queryStrings[i]);
             }
-
-            if(tempQueryKey.length() > 0)
-                tempQueryKey.deleteCharAt(tempQueryKey.length() - 1);
-            else
-                tempQueryKey.append(" ");
-
+            
             List<Integer> valueList = new ArrayList<>();
-            for (String key : map.keySet()) {
-                if(key.contains(tempQueryKey.toString())){
-                    valueList.addAll(map.get(key));
+            for (Set<String> eachKeySet : map.keySet()) {
+                if(eachKeySet.containsAll(set)){
+                    valueList.addAll(map.get(eachKeySet));
                 }
             }
 
