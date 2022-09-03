@@ -23,9 +23,11 @@ class Solution {
             int targetScore = Integer.parseInt(editStr.substring(splitIndex + 1));
             String targetStr = editStr.substring(0, splitIndex);
 
-            List<Integer> valueList = map.get(targetStr);
+            List<Integer> valueList = map.getOrDefault(targetStr, new ArrayList<>());
+
             int targetNum = bisectLeft(valueList,targetScore);
             answer.add(valueList.size() - targetNum);
+
         }
 
         return answer.stream().mapToInt(Integer::intValue).toArray();
