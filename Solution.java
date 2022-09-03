@@ -3,44 +3,46 @@ package com.company;
 import java.util.*;
 
 class Solution {
-    public int[] solution(String[] info, String[] query) {
+    String[] gInfo;
+    Map<String, List<Integer>> map;
+    public int[] solution(String[] infos, String[] query) {
         List<Integer> answer = new ArrayList<Integer>();
-        Map<Set<String>, List<Integer>> map = new HashMap<>();
-        for (String str : info) {
-            int splitIndex = str.lastIndexOf(" ");
-            String[] keys = str.substring(0, splitIndex).split(" ");
-            Set<String> set = new HashSet<>(Arrays.asList(keys));
+        map = new HashMap<>();
+        for (String info : infos) {
+            gInfo = info.split(" ");
+            dfs("",0);
+        }
 
-            Integer value = Integer.valueOf(str.substring(splitIndex + 1));
-            List<Integer> list = map.getOrDefault(set, new ArrayList<>());
-            list.add(value);
-            map.put(set, list);
+        for (List<Integer> list : map.values()) {
+            list.sort(null);
         }
 
         for (String str : query) {
-            String[] queryStrings =  str.replace(" and ", " ").split(" ");
-            int targetScore = Integer.parseInt(queryStrings[queryStrings.length - 1]);
-            Set<String> set = new HashSet<>();
+            String editStr = str.replace(" and ", "");
+            int splitIndex =  editStr.lastIndexOf(" ");
+            int targetScore = Integer.parseInt(editStr.substring(splitIndex + 1));
+            String targetStr = editStr.substring(0, splitIndex);
 
-            for (int i = 0; i < queryStrings.length - 1; i++) {
-                if(!queryStrings[i].equals("-")) set.add(queryStrings[i]);
-            }
-            
-            List<Integer> valueList = new ArrayList<>();
-            for (Set<String> eachKeySet : map.keySet()) {
-                if(eachKeySet.containsAll(set)){
-                    valueList.addAll(map.get(eachKeySet));
-                }
-            }
-
-            valueList.sort(null);
-
+            List<Integer> valueList = map.get(targetStr);
             int targetNum = bisectLeft(valueList,targetScore);
             answer.add(valueList.size() - targetNum);
         }
 
-
         return answer.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private void dfs(String str , int index) {
+        if(index == 4){
+            List<Integer> list = map.getOrDefault(str, new ArrayList<>());
+            list.add(Integer.valueOf(gInfo[index]));
+            map.put(str, list);
+            return;
+        }
+
+        String tempStr1 = str + gInfo[index];
+        dfs(tempStr1,index + 1);
+        String tempStr2 = str + "-";
+        dfs(tempStr2,index + 1);
     }
 
     private int bisectLeft(List<Integer> valueList, int targetScore) {
