@@ -13,6 +13,7 @@ public class Main {
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
-        System.out.println((testSolution.solution(80, new int[][] {{80,20},{50,40},{30,10}})));
+//        System.out.println(testSolution.solution("100-200*300-500+20"));
+        System.out.println(testSolution.solution("50*6-3*2"));
     }
 }
