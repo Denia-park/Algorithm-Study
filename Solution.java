@@ -12,7 +12,6 @@ class Solution {
         long answer = 0;
         combinedOperators = new ArrayList<>();
         isVisited = new boolean[3];
-        Stack<String> stack = new Stack<>();
 
         dfs("");
 
@@ -20,37 +19,36 @@ class Solution {
 
         for (String combinedOperator : combinedOperators) {
             List<String> inputList = expressionList;
-            List<String> resultList = new ArrayList<>();
+            Stack<String> stack = new Stack<>();
             int operatorIndex = 0;
             while(true){
                 for (int i = 0; i < inputList.size(); i++) {
-                    String tempStr = inputList.get(i);
+                    String curStr = inputList.get(i);
 
-                    if(isOperator(tempStr) && tempStr.equals(combinedOperator.substring(operatorIndex, operatorIndex + 1))){
-                        String removeValue = inputList.get(i - 1);
-                        resultList.remove(resultList.size() - 1);
-                        switch (tempStr) {
+                    if (!stack.isEmpty() && isOperator(stack.peek()) && stack.peek().equals(combinedOperator.substring(operatorIndex, operatorIndex + 1))) {
+                        String operator = stack.pop();
+                        String calculateValue = stack.pop();
+                        switch (operator) {
                             case "+":
-                                resultList.add(String.valueOf(Long.parseLong(removeValue) + Long.parseLong(inputList.get(i + 1))));
+                                stack.push(String.valueOf(Long.parseLong(calculateValue) + Long.parseLong(curStr)));
                                 break;
                             case "*":
-                                resultList.add(String.valueOf(Long.parseLong(removeValue) * Long.parseLong(inputList.get(i + 1))));
+                                stack.push(String.valueOf(Long.parseLong(calculateValue) * Long.parseLong(curStr)));
                                 break;
                             case "-":
-                                resultList.add(String.valueOf(Long.parseLong(removeValue) - Long.parseLong(inputList.get(i + 1))));
+                                stack.push(String.valueOf(Long.parseLong(calculateValue) - Long.parseLong(curStr)));
                                 break;
                         }
-                        i = i + 1;
-                    }else{
-                        resultList.add(tempStr);
+                    } else {
+                        stack.push(curStr);
                     }
                 }
-                if(resultList.size() == 1){
-                    answer = Math.max(answer, Math.abs(Long.parseLong(resultList.get(0))));
+                if(stack.size() == 1){
+                    answer = Math.max(answer, Math.abs(Long.parseLong(stack.pop())));
                     break;
                 }
-                inputList = resultList;
-                resultList = new ArrayList<String>();
+                inputList = new ArrayList<>(stack);
+                stack.clear();
                 operatorIndex ++;
             }
         }
