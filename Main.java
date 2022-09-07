@@ -13,7 +13,10 @@ public class Main {
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
-        System.out.println(testSolution.solution("100-200*300-500+20"));
-        System.out.println(testSolution.solution("50*6-3*2"));
+        System.out.println(Arrays.toString(testSolution.solution(3, new String[]{"tank", "kick", "know", "wheel", "land", "dream", "mother", "robot", "tank"})));
+
+        System.out.println(Arrays.toString(testSolution.solution(5, new String[]{"hello", "observe", "effect", "take", "either", "recognize", "encourage", "ensure", "establish", "hang", "gather", "refer", "reference", "estimate", "executive"})));
+
+        System.out.println(Arrays.toString(testSolution.solution(2, new String[]{"hello", "one", "even", "never", "now", "world", "draw"})));
     }
 }
