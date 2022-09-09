@@ -1,38 +1,22 @@
 package com.company;
 
+// 참조 : https://school.programmers.co.kr/questions/10368
+// 참조 : https://deveric.tistory.com/61
+
 class Solution {
-    //Combination nCr = n! / (r! * (n-r)!)
+    //Combination nCr = n! / (r! * (n-r)!) 으로 처음에 풀었으나 overFlow 때문에 계산이 되지 않음
+    //피보나치 수열로 접근을 해야한다.
+    //DP 문제 , 메모이제이션 접근
     public int solution(int quizNum) {
-        // 기본 값을 1 (모두 1칸으로 채웠을 경우)
-        long answer = 1;
+        long[] memo = new long[quizNum + 1];
 
-        //
-        int n = quizNum - 1;
-        int r = 1;
+        memo[1] = 1;
+        memo[2] = 2;
 
-        while (2 * r <= quizNum){
-            answer += combination(n,r);
-            n--;
-            r++;
+        for (int i = 3; i <= quizNum; i++) {
+            memo[i] = (memo[i-1] + memo[i-2])% 1000000007;
         }
 
-        return (int) (answer % 1000000007);
+        return (int) (memo[quizNum]);
     }
-
-    private long combination(int n , int r) {
-        long numerator = 1;
-        //numerator
-        for (long i = n; i > n-r; i--) {
-            numerator *= i;
-        }
-
-        long denominator = 1;
-        //denominator
-        for (long i = 1; i <= r; i++) {
-            denominator *= i;
-        }
-
-        return numerator / denominator;
-    }
-
 }
