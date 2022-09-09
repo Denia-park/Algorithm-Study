@@ -13,7 +13,9 @@ public class Main {
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
-        System.out.println(Arrays.toString(testSolution.solution(new int[]{1, 2, 3, 2, 3})));
+//        System.out.println(testSolution.solution(4));
+//        System.out.println(testSolution.solution(7));
+        System.out.println(testSolution.solution(100));
 
 
     }

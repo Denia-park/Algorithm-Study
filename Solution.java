@@ -1,27 +1,38 @@
 package com.company;
 
 class Solution {
-    public int[] solution(int[] prices) {
-        //answer 선언
-        int[] answer = new int[prices.length];
+    //Combination nCr = n! / (r! * (n-r)!)
+    public int solution(int quizNum) {
+        // 기본 값을 1 (모두 1칸으로 채웠을 경우)
+        long answer = 1;
 
-        //모든 요소에 대해서 완전 탐색 수행 - 2중 for문
-        //시작점을 선언
-        for (int i = 0; i < prices.length; i++) {
-            //시작하는 값
-            int startValue = prices[i];
-            //count 용 변수
-            int count = 0;
-            //시작하는 값 다음부터 시작하는 값 과 비교하여 count를 올리고 작은 값이 나오면 break
-            for (int j = i + 1; j < prices.length; j++) {
-                count++;
-                if(prices[j] < startValue)
-                    break;
-            }
-            //answer에 count 삽입
-            answer[i] = count;
+        //
+        int n = quizNum - 1;
+        int r = 1;
+
+        while (2 * r <= quizNum){
+            answer += combination(n,r);
+            n--;
+            r++;
         }
 
-        return answer;
+        return (int) (answer % 1000000007);
     }
+
+    private long combination(int n , int r) {
+        long numerator = 1;
+        //numerator
+        for (long i = n; i > n-r; i--) {
+            numerator *= i;
+        }
+
+        long denominator = 1;
+        //denominator
+        for (long i = 1; i <= r; i++) {
+            denominator *= i;
+        }
+
+        return numerator / denominator;
+    }
+
 }
