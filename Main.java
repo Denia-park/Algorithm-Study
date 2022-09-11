@@ -13,7 +13,9 @@ public class Main {
 //        System.out.println(Arrays.toString(testSolution.solution(quizArr1_a, quizArr1_b)));
 
 //        System.out.println(testSolution.solution(quizArr3_a));
-        System.out.println(Arrays.toString(testSolution.solution(4)));
+//        System.out.println((testSolution.solution(3,3,new String[]{"ABC", "DEF", "GHI"})));
+        System.out.println((testSolution.solution(4,5,new String[]{"CCBDE", "AAADE", "AAABF", "CCBBF"})));
+        System.out.println((testSolution.solution(6,6,new String[]{"TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"})));
 
     }
 }
