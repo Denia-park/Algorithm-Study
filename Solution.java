@@ -1,92 +1,111 @@
 package com.company;
 
-// 참조 : https://hyojun.tistory.com/entry/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%EC%82%BC%EA%B0%81-%EB%8B%AC%ED%8C%BD%EC%9D%B4-Java
 
 class Solution {
-    //삼각형을 그리기 위해서 2차원 좌표계를 설정
-    int[][] coordinates;
-    //해당하는 좌표가 올바른 좌표인지 확인할때 사용할 변수 설정
-    int maxIndex;
-    public int[] solution(int n) {
-        //2차원 좌표계 초기화
-        coordinates = new int[n][n];
-        //해당 변수 n으로 초기화
-        maxIndex = n;
-        //채워져야 하는 최고 값을 maxValue 로 설정
-        int maxValue = 0;
-        //방향을 설정
-        int direction = 1; // 1 : 아래 , 2: 오른쪽 , 3: 위로
-        //maxValue 를 구하기 위해서 1~n 까지 모두 더함
-        for (int i = 1; i <= n; i++) {
-            maxValue += i;
-        }
+    int[][] directions = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}};
+    int boardHeight;
+    int boardWidth;
+    public int solution(int height, int width, String[] board) {
+        int answer = 0;
 
-        //answer 를 초기화
-        int[] answer = new int[maxValue];
+        boardHeight = height;
+        boardWidth = width;
 
-        //처음부터 채울 값을 index로 두고 1로 초기화
-        int index = 1;
-        //2차원 좌표계에서 사용할 row, col 설정
-        int row = -1 , col = 0;
+        while(true) {
+            boolean[][] isDeletedBlock = checkBlockInBoard(board);
 
-        //index가 maxValue 값을 넘길때까지 while문을 돈다.
-        while (index <= maxValue) {
-            //row , col 을 임시로 설정
-            int tempRow = row;
-            int tempCol = col;
-            //방향에 따라서 tempRow , tempCol 의 값을 수정
-            if(direction == 1) {
-                tempRow++;
-            } else if (direction == 2) {
-                tempCol++;
-            }else if (direction == 3) {
-                tempRow--;
-                tempCol--;
-            }
+            //null 이 나오면 지울 게 없다는 것, while문 종료
+            if (isDeletedBlock == null) break;
 
-            //수정한 tempRow, tempCol 값이 올바른 좌표값이 아니라면, 2차원 배열의 값을 업데이트 하지 않고
-            //방향을 수정하여 다시 tempRow , tempCol 을 확인해야함
-            if(!isRightCoordinates(tempRow, tempCol)){
-                if(direction < 3) direction++;
-                else direction = 1;
-
-                continue;
-            }
-
-            //수정한 tempRow, tempCol 이 올바른 좌표값이 맞다면,
-            //row , col 에 해당 값들을 적용
-            row = tempRow;
-            col = tempCol;
-
-            //row , col 에 맞게 index를 삽입
-            coordinates[row][col] = index;
-            //index를 삽입했으므로 index 를 증가
-            index++;
-        }
-
-        //answer 배열을 업데이트 하기 위한 answerIndex 를 설정
-        int answerIndex = 0;
-
-        //2중 for문을 돌면서 coordinates 배열을 확인하여 0이 아닌 값만 answer 배열에 업데이트
-        for (int tempRow = 0; tempRow < n; tempRow++) {
-            for (int tempCol = 0; tempCol < n; tempCol++) {
-                int tempAnswerValue = coordinates[tempRow][tempCol];
-                //0이 아닌 값만 answer 배열에 업데이트 후 answerIndex 도 업데이트
-                if(tempAnswerValue != 0){
-                    answer[answerIndex] = tempAnswerValue;
-                    answerIndex++;
-                }
-            }
+            //updateBoard , 여기서 answer 반환
+            answer = updateBoard(board , isDeletedBlock);
         }
 
         return answer;
     }
 
-    //올바른 좌표계 값이 맞는지 확인
-        // 0 이상 n 미만이 맞는지 확인
-        // 0이 아닌 값이 들어가 있으면 이미 값이 수정 되었으므로 잘못된 방향이다.
-    
-    private boolean isRightCoordinates(int row , int col) {
-        return row >= 0 && row < maxIndex && col >= 0 && col < maxIndex && coordinates[row][col] == 0;
+    private int updateBoard(String[] board, boolean[][] isDeletedBlock) {
+        int answer = 0;
+        int height = board.length;;
+        int width = board[0].length();
+
+        for (int i = 0; i < height; i++) {
+            String tempStr = "";
+            for (int j = 0; j < width; j++) {
+                char tempChar;
+                if(isDeletedBlock[i][j]){
+                    tempChar = ' ';
+                    answer++;
+                }else {
+                    tempChar = board[i].charAt(j);
+                }
+                tempStr = tempStr + tempChar;
+            }
+
+            board[i] = tempStr;
+        }
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if(board[j].charAt(i) == ' '){
+                    
+                }
+            }
+        }
+
+
+        return answer;
     }
+
+    private boolean[][] checkBlockInBoard(String[] board) {
+        int height = board.length;;
+        int width = board[0].length();
+        int deleteCount = 0;
+
+        boolean[][] isDeletedBlock = new boolean[height][width];
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                deleteCount += checkFourBlockExist(board, i, j, isDeletedBlock);
+            }
+        }
+
+        return deleteCount == 0 ? null : isDeletedBlock;
+    }
+
+    private int checkFourBlockExist(String[] board, int heightIndex, int widthIndex, boolean[][] isDeletedBlock) {
+        int deleteCount = 0;
+
+        char c = board[heightIndex].charAt(widthIndex);
+
+        if(c == ' ') return 0;
+
+        //4방향에 대해서 체크
+            //1시, 5시, 7시, 11시 에 4개의 블럭들이 존재하는지 확인
+        directionCheck : for (int i = 0; i < 4; i = i + 2) {
+            //방향당 자기 주변 블럭 체크 , directions 변수 에 자기 주변 블럭 체크 용 dx, dy 기입해둠
+            for (int j = i; j < i + 3; j++) {
+                int moveHeight = heightIndex + directions[j][0];
+                int moveWidth = widthIndex + directions[j][1];
+
+                if (!isRightIndex(moveHeight, moveWidth) || board[moveHeight].charAt(moveWidth) != c) {
+                    continue directionCheck;
+                }
+            }
+            //4개의 블럭이 겹치므로 isDeletedBlock 에 체크를 해둔다.
+            for (int j = i; j < i + 3; j++) {
+                int moveHeight = heightIndex + directions[j][0];
+                int moveWidth = widthIndex + directions[j][1];
+
+                isDeletedBlock[moveHeight][moveWidth] = true;
+                deleteCount++;
+            }
+        }
+        return deleteCount;
+    }
+
+    private boolean isRightIndex(int heightIndex, int widthIndex){
+        return 0 <= heightIndex && heightIndex < boardHeight && 0 <= widthIndex && widthIndex < boardWidth;
+    }
+
 }
