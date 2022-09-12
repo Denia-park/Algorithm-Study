@@ -24,6 +24,11 @@ class Solution {
             int smallValIndex = -1;
             int secondPersonIndex = 0;
 
+            if(isMovedNewPeople[firstPersonIndex]){
+                firstPersonIndex --;
+                continue;
+            }
+
             isMovedNewPeople[firstPersonIndex] = true;
             peopleNum++;
 
@@ -32,7 +37,7 @@ class Solution {
                     smallValIndex = secondPersonIndex;
                 }
             }
-            
+
             if(smallValIndex != -1) {
                 isMovedNewPeople[smallValIndex] = true;
                 peopleNum++;
