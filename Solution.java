@@ -33,8 +33,11 @@ class Solution {
             peopleNum++;
 
             for (secondPersonIndex = 0; secondPersonIndex < firstPersonIndex; secondPersonIndex++) {
-                if (!isMovedNewPeople[secondPersonIndex] && newPeople[firstPersonIndex] + newPeople[secondPersonIndex] <= limit) {
-                    smallValIndex = secondPersonIndex;
+                if (!isMovedNewPeople[secondPersonIndex]) {
+                    if(newPeople[firstPersonIndex] + newPeople[secondPersonIndex] <= limit)
+                        smallValIndex = secondPersonIndex;
+                    else
+                        break;
                 }
             }
 
