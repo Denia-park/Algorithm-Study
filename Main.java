@@ -16,7 +16,6 @@ public class Main {
 //        System.out.println((testSolution.solution(3,3,new String[]{"ABC", "DEF", "GHI"})));
 //        System.out.println((testSolution.solution(new int[]{70, 50, 80, 50}, 100)));
 //        System.out.println((testSolution.solution(new int[]{70, 80, 50}, 100)));
-        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100}, 100)));
-
+        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100, 90}, 100))); //5
     }
 }
