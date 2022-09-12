@@ -9,7 +9,7 @@ class Solution {
 
         Arrays.sort(people);
 
-        int limitValIndex = bisectLeft(people, limit);
+        int limitValIndex = bisectRight(people, limit - people[0]);
 
         peopleNum += people.length - limitValIndex;
         moveCount += peopleNum;
@@ -61,6 +61,23 @@ class Solution {
             int mid = (start + end) / 2;
 
             if(targetValue <= people[mid]) {
+                end = mid;
+            }else{
+                start = mid + 1;
+            }
+        }
+
+        return end;
+    }
+
+    public int bisectRight(int[] people, int targetValue) {
+        int start = 0;
+        int end = people.length;
+
+        while (start < end) {
+            int mid = (start + end) / 2;
+
+            if(targetValue < people[mid]) {
                 end = mid;
             }else{
                 start = mid + 1;
