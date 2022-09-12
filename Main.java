@@ -14,8 +14,9 @@ public class Main {
 
 //        System.out.println(testSolution.solution(quizArr3_a));
 //        System.out.println((testSolution.solution(3,3,new String[]{"ABC", "DEF", "GHI"})));
-        System.out.println((testSolution.solution(4,5,new String[]{"CCBDE", "AAADE", "AAABF", "CCBBF"})));
-        System.out.println((testSolution.solution(6,6,new String[]{"TTTANT", "RRFACC", "RRRFCC", "TRRRAA", "TTMMMF", "TMMTTJ"})));
-
+//        System.out.println((testSolution.solution(new int[]{70, 50, 80, 50}, 100)));
+//        System.out.println((testSolution.solution(new int[]{70, 80, 50}, 100)));
+//        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100, 90}, 100))); //5
+        System.out.println((testSolution.solution(new int[]{10, 10, 10, 10,100,100, 90}, 100))); //5
     }
 }
