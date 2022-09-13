@@ -6,11 +6,10 @@ import java.util.List;
 class Solution {
     List<List<Integer>> graph;
     boolean[] isVisited;
-    int answer;
     int nodeCount;
+    int[] disconnectedNode;
     public int solution(int nodeNum, int[][] wires) {
         graph = new ArrayList<>();
-        answer = -1;
 
         for (int i = 0; i < nodeNum + 1; i++) {
             graph.add(new ArrayList<>());
@@ -23,24 +22,42 @@ class Solution {
             graph.get(end).add(start);
         }
 
-        int targetNode = 1;
+        int[] nodeAbsCount = new int[wires.length];
 
-        nodeCount = 0;
-        isVisited = new boolean[nodeNum + 1];
-        dfs(targetNode);
+        for (int i = 0; i < wires.length; i++) {
+            disconnectedNode = wires[i];
 
-        System.out.println(nodeCount);
+            int targetNode = 1;
+
+            nodeCount = 0;
+            isVisited = new boolean[nodeNum + 1];
+            dfs(targetNode);
+
+            nodeAbsCount[i] = Math.abs((nodeNum - nodeCount) - nodeCount);
+        }
+
+        int answer = Integer.MAX_VALUE;
+
+        for (int j : nodeAbsCount) {
+            answer = Math.min(answer, j);
+        }
 
         return answer;
     }
 
     private void dfs(int targetNode) {
+        isVisited[targetNode] = true;
+        nodeCount++;
+
         for (int i = 0; i < graph.get(targetNode).size(); i++){
             int newNode = graph.get(targetNode).get(i);
-            if(!isVisited[newNode]){
-                isVisited[newNode] = true;
-                nodeCount++;
 
+            if ((disconnectedNode[0] == targetNode && disconnectedNode[1] == newNode)
+                    || (disconnectedNode[0] == newNode && disconnectedNode[1] == targetNode)) {
+                continue;
+            }
+
+            if(!isVisited[newNode]){
                 dfs(newNode);
             }
         }
