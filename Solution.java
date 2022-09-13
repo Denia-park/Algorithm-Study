@@ -7,7 +7,7 @@ class Solution {
     List<List<Integer>> graph;
     boolean[] isVisited;
     int answer;
-    int dfsDeepth;
+    int nodeCount;
     public int solution(int nodeNum, int[][] wires) {
         graph = new ArrayList<>();
         answer = -1;
@@ -25,24 +25,23 @@ class Solution {
 
         int targetNode = 1;
 
-        dfsDeepth = 1;
+        nodeCount = 0;
         isVisited = new boolean[nodeNum + 1];
-        dfs(targetNode, dfsDeepth);
+        dfs(targetNode);
 
-        System.out.println(dfsDeepth);
+        System.out.println(nodeCount);
 
         return answer;
     }
 
-    private void dfs(int targetNode, int deepth) {
-        dfsDeepth = Math.max(dfsDeepth, deepth);
-
+    private void dfs(int targetNode) {
         for (int i = 0; i < graph.get(targetNode).size(); i++){
             int newNode = graph.get(targetNode).get(i);
             if(!isVisited[newNode]){
                 isVisited[newNode] = true;
-                int newDeepth = deepth + 1;
-                dfs(newNode, newDeepth);
+                nodeCount++;
+
+                dfs(newNode);
             }
         }
     }
