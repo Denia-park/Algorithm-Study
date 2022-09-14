@@ -19,8 +19,9 @@ public class Main {
 //        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100, 90}, 100))); //5
 
 
-        System.out.println((testSolution.solution(9, new int[][]{{1, 3}, {2, 3}, {3, 4}, {4, 5}, {4, 6}, {4, 7}, {7, 8}, {7, 9}}))); //5
-//        System.out.println((testSolution.solution(4, new int[][]{{1, 2}, {2, 3}, {3, 4}}))); //5
-//        System.out.println((testSolution.solution(7, new int[][]{{1, 2}, {2, 7}, {3, 7}, {3, 4}, {4, 5}, {6, 7}}))); //5
+        System.out.println((testSolution.solution(5)));
+        System.out.println((testSolution.solution(1)));
+        System.out.println((testSolution.solution(5000)));
+        System.out.println((testSolution.solution(1000_000_000)));
     }
 }
