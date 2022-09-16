@@ -19,9 +19,8 @@ public class Main {
 //        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100, 90}, 100))); //5
 
 
-        System.out.println((testSolution.solution("AAAAE"	)));
-        System.out.println((testSolution.solution("AAAE"	)));
-        System.out.println((testSolution.solution("I"	)));
-        System.out.println((testSolution.solution("EIO"	)));
+        System.out.println((Arrays.toString(testSolution.solution("110010101001"))));
+        System.out.println((Arrays.toString(testSolution.solution("01110"))));
+        System.out.println((Arrays.toString(testSolution.solution("1111111"))));
     }
 }
