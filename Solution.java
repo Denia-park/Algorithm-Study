@@ -1,14 +1,23 @@
 package com.company;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class Solution {
+    Map<Long,Long> map = new HashMap<Long,Long>();
     public long[] solution(long[] numbers) {
         long[] answer = new long[numbers.length];
 
-
         int index = 0;
         for (long number : numbers) {
-            long saveValue = findNewNum(number);
-            answer[index] = saveValue;
+            Long tempAnswer = map.getOrDefault(number, -1L);
+            if(tempAnswer == -1L) {
+                long saveValue = findNewNum(number);
+                answer[index] = saveValue;
+                map.put(number, tempAnswer);
+            }else{
+                answer[index] = tempAnswer;
+            }
 
             index++;
         }
