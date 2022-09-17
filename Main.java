@@ -19,6 +19,6 @@ public class Main {
 //        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100, 90}, 100))); //5
 
 
-        System.out.println((Arrays.toString(testSolution.solution(new long[]{2,7}))));
+        System.out.println((Arrays.toString(testSolution.solution(new long[]{9,11}))));
     }
 }

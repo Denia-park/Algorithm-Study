@@ -1,24 +1,14 @@
 package com.company;
 
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
-    Map<Long,Long> map;
     public long[] solution(long[] numbers) {
         long[] answer = new long[numbers.length];
-        map = new HashMap<>();
+
 
         int index = 0;
         for (long number : numbers) {
-            long existValue = map.getOrDefault(number, -1L);
-            if (existValue == -1) {
-                long saveValue = findNewNum(number);
-                answer[index] = saveValue;
-                map.put(number, saveValue);
-            }else{
-                answer[index] = existValue;
-            }
+            long saveValue = findNewNum(number);
+            answer[index] = saveValue;
 
             index++;
         }
@@ -27,12 +17,16 @@ class Solution {
     }
 
     private long findNewNum(long number) {
-        long newNumber = number + 1;
-        while (true) {
-            long XorValue = number ^ newNumber;
-            if(Long.bitCount(XorValue) <= 2)
-                return newNumber;
-            newNumber++;
+        String numberBinaryString = Long.toBinaryString(number);
+
+        int zeroIndex = numberBinaryString.lastIndexOf("0");
+
+        if(zeroIndex == -1){
+            String newNumberBinaryString = "10" + numberBinaryString.substring(1);
+            return Long.parseLong(newNumberBinaryString, 2);
+        }else{
+            String newNumberBinaryString = numberBinaryString.substring(0, zeroIndex) + "1" + numberBinaryString.substring(zeroIndex + 1);
+            return Long.parseLong(newNumberBinaryString, 2);
         }
     }
 }
