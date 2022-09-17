@@ -24,8 +24,11 @@ class Solution {
         if(zeroIndex == -1){
             String newNumberBinaryString = "10" + numberBinaryString.substring(1);
             return Long.parseLong(newNumberBinaryString, 2);
-        }else{
+        }else if (zeroIndex == numberBinaryString.length() - 1){
             String newNumberBinaryString = numberBinaryString.substring(0, zeroIndex) + "1" + numberBinaryString.substring(zeroIndex + 1);
+            return Long.parseLong(newNumberBinaryString, 2);
+        }else {
+            String newNumberBinaryString = numberBinaryString.substring(0, zeroIndex) + "10" + numberBinaryString.substring(zeroIndex + 2);
             return Long.parseLong(newNumberBinaryString, 2);
         }
     }
