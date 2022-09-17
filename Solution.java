@@ -14,12 +14,11 @@ class Solution {
     }
 
     private long findNewNum(long number) {
-        String numberBinaryString = Long.toBinaryString(number);
         long newNumber = number + 1;
         while (true) {
             long XorValue = number ^ newNumber;
-            String newNumberBinaryString = Long.toBinaryString(XorValue).replace("0", "");
-            if(newNumberBinaryString.length() <= 2)
+            String newNumberBinaryString = Long.toBinaryString(XorValue);
+            if(Long.bitCount(Long.parseLong(newNumberBinaryString,2)) <= 2)
                 return newNumber;
             newNumber++;
         }
