@@ -17,8 +17,7 @@ class Solution {
         long newNumber = number + 1;
         while (true) {
             long XorValue = number ^ newNumber;
-            String newNumberBinaryString = Long.toBinaryString(XorValue);
-            if(Long.bitCount(Long.parseLong(newNumberBinaryString,2)) <= 2)
+            if(Long.bitCount(XorValue) <= 2)
                 return newNumber;
             newNumber++;
         }
