@@ -1,61 +1,79 @@
 package com.company;
 
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
-    //중복된 값이 나올 경우 또 다시 계산하는 것을 막기 위해서 map을 사용
-    Map<Long,Long> map = new HashMap<>();
-    public long[] solution(long[] numbers) {
-        //return 용 Long 배열을 생성
-        long[] answer = new long[numbers.length];
+    public int solution(String skill, String[] skill_trees) {
+        //answer 변수 선언
+        int answer = 0;
 
-        //배열용으로 사용할 index
-        int index = 0;
+        //모든 스킬 트리에 대해서 스킬이 올바르게 찍혔는지 테스트
+        for (String skill_tree : skill_trees) {
+            //모든 스킬의 찍힌 순서를 알아보기 위해서 skillIndexArr 를 선언
+            int[] skillIndexArr = new int[skill.length()];
+            //올바르게 찍힌 스킬인지 확인해줄 flag
+            boolean rightSkillTreeFlag = true;
 
-        //for문을 돌면서 모든 요소에 대해서 검사
-        for (long number : numbers) {
-            //이전에 저장한 값이 있으면 해당 값을 return , 아니면 -1을 리턴
-            Long tempAnswer = map.getOrDefault(number, -1L);
-            //-1이 나오면 값이 없으므로 계산을 해야함
-            if(tempAnswer == -1L) {
-                //값을 구하고 answer배열에 저장 후 map 에도 저장
-                long saveValue = findNewNum(number);
-                answer[index] = saveValue;
-                map.put(number, tempAnswer);
-            }else{
-                //이미 저장된 값이 있으면 해당 값을 저장
-                answer[index] = tempAnswer;
+            //skill_tree에서 skill 이 어떤 순서로 찍혔는지 확인
+            for (int i = 0; i < skill.length(); i++) {
+                //처음으로 찍혀야 하는 스킬 선언
+                char eachSkill = skill.charAt(i);
+                //skill_tree 에서 몇번째로 찍혔는지 확인
+                int eachSkillIndex = skill_tree.indexOf(eachSkill);
+
+                //구해진 값을 skillIndexArr 에 저장
+                skillIndexArr[i] = eachSkillIndex;
             }
 
-            //index는 for을 돌때마다 업데이트
-            index++;
+            //skillIndexArr 에 찍혀진 값을 바탕으로 올바르게 찍힌 스킬인지 확인한다.
+                //Index가 OutOfRangeError 를 발생하는 것을 막기 위해서 skill.length() -1 까지만 for문을 돌린다.
+            for (int i = 0; i < skill.length() - 1; i++) {
+                //선행스킬 중 현재 스킬
+                int curSkillIdx = skillIndexArr[i];
+                //선행스킬 중 다음 스킬
+                int nextSkillIdx = skillIndexArr[i + 1];
+
+                //올바른 스킬 트리가 아닌 경우 rightSkillTreeFlag 를 false 로 변환한 후 for문을 빠져나간다.
+                if (isNotRightSkillTree(curSkillIdx, nextSkillIdx)) {
+                    rightSkillTreeFlag = false;
+                    break;
+                }
+            }
+
+            //올바른 스킬 트리 인 경우만 answer를 업데이트
+            if(rightSkillTreeFlag){
+                answer++;
+            }
         }
 
         return answer;
     }
 
-    private long findNewNum(long number) {
-        //number를 2진수로 변경
-        String numberBinaryString = Long.toBinaryString(number);
+    //현재 스킬이 skill_tree 에 존재하는지 확인
+    private boolean isExistInSkillTree(int skillIndex){
+        return skillIndex != -1;
+    }
 
-        // 비트가 2개 이하로 작은 제일 작은 값을 찾아야 하므로 일반 indexOf 가 아니라 lastIndexOf 를 사용한다.
-        int zeroIndex = numberBinaryString.lastIndexOf("0");
+    //매개변수로 들어간 모든 스킬이 skill_tree 에 존재하는지 확인
+    private boolean isAllExistInSkillTree(int skillIdx1 , int skillIdx2){
+        return skillIdx1 != -1 && skillIdx2 != -1;
+    }
 
-        //0을 찾지 못했으면 제일 큰 비트를 10 으로 바꿔준다.
-        if(zeroIndex == -1){
-            String newNumberBinaryString = "10" + numberBinaryString.substring(1);
-            return Long.parseLong(newNumberBinaryString, 2);
+    //잘못된 순서로 찍힌 스킬인지 확인
+    private boolean isWrongOrderSkillTree(int curSkillIndex , int nextSkillIndex){
+        //모든 스킬이 존재하는데 후행 스킬이 먼저 찍힌 경우 잘못된 순서로 찍힌 스킬
+        return isAllExistInSkillTree(curSkillIndex, nextSkillIndex) &&
+                curSkillIndex - nextSkillIndex > 0;
+    }
+
+    //올바른 스킬트리가 맞는지 확인
+        //1. 선행스킬이 존재하지 않는데 후행스킬이 존재하는 경우 올바른 스킬트리가 아님
+        //2. 순서가 잘못된 경우 올바른 스킬트리가 아님
+    private boolean isNotRightSkillTree(int curSkillIndex , int nextSkillIndex){
+        if(!isExistInSkillTree(curSkillIndex) && isExistInSkillTree(nextSkillIndex)){
+            return true;
+        }else if(isWrongOrderSkillTree(curSkillIndex, nextSkillIndex)){
+            return true;
         }
-        //String의 마지막 자리에 0이 있으면 해당 자리만 1 올려주면 된다.
-        else if (zeroIndex == numberBinaryString.length() - 1){
-            String newNumberBinaryString = numberBinaryString.substring(0, zeroIndex) + "1" + numberBinaryString.substring(zeroIndex + 1);
-            return Long.parseLong(newNumberBinaryString, 2);
-        }
-        //0이 없거나 , String의 마지막 자리에 0이 있는 경우가 아니면 lastIndexOf로 0을 찾고 01을 10으로 바꿔주면 된다.
-        else {
-            String newNumberBinaryString = numberBinaryString.substring(0, zeroIndex) + "10" + numberBinaryString.substring(zeroIndex + 2);
-            return Long.parseLong(newNumberBinaryString, 2);
-        }
+
+        return false;
     }
 }
