@@ -1,4 +1,4 @@
-package com.company.Greedy;
+package Greedy;
 
 // 모험가 길드 문제
 
@@ -18,7 +18,7 @@ public class Greedy3 {
 
         //인덱스
         int index = 0;
-        
+
         //정수 배열 내용 업데이트
         for (String tempStr : strArray) {
             intArray[index] = (Integer.parseInt(tempStr));

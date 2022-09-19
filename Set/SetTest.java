@@ -1,4 +1,4 @@
-package com.company.Set;
+package Set;
 
 import java.util.HashSet;
 import java.util.Iterator;

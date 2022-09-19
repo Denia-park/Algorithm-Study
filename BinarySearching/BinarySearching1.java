@@ -1,6 +1,4 @@
-package com.company.BinarySearching;
-
-import java.util.Arrays;
+package BinarySearching;
 
 // 떡볶이 떡 만들기
 public class BinarySearching1 {
@@ -68,7 +66,7 @@ public class BinarySearching1 {
 
 }
 
-// 나동빈님 코드 
+// 나동빈님 코드
 
 //import java.util.*;
 //

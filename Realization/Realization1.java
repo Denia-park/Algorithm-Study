@@ -1,4 +1,4 @@
-package com.company.Realization;
+package Realization;
 
 //시각
     // 문제 해결 아이디어

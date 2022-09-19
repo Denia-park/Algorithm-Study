@@ -1,7 +1,3 @@
-package com.company;
-
-import java.util.Arrays;
-
 public class Main {
     static public void main(String[] args) {
         Solution testSolution = new Solution();
