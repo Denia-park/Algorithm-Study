@@ -19,6 +19,8 @@ public class Main {
 //        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100, 90}, 100))); //5
 
 
-        System.out.println(testSolution.solution("CBD", new String[]{"BACDE", "CBADF", "AECB", "BDA"}));
+//        System.out.println(testSolution.solution(3, new String[]{"Jeju", "Pangyo", "Seoul", "NewYork", "LA", "Jeju", "Pangyo", "Seoul", "NewYork", "LA"}));
+//        System.out.println(testSolution.solution(2, new String[]{"Jeju", "Pangyo", "NewYork", "newyork"}));
+        System.out.println(testSolution.solution(0, new String[]{"Jeju", "la", "Jeju", "La","lA","lA","lA","La", "newyork", "newyork", "newyork", "newyork","Jeju", "Jeju", "Jeju", "Jeju"}));
     }
 }
