@@ -7,6 +7,9 @@ class Solution {
     public int solution(int cacheSize, String[] cities) {
         int answer = 0;
 
+        if(cacheSize == 0)
+            return cities.length * 5;
+
         Deque<String> dq = new LinkedList<>();
 
         for (String city : cities) {
@@ -18,9 +21,9 @@ class Solution {
                 continue;
             }
 
-            if(dq.size() >= cacheSize) {
+            if(dq.size() >= cacheSize)
                 dq.poll();
-            }
+
             dq.add(upperCaseCityName);
             answer += 5;
         }
