@@ -1,4 +1,4 @@
-package com.company.DynamicProgramming;
+package DynamicProgramming;
 
 import java.util.ArrayList;
 import java.util.Collections;

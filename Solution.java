@@ -1,45 +1,108 @@
-package com.company;
-
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class Solution {
-    public int solution(int cacheSize, String[] cities) {
-        //answer을 정의
-        int answer = 0;
+    //교점을 저장할 List 선언
+    List<long[]> list;
+    //*을 표현하기 위한 배열을 만들기 위해서 필요한 값들을 선언
+    long minX, minY, maxX, maxY;
+    public String[] solution(int[][] lines) {
+        //교점을 저장할 List를 초기화
+        list = new ArrayList<>();
 
-        //cacheSize 가 0일때는 예외로 처리
-        if(cacheSize == 0)
-            return cities.length * 5;
+        //*을 표현하기 위한 배열을 만들기 위해서 필요한 값들을 초기화
+        minX = Long.MAX_VALUE;
+        minY = Long.MAX_VALUE;
+        maxX = Long.MIN_VALUE;
+        maxY = Long.MIN_VALUE;
 
-        //캐시 저장을 위해서 Deque 선언
-        Deque<String> dq = new LinkedList<>();
+        //교점 구하기
+        getIntersections(lines);
 
-        //모든 city에 대해서 캐시를 확인
-        for (String city : cities) {
-            //모든 city의 이름은 대문자로 처리한다. (※문제 조건에는 대소문자 구분하지 않는다고 나와있음)
-            String upperCaseCityName = city.toUpperCase();
-            //dq가 비어있지 않고 , 캐시에 해당 city가 들어있으면 오래된 캐시를 정리하고 새 캐시로 업데이트
-            //캐시에 내용이 있으므로 1초를 추가
-            //작업이 끝났으므로 continue
-            if(!dq.isEmpty() && dq.contains(upperCaseCityName)) {
-                dq.remove(upperCaseCityName);
-                dq.add(upperCaseCityName);
-                answer += 1;
-                continue;
+        //교점 표시하기
+        return showIntersection();
+    }
+
+    private void getIntersections(int[][] lines) {
+        //2중 for문을 돌면서 모든 선들끼리의 교점을 구한다. => 조합을 이용
+        for (int i = 0; i < lines.length; i++) {
+            for (int j = i + 1; j < lines.length; j++) {
+                calculateIntersection(lines[i], lines[j]);
             }
+        }
+    }
 
-            //cacheSize 가 0인 경우는 위에서 이미 처리했으므로 무조건 캐시 사이즈는 1 이상
-            //캐시의 내용이 있는데 현재 city의 내용이 없으므로 LRU 캐시 교체 알고리즘에 의해 제일 오래된 캐시를 삭제
-            if(dq.size() >= cacheSize)
-                dq.poll();
+    private void calculateIntersection(int[] line1, int[] line2) {
+        //교점은 실수가 나올수도 있으므로 Double 로 선언
+        Double[] tempVal = new Double[2];
+        //A ~ F 까지는 모두 정수이지만 곱 , 나누기 연산시에는 실수가 나올 수 있으므로 처음부터 double로 선언
+        double A = line1[0];
+        double B = line1[1];
+        double E = line1[2];
+        double C = line2[0];
+        double D = line2[1];
+        double F = line2[2];
 
-            //신규 캐시 추가
-            dq.add(upperCaseCityName);
-            //캐시에 없는 경우 실행시간은 5초를 추가
-            answer += 5;
+        //두 선이 평행하는 경우 이므로 교점이 없음
+            //두선이 겹치는 경우는 존재하지 않는다고 문제에 나와있다.
+        if((A * D) - (B * C) == 0){
+            return;
         }
 
+        //X 교점 구하기
+        tempVal[0] = ((B * F) - (E * D)) / ((A * D) - (B * C));
+        //Y 교점 구하기
+        tempVal[1] = ((E * C) - (A * F)) / ((A * D) - (B * C));
+
+        //소수점을 버리기
+        long intFloatX = (long) Math.floor(tempVal[0]);
+        long intFloatY = (long) Math.floor(tempVal[1]);
+
+        //기존 값과 소수점을 버린 값을 비교하는데 X ,Y 둘중에 한개라도 다르다면,
+        // 실수가 포함되어 있으므로 교점을 구하지 않음
+        if (tempVal[0] != intFloatX || tempVal[1] != intFloatY) {
+            return;
+        }
+
+        //X , Y 의 최대값 최소값을 업데이트한다.
+        minX = Math.min(minX, intFloatX);
+        minY = Math.min(minY, intFloatY);
+        maxX = Math.max(maxX, intFloatX);
+        maxY = Math.max(maxY, intFloatY);
+
+        //교점이 정수인 경우 list에 추가한다.
+        list.add(new long[]{intFloatX, intFloatY});
+    }
+
+    private String[] showIntersection() {
+        //교점의 사이즈가 1인 경우 바로 return 한다.
+        if(list.size() == 1) {
+            return new String[]{"*"};
+        }
+
+        //*을 찍기 위해서 char 2차원 배열을 선언한다.
+        char[][] charArr = new char[(int) (maxY - minY + 1)][(int) (maxX - minX + 1)];
+
+        //처음에는 모두 '.' 로 채운다.
+        for (char[] chars : charArr) {
+            Arrays.fill(chars, '.');
+        }
+
+        //*을 교점에다가 채운다
+        for (long[] ints : list) {
+            int absX = (int) Math.abs(ints[0] - minX);
+            int absY = (int) Math.abs(maxY - ints[1]);
+            charArr[absY][absX] = '*';
+        }
+
+        //char의 2차원 배열을 String 1차원 배열로 변환
+        String[] answer = new String[(int) (maxY - minY + 1)];
+        for (int i = 0; i < maxY - minY + 1; i++) {
+            answer[i] = String.valueOf(charArr[i]);
+        }
+
+        //answer를 return
         return answer;
     }
 }

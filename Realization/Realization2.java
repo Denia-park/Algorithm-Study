@@ -1,4 +1,4 @@
-package com.company.Realization;
+package Realization;
 
 public class Realization2 {
     public static void main(String[] args) {

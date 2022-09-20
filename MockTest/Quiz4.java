@@ -1,4 +1,4 @@
-package com.company;
+package MockTest;
 
 import java.util.Arrays;
 

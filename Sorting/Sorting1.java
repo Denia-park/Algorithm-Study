@@ -1,4 +1,4 @@
-package com.company.Sorting;
+package Sorting;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class Sorting1 {
 //        // 배열 B는 내림차순 정렬 수행
 //        Arrays.sort(b, Collections.reverseOrder());
 //
-//        // 첫 번째 인덱스부터 확인하며, 두 배열의 원소를 최대 K번 비교 
+//        // 첫 번째 인덱스부터 확인하며, 두 배열의 원소를 최대 K번 비교
 //        for (int i = 0; i < k; i++) {
 //            // A의 원소가 B의 원소보다 작은 경우
 //            if (a[i] < b[i]) {

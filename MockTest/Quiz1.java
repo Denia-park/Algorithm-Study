@@ -1,4 +1,4 @@
-package com.company;
+package MockTest;
 
 public class Quiz1 {
     static public void main(String[] args) {
