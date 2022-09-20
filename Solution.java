@@ -51,12 +51,12 @@ class Solution {
         list.sort(new Comparator<Float[]>() {
             @Override
             public int compare(Float[] o1, Float[] o2) {
-                if(o1[0] < o2[0]){
-                    return -1;
-                }else if(o1[0] == o2[0]){
-                    return o1[1].compareTo(o2[1]);
-                }else{
+                if(o1[1] > o2[1]){
                     return 1;
+                }else if(o1[1] == o2[1]){
+                    return o1[0].compareTo(o2[0]);
+                }else{
+                    return -1;
                 }
             }
         });
@@ -67,10 +67,6 @@ class Solution {
             Arrays.fill(chars, '.');
         }
 
-        boolean stanFlag = false;
-        int stanX = 0;
-        int stanY = 0;
-
         for (Float[] floats : list) {
             int intFloatX = (int) Math.floor(floats[0]);
             int intFloatY = (int) Math.floor(floats[1]);
@@ -79,16 +75,9 @@ class Solution {
                 continue;
             }
 
-            if (!stanFlag) {
-                stanFlag = true;
-                charArr[0][0] = '*';
-                stanX = intFloatX;
-                stanY = intFloatY;
-            } else {
-                int absY = Math.abs(stanY - intFloatY);
-                int absX = Math.abs(intFloatX - stanX);
-                charArr[absY][absX] = '*';
-            }
+            int absX = Math.abs(intFloatX - minX);
+            int absY = Math.abs(maxY - intFloatY);
+            charArr[absY][absX] = '*';
         }
 
         String[] answer = new String[maxY - minY + 1];
