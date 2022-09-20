@@ -1,43 +1,97 @@
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class Solution {
-    public int solution(int cacheSize, String[] cities) {
-        //answer을 정의
-        int answer = 0;
+    List<Float[]> list;
+    public String[] solution(int[][] lines) {
+        String[] answer = {};
 
-        //cacheSize 가 0일때는 예외로 처리
-        if(cacheSize == 0)
-            return cities.length * 5;
+        list = new ArrayList<>();
 
-        //캐시 저장을 위해서 Deque 선언
-        Deque<String> dq = new LinkedList<>();
+        //교점 구하기
+        getIntersections(lines);
 
-        //모든 city에 대해서 캐시를 확인
-        for (String city : cities) {
-            //모든 city의 이름은 대문자로 처리한다. (※문제 조건에는 대소문자 구분하지 않는다고 나와있음)
-            String upperCaseCityName = city.toUpperCase();
-            //dq가 비어있지 않고 , 캐시에 해당 city가 들어있으면 오래된 캐시를 정리하고 새 캐시로 업데이트
-            //캐시에 내용이 있으므로 1초를 추가
-            //작업이 끝났으므로 continue
-            if(!dq.isEmpty() && dq.contains(upperCaseCityName)) {
-                dq.remove(upperCaseCityName);
-                dq.add(upperCaseCityName);
-                answer += 1;
+        //교점 표시하기
+        answer = showIntersection();
+
+        return answer;
+    }
+
+    private void getIntersections(int[][] lines) {
+        for (int i = 0; i < lines.length; i++) {
+            for (int j = i + 1; j < lines.length; j++) {
+                calculateIntersection(lines[i], lines[j]);
+            }
+        }
+    }
+
+    private String[] showIntersection() {
+        if(list.size() == 1) {
+            return new String[]{"*"};
+        }
+
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (Float[] floats : list) {
+            int intFloatX = (int) Math.floor(floats[0]);
+            int intFloatY = (int) Math.floor(floats[1]);
+
+            if (floats[0] != intFloatX || floats[1] != intFloatY) {
                 continue;
             }
 
-            //cacheSize 가 0인 경우는 위에서 이미 처리했으므로 무조건 캐시 사이즈는 1 이상
-            //캐시의 내용이 있는데 현재 city의 내용이 없으므로 LRU 캐시 교체 알고리즘에 의해 제일 오래된 캐시를 삭제
-            if(dq.size() >= cacheSize)
-                dq.poll();
+            minX = Math.min(minX, intFloatX);
+            minY = Math.min(minY, intFloatY);
+            maxX = Math.max(maxX, intFloatX);
+            maxY = Math.max(maxY, intFloatY);
+        }
 
-            //신규 캐시 추가
-            dq.add(upperCaseCityName);
-            //캐시에 없는 경우 실행시간은 5초를 추가
-            answer += 5;
+        char[][] charArr = new char[maxY - minY + 1][maxX - minX + 1];
+
+        for (char[] chars : charArr) {
+            Arrays.fill(chars, '.');
+        }
+
+        for (Float[] floats : list) {
+            int intFloatX = (int) Math.floor(floats[0]);
+            int intFloatY = (int) Math.floor(floats[1]);
+
+            if (floats[0] != intFloatX || floats[1] != intFloatY) {
+                continue;
+            }
+
+            charArr[intFloatX + 1][intFloatY - 1] = '*';
+        }
+
+        String[] answer = new String[maxY - minY + 1];
+        for (int i = 0; i < maxY - minY + 1; i++) {
+            answer[i] = String.valueOf(charArr[i]);
         }
 
         return answer;
     }
+
+    private void calculateIntersection(int[] line1, int[] line2) {
+        Float[] tempVal = new Float[2];
+        float A = line1[0];
+        float B = line1[1];
+        float E = line1[2];
+        float C = line2[0];
+        float D = line2[1];
+        float F = line2[2];
+
+        if((A * D) - (B * C) == 0){
+            return;
+        }
+
+        tempVal[0] = ((B * F) - (E * D)) / ((A * D) - (B * C));
+        tempVal[1] = ((E * C) - (A * F)) / ((A * D) - (B * C));
+
+        list.add(tempVal);
+    }
+
 }
