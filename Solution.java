@@ -1,18 +1,25 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 class Solution {
-    List<Float[]> list;
+    List<int[]> list;
+    int minX;
+    int minY;
+    int maxX;
+    int maxY;
     public String[] solution(int[][] lines) {
         list = new ArrayList<>();
+
+        minX = Integer.MAX_VALUE;
+        minY = Integer.MAX_VALUE;
+        maxX = Integer.MIN_VALUE;
+        maxY = Integer.MIN_VALUE;
 
         //교점 구하기
         getIntersections(lines);
 
         //교점 표시하기
-
         return showIntersection();
     }
 
@@ -29,54 +36,15 @@ class Solution {
             return new String[]{"*"};
         }
 
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
-
-        for (Float[] floats : list) {
-            int intFloatX = (int) Math.floor(floats[0]);
-            int intFloatY = (int) Math.floor(floats[1]);
-
-            if (floats[0] != intFloatX || floats[1] != intFloatY) {
-                continue;
-            }
-
-            minX = Math.min(minX, intFloatX);
-            minY = Math.min(minY, intFloatY);
-            maxX = Math.max(maxX, intFloatX);
-            maxY = Math.max(maxY, intFloatY);
-        }
-
-        list.sort(new Comparator<Float[]>() {
-            @Override
-            public int compare(Float[] o1, Float[] o2) {
-                if(o1[1] > o2[1]){
-                    return 1;
-                }else if(o1[1] == o2[1]){
-                    return o1[0].compareTo(o2[0]);
-                }else{
-                    return -1;
-                }
-            }
-        });
-
         char[][] charArr = new char[maxY - minY + 1][maxX - minX + 1];
 
         for (char[] chars : charArr) {
             Arrays.fill(chars, '.');
         }
 
-        for (Float[] floats : list) {
-            int intFloatX = (int) Math.floor(floats[0]);
-            int intFloatY = (int) Math.floor(floats[1]);
-
-            if (floats[0] != intFloatX || floats[1] != intFloatY) {
-                continue;
-            }
-
-            int absX = Math.abs(intFloatX - minX);
-            int absY = Math.abs(maxY - intFloatY);
+        for (int[] ints : list) {
+            int absX = Math.abs(ints[0] - minX);
+            int absY = Math.abs(maxY - ints[1]);
             charArr[absY][absX] = '*';
         }
 
@@ -104,7 +72,18 @@ class Solution {
         tempVal[0] = ((B * F) - (E * D)) / ((A * D) - (B * C));
         tempVal[1] = ((E * C) - (A * F)) / ((A * D) - (B * C));
 
-        list.add(tempVal);
-    }
+        int intFloatX = (int) Math.floor(tempVal[0]);
+        int intFloatY = (int) Math.floor(tempVal[1]);
 
+        if (tempVal[0] != intFloatX || tempVal[1] != intFloatY) {
+            return;
+        }
+
+        minX = Math.min(minX, intFloatX);
+        minY = Math.min(minY, intFloatY);
+        maxX = Math.max(maxX, intFloatX);
+        maxY = Math.max(maxY, intFloatY);
+
+        list.add(new int[]{intFloatX, intFloatY});
+    }
 }
