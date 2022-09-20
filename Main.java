@@ -18,9 +18,9 @@ public class Main {
 
 
         System.out.println(Arrays.toString(testSolution.solution(new int[][]{{2, -1, 4}, {-2, -1, 4}, {0, -1, 1}, {5, -8, -12}, {5, 8, 12}})));
-        System.out.println(Arrays.toString(testSolution.solution(new int[][]{{0, 1, -1}, {1, 0, -1}, {1, 0, 1}})));
-        System.out.println(Arrays.toString(testSolution.solution(new int[][]{{1, -1, 0}, {2, -1, 0}})));
-        System.out.println(Arrays.toString(testSolution.solution(new int[][]{{1, -1, 0}, {2, -1, 0}, {4, -1, 0}})));
+//        System.out.println(Arrays.toString(testSolution.solution(new int[][]{{0, 1, -1}, {1, 0, -1}, {1, 0, 1}})));
+//        System.out.println(Arrays.toString(testSolution.solution(new int[][]{{1, -1, 0}, {2, -1, 0}})));
+//        System.out.println(Arrays.toString(testSolution.solution(new int[][]{{1, -1, 0}, {2, -1, 0}, {4, -1, 0}})));
     }
 }
 

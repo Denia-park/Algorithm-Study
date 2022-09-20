@@ -3,18 +3,18 @@ import java.util.Arrays;
 import java.util.List;
 
 class Solution {
-    List<int[]> list;
-    int minX;
-    int minY;
-    int maxX;
-    int maxY;
+    List<long[]> list;
+    long minX;
+    long minY;
+    long maxX;
+    long maxY;
     public String[] solution(int[][] lines) {
         list = new ArrayList<>();
 
-        minX = Integer.MAX_VALUE;
-        minY = Integer.MAX_VALUE;
-        maxX = Integer.MIN_VALUE;
-        maxY = Integer.MIN_VALUE;
+        minX = Long.MAX_VALUE;
+        minY = Long.MAX_VALUE;
+        maxX = Long.MIN_VALUE;
+        maxY = Long.MIN_VALUE;
 
         //교점 구하기
         getIntersections(lines);
@@ -31,39 +31,14 @@ class Solution {
         }
     }
 
-    private String[] showIntersection() {
-        if(list.size() == 1) {
-            return new String[]{"*"};
-        }
-
-        char[][] charArr = new char[maxY - minY + 1][maxX - minX + 1];
-
-        for (char[] chars : charArr) {
-            Arrays.fill(chars, '.');
-        }
-
-        for (int[] ints : list) {
-            int absX = Math.abs(ints[0] - minX);
-            int absY = Math.abs(maxY - ints[1]);
-            charArr[absY][absX] = '*';
-        }
-
-        String[] answer = new String[maxY - minY + 1];
-        for (int i = 0; i < maxY - minY + 1; i++) {
-            answer[i] = String.valueOf(charArr[i]);
-        }
-
-        return answer;
-    }
-
     private void calculateIntersection(int[] line1, int[] line2) {
-        Float[] tempVal = new Float[2];
-        float A = line1[0];
-        float B = line1[1];
-        float E = line1[2];
-        float C = line2[0];
-        float D = line2[1];
-        float F = line2[2];
+        Double[] tempVal = new Double[2];
+        double A = line1[0];
+        double B = line1[1];
+        double E = line1[2];
+        double C = line2[0];
+        double D = line2[1];
+        double F = line2[2];
 
         if((A * D) - (B * C) == 0){
             return;
@@ -72,8 +47,8 @@ class Solution {
         tempVal[0] = ((B * F) - (E * D)) / ((A * D) - (B * C));
         tempVal[1] = ((E * C) - (A * F)) / ((A * D) - (B * C));
 
-        int intFloatX = (int) Math.floor(tempVal[0]);
-        int intFloatY = (int) Math.floor(tempVal[1]);
+        long intFloatX = (long) Math.floor(tempVal[0]);
+        long intFloatY = (long) Math.floor(tempVal[1]);
 
         if (tempVal[0] != intFloatX || tempVal[1] != intFloatY) {
             return;
@@ -84,6 +59,31 @@ class Solution {
         maxX = Math.max(maxX, intFloatX);
         maxY = Math.max(maxY, intFloatY);
 
-        list.add(new int[]{intFloatX, intFloatY});
+        list.add(new long[]{intFloatX, intFloatY});
+    }
+
+    private String[] showIntersection() {
+        if(list.size() == 1) {
+            return new String[]{"*"};
+        }
+
+        char[][] charArr = new char[(int) (maxY - minY + 1)][(int) (maxX - minX + 1)];
+
+        for (char[] chars : charArr) {
+            Arrays.fill(chars, '.');
+        }
+
+        for (long[] ints : list) {
+            int absX = (int) Math.abs(ints[0] - minX);
+            int absY = (int) Math.abs(maxY - ints[1]);
+            charArr[absY][absX] = '*';
+        }
+
+        String[] answer = new String[(int) (maxY - minY + 1)];
+        for (int i = 0; i < maxY - minY + 1; i++) {
+            answer[i] = String.valueOf(charArr[i]);
+        }
+
+        return answer;
     }
 }
