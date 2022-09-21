@@ -1,108 +1,89 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 class Solution {
-    //교점을 저장할 List 선언
-    List<long[]> list;
-    //*을 표현하기 위한 배열을 만들기 위해서 필요한 값들을 선언
-    long minX, minY, maxX, maxY;
-    public String[] solution(int[][] lines) {
-        //교점을 저장할 List를 초기화
-        list = new ArrayList<>();
+    //사용하는 좌표계의 사이즈를 확인할때 사용
+    int mapSizeLimit;
+    //이동한 길을 기록해둘 Set
+    Set<String> pathMemory;
+    //현재 좌표의 위치
+    int[] curPoint;
+    public int solution(String dirs) {
+        //좌표계 사이즈 초기화
+        mapSizeLimit = 5;
+        //Set 초기화
+        pathMemory = new HashSet<>();
+        //처음 좌표 시작은 0,0 에서 시작
+        curPoint = new int[]{0, 0};
 
-        //*을 표현하기 위한 배열을 만들기 위해서 필요한 값들을 초기화
-        minX = Long.MAX_VALUE;
-        minY = Long.MAX_VALUE;
-        maxX = Long.MIN_VALUE;
-        maxY = Long.MIN_VALUE;
+        //제공된 이동경로를 따라 curPoint 를 움직인다.
+        for (int i = 0; i < dirs.length(); i++) {
+            //움직여야 하는 이동경로
+            char command = dirs.charAt(i);
+            //주어진 이동경로에 대해서 curPoint 를 이동시키는 메서드
+            movePoint(command);
+        }
 
-        //교점 구하기
-        getIntersections(lines);
-
-        //교점 표시하기
-        return showIntersection();
+        //이동한 Path 를 가지고 있는 pathMemory 의 Size 절반이 움직인 경로
+            //Size의 절반인 이유는 1,1 -> 0,0 간 것 과 0,0 -> 1,1 간 것은 똑같기 때문에 동일 경로에 대해서
+            //2가지의 값이 존재한다.
+        return pathMemory.size() / 2;
     }
 
-    private void getIntersections(int[][] lines) {
-        //2중 for문을 돌면서 모든 선들끼리의 교점을 구한다. => 조합을 이용
-        for (int i = 0; i < lines.length; i++) {
-            for (int j = i + 1; j < lines.length; j++) {
-                calculateIntersection(lines[i], lines[j]);
-            }
+    private void movePoint(char command) {
+        //원래 좌표를 저장 : originX, originY
+        int originX = curPoint[0];
+        int originY = curPoint[1];
+        //움직인 좌표를 관리 : moveX, moveY
+        int moveX = curPoint[0];
+        int moveY = curPoint[1];
+
+        //command에 따라서 다르게 움직이므로 switch문 사용
+            //mapSizeLimit 보다 작은 경우에만 좌표를 옮길 수 있음
+            //mapSizeLimit 을 넘어가게 되면 더이상 움직이지 못함 => 경로 존재 X , 그러므로 바로 return
+        switch (command) {
+            case 'U':
+                if (moveY + 1 <= mapSizeLimit){
+                    moveY++;
+                    break;
+                }
+                return;
+            case 'D':
+                if (moveY - 1 >= -mapSizeLimit) {
+                    moveY--;
+                    break;
+                }
+                return;
+            case 'R':
+                if (moveX + 1 <= mapSizeLimit) {
+                    moveX++;
+                    break;
+                }
+                return;
+            case 'L':
+                if (moveX - 1 >= -mapSizeLimit) {
+                    moveX--;
+                    break;
+                }
+                return;
         }
-    }
+        
+        //움직인 경로를 저장하기 위해서 StringBuilder 객체 생성
+        //원래 좌표 , 이동 좌표 를 String 으로 만들어서 pathMemory 에 저장
+        StringBuilder tempPathMemory = new StringBuilder();
+        tempPathMemory.append(originX).append(originY);
+        tempPathMemory.append(moveX).append(moveY);
+        pathMemory.add(tempPathMemory.toString());
 
-    private void calculateIntersection(int[] line1, int[] line2) {
-        //교점은 실수가 나올수도 있으므로 Double 로 선언
-        Double[] tempVal = new Double[2];
-        //A ~ F 까지는 모두 정수이지만 곱 , 나누기 연산시에는 실수가 나올 수 있으므로 처음부터 double로 선언
-        double A = line1[0];
-        double B = line1[1];
-        double E = line1[2];
-        double C = line2[0];
-        double D = line2[1];
-        double F = line2[2];
+        //움직인 경로의 반대 버전을 저장하기 위해서 setLength 를 사용하여 StringBuilder 초기화
+        //이동 좌표, 원래 좌표 를 String 으로 만들어서 pathMemory 에 저장
+        tempPathMemory.setLength(0);
+        tempPathMemory.append(moveX).append(moveY);
+        tempPathMemory.append(originX).append(originY);
+        pathMemory.add(tempPathMemory.toString());
 
-        //두 선이 평행하는 경우 이므로 교점이 없음
-            //두선이 겹치는 경우는 존재하지 않는다고 문제에 나와있다.
-        if((A * D) - (B * C) == 0){
-            return;
-        }
-
-        //X 교점 구하기
-        tempVal[0] = ((B * F) - (E * D)) / ((A * D) - (B * C));
-        //Y 교점 구하기
-        tempVal[1] = ((E * C) - (A * F)) / ((A * D) - (B * C));
-
-        //소수점을 버리기
-        long intFloatX = (long) Math.floor(tempVal[0]);
-        long intFloatY = (long) Math.floor(tempVal[1]);
-
-        //기존 값과 소수점을 버린 값을 비교하는데 X ,Y 둘중에 한개라도 다르다면,
-        // 실수가 포함되어 있으므로 교점을 구하지 않음
-        if (tempVal[0] != intFloatX || tempVal[1] != intFloatY) {
-            return;
-        }
-
-        //X , Y 의 최대값 최소값을 업데이트한다.
-        minX = Math.min(minX, intFloatX);
-        minY = Math.min(minY, intFloatY);
-        maxX = Math.max(maxX, intFloatX);
-        maxY = Math.max(maxY, intFloatY);
-
-        //교점이 정수인 경우 list에 추가한다.
-        list.add(new long[]{intFloatX, intFloatY});
-    }
-
-    private String[] showIntersection() {
-        //교점의 사이즈가 1인 경우 바로 return 한다.
-        if(list.size() == 1) {
-            return new String[]{"*"};
-        }
-
-        //*을 찍기 위해서 char 2차원 배열을 선언한다.
-        char[][] charArr = new char[(int) (maxY - minY + 1)][(int) (maxX - minX + 1)];
-
-        //처음에는 모두 '.' 로 채운다.
-        for (char[] chars : charArr) {
-            Arrays.fill(chars, '.');
-        }
-
-        //*을 교점에다가 채운다
-        for (long[] ints : list) {
-            int absX = (int) Math.abs(ints[0] - minX);
-            int absY = (int) Math.abs(maxY - ints[1]);
-            charArr[absY][absX] = '*';
-        }
-
-        //char의 2차원 배열을 String 1차원 배열로 변환
-        String[] answer = new String[(int) (maxY - minY + 1)];
-        for (int i = 0; i < maxY - minY + 1; i++) {
-            answer[i] = String.valueOf(charArr[i]);
-        }
-
-        //answer를 return
-        return answer;
+        //현재의 좌표를 움직인 좌표로 수정
+        curPoint[0] = moveX;
+        curPoint[1] = moveY;
     }
 }
