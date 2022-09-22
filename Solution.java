@@ -13,8 +13,6 @@ class Solution {
     final int MUSIC_CODE_IN_PLAY_TIME = 3;
     List<String[]> editMusicInfos;
     public String solution(String neoCode, String[] musicinfos) {
-        String answer = "";
-
         editMusicInfos = new ArrayList<>();
 
         int index = 0;
@@ -60,7 +58,7 @@ class Solution {
             return 1;
         });
 
-        return matchingMusicArr.get(0)[2];
+        return matchingMusicArr.get(0)[MUSIC_TITLE];
     }
 
     private boolean isEqualCode(String cuttingCode, String neoCode) {
