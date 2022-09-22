@@ -12,7 +12,7 @@ class Solution {
     final int MUSIC_TITLE = 2;
     final int MUSIC_CODE_IN_PLAY_TIME = 3;
     List<String[]> editMusicInfos;
-    public String solution(String m, String[] musicinfos) {
+    public String solution(String neoCode, String[] musicinfos) {
         String answer = "";
 
         editMusicInfos = new ArrayList<>();
@@ -26,8 +26,17 @@ class Solution {
         List<String[]> matchingMusicArr = new ArrayList<>();
 
         for (String[] editMusicInfo : editMusicInfos) {
-            if(editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].contains(m)){
-                matchingMusicArr.add(editMusicInfo);
+            int matchingIndex = editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].indexOf(neoCode);
+
+            while(matchingIndex != -1 ){
+                String cuttingCode = editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].substring(matchingIndex, matchingIndex + neoCode.length() + 1);
+
+                if (isEqualCode(cuttingCode, neoCode)) {
+                    matchingMusicArr.add(editMusicInfo);
+                    break;
+                }
+
+                matchingIndex = editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].indexOf(neoCode, matchingIndex + 1);
             }
         }
 
@@ -52,6 +61,21 @@ class Solution {
         });
 
         return matchingMusicArr.get(0)[2];
+    }
+
+    private boolean isEqualCode(String cuttingCode, String neoCode) {
+        String[] cuttingCodeArr = getCodeArr(cuttingCode);
+        String[] neoCodeArr = getCodeArr(neoCode);
+
+        int matchingCount = 0;
+
+        for (int i = 0; i <neoCodeArr.length; i++) {
+            if (cuttingCodeArr[i].equals(neoCodeArr[i])) {
+                matchingCount++;
+            }
+        }
+
+        return matchingCount == neoCodeArr.length;
     }
 
     private void parsingMusicInfo(String musicinfo, int index) {

@@ -15,8 +15,8 @@ public class Main {
 //        System.out.println((testSolution.solution(new int[]{10, 30, 50,100,100,100, 90}, 100))); //5
 
 
-        System.out.println(testSolution.solution("ABCDEFG", new String[]{"12:00,12:14,HELLO,CDEFGAB", "13:00,13:05,WORLD,ABCDEF"}));
-        System.out.println(testSolution.solution("CC#BCC#BCC#BCC#B", new String[]{"03:00,03:30,FOO,CC#B", "04:00,04:08,BAR,CC#BCC#BCC#B"}));
+//        System.out.println(testSolution.solution("ABCDEFG", new String[]{"12:00,12:14,HELLO,CDEFGAB", "13:00,13:05,WORLD,ABCDEF"}));
+//        System.out.println(testSolution.solution("CC#BCC#BCC#BCC#B", new String[]{"03:00,03:30,FOO,CC#B", "04:00,04:08,BAR,CC#BCC#BCC#B"}));
         System.out.println(testSolution.solution("ABC", new String[]{"12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"}));
         System.out.println(testSolution.solution("ABC", new String[]{"12:50,13:04,HELLO,C#DEFGAB", "12:58,13:03,WORLD,ABCDEF"}));
     }
