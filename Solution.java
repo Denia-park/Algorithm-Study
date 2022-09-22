@@ -27,7 +27,8 @@ class Solution {
             int matchingIndex = editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].indexOf(neoCode);
 
             while(matchingIndex != -1 ){
-                String cuttingCode = editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].substring(matchingIndex, matchingIndex + neoCode.length() + 1);
+                int endSubStringIndex = (matchingIndex + neoCode.length() + 1) > editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].length() ? matchingIndex + neoCode.length() : matchingIndex + neoCode.length() + 1;
+                String cuttingCode = editMusicInfo[MUSIC_CODE_IN_PLAY_TIME].substring(matchingIndex, endSubStringIndex);
 
                 if (isEqualCode(cuttingCode, neoCode)) {
                     matchingMusicArr.add(editMusicInfo);
