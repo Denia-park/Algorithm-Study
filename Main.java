@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Main {
     static public void main(String[] args) {
         Solution testSolution = new Solution();
@@ -16,7 +18,9 @@ public class Main {
 
 
 //        System.out.println(testSolution.solution(new int[][]{{0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {0, 0, 1, 0}}));
-        System.out.println(testSolution.solution(new int[][]{{0,0,1,1},{1,1,1,1}}));
+//        System.out.println(Arrays.toString(testSolution.solution("KAKAO")));
+//        System.out.println(Arrays.toString(testSolution.solution("TOBEORNOTTOBEORTOBEORNOT")));
+        System.out.println(Arrays.toString(testSolution.solution("ABABABABABABABAB")));
     }
 }
 

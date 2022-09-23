@@ -1,23 +1,56 @@
-//정답 코드 참고 : https://small-stap.tistory.com/40
-    //DP를 사용함
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
-    int[][] memo;
+    public int[] solution(String msg) {
+        List<Integer> answer = new ArrayList<>();
+        int addIndex = 27;
 
-    public int solution(int[][] board) {
-        memo = new int[board.length + 1][board[0].length + 1];
-        int lengthOfMaxSide = 0;
+        Map<String,Integer> map = new HashMap<>();
+        initializeMap(map);
 
-        for (int i = 1; i < board.length + 1; i++) {
-            for (int j = 1; j < board[0].length + 1; j++) {
-                if(board[i - 1][j - 1] == 0 ) continue;
+        for (int i = 0; i < msg.length();) {
+            int cuttingNum = 1;
+            int tempVal;
 
-                int tempLength = Math.min(memo[i][j - 1], Math.min(memo[i - 1][j], memo[i - 1][j - 1])) + 1;
-                lengthOfMaxSide = Math.max(lengthOfMaxSide, tempLength);
-                memo[i][j] = tempLength;
+            while (true) {
+                String tempStr = msg.substring(i, i + cuttingNum);
+
+                tempVal = map.getOrDefault(tempStr, -1);
+
+                if(tempVal != -1){
+                    if(i + cuttingNum < msg.length()){
+                        cuttingNum++;
+                        continue;
+                    }
+                    else{
+                        i++;
+                        break;
+                    }
+                }
+
+                map.put(tempStr, addIndex);
+                addIndex++;
+
+                tempVal = map.get(msg.substring(i, i + cuttingNum - 1));
+                break;
             }
+
+            answer.add(tempVal);
+            i += cuttingNum - 1;
         }
 
-        return lengthOfMaxSide * lengthOfMaxSide;
+        return answer.stream().mapToInt((i) -> i).toArray();
+    }
+
+    private void initializeMap(Map<String, Integer> map) {
+        char tempC = 'A';
+
+        for (int i = 1; i <= 26; i++) {
+            map.put(String.valueOf(tempC), i);
+            tempC++;
+        }
     }
 }
