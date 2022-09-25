@@ -18,16 +18,11 @@ public class Main {
 
 
 //        System.out.println(testSolution.solution(new int[][]{{0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {0, 0, 1, 0}}));
-<<<<<<< Updated upstream
-//        System.out.println(Arrays.toString(testSolution.solution("KAKAO")));
-//        System.out.println(Arrays.toString(testSolution.solution("TOBEORNOTTOBEORTOBEORNOT")));
-        System.out.println(Arrays.toString(testSolution.solution("ABABABABABABABAB")));
-=======
 
         System.out.println(testSolution.solution(6));
         System.out.println(testSolution.solution(8));
         System.out.println(testSolution.solution(10));
->>>>>>> Stashed changes
+
     }
 }
 
