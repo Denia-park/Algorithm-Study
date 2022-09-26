@@ -19,9 +19,8 @@ public class Main {
 
 //        System.out.println(testSolution.solution(new int[][]{{0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {0, 0, 1, 0}}));
 
-        System.out.println(testSolution.solution(6));
-        System.out.println(testSolution.solution(8));
-        System.out.println(testSolution.solution(10));
+        System.out.println(Arrays.toString(testSolution.solution(new String[]{"img12.png", "img10.png", "img02.png", "img1.png", "IMG01.GIF", "img2.JPG"})));
+        System.out.println(Arrays.toString(testSolution.solution(new String[]{"F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunderbolt II", "F-14 Tomcat"})));
 
     }
 }

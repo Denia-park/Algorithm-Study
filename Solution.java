@@ -1,23 +1,58 @@
-// 정답 코드 참고 : https://wonillism.github.io/programmers/Programmers-3xn-tiling/
+import java.util.Arrays;
+import java.util.Comparator;
 
 class Solution {
-    public long solution(int n) {
-        long[] memo = new long[5001];
+    public String[] solution(String[] files) {
 
-        memo[2] = 3;
+        Arrays.sort(files,new Comparator<String>(){
+            @Override
+            public int compare(String _o1, String _o2) {
+                String o1 = _o1.toLowerCase();
+                String o2 = _o2.toLowerCase();
+                int[] o1Indexes = getNumberTailIndex(o1);
+                int o1NumIdx = o1Indexes[0];
+                int o1TailIdx = o1Indexes[1];
 
-        for (int i = 4; i <= n; i += 2) {
-            long cal1 = 0;
-            long cal2 = 0;
+                int[] o2Indexes = getNumberTailIndex(o2);
+                int o2NumIdx = o2Indexes[0];
+                int o2TailIdx = o2Indexes[1];
 
-            cal1 = 3 * memo[i - 2];
+                if(o1.substring(0,o1NumIdx).equals(o2.substring(0,o2NumIdx))){
+                    int o1Num = Integer.parseInt(o1.substring(o1NumIdx, o1TailIdx));
+                    int o2Num = Integer.parseInt(o2.substring(o2NumIdx, o2TailIdx));
 
-            for (int j = i-4; j > 0 ; j -= 2) {
-                cal2 += (2 * memo[j]);
+                    return o1Num - o2Num;
+                }
+                return o1.substring(0,o1NumIdx).compareTo(o2.substring(0,o2NumIdx));
             }
-            memo[i] = (cal1 + cal2 + 2)% 1_000_000_007;
+        });
+
+        return files;
+    }
+
+    private int[] getNumberTailIndex(String str) {
+        int[] rtArr = new int[2];
+        rtArr[1] = -1;
+
+        int numCount = 0;
+
+        for (int i = 0; i < str.length(); i++) {
+            if(i == 0) continue;
+            if(!Character.isDigit(str.charAt(i - 1)) && Character.isDigit(str.charAt(i))){
+                rtArr[0] = i;
+                break;
+            }
         }
 
-        return memo[n];
+        for (int i = rtArr[0]; i < str.length(); i++) {
+            if(numCount < 5 && Character.isDigit(str.charAt(i))){
+                numCount ++;
+            }else{
+                rtArr[1] = i;
+                break;
+            }
+        }
+
+        return rtArr;
     }
 }
