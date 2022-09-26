@@ -18,8 +18,10 @@ class Solution {
                 int o2TailIdx = o2Indexes[1];
 
                 if(o1.substring(0,o1NumIdx).equals(o2.substring(0,o2NumIdx))){
-                    int o1Num = Integer.parseInt(o1.substring(o1NumIdx, o1TailIdx));
-                    int o2Num = Integer.parseInt(o2.substring(o2NumIdx, o2TailIdx));
+                    String o1NumStr = o1.substring(o1NumIdx, o1TailIdx);
+                    String o2NumStr = o2.substring(o2NumIdx, o2TailIdx);
+                    int o1Num = Integer.parseInt(o1NumStr);
+                    int o2Num = Integer.parseInt(o2NumStr);
 
                     return o1Num - o2Num;
                 }
@@ -32,7 +34,7 @@ class Solution {
 
     private int[] getNumberTailIndex(String str) {
         int[] rtArr = new int[2];
-        rtArr[1] = -1;
+        rtArr[1] = str.length();
 
         int numCount = 0;
 
