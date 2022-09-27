@@ -13,15 +13,8 @@ class Solution {
         while(mySaveNumCount != t){
             if(numCount == numberString.length()){
                 number++;
-                if(n == 2){
-                    numberString = Integer.toBinaryString(number);
-                } else if (n == 16) {
-                    numberString = Integer.toHexString(number);
-                } else if (n == 8) {
-                    numberString = Integer.toOctalString(number);
-                } else if (n == 10) {
-                    numberString = Integer.toString(number);
-                }
+
+                numberString = Integer.toString(number, n);
 
                 numCount = 0;
             }
