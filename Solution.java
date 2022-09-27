@@ -1,38 +1,19 @@
 class Solution {
     public String solution(int n, int t, int m, int p) {
-        String answer = "";
-
-        int mySaveNumCount = 0;
+        StringBuilder answer = new StringBuilder();
 
         int number = 0;
-        String numberString = "0";
-        int numCount = 0;
+        StringBuilder allNumberString = new StringBuilder();
 
-        int turnCount = 1;
-
-        while(mySaveNumCount != t){
-            if(numCount == numberString.length()){
-                number++;
-
-                numberString = Integer.toString(number, n);
-
-                numCount = 0;
-            }
-
-            if(turnCount == p){
-                answer += numberString.charAt(numCount);
-                mySaveNumCount++;
-            }
-
-            if(turnCount < m){
-                turnCount++;
-            }else{
-                turnCount = 1;
-            }
-
-            numCount++;
+        while (allNumberString.length() < t * m){
+            allNumberString.append(Integer.toString(number, n));
+            number++;
         }
 
-        return answer.toUpperCase();
+        for (int round = 0; round < t; round++) {
+            answer.append(allNumberString.charAt(p - 1 + (round * m)));
+        }
+
+        return answer.toString().toUpperCase();
     }
 }
