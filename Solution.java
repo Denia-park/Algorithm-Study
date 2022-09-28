@@ -1,21 +1,28 @@
-class Solution {
-    public String solution(int n, int t, int m, int p) {
-        StringBuilder answer = new StringBuilder();
+//정답 코드 참조 : https://shanepark.tistory.com/183
 
-        int number = 0;
-        StringBuilder allNumberString = new StringBuilder();
+public class Solution {
+    int solution(int[][] land) {
+        final int length = land.length;
 
-        //우리가 필요한 길이만큼 String을 합친다.
-        while (allNumberString.length() < t * m){
-            allNumberString.append(Integer.toString(number, n));
-            number++;
+        for (int i = 1; i < length; i++) {
+            land[i][0] += max(land[i - 1][1], land[i - 1][2], land[i - 1][3]);
+            land[i][1] += max(land[i - 1][0], land[i - 1][2], land[i - 1][3]);
+            land[i][2] += max(land[i - 1][1], land[i - 1][3], land[i - 1][0]);
+            land[i][3] += max(land[i - 1][1], land[i - 1][2], land[i - 1][0]);
         }
 
-        //내 차례에 맞는 char을 더하면서 answer를 만든다.
-        for (int round = 0; round < t; round++) {
-            answer.append(allNumberString.charAt(p - 1 + (round * m)));
-        }
+        return max(land[length - 1]);
+    }
 
-        return answer.toString().toUpperCase();
+    public int max(int a, int b, int c) {
+        return Math.max(Math.max(a, b), c);
+    }
+
+    public int max(int[] arr) {
+        int max = 0;
+        for(int number : arr) {
+            max = Math.max(max, number);
+        }
+        return max;
     }
 }
