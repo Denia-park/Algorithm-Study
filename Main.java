@@ -20,10 +20,7 @@ public class Main {
 //        System.out.println(testSolution.solution(new int[][]{{0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {0, 0, 1, 0}}));
 
 //        System.out.println(Arrays.toString(testSolution.solution(new String[]{"img12.png", "img10.png", "img02.png", "img1.png", "IMG01.GIF", "img2.JPG"})));
-        System.out.println(testSolution.solution(2,4,2, 1));
-        System.out.println(testSolution.solution(16,16,2, 1));
-        System.out.println(testSolution.solution(16,16,2, 2));
-
+        System.out.println(testSolution.solution(new int[][]{{1,1,10,11},{100,30,10,99}}));
     }
 }
 
