@@ -20,8 +20,12 @@ public class Main {
 //        System.out.println(testSolution.solution(new int[][]{{0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {0, 0, 1, 0}}));
 
 //        System.out.println(Arrays.toString(testSolution.solution(new String[]{"img12.png", "img10.png", "img02.png", "img1.png", "IMG01.GIF", "img2.JPG"})));
-        System.out.println(testSolution.solution(new String[]{"aya", "yee", "u", "maa"}));
-        System.out.println(testSolution.solution(new String[]{"ayaye", "uuu", "yeye", "yemawoo", "ayaayaa"}));
+
+
+//        System.out.println(testSolution.solution(new int[][]{{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 0, 0, 0, 0}}));
+        System.out.println(testSolution.solution(new int[][]{{0, 0, 0, 0, 0}, {1, 1, 1, 1, 1}, {2, 2, 2, 2, 2}, {3, 3, 1, 3, 3}, {4, 4, 4, 4, 4}}));
+        System.out.println(testSolution.solution(new int[][]{{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 1, 1, 0}, {0, 0, 0, 0, 0}}));
+        System.out.println(testSolution.solution(new int[][]{{1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1}}));
     }
 }
 
