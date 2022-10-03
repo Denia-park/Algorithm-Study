@@ -23,8 +23,8 @@ public class Main {
 
 
 //        System.out.println(testSolution.solution(new int[][]{{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 0, 0, 0, 0}}));
-        System.out.println(testSolution.solution(78));
-        System.out.println(testSolution.solution(15));
+        System.out.println(testSolution.solution(4));
+        System.out.println(testSolution.solution(3));
     }
 }
 
