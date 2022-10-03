@@ -1,16 +1,13 @@
 class Solution {
-    public int solution(int n) {
-        int answer = 0;
+    public long solution(int n) {
+        long[] memo = new long[2001];
+        memo[1] = 1;
+        memo[2] = 2;
 
-        int oldNBit1Count = Integer.bitCount(n);
-
-        for (int i = n + 1; i <= 1_000_000; i++) {
-            if(Integer.bitCount(i) == Integer.bitCount(n)) {
-                answer = i;
-                break;
-            }
+        for (int i = 3; i <= n; i++) {
+            memo[i] = (memo[i - 1] + memo[i - 2]) % 1234567;
         }
-        
-        return answer;
+
+        return memo[n];
     }
 }
