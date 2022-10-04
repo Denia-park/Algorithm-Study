@@ -1,13 +1,11 @@
 class Solution {
-    public long solution(int n) {
-        long[] memo = new long[2001];
-        memo[1] = 1;
-        memo[2] = 2;
+    public int solution(int[] sides) {
+        int bigValue = Math.max(sides[0], sides[1]);
+        int smallValue = Math.min(sides[0], sides[1]);
 
-        for (int i = 3; i <= n; i++) {
-            memo[i] = (memo[i - 1] + memo[i - 2]) % 1234567;
-        }
+        int lowLimit = bigValue - smallValue;
+        int highLimit = bigValue + smallValue;
 
-        return memo[n];
+        return highLimit - lowLimit - 1;
     }
 }
