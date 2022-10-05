@@ -9,15 +9,14 @@ class Solution {
 
         for (int[] ints : arr) {
             for (int anInt : ints) {
-                if(anInt == 0){
+                if(anInt == 0)
                     zeroCount++;
-                }else{
+                else
                     oneCount++;
-                }
             }
         }
 
-        checkAllElements(arr, 0, arr.length);
+        checkAllElements(arr, new int[]{0, 0}, arr.length);
 
         answer[0] += zeroCount;
         answer[1] += oneCount;
@@ -25,36 +24,39 @@ class Solution {
         return answer;
     }
 
-    private void checkAllElements(int[][] arr, int start ,int end) {
-        if(start == end){
+    private void checkAllElements(int[][] arr, int[] start ,int length) {
+        if (length == 1)
             return;
-        }
 
         boolean flag = true;
-        int startValue = arr[start][start];
 
-        out : for (int i = start; i < end; i++) {
-            for (int j = start; j < end; j++) {
-                if(startValue != arr[i][j]){
+        int startValue = arr[start[0]][start[1]];
+
+        out:
+        for (int row = start[0]; row < start[0] + length; row++) {
+            for (int col = start[1]; col < start[1] + length; col++) {
+                if (startValue != arr[row][col]) {
                     flag = false;
                     break out;
                 }
             }
         }
 
-        if(flag){
-            int tempValue = (int) Math.pow((end - start + 1), 2);
+        if (flag) {
+            int tempValue = (int) Math.pow(length, 2) - 1;
 
-            if(startValue == 0){
-                zeroCount += tempValue;
-            }else{
-                oneCount += tempValue;
-            }
+            if (startValue == 0)
+                zeroCount -= tempValue;
+            else
+                oneCount -= tempValue;
+
+            return;
         }
 
-        checkAllElements(arr, start, end / 2);
-        checkAllElements(arr, end / 2, end);
-        checkAllElements(arr, start, end / 2);
-        checkAllElements(arr, start, end / 2);
+
+        checkAllElements(arr, start, length / 2);
+        checkAllElements(arr, new int[]{start[0], start[1] + length / 2}, length / 2);
+        checkAllElements(arr, new int[]{start[0] + length / 2, start[1]}, length / 2);
+        checkAllElements(arr, new int[]{start[0] + length / 2, start[1] + length / 2}, length / 2);
     }
 }
