@@ -1,4 +1,4 @@
-package com.company.ShortestPath;
+package ShortestPath;
 
 import java.util.Arrays;
 import java.util.Scanner;

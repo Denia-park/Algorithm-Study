@@ -1,4 +1,4 @@
-package com.company;
+package MockTest;
 
 import java.util.HashMap;
 import java.util.Map;

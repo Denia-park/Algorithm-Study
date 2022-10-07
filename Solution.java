@@ -1,39 +1,50 @@
-package com.company;
+class Solution{
+    //따로 makeNewArr 를 써서 배열을 만들게 되면 메모리 초과가 남
+    //구현 문제로 이해하고 그냥 바로 return할 arr를 만들어야 함
+    public int[] solution (int n, long left, long right){
+        //구해야하는 개수 초기화
+        int arrNum = (int) (right - left + 1L);
+        //answer 초기화
+        int[] answer = new int[arrNum];
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+        //필요한 row, col 초기화
+        int startRow = (int) (left / n);
+        int startCol = (int) (left %  n);
 
-public class Solution {
-    static public void main(String[] args) {
-        Solution testSolution = new Solution();
+        //지금까지 arr에 저장한 원소 개수를 셀 변수
+        int myCount = 0;
 
-        String[] quizArr1 = {"119", "97674223", "1195524421"};
-        String[] quizArr2 = {"123", "456", "789"};
-        String[] quizArr3 = {"12", "123", "1235", "567", "88"};
-        String[] quizArr4 = {"115524421", "119", "1197674223", "1234", "1235", "456", "567", "789", "88"};
+        //처음에 내가 원하는 startRow , startCol 로 시작을 하고 startFlag를 초기화 시켜서
+        //다음 row 부터는 col을 0부터 시작하게 설정
+        boolean startFlag = true;
 
-        System.out.println(testSolution.solution(quizArr1));
-        System.out.println(testSolution.solution(quizArr2));
-        System.out.println(testSolution.solution(quizArr3));
-        System.out.println(testSolution.solution(quizArr4));
+        out :
+        for(int row = startRow; row < n; row++){
+            for(int col = startFlag ? startCol : 0; col < n; col++){
+                answer[myCount++] = Math.max(row+1,col+1);
+                
+                //arrNum이 myCount 와 같으면 return할 배열을 제대로 채웠으므로 for문을 종료
+                if(myCount == arrNum){
+                    break out;
+                }
+            }
 
+            startFlag = false;
+        }
+
+        return answer;
     }
+    
+    //처음에 만들어서 사용을 했는데 필요없어서 사용하지 않음
+    public int[][] makeNewArr (int size){
+        int[][] rtArr = new int[size][size];
 
-    public boolean solution(String[] phone_book) {
-        // 해쉬를 사용한 방법 - HashSet 에 모든 phone_book 데이터를 넣는다.
-        Set<String> set = new HashSet<String>(Arrays.asList(phone_book));
-
-        //phone_book 데이터 하나씩 꺼내서 substring 으로 글자를 쪼개면서
-        //쪼갠 글자가 HashSet 안에 있는지 확인한다. 있으면 return false
-        //이렇게 해도 시간이 짧게 걸리는 이유는 ?
-            // Hash를 사용할 경우 삽입, 검색 의 시간 복잡도가 O(1) 이기 때문에 가능
-        for (String phone : phone_book) {
-            for (int i = 1; i < phone.length(); i++) {
-                if(set.contains(phone.substring(0, i))) return false;
+        for (int row = 0; row < size; row++){
+            for (int col = 0; col < size; col++){
+                rtArr[row][col] = Math.max(row+1,col+1);
             }
         }
 
-        return true;
+        return rtArr;
     }
 }

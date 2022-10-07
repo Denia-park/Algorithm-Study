@@ -1,4 +1,4 @@
-package com.company.Greedy;
+package Greedy;
 
 // 거스름돈 문제
 //- 정당성 분석

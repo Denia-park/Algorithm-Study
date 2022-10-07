@@ -1,4 +1,4 @@
-package com.company.Realization;
+package Realization;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.company.Greedy;
+package Greedy;
 
 // 곱하기 혹은 더하기 문제
 
