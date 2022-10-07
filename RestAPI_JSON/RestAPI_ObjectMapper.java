@@ -1,5 +1,6 @@
 package RestAPI_JSON;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,6 +46,25 @@ public class RestAPI_ObjectMapper {
             Map<String, Object> tempMapper2 = mapper.readValue(headersContent, new TypeReference<Map<String, Object>>() { });
             System.out.println(headersContent);
             System.out.println(tempMapper2.get("Accept"));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        /* JsonStr -> Map */
+        System.out.println("\n2. JsonStr -> VO");
+        try {
+            VO tempMapper1 = mapper.readValue(msgGet, VO.class);
+            System.out.println(tempMapper1);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        /* Map -> VO */
+        System.out.println("\n3. Map -> VO");
+        try {
+            Map<String, Object> tempMapperFrom = mapper.readValue(msgGet, new TypeReference<Map<String, Object>>() { });
+            VO tempMapper1 = mapper.convertValue(tempMapperFrom, VO.class);
+            System.out.println(tempMapper1);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -114,8 +134,37 @@ public class RestAPI_ObjectMapper {
     }
 }
 
+
+//Getter or Setter 둘 중에 1개만 정의되어 있어도 JSON 파싱시에 값을 제대로 불러온다.
+@JsonIgnoreProperties(ignoreUnknown = true)
 class VO{
-    private String args;
-    private String origin;
-    private String url;
+    private Object args;
+    private Object origin;
+    private Map<String,Object> headers;
+    private Object url;
+
+    //일부러 Getter or Setter 를 정의하지 않았음
+    //=> 값을 제대로 못 읽어오는 것을 확인할 수가 있다.
+    //1개라도 존재하지 않으면 값을 못 읽어옴
+//    public Object getHeaders() {
+//        return headers;
+//    }
+
+    public Object getArgs() {
+        return args;
+    }
+
+    public Object getOrigin() {
+        return origin;
+    }
+
+    public Object getUrl() {
+        return url;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("args = %s, headers = %s ,origin = %s, url = %s", this.args, this.headers, this.origin, this.url);
+    }
+
 }
