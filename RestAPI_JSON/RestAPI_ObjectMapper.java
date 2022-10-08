@@ -1,5 +1,7 @@
 package RestAPI_JSON;
 
+// Jackson Databind 2.13.3
+// 출처 https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind/2.13.3
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
