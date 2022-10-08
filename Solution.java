@@ -1,48 +1,25 @@
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 class Solution {
-    public int solution(String[] spell, String[] dic) {
-        List<Character> words = Arrays.stream(spell).map(s -> s.charAt(0)).collect(Collectors.toList());
+    public int solution(int[][] dots) {
+        Set<Double> answerSet = new HashSet<>();
 
-        for (String str : dic) {
-            if(str.length() < spell.length) continue;
-
-            Set<Character> spellSet = str.chars().mapToObj(c -> (char) c).collect(Collectors.toSet());
-
-            if (spellSet.containsAll(words))
-                return 1;
-        }
-
-        return 2;
-    }
-}
-
-/*
-class Solution {
-    public int solution(String[] spell, String[] dic) {
-        int answer = 2;
-
-
-        for(String dicS : dic) {
-
-            boolean isRight = true;
-            for(String spellS : spell) {
-                if(dicS.indexOf(spellS) == -1) {
-                    isRight = false;
-                    break;
+        for (int i = 0; i < dots.length; i++) {
+            for (int j = i + 1; j < dots.length; j++) {
+                double slope = getSlope(dots[i], dots[j]);
+                if(answerSet.contains(slope)){
+                    return 1;
+                }else{
+                    answerSet.add(slope);
                 }
             }
-
-            if(isRight) {
-                answer = 1;
-                break;
-            }
         }
 
-        return answer;
+        return 0;
+    }
+
+    private Double getSlope(int[] dot, int[] dot1) {
+        return Math.abs((double) (dot[1] - dot1[1]) / (dot[0] - dot1[0]));
     }
 }
- */
