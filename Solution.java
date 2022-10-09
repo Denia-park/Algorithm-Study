@@ -1,25 +1,44 @@
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 class Solution {
-    public int solution(int[][] dots) {
-        Set<Double> answerSet = new HashSet<>();
+    public int solution(int[] cards) {
+        int maxValue = 0;
 
-        for (int i = 0; i < dots.length; i++) {
-            for (int j = i + 1; j < dots.length; j++) {
-                double slope = getSlope(dots[i], dots[j]);
-                if(answerSet.contains(slope)){
-                    return 1;
-                }else{
-                    answerSet.add(slope);
+        for (int card : cards) {
+            int[] newCardArr = Arrays.copyOf(cards, cards.length);
+            Set<Integer> set = new HashSet<Integer>();
+
+            int tempCard = card;
+
+            while (!set.contains(tempCard)) {
+                set.add(tempCard);
+
+                tempCard = newCardArr[tempCard - 1];
+            }
+
+            int firstBoxNum = set.size();
+
+            for (int j : newCardArr) {
+                if (set.contains(j)) continue;
+
+                int secondBoxNum = 0;
+
+                tempCard = j;
+
+                while (!set.contains(tempCard)) {
+                    set.add(tempCard);
+
+                    secondBoxNum++;
+
+                    tempCard = newCardArr[tempCard - 1];
                 }
+
+                maxValue = Math.max(maxValue, firstBoxNum * secondBoxNum);
             }
         }
 
-        return 0;
-    }
-
-    private Double getSlope(int[] dot, int[] dot1) {
-        return Math.abs((double) (dot[1] - dot1[1]) / (dot[0] - dot1[0]));
+        return maxValue;
     }
 }
