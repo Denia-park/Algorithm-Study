@@ -1,42 +1,27 @@
-import java.util.HashSet;
-import java.util.Set;
-
 class Solution {
-    int[] cards;
+    public int solution(int n, int k) {
+        int answer = 0;
+        String radixString = Integer.toString(n, k);
+        String[] strArr = radixString.split("0");
 
-    public int solution(int[] paramCards) {
-        cards = paramCards;
-        int maxValue = 0;
+        for (String str : strArr) {
+            if (str.equals("") || str.equals("1")) continue;
 
-        //1번 상자 그룹 구하기
-        for (int selectCardOn1st : cards) {
-            Set<Integer> set = new HashSet<Integer>();
-
-            int firstBoxNum = selectingBoxUntilEnd(selectCardOn1st, set);
-
-            //2번 상자 그룹 구하기
-            for (int selectCardOn2st : cards) {
-                int secondBoxNum = selectingBoxUntilEnd(selectCardOn2st, set);
-
-                maxValue = Math.max(maxValue, firstBoxNum * secondBoxNum);
+            if (isPrime(str)) {
+                answer++;
             }
         }
-
-        return maxValue;
+        return answer;
     }
 
-    private int selectingBoxUntilEnd(int selectCard, Set<Integer> set) {
-        int tempCard = selectCard;
+    private boolean isPrime(String str) {
+        int intVal = Integer.parseInt(str);
+        for (int i = 2; i <= (int) Math.pow(intVal, 0.5); i++) {
+            if (intVal % i == 0) {
+                return false;
+            }
 
-        int rtVal = 0;
-
-        while (!set.contains(tempCard)) {
-            set.add(tempCard);
-            rtVal++;
-
-            tempCard = cards[tempCard - 1];
         }
-
-        return rtVal;
+        return true;
     }
 }
