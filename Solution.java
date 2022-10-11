@@ -1,29 +1,34 @@
+import java.util.HashMap;
+import java.util.Map;
+
 class Solution {
-    public int solution(int n, int k) {
+    public int solution(int[][] lines) {
         int answer = 0;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
 
-        String radixString = Integer.toString(n, k);
-        String[] strArr = radixString.split("0");
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 
-        for (String str : strArr) {
-            if (str.equals("") || str.equals("1")) continue;
+        for (int[] line : lines) {
+            int tempMin = Math.min(line[0], line[1]);
+            int tempMax = Math.max(line[0], line[1]);
+            min = Math.min(min, tempMin);
+            max = Math.max(max, tempMax);
 
-            if (isPrime(str)) {
+            for (int i = tempMin; i < tempMax + 1; i++) {
+                map.put(i, map.getOrDefault(i, 0) + 1);
+            }
+        }
+
+        for (int i = min + 1; i < max + 1; i++) {
+            if (!map.containsKey(i) || !map.containsKey(i - 1)) continue;
+
+            if (map.get(i - 1) >= 2 && map.get(i) >= 2) {
                 answer++;
             }
         }
+
+
         return answer;
-    }
-
-    private boolean isPrime(String str) {
-        long intVal = Long.parseLong(str);
-        
-        for (int i = 2; i <= (int) Math.pow(intVal, 0.5); i++) {
-            if (intVal % i == 0) {
-                return false;
-            }
-
-        }
-        return true;
     }
 }
