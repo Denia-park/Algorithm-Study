@@ -1,29 +1,23 @@
 class Solution {
-    public int solution(int n, int k) {
+    public int solution(int[][] lines) {
         int answer = 0;
 
-        String radixString = Integer.toString(n, k);
-        String[] strArr = radixString.split("0");
+        int[] lineArr = new int[200];
 
-        for (String str : strArr) {
-            if (str.equals("") || str.equals("1")) continue;
+        for (int[] line : lines) {
+            int tempMin = Math.min(line[0], line[1]);
+            int tempMax = Math.max(line[0], line[1]);
+            for (int i = tempMin; i < tempMax; i++) {
+                lineArr[i + 100]++;
+            }
+        }
 
-            if (isPrime(str)) {
+        for (int i = 1; i < lineArr.length; i++) {
+            if (lineArr[i] > 1) {
                 answer++;
             }
         }
+
         return answer;
-    }
-
-    private boolean isPrime(String str) {
-        long intVal = Long.parseLong(str);
-        
-        for (int i = 2; i <= (int) Math.pow(intVal, 0.5); i++) {
-            if (intVal % i == 0) {
-                return false;
-            }
-
-        }
-        return true;
     }
 }
