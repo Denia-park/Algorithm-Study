@@ -1,23 +1,25 @@
 class Solution {
-    public int solution(int[][] lines) {
-        int answer = 0;
+    public int solution(int a, int b) {
+        int newB = b / gcd(a, b);
 
-        int[] lineArr = new int[200];
-
-        for (int[] line : lines) {
-            int tempMin = Math.min(line[0], line[1]);
-            int tempMax = Math.max(line[0], line[1]);
-            for (int i = tempMin; i < tempMax; i++) {
-                lineArr[i + 100]++;
+        while (newB != 1) {
+            if (newB % 2 == 0) {
+                newB /= 2;
+            } else if (newB % 5 == 0) {
+                newB /= 5;
+            } else {
+                return 2;
             }
         }
 
-        for (int i = 1; i < lineArr.length; i++) {
-            if (lineArr[i] > 1) {
-                answer++;
-            }
-        }
+        return 1;
+    }
 
-        return answer;
+    private int gcd(int a, int b) {
+        if (b == 0) {
+            return a;
+        } else {
+            return gcd(b, a % b);
+        }
     }
 }
