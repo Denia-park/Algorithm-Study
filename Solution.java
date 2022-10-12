@@ -1,25 +1,36 @@
 class Solution {
-    public int solution(int a, int b) {
-        int newB = b / gcd(a, b);
+    public String solution(String X, String Y) {
+        StringBuilder answer = new StringBuilder();
 
-        while (newB != 1) {
-            if (newB % 2 == 0) {
-                newB /= 2;
-            } else if (newB % 5 == 0) {
-                newB /= 5;
-            } else {
-                return 2;
+        int[] arrX = new int[10];
+        int[] arrY = new int[10];
+
+        countNumInArr(X, arrX);
+        countNumInArr(Y, arrY);
+
+        for (int i = arrX.length - 1; i >= 0; i--) {
+            while (arrX[i] >= 1 && arrY[i] >= 1) {
+                arrX[i]--;
+                arrY[i]--;
+
+                answer.append(i);
             }
         }
 
-        return 1;
+        if (answer.toString().equals("")) {
+            return "-1";
+        } else if (answer.toString().startsWith("0")) {
+            return "0";
+        } else {
+            return answer.toString();
+        }
     }
 
-    private int gcd(int a, int b) {
-        if (b == 0) {
-            return a;
-        } else {
-            return gcd(b, a % b);
+    private void countNumInArr(String str, int[] arr) {
+        for (int i = 0; i < str.length(); i++) {
+            int index = str.charAt(i) - '0';
+
+            arr[index]++;
         }
     }
 }
