@@ -1,6 +1,6 @@
 class Solution {
     public String solution(String X, String Y) {
-        String answer = "";
+        StringBuilder answer = new StringBuilder();
 
         int[] arrX = new int[10];
         int[] arrY = new int[10];
@@ -13,16 +13,16 @@ class Solution {
                 arrX[i]--;
                 arrY[i]--;
 
-                answer += i;
+                answer.append(i);
             }
         }
 
-        if (answer.equals("")) {
+        if (answer.toString().equals("")) {
             return "-1";
-        } else if (answer.startsWith("0")) {
+        } else if (answer.toString().startsWith("0")) {
             return "0";
         } else {
-            return answer;
+            return answer.toString();
         }
     }
 
