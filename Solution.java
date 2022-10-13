@@ -1,44 +1,29 @@
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 class Solution {
-    public int solution(int target) {
-        int answer = 0;
+    public Integer[] solution(int[] numlist, int n) {
+        List<Integer> solution = IntStream.of(numlist).boxed().collect(Collectors.toList());
 
-        MyNumber myNumber = new MyNumber(1, 1);
+        solution.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                int o1Abs = Math.abs(o1 - n);
+                int o2Abs = Math.abs(o2 - n);
 
-        while (myNumber.start <= target) {
-            if (myNumber.sum < target) {
-                myNumber.updateSumWithEnd();
-            } else if (myNumber.sum > target) {
-                myNumber.updateSumWithStart();
-            } else {
-                answer++;
+                if (o1Abs == o2Abs) {
+                    if (o1 > o2) return -1;
+                    else if (o1 < o2) return 1;
+                } else {
+                    return o1Abs - o2Abs;
+                }
 
-                myNumber.updateSumWithEnd();
-                myNumber.updateSumWithStart();
+                return 0;
             }
-        }
+        });
 
-        return answer;
-    }
-}
-
-class MyNumber {
-    int start;
-    int end;
-    int sum;
-
-    public MyNumber(int start, int end) {
-        this.start = start;
-        this.end = end;
-        this.sum = end;
-    }
-
-    public void updateSumWithEnd() {
-        end++;
-        sum += end;
-    }
-
-    public void updateSumWithStart() {
-        sum -= start;
-        start++;
+        return solution.toArray(new Integer[0]);
     }
 }
