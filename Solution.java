@@ -1,44 +1,20 @@
+import java.util.stream.IntStream;
+
 class Solution {
-    public int solution(int target) {
-        int answer = 0;
+    public Integer[] solution(int[] numlist, int n) {
 
-        MyNumber myNumber = new MyNumber(1, 1);
+        return IntStream.of(numlist).boxed().sorted((o1, o2) -> {
+            int o1Abs = Math.abs(o1 - n);
+            int o2Abs = Math.abs(o2 - n);
 
-        while (myNumber.start <= target) {
-            if (myNumber.sum < target) {
-                myNumber.updateSumWithEnd();
-            } else if (myNumber.sum > target) {
-                myNumber.updateSumWithStart();
+            if (o1Abs == o2Abs) {
+                if (o1 > o2) return -1;
+                else if (o1 < o2) return 1;
             } else {
-                answer++;
-
-                myNumber.updateSumWithEnd();
-                myNumber.updateSumWithStart();
+                return o1Abs - o2Abs;
             }
-        }
 
-        return answer;
-    }
-}
-
-class MyNumber {
-    int start;
-    int end;
-    int sum;
-
-    public MyNumber(int start, int end) {
-        this.start = start;
-        this.end = end;
-        this.sum = end;
-    }
-
-    public void updateSumWithEnd() {
-        end++;
-        sum += end;
-    }
-
-    public void updateSumWithStart() {
-        sum -= start;
-        start++;
+            return 0;
+        }).toArray(Integer[]::new);
     }
 }
