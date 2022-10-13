@@ -1,36 +1,44 @@
 class Solution {
-    public String solution(String X, String Y) {
-        StringBuilder answer = new StringBuilder();
+    public int solution(int target) {
+        int answer = 0;
 
-        int[] arrX = new int[10];
-        int[] arrY = new int[10];
+        MyNumber myNumber = new MyNumber(1, 1);
 
-        countNumInArr(X, arrX);
-        countNumInArr(Y, arrY);
+        while (myNumber.start <= target) {
+            if (myNumber.sum < target) {
+                myNumber.updateSumWithEnd();
+            } else if (myNumber.sum > target) {
+                myNumber.updateSumWithStart();
+            } else {
+                answer++;
 
-        for (int i = arrX.length - 1; i >= 0; i--) {
-            while (arrX[i] >= 1 && arrY[i] >= 1) {
-                arrX[i]--;
-                arrY[i]--;
-
-                answer.append(i);
+                myNumber.updateSumWithEnd();
+                myNumber.updateSumWithStart();
             }
         }
 
-        if (answer.toString().equals("")) {
-            return "-1";
-        } else if (answer.toString().startsWith("0")) {
-            return "0";
-        } else {
-            return answer.toString();
-        }
+        return answer;
+    }
+}
+
+class MyNumber {
+    int start;
+    int end;
+    int sum;
+
+    public MyNumber(int start, int end) {
+        this.start = start;
+        this.end = end;
+        this.sum = end;
     }
 
-    private void countNumInArr(String str, int[] arr) {
-        for (int i = 0; i < str.length(); i++) {
-            int index = str.charAt(i) - '0';
+    public void updateSumWithEnd() {
+        end++;
+        sum += end;
+    }
 
-            arr[index]++;
-        }
+    public void updateSumWithStart() {
+        sum -= start;
+        start++;
     }
 }
