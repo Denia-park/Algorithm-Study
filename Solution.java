@@ -1,22 +1,26 @@
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
-    public String solution(String[] id_pw, String[][] db) {
-        Map<String, String> dbMap = new HashMap<String, String>();
+    final int BONUS_NUM = 10;
 
-        for (String[] strings : db) {
-            dbMap.put(strings[0], strings[1]);
-        }
+    public int solution(int chicken) {
+        int answer = 0;
 
-        if (dbMap.containsKey(id_pw[0])) {
-            if (dbMap.get(id_pw[0]).equals(id_pw[1])) {
-                return "login";
-            } else {
-                return "wrong pw";
+        int restChick = chicken % BONUS_NUM;
+        int couponNum = chicken / BONUS_NUM;
+        answer += couponNum;
+
+        while (couponNum != 0) {
+            int newCouponNum = couponNum / BONUS_NUM;
+            int newRestChick = couponNum % BONUS_NUM;
+            answer += newCouponNum;
+            couponNum = newCouponNum;
+
+            restChick = restChick + newRestChick;
+            if (restChick >= BONUS_NUM) {
+                answer += restChick / BONUS_NUM;
+                restChick = restChick % BONUS_NUM;
             }
-        } else {
-            return "fail";
         }
+
+        return answer;
     }
 }
