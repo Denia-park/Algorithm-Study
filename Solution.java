@@ -1,21 +1,15 @@
 class Solution {
     final int BONUS_NUM = 10;
 
-    public int solution(int coupon) {
+    public int solution(int chicken) {
         int answer = 0;
 
-        int orderChick = coupon / BONUS_NUM;
-        int restCoupon = orderChick + coupon % BONUS_NUM;
+        while (chicken >= BONUS_NUM) {
+            int newChick = chicken / BONUS_NUM;
+            int restChick = chicken % BONUS_NUM;
+            chicken = newChick + restChick;
 
-        while (true) {
-            answer += orderChick;
-
-            if (restCoupon < BONUS_NUM) {
-                break;
-            }
-
-            orderChick = restCoupon / BONUS_NUM;
-            restCoupon = orderChick + restCoupon % BONUS_NUM;
+            answer += newChick;
         }
 
         return answer;
