@@ -1,7 +1,23 @@
 class Solution {
-    public String solution(String bin1, String bin2) {
-        long newValue = Long.parseLong(bin1, 2) + Long.parseLong(bin2, 2);
+    public int solution(int[] number) {
+        int answer = 0;
 
-        return Long.toBinaryString(newValue);
+        for (int i = 0; i < number.length; i++) {
+            int i1 = number[i];
+
+            for (int j = i + 1; j < number.length; j++) {
+                int i2 = number[j];
+
+                for (int k = j + 1; k < number.length; k++) {
+                    int i3 = number[k];
+
+                    if (i1 + i2 + i3 == 0) {
+                        answer++;
+                    }
+                }
+            }
+        }
+
+        return answer;
     }
 }
