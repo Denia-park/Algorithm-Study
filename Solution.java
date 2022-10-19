@@ -1,23 +1,28 @@
 class Solution {
-    public int solution(int[] number) {
-        int answer = 0;
+    public int solution(String before, String after) {
+        int[] beforeArr = countCharNum(before);
+        int[] afterArr = countCharNum(after);
 
-        for (int i = 0; i < number.length; i++) {
-            int i1 = number[i];
+        for (int i = 0; i < afterArr.length; i++) {
+            int bi = beforeArr[i];
+            int ai = afterArr[i];
 
-            for (int j = i + 1; j < number.length; j++) {
-                int i2 = number[j];
-
-                for (int k = j + 1; k < number.length; k++) {
-                    int i3 = number[k];
-
-                    if (i1 + i2 + i3 == 0) {
-                        answer++;
-                    }
-                }
+            if (bi != ai) {
+                return 0;
             }
         }
 
-        return answer;
+        return 1;
+    }
+
+    private int[] countCharNum(String str) {
+        int[] rtArr = new int[30];
+
+        for (int i = 0; i < str.length(); i++) {
+            int idx = str.charAt(i) - 'a';
+            rtArr[idx]++;
+        }
+
+        return rtArr;
     }
 }
