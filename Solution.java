@@ -1,18 +1,28 @@
-import java.util.List;
-import java.util.stream.Collectors;
-
 class Solution {
     public int solution(String before, String after) {
-        List<Character> beforeList = before.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
-        List<Character> afterList = after.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
+        int[] beforeArr = countCharNum(before);
+        int[] afterArr = countCharNum(after);
 
-        beforeList.sort(null);
-        afterList.sort(null);
+        for (int i = 0; i < afterArr.length; i++) {
+            int bi = beforeArr[i];
+            int ai = afterArr[i];
 
-        if (afterList.equals(beforeList)) {
-            return 1;
-        } else {
-            return 0;
+            if (bi != ai) {
+                return 0;
+            }
         }
+
+        return 1;
+    }
+
+    private int[] countCharNum(String str) {
+        int[] rtArr = new int[30];
+
+        for (int i = 0; i < str.length(); i++) {
+            int idx = str.charAt(i) - 'a';
+            rtArr[idx]++;
+        }
+
+        return rtArr;
     }
 }
