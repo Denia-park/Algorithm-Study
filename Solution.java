@@ -1,23 +1,18 @@
+import java.util.List;
+import java.util.stream.Collectors;
+
 class Solution {
-    public int solution(int[] number) {
-        int answer = 0;
+    public int solution(String before, String after) {
+        List<Character> beforeList = before.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
+        List<Character> afterList = after.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
 
-        for (int i = 0; i < number.length; i++) {
-            int i1 = number[i];
+        beforeList.sort(null);
+        afterList.sort(null);
 
-            for (int j = i + 1; j < number.length; j++) {
-                int i2 = number[j];
-
-                for (int k = j + 1; k < number.length; k++) {
-                    int i3 = number[k];
-
-                    if (i1 + i2 + i3 == 0) {
-                        answer++;
-                    }
-                }
-            }
+        if (afterList.equals(beforeList)) {
+            return 1;
+        } else {
+            return 0;
         }
-
-        return answer;
     }
 }
