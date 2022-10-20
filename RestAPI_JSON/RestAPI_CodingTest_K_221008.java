@@ -33,7 +33,7 @@ public class RestAPI_CodingTest_K_221008 {
             System.out.println();
             System.out.println("===========================================");
             System.out.println("Day Start : " + dayCount);
-            RestAPI.newRequests(reservationList);
+//            RestAPI.newRequests(reservationList);
 
             List<Map<String, Object>> sendMapList = new ArrayList<>();
 
@@ -50,7 +50,7 @@ public class RestAPI_CodingTest_K_221008 {
 
             data.put("room_assign", sendMapList);
 
-            RestAPI.simulate(data);
+//            RestAPI.simulate(data);
             dayCount++;
 
             try {
@@ -63,7 +63,7 @@ public class RestAPI_CodingTest_K_221008 {
             System.out.println();
         }
 
-        RestAPI.scoreAPI();
+//        RestAPI.scoreAPI();
     }
 
     public class RestAPI {
