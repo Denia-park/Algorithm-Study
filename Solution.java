@@ -1,20 +1,20 @@
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 class Solution {
-    public int solution(int i, int j, int k) {
-        int answer = 0;
+    public String solution(String my_string) {
+        Set<Character> set = new LinkedHashSet<>();
 
-        for (int l = i; l <= j; l++) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(l);
-
-            int defaultLength = sb.length();
-
-            for (int r = 0; r < defaultLength; r++) {
-                if ((sb.charAt(r) - '0') == k) {
-                    answer++;
-                }
-            }
+        for (int i = 0; i < my_string.length(); i++) {
+            set.add(my_string.charAt(i));
         }
 
-        return answer;
+        Character[] tempCharacterArr = set.toArray(new Character[0]);
+
+        StringBuilder sb = new StringBuilder();
+        for (Character character : tempCharacterArr) {
+            sb.append(character);
+        }
+        return sb.toString();
     }
 }
