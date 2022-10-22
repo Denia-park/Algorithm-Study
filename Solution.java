@@ -1,14 +1,14 @@
 class Solution {
-    public int solution(int order) {
+    public int solution(int submitNum, int receiveNum, int initCokeNum) {
         int answer = 0;
-        String strOrder = "" + order;
-        for (int i = 0; i < strOrder.length(); i++) {
-            char tempChar = strOrder.charAt(i);
 
-            if (tempChar == '3' || tempChar == '6' || tempChar == '9') {
-                answer++;
-            }
+        while (initCokeNum >= submitNum) {
+            int tempReceive = (initCokeNum / submitNum) * receiveNum;
+            initCokeNum = initCokeNum % submitNum + tempReceive;
+
+            answer += tempReceive;
         }
+
         return answer;
     }
 }
