@@ -1,20 +1,14 @@
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 class Solution {
-    public String solution(String my_string) {
-        Set<Character> set = new LinkedHashSet<>();
+    public int solution(int order) {
+        int answer = 0;
+        String strOrder = "" + order;
+        for (int i = 0; i < strOrder.length(); i++) {
+            char tempChar = strOrder.charAt(i);
 
-        for (int i = 0; i < my_string.length(); i++) {
-            set.add(my_string.charAt(i));
+            if (tempChar == '3' || tempChar == '6' || tempChar == '9') {
+                answer++;
+            }
         }
-
-        Character[] tempCharacterArr = set.toArray(new Character[0]);
-
-        StringBuilder sb = new StringBuilder();
-        for (Character character : tempCharacterArr) {
-            sb.append(character);
-        }
-        return sb.toString();
+        return answer;
     }
 }
