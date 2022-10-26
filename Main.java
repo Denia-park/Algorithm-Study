@@ -2,9 +2,8 @@ public class Main {
     static public void main(String[] args) {
         Solution testSolution = new Solution();
 
-        System.out.println((testSolution.solution(new String[]{"banana", "apple", "rice", "pork", "pot"},
-                new int[]{3, 2, 2, 2, 1},
-                new String[]{"chicken", "apple", "apple", "banana", "rice", "apple", "pork", "banana", "pork", "rice", "pot", "banana", "apple", "banana"})));
+//        System.out.println(testSolution.solution(new int[]{4, 3, 1, 2, 5}));
+        System.out.println(testSolution.solution(new int[]{5, 4, 3, 2, 1}));
     }
 }
 
