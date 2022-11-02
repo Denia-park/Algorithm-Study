@@ -1,40 +1,76 @@
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    public int solution(int[] wantOrder) {
-        int answer = 0;
+    public int solution(int distance, int[][] scope, int[][] times) {
+        List<Enemy> enemies = new ArrayList<Enemy>();
 
-        Stack<Integer> saveOrder = new Stack<Integer>();
+        for (int i = 0; i < scope.length; i++) {
+            int[] distanceArr = scope[i];
+            int[] timeArr = times[i];
 
-        int defaultOrder = 1;
-        int wantOrderIdx = 0;
+            int workStartDistance = Math.min(distanceArr[0], distanceArr[1]);
+            int workEndDistance = Math.max(distanceArr[0], distanceArr[1]);
 
-        while (true) {
-            if (!saveOrder.isEmpty() && wantOrder[wantOrderIdx] == saveOrder.peek()) {
-                answer++;
+            int workTime = timeArr[0];
+            int restTime = timeArr[1];
 
-                wantOrderIdx++;
-                saveOrder.pop();
-
-                continue;
-            }
-
-            if (defaultOrder > wantOrder.length)
-                break;
-
-            if (wantOrder[wantOrderIdx] == defaultOrder) {
-                answer++;
-
-                wantOrderIdx++;
-                defaultOrder++;
-
-                continue;
-            }
-
-            saveOrder.push(defaultOrder);
-            defaultOrder++;
+            enemies.add(new Enemy(workStartDistance, workEndDistance, workTime, restTime));
         }
 
-        return answer;
+        enemies.sort(null);
+
+        for (Enemy enemy : enemies) {
+            for (int curTime = enemy.getWorkStartDistance(); curTime <= enemy.getWorkEndDistance(); curTime++) {
+                if (isWorkingTime(curTime, enemy.getWorkTime(), enemy.getRestTime())) {
+                    return curTime;
+                }
+            }
+        }
+
+        return distance;
+    }
+
+    private boolean isWorkingTime(int curTime, int workTime, int restTime) {
+        int totalTime = workTime + restTime;
+        int curStatus = curTime % totalTime;
+
+        return 0 < curStatus && curStatus <= workTime;
+    }
+}
+
+class Enemy implements Comparable<Enemy> {
+    private final int workStartDistance;
+    private final int workEndDistance;
+
+    private final int workTime;
+    private final int restTime;
+
+    public Enemy(int workStartDistance, int workEndDistance, int workTime, int restTime) {
+        this.workStartDistance = workStartDistance;
+        this.workEndDistance = workEndDistance;
+        this.workTime = workTime;
+        this.restTime = restTime;
+    }
+
+    public int getWorkStartDistance() {
+        return workStartDistance;
+    }
+
+    public int getWorkEndDistance() {
+        return workEndDistance;
+    }
+
+    public int getWorkTime() {
+        return workTime;
+    }
+
+    public int getRestTime() {
+        return restTime;
+    }
+
+    @Override
+    public int compareTo(Enemy another) {
+        return this.workStartDistance - another.workStartDistance;
     }
 }

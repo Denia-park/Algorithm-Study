@@ -3,7 +3,8 @@ public class Main {
         Solution testSolution = new Solution();
 
 //        System.out.println(testSolution.solution(new int[]{4, 3, 1, 2, 5}));
-        System.out.println(testSolution.solution(new int[]{5, 4, 3, 2, 1}));
+        System.out.println(testSolution.solution(10, new int[][]{{3, 4}, {5, 8}}, new int[][]{{2, 5}, {4, 3}}));
+        System.out.println(testSolution.solution(12, new int[][]{{7, 8}, {4, 6}, {11, 10}}, new int[][]{{2, 2}, {2, 4}, {3, 3}}));
     }
 }
 
