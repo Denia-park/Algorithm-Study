@@ -1,40 +1,11 @@
-import java.util.Stack;
+import java.util.Arrays;
 
 class Solution {
-    public int solution(int[] wantOrder) {
-        int answer = 0;
+    public int solution(int[] sides) {
+        Arrays.sort(sides);
+        int max = sides[sides.length - 1];
 
-        Stack<Integer> saveOrder = new Stack<Integer>();
-
-        int defaultOrder = 1;
-        int wantOrderIdx = 0;
-
-        while (true) {
-            if (!saveOrder.isEmpty() && wantOrder[wantOrderIdx] == saveOrder.peek()) {
-                answer++;
-
-                wantOrderIdx++;
-                saveOrder.pop();
-
-                continue;
-            }
-
-            if (defaultOrder > wantOrder.length)
-                break;
-
-            if (wantOrder[wantOrderIdx] == defaultOrder) {
-                answer++;
-
-                wantOrderIdx++;
-                defaultOrder++;
-
-                continue;
-            }
-
-            saveOrder.push(defaultOrder);
-            defaultOrder++;
-        }
-
-        return answer;
+        int restLength = sides[0] + sides[1];
+        return restLength <= max ? 2 : 1;
     }
 }
