@@ -28,9 +28,6 @@ class Solution {
         for (int idx = 0; idx <= (end - begin); idx++) {
             if (myNum == 1) {
                 answer[idx] = 0;
-            } else if (myNum == 2 || myNum == 3) {
-                answer[idx] = 1;
-                primeList.add((int) myNum);
             } else {
                 boolean addFlag = true;
                 for (Integer integer : primeList) {
