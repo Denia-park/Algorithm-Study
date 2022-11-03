@@ -13,26 +13,27 @@ class Solution {
             if (value == 1) {
                 answerList.add(0);
             } else {
-                boolean isPrime = true;
-                for (int i = 2; i <= Math.sqrt(value); i++) {
-                    if (value % i == 0) {
-                        int divideValue = value / i;
+                int gcd = getGcd(value);
 
-                        if (divideValue <= BLOCK_LIMIT) {
-                            answerList.add(divideValue);
-                            isPrime = false;
-
-                            break;
-                        }
-                    }
-                }
-
-                if (isPrime) {
-                    answerList.add(1);
-                }
+                answerList.add(gcd);
             }
         }
 
         return answerList.toArray(new Integer[0]);
+    }
+
+    //Greatest Common Divisor
+    private int getGcd(int value) {
+        for (int i = 2; i <= Math.sqrt(value); i++) {
+            if (value % i == 0) {
+                int divideValue = value / i;
+
+                if (divideValue <= BLOCK_LIMIT) {
+                    return divideValue;
+                }
+            }
+        }
+
+        return 1;
     }
 }
