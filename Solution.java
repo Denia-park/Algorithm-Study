@@ -15,16 +15,15 @@ class Solution {
             } else {
                 boolean isPrime = true;
                 for (int i = 2; i <= Math.sqrt(value); i++) {
-                    int mok = value / i;
-
-                    if (mok > BLOCK_LIMIT) {
-                        continue;
-                    }
-
                     if (value % i == 0) {
-                        answerList.add(mok);
-                        isPrime = false;
-                        break;
+                        int divideValue = value / i;
+
+                        if (divideValue <= BLOCK_LIMIT) {
+                            answerList.add(divideValue);
+                            isPrime = false;
+
+                            break;
+                        }
                     }
                 }
 
