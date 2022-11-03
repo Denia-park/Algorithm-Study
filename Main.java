@@ -5,7 +5,7 @@ public class Main {
         Solution testSolution = new Solution();
 
 //        System.out.println(testSolution.solution(new int[]{4, 3, 1, 2, 5}));
-        System.out.println(Arrays.toString(testSolution.solution(1, 100)));
+        System.out.println(Arrays.toString(testSolution.solution(1, 1_000_000)));
 //        System.out.println(Arrays.toString(testSolution.solution(2, 101)));
     }
 }

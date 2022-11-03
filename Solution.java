@@ -1,38 +1,39 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// https://deok2kim.tistory.com/123 정답 코드 참고
+// 블럭의 한계가 있다는 것을 확인하지 못했음
 class Solution {
-    public int[] solution(long begin, long end) {
-        int[] answer = new int[(int) (end - begin) + 1];
+    final int BLOCK_LIMIT = 10_000_000;
 
-        long myNum = begin;
+    public Integer[] solution(long begin, long end) {
+        List<Integer> answerList = new ArrayList<Integer>(10000);
 
-        for (int idx = 0; idx <= (end - begin); idx++) {
-            if (myNum == 1) {
-                answer[idx] = 0;
-            } else if (myNum % 2 == 0) {
-                answer[idx] = (int) (myNum / 2);
+        for (int value = (int) begin; value <= end; value++) {
+            if (value == 1) {
+                answerList.add(0);
             } else {
-                int divideNum = getDivideNum(myNum);
-                if (divideNum == -1) {
-                    answer[idx] = 1;
-                } else {
-                    answer[idx] = (divideNum);
+                boolean isPrime = true;
+                for (int i = 2; i <= Math.sqrt(value); i++) {
+                    int mok = value / i;
+
+                    if (mok > BLOCK_LIMIT) {
+                        continue;
+                    }
+
+                    if (value % i == 0) {
+                        answerList.add(mok);
+                        isPrime = false;
+                        break;
+                    }
+                }
+
+                if (isPrime) {
+                    answerList.add(1);
                 }
             }
-
-            myNum++;
         }
 
-        return answer;
-    }
-
-    private int getDivideNum(long value) {
-        int lastVal = -1;
-        for (int i = 3; i <= Math.sqrt(value); i += 2) {
-            if (value % i == 0) {
-                lastVal = (int) (value / i);
-                break;
-            }
-        }
-
-        return lastVal;
+        return answerList.toArray(new Integer[0]);
     }
 }
