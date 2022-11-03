@@ -6,7 +6,7 @@ public class Main {
 
 //        System.out.println(testSolution.solution(new int[]{4, 3, 1, 2, 5}));
         System.out.println(Arrays.toString(testSolution.solution(1, 100)));
-        System.out.println(Arrays.toString(testSolution.solution(2, 101)));
+//        System.out.println(Arrays.toString(testSolution.solution(2, 101)));
     }
 }
 
