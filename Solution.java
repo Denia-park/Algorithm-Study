@@ -1,76 +1,39 @@
 import java.util.ArrayList;
 import java.util.List;
 
+// https://deok2kim.tistory.com/123 정답 코드 참고
+// 블럭의 한계가 있다는 것을 확인하지 못했음
 class Solution {
-    public int solution(int distance, int[][] scope, int[][] times) {
-        List<Enemy> enemies = new ArrayList<Enemy>();
+    final int BLOCK_LIMIT = 10_000_000;
 
-        for (int i = 0; i < scope.length; i++) {
-            int[] distanceArr = scope[i];
-            int[] timeArr = times[i];
+    public Integer[] solution(long begin, long end) {
+        List<Integer> answerList = new ArrayList<Integer>(10000);
 
-            int workStartDistance = Math.min(distanceArr[0], distanceArr[1]);
-            int workEndDistance = Math.max(distanceArr[0], distanceArr[1]);
+        for (int value = (int) begin; value <= end; value++) {
+            if (value == 1) {
+                answerList.add(0);
+            } else {
+                int gcd = getGcd(value);
 
-            int workTime = timeArr[0];
-            int restTime = timeArr[1];
-
-            enemies.add(new Enemy(workStartDistance, workEndDistance, workTime, restTime));
+                answerList.add(gcd);
+            }
         }
 
-        enemies.sort(null);
+        return answerList.toArray(new Integer[0]);
+    }
 
-        for (Enemy enemy : enemies) {
-            for (int curTime = enemy.getWorkStartDistance(); curTime <= enemy.getWorkEndDistance(); curTime++) {
-                if (isWorkingTime(curTime, enemy.getWorkTime(), enemy.getRestTime())) {
-                    return curTime;
+    //Greatest Common Divisor
+    private int getGcd(int value) {
+        for (int i = 2; i <= Math.sqrt(value); i++) {
+            if (value % i == 0) {
+                int divideValue = value / i;
+
+                if (divideValue <= BLOCK_LIMIT) {
+                    return divideValue;
                 }
             }
         }
 
-        return distance;
-    }
-
-    private boolean isWorkingTime(int curTime, int workTime, int restTime) {
-        int totalTime = workTime + restTime;
-        int curStatus = curTime % totalTime;
-
-        return 0 < curStatus && curStatus <= workTime;
-    }
-}
-
-class Enemy implements Comparable<Enemy> {
-    private final int workStartDistance;
-    private final int workEndDistance;
-
-    private final int workTime;
-    private final int restTime;
-
-    public Enemy(int workStartDistance, int workEndDistance, int workTime, int restTime) {
-        this.workStartDistance = workStartDistance;
-        this.workEndDistance = workEndDistance;
-        this.workTime = workTime;
-        this.restTime = restTime;
-    }
-
-    public int getWorkStartDistance() {
-        return workStartDistance;
-    }
-
-    public int getWorkEndDistance() {
-        return workEndDistance;
-    }
-
-    public int getWorkTime() {
-        return workTime;
-    }
-
-    public int getRestTime() {
-        return restTime;
-    }
-
-    @Override
-    public int compareTo(Enemy another) {
-        return this.workStartDistance - another.workStartDistance;
+        return 1;
     }
 }

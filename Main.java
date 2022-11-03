@@ -1,10 +1,12 @@
+import java.util.Arrays;
+
 public class Main {
     static public void main(String[] args) {
         Solution testSolution = new Solution();
 
 //        System.out.println(testSolution.solution(new int[]{4, 3, 1, 2, 5}));
-        System.out.println(testSolution.solution(10, new int[][]{{3, 4}, {5, 8}}, new int[][]{{2, 5}, {4, 3}}));
-        System.out.println(testSolution.solution(12, new int[][]{{7, 8}, {4, 6}, {11, 10}}, new int[][]{{2, 2}, {2, 4}, {3, 3}}));
+        System.out.println(Arrays.toString(testSolution.solution(1, 1_000_000)));
+//        System.out.println(Arrays.toString(testSolution.solution(2, 101)));
     }
 }
 
