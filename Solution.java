@@ -1,39 +1,146 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-// https://deok2kim.tistory.com/123 정답 코드 참고
-// 블럭의 한계가 있다는 것을 확인하지 못했음
 class Solution {
-    final int BLOCK_LIMIT = 10_000_000;
+    public int[] solution(int[] feeInfos, String[] records) {
+        Map<String, Car> carMap = new TreeMap<>();
 
-    public Integer[] solution(long begin, long end) {
-        List<Integer> answerList = new ArrayList<Integer>(10000);
+        updateCarDbByRecords(carMap, records);
 
-        for (int value = (int) begin; value <= end; value++) {
-            if (value == 1) {
-                answerList.add(0);
-            } else {
-                int gcd = getGcd(value);
+        int[] answer = new int[carMap.size()];
 
-                answerList.add(gcd);
-            }
-        }
+        calculateCarParkingTimeOnMidnight(carMap);
 
-        return answerList.toArray(new Integer[0]);
+        applyTotalFeeToAnswerArray(carMap, answer, feeInfos);
+
+        return answer;
     }
 
-    //Greatest Common Divisor
-    private int getGcd(int value) {
-        for (int i = 2; i <= Math.sqrt(value); i++) {
-            if (value % i == 0) {
-                int divideValue = value / i;
+    private void updateCarDbByRecords(Map<String, Car> carMap, String[] records) {
+        for (String record : records) {
+            String[] recordArr = record.split(" ");
+            String time = recordArr[0];
+            String carNum = recordArr[1];
+            String inOut = recordArr[2];
 
-                if (divideValue <= BLOCK_LIMIT) {
-                    return divideValue;
+            if (inOut.equals("IN")) {
+                Car myCar = carMap.get(carNum);
+                if (myCar == null) {
+                    carMap.put(carNum, new Car(carNum, time));
+                } else {
+                    myCar.setEnterTime(time);
                 }
+            } else {
+                Car myCar = carMap.get(carNum);
+                myCar.setExitTime(time);
+
+                int parkingTime = myCar.getParkingTime();
+                myCar.setTotalParkingTime(myCar.getTotalParkingTime() + parkingTime);
             }
         }
+    }
 
-        return 1;
+    private void applyTotalFeeToAnswerArray(Map<String, Car> carMap, int[] answer, int[] feeInfos) {
+        int idx = 0;
+        for (Map.Entry<String, Car> carEntry : carMap.entrySet()) {
+            Car myCar = carEntry.getValue();
+            answer[idx] = calculateFee(myCar, feeInfos);
+            idx++;
+        }
+    }
+
+    private void calculateCarParkingTimeOnMidnight(Map<String, Car> carMap) {
+        for (Map.Entry<String, Car> carEntry : carMap.entrySet()) {
+            Car myCar = carEntry.getValue();
+
+            if (myCar.getEnterTime() == null)
+                continue;
+
+            if (myCar.getExitTime() == null) {
+                myCar.setExitTime("23:59");
+            }
+
+            int totalTime = myCar.getParkingTime();
+            myCar.setTotalParkingTime(myCar.getTotalParkingTime() + totalTime);
+        }
+    }
+
+    private int calculateFee(Car myCar, int[] feeInfos) {
+        int defaultTime = feeInfos[0];
+        int defaultFee = feeInfos[1];
+        int unitTime = feeInfos[2];
+        int unitFee = feeInfos[3];
+
+        int totalParkingTime = myCar.getTotalParkingTime();
+        int totalFee = 0;
+
+        if (totalParkingTime <= defaultTime) {
+            totalFee = defaultFee;
+        } else {
+            double additionalTime = totalParkingTime - defaultTime;
+            int additionalFee = (int) Math.ceil(additionalTime / unitTime) * unitFee;
+
+            totalFee = defaultFee + additionalFee;
+        }
+
+        return totalFee;
+    }
+}
+
+class Car {
+    private final String carNum;
+    private String enterTime;
+    private String exitTime;
+    private int totalParkingTime;
+
+    public Car(String carNum, String enterTime) {
+        this.carNum = carNum;
+        this.enterTime = enterTime;
+        this.exitTime = null;
+        this.totalParkingTime = 0;
+    }
+
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public String getEnterTime() {
+        return enterTime;
+    }
+
+    public void setEnterTime(String enterTime) {
+        this.enterTime = enterTime;
+    }
+
+    public String getExitTime() {
+        return exitTime;
+    }
+
+    public void setExitTime(String exitTime) {
+        this.exitTime = exitTime;
+    }
+
+    public int getTotalParkingTime() {
+        return totalParkingTime;
+    }
+
+    public void setTotalParkingTime(int totalParkingTime) {
+        this.totalParkingTime = totalParkingTime;
+    }
+
+    public int getParkingTime() {
+        if (this.enterTime == null || this.exitTime == null)
+            return -1;
+
+        String[] enterTimeArr = this.enterTime.split(":");
+        String[] exitTimeArr = this.exitTime.split(":");
+
+        int enterTimeTotal = Integer.parseInt(enterTimeArr[0]) * 60 + Integer.parseInt(enterTimeArr[1]);
+        int exitTimeTotal = Integer.parseInt(exitTimeArr[0]) * 60 + Integer.parseInt(exitTimeArr[1]);
+
+        this.enterTime = null;
+        this.exitTime = null;
+
+        return exitTimeTotal - enterTimeTotal;
     }
 }
