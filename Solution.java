@@ -1,39 +1,98 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-// https://deok2kim.tistory.com/123 정답 코드 참고
-// 블럭의 한계가 있다는 것을 확인하지 못했음
 class Solution {
-    final int BLOCK_LIMIT = 10_000_000;
+    public int[] solution(int[] feeInfos, String[] records) {
+        Map<String, Car> carMap = new TreeMap<>();
 
-    public Integer[] solution(long begin, long end) {
-        List<Integer> answerList = new ArrayList<Integer>(10000);
+        for (String record : records) {
+            String[] recordArr = record.split(" ");
+            String time = recordArr[0];
+            String carNum = recordArr[1];
+            String inOut = recordArr[2];
 
-        for (int value = (int) begin; value <= end; value++) {
-            if (value == 1) {
-                answerList.add(0);
+            if (inOut.equals("IN")) {
+                carMap.put(carNum, new Car(carNum, time));
             } else {
-                int gcd = getGcd(value);
-
-                answerList.add(gcd);
+                Car myCar = carMap.get(carNum);
+                myCar.setExitTime(time);
             }
         }
 
-        return answerList.toArray(new Integer[0]);
+        int[] answer = new int[carMap.size()];
+
+        int idx = 0;
+        for (Map.Entry<String, Car> carEntry : carMap.entrySet()) {
+            Car myCar = carEntry.getValue();
+            answer[idx] = getFee(myCar, feeInfos);
+            idx++;
+        }
+
+        return answer;
     }
 
-    //Greatest Common Divisor
-    private int getGcd(int value) {
-        for (int i = 2; i <= Math.sqrt(value); i++) {
-            if (value % i == 0) {
-                int divideValue = value / i;
+    private int getFee(Car myCar, int[] feeInfos) {
+        int defaultTime = feeInfos[0];
+        int defaultFee = feeInfos[1];
+        int unitTime = feeInfos[2];
+        int unitFee = feeInfos[3];
 
-                if (divideValue <= BLOCK_LIMIT) {
-                    return divideValue;
-                }
-            }
+        String enterTime = myCar.getEnterTime();
+        String exitTime = myCar.getExitTime();
+
+        if (exitTime == null) {
+            exitTime = "23:59";
+        }
+        int totalTime = calculateTime(enterTime, exitTime);
+        int totalFee = 0;
+
+        if (totalTime <= defaultTime) {
+            totalFee = defaultFee;
+        } else {
+            double additionalTime = totalTime - defaultTime;
+            int additionalFee = (int) Math.ceil(additionalTime / unitTime) * unitFee;
+
+            totalFee = defaultFee + additionalFee;
         }
 
-        return 1;
+        return totalFee;
+    }
+
+    private int calculateTime(String enterTime, String exitTime) {
+        String[] enterTimeArr = enterTime.split(":");
+        String[] exitTimeArr = exitTime.split(":");
+
+        int enterTimeTotal = Integer.parseInt(enterTimeArr[0]) * 60 + Integer.parseInt(enterTimeArr[0]);
+        int exitTimeTotal = Integer.parseInt(exitTimeArr[0]) * 60 + Integer.parseInt(exitTimeArr[0]);
+
+        return enterTimeTotal - exitTimeTotal;
+    }
+}
+
+class Car {
+    private final String carNum;
+    private final String enterTime;
+    private String exitTime;
+
+    public Car(String carNum, String enterTime) {
+        this.carNum = carNum;
+        this.enterTime = enterTime;
+        this.exitTime = null;
+    }
+
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public String getEnterTime() {
+        return enterTime;
+    }
+
+    public String getExitTime() {
+        return exitTime;
+    }
+
+    public void setExitTime(String exitTime) {
+        this.exitTime = exitTime;
     }
 }
