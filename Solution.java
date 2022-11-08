@@ -5,6 +5,18 @@ class Solution {
     public int[] solution(int[] feeInfos, String[] records) {
         Map<String, Car> carMap = new TreeMap<>();
 
+        updateCarDbByRecords(carMap, records, feeInfos);
+
+        int[] answer = new int[carMap.size()];
+
+        calculateMidnightFee(carMap, feeInfos);
+
+        applyTotalFeeToAnswerArray(carMap, answer);
+
+        return answer;
+    }
+
+    private void updateCarDbByRecords(Map<String, Car> carMap, String[] records, int[] feeInfos) {
         for (String record : records) {
             String[] recordArr = record.split(" ");
             String time = recordArr[0];
@@ -16,19 +28,33 @@ class Solution {
             } else {
                 Car myCar = carMap.get(carNum);
                 myCar.setExitTime(time);
+
+                int totalFee = getFee(myCar, feeInfos);
+                myCar.setTotalFee(myCar.getTotalFee() + totalFee);
             }
         }
+    }
 
-        int[] answer = new int[carMap.size()];
-
+    private void applyTotalFeeToAnswerArray(Map<String, Car> carMap, int[] answer) {
         int idx = 0;
         for (Map.Entry<String, Car> carEntry : carMap.entrySet()) {
             Car myCar = carEntry.getValue();
-            answer[idx] = getFee(myCar, feeInfos);
+            answer[idx] = myCar.getTotalFee();
             idx++;
         }
+    }
 
-        return answer;
+    private void calculateMidnightFee(Map<String, Car> carMap, int[] feeInfos) {
+        for (Map.Entry<String, Car> carEntry : carMap.entrySet()) {
+            Car myCar = carEntry.getValue();
+
+            if (myCar.getEnterTime() == null)
+                continue;
+
+            int feeOfMidnight = getFee(myCar, feeInfos);
+
+            myCar.setTotalFee(myCar.getTotalFee() + feeOfMidnight);
+        }
     }
 
     private int getFee(Car myCar, int[] feeInfos) {
@@ -71,13 +97,15 @@ class Solution {
 
 class Car {
     private final String carNum;
-    private final String enterTime;
+    private String enterTime;
     private String exitTime;
+    private int totalFee;
 
     public Car(String carNum, String enterTime) {
         this.carNum = carNum;
         this.enterTime = enterTime;
         this.exitTime = null;
+        this.totalFee = 0;
     }
 
     public String getCarNum() {
@@ -88,11 +116,23 @@ class Car {
         return enterTime;
     }
 
+    public void setEnterTime(String enterTime) {
+        this.enterTime = enterTime;
+    }
+
     public String getExitTime() {
         return exitTime;
     }
 
     public void setExitTime(String exitTime) {
         this.exitTime = exitTime;
+    }
+
+    public int getTotalFee() {
+        return totalFee;
+    }
+
+    public void setTotalFee(int totalFee) {
+        this.totalFee = totalFee;
     }
 }
