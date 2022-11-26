@@ -1,14 +1,12 @@
-import java.io.IOException;
-
 public class Main {
-    static public void main(String[] args) throws IOException {
-        Solution testSolution = new Solution();
+    static public void main(String[] args) {
+        Solution ts = new Solution();
 
-        System.out.println((testSolution.solution(23)));
+        String[] subway = {"1 2 3 4 5 6 7 8", "2 11", "0 11 10", "3 17 19 12 13 9 14 15 10", "20 2 21"};
+
+        System.out.println(ts.solution(subway, 1, 9));
     }
 }
-
-//
 //public class Main{
 //
 //    public static void main(String[] args) throws IOException {
