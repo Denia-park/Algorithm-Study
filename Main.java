@@ -1,26 +1,12 @@
-import java.util.Arrays;
-
 public class Main {
     static public void main(String[] args) {
-        Solution testSolution = new Solution();
+        Solution ts = new Solution();
 
-//        System.out.println(testSolution.solution(new int[]{4, 3, 1, 2, 5}));
-        System.out.println(Arrays.toString(testSolution.solution(
-                new int[]{180, 5000, 10, 600},
-                new String[]{
-                        "05:34 5961 IN",
-                        "06:00 0000 IN",
-                        "06:34 0000 OUT",
-                        "07:59 5961 OUT",
-                        "07:59 0148 IN",
-                        "18:59 0000 IN",
-                        "19:09 0148 OUT",
-                        "22:59 5961 IN",
-                        "23:00 5961 OUT"})));
+        String[] subway = {"1 2 3 4 5 6 7 8", "2 11", "0 11 10", "3 17 19 12 13 9 14 15 10", "20 2 21"};
+
+        System.out.println(ts.solution(subway, 1, 9));
     }
 }
-
-//
 //public class Main{
 //
 //    public static void main(String[] args) throws IOException {
