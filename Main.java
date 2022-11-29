@@ -1,10 +1,8 @@
-import java.util.Arrays;
-
 public class Main {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(3, new int[]{10, 100, 20, 150, 1, 100, 200})));
+        System.out.println(ts.solution(new int[]{3, 1, 2}, 5));
     }
 }
 //public class Main{

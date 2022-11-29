@@ -1,26 +1,20 @@
-import java.util.PriorityQueue;
-
 class Solution {
-    public int[] solution(int k, int[] score) {
-        int[] answer = new int[score.length];
+    public int solution(int[] food_times, long k) {
+        int idxCheck = 0;
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>(k);
+        for (int time = 0; time < k; time++) {
+            boolean eatFlag = false;
 
-        int index = 0;
+            while (!eatFlag) {
+                if (food_times[idxCheck] != 0) {
+                    food_times[idxCheck]--;
+                    eatFlag = true;
+                }
 
-        for (int sco : score) {
-            pq.add(sco);
-
-            if (pq.size() > k) {
-                pq.poll();
-            }
-
-            if (!pq.isEmpty()) {
-                answer[index] = pq.peek();
-                index++;
+                idxCheck = (idxCheck + 1) % food_times.length;
             }
         }
 
-        return answer;
+        return idxCheck + 1;
     }
 }
