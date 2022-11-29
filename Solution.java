@@ -1,20 +1,59 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 class Solution {
     public int solution(int[] food_times, long k) {
-        int idxCheck = 0;
+        int idxCheck = 1;
 
-        for (int time = 0; time < k; time++) {
-            boolean eatFlag = false;
+        Queue<Food> queue = new LinkedList<>();
 
-            while (!eatFlag) {
-                if (food_times[idxCheck] != 0) {
-                    food_times[idxCheck]--;
-                    eatFlag = true;
+        for (int food_time : food_times) {
+            queue.add(new Food(idxCheck, food_time));
+            idxCheck++;
+        }
+        long time = 0;
+
+        while (time < k) {
+            if (!queue.isEmpty()) {
+                Food food = queue.poll();
+
+                food.eat();
+
+                if (food.getFoodQuantity() > 0) {
+                    queue.add(food);
                 }
-
-                idxCheck = (idxCheck + 1) % food_times.length;
             }
+
+            time++;
         }
 
-        return idxCheck + 1;
+        if (queue.isEmpty()) {
+            return -1;
+        } else {
+            return queue.peek().getNumber();
+        }
+    }
+
+}
+
+class Food {
+    int number;
+    int foodQuantity;
+
+    public Food(int number, int foodQuantity) {
+        this.number = number;
+        this.foodQuantity = foodQuantity;
+    }
+
+    void eat() {
+        this.foodQuantity--;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public int getFoodQuantity() {
+        return foodQuantity;
     }
 }
