@@ -1,10 +1,10 @@
+import java.util.Arrays;
+
 public class Main {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        String[] subway = {"1 2 3 4 5 6 7 8", "2 11", "0 11 10", "3 17 19 12 13 9 14 15 10", "20 2 21"};
-
-        System.out.println(ts.solution(subway, 1, 9));
+        System.out.println(Arrays.toString(ts.solution(3, new int[]{10, 100, 20, 150, 1, 100, 200})));
     }
 }
 //public class Main{
