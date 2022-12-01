@@ -1,26 +1,24 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     static public void main(String[] args) throws IOException {
-        Solution testSolution = new Solution();
+        Solution ts = new Solution();
 
-        List<String[]> map = new ArrayList<>();
+//      *BufferedReader*
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] commandList = null;
-        String[] startLine = br.readLine().split(" ");
-        int ROW = Integer.parseInt(startLine[0]);
 
-        for (int i = 0; i < ROW; i++) {
-            map.add(br.readLine().split(" "));
+        String[] firstInput = br.readLine().split(" ");
+        int tableSize = Integer.parseInt(firstInput[0]);
+        int restaurantNumber = Integer.parseInt(firstInput[1]);
+
+        String[][] tables = new String[tableSize][tableSize];
+        for (int i = 0; i < tables.length; i++) {
+            tables[i] = br.readLine().split(" ");
         }
 
-        commandList = br.readLine().split(" ");
-
-        testSolution.solution(startLine, map, commandList);
+        System.out.println(ts.solution(tableSize, restaurantNumber, tables));
     }
 }
 
