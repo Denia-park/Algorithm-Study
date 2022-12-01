@@ -1,24 +1,25 @@
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 class Solution {
-    // r, c  => 1,1 시작
-    // 치킨 거리 = 집과 가장 가까운 치킨집 사이
-    // 집을 기준으로 정해짐
-    // 도시의 치킨 거리는 모든 집의 치킨 거리의 합
-    // 거리는 절대값 으로 계산
-
     final String EMPTY = "0";
     final String HOUSE = "1";
     final String CHICK = "2";
 
-    public int solution(int tableSize, int restaurantNumber, String[][] tables) {
-        List<House> houses = new ArrayList<>();
-        List<Chick> chicks = new ArrayList<>();
-        int chickNum = 0;
-        int houseNum = 0;
+    List<House> houses;
 
-        int idx = 0;
+    int minValue;
+
+    int gChickLimit;
+
+    public int solution(int tableSize, int chickLimit, String[][] tables) {
+        houses = new ArrayList<>();
+        minValue = Integer.MAX_VALUE;
+        gChickLimit = chickLimit;
+
+        List<Chick> chicks = new ArrayList<>();
 
         for (int r = 0; r < tableSize; r++) {
             for (int c = 0; c < tableSize; c++) {
@@ -28,44 +29,43 @@ class Solution {
 
                 if (tables[r][c].equals(HOUSE)) {
                     houses.add(new House(r, c));
-                    houseNum++;
                 } else if (tables[r][c].equals(CHICK)) {
-                    chicks.add(new Chick(r, c, idx));
-                    idx++;
-                    chickNum++;
+                    chicks.add(new Chick(r, c));
                 }
             }
         }
 
-        int[][] chickDistances = new int[chickNum][houseNum];
+        Deque<Chick> deque = new LinkedList<>();
+        combination(chicks, deque, 0);
 
-        int rIdx = 0;
-        for (Chick chick : chicks) {
-            int totalDistance = 0;
-            int cIdx = 0;
-            for (House house : houses) {
-                int tempDistance = calculateDistance(chick, house);
-                chickDistances[rIdx][cIdx] = tempDistance;
-                totalDistance += tempDistance;
-                cIdx++;
-            }
-            chick.sumChickDistance = totalDistance;
-            rIdx++;
+        return minValue;
+    }
+
+    private void combination(List<Chick> chicks, Deque<Chick> aliceChicks, int startIdx) {
+        if (aliceChicks.size() >= gChickLimit) {
+            minValue = Math.min(minValue, calculateCityChickDistance(aliceChicks));
+            return;
         }
 
-        chicks.sort(null);
+        for (int curIdx = startIdx; curIdx < chicks.size(); curIdx++) {
+            aliceChicks.addLast(chicks.get(curIdx));
+            combination(chicks, aliceChicks, curIdx + 1);
+            aliceChicks.pollLast();
+        }
+    }
 
-        int rtVal = 0;
+    private int calculateCityChickDistance(Deque<Chick> aliceChicks) {
+        int totalDistance = 0;
+        for (House house : houses) {
+            int minDistance = Integer.MAX_VALUE;
 
-        for (int j = 0; j < houseNum; j++) {
-            int minValue = (chickDistances[chicks.get(0).idx][j]);
-            for (int i = 1; i < restaurantNumber; i++) {
-                minValue = Math.min(minValue, (chickDistances[chicks.get(i).idx][j]));
+            for (Chick chick : aliceChicks) {
+                minDistance = Math.min(minDistance, calculateDistance(chick, house));
             }
-            rtVal += minValue;
+            totalDistance += minDistance;
         }
 
-        return rtVal;
+        return totalDistance;
     }
 
     int calculateDistance(Chick chick, House house) {
@@ -83,22 +83,12 @@ class House {
     }
 }
 
-class Chick implements Comparable<Chick> {
+class Chick {
     int r;
     int c;
-    int idx;
 
-    int sumChickDistance;
-
-    public Chick(int r, int c, int idx) {
+    public Chick(int r, int c) {
         this.r = r;
         this.c = c;
-        this.idx = idx;
-        sumChickDistance = 0;
-    }
-
-    @Override
-    public int compareTo(Chick o) {
-        return Integer.compare(this.sumChickDistance, o.sumChickDistance);
     }
 }
