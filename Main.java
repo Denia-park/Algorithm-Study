@@ -1,8 +1,24 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class Main {
-    static public void main(String[] args) {
+    static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(new int[]{3, 1, 2}, 5));
+//      *BufferedReader*
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] firstInput = br.readLine().split(" ");
+        int tableSize = Integer.parseInt(firstInput[0]);
+        int restaurantNumber = Integer.parseInt(firstInput[1]);
+
+        String[][] tables = new String[tableSize][tableSize];
+        for (int i = 0; i < tables.length; i++) {
+            tables[i] = br.readLine().split(" ");
+        }
+
+        System.out.println(ts.solution(tableSize, restaurantNumber, tables));
     }
 }
 //public class Main{

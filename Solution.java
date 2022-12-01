@@ -1,45 +1,60 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
-// 정답 참고
-// https://github.com/ndb796/python-for-coding-test/blob/master/11/6.java
-
-class Food implements Comparable<Food> {
-
-    private int time;
-    private int index;
-
-    public Food(int time, int index) {
-        this.time = time;
-        this.index = index;
-    }
-
-    public int getTime() {
-        return this.time;
-    }
-
-    public int getIndex() {
-        return this.index;
-    }
-
-    // 시간이 짧은 것이 높은 우선순위를 가지도록 설정
-    @Override
-    public int compareTo(Food other) {
-        return Integer.compare(this.time, other.time);
-    }
-}
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 class Solution {
-    public int solution(int[] food_times, long k) {
-        // 전체 음식을 먹는 시간보다 k가 크거나 같다면 -1
-        long summary = 0;
-        for (int i = 0; i < food_times.length; i++) {
-            summary += food_times[i];
+    final String EMPTY = "0";
+    final String HOUSE = "1";
+    final String CHICK = "2";
+
+    List<House> houses;
+
+    int minValue;
+
+    int gChickLimit;
+
+    public int solution(int tableSize, int chickLimit, String[][] tables) {
+        houses = new ArrayList<>();
+        minValue = Integer.MAX_VALUE;
+        gChickLimit = chickLimit;
+
+        List<Chick> chicks = new ArrayList<>();
+
+        for (int r = 0; r < tableSize; r++) {
+            for (int c = 0; c < tableSize; c++) {
+                if (tables[r][c].equals(EMPTY)) {
+                    continue;
+                }
+
+                if (tables[r][c].equals(HOUSE)) {
+                    houses.add(new House(r, c));
+                } else if (tables[r][c].equals(CHICK)) {
+                    chicks.add(new Chick(r, c));
+                }
+            }
+        }
+
+        Deque<Chick> deque = new LinkedList<>();
+        combination(chicks, deque, 0);
+
+        return minValue;
+    }
+
+    private void combination(List<Chick> chicks, Deque<Chick> aliceChicks, int startIdx) {
+        if (aliceChicks.size() >= gChickLimit) {
+            minValue = Math.min(minValue, calculateCityChickDistance(aliceChicks));
+            return;
+        }
+
+        for (int curIdx = startIdx; curIdx < chicks.size(); curIdx++) {
+            aliceChicks.addLast(chicks.get(curIdx));
+            combination(chicks, aliceChicks, curIdx + 1);
+            aliceChicks.pollLast();
         }
         if (summary <= k) return -1;
 
+<<<<<<< HEAD
         // 시간이 작은 음식부터 빼야 하므로 우선순위 큐를 이용
         PriorityQueue<Food> pq = new PriorityQueue<>();
         for (int i = 0; i < food_times.length; i++) {
@@ -72,5 +87,43 @@ class Solution {
             }
         });
         return result.get((int) ((k - summary) % length)).getIndex();
+=======
+    private int calculateCityChickDistance(Deque<Chick> aliceChicks) {
+        int totalDistance = 0;
+        for (House house : houses) {
+            int minDistance = Integer.MAX_VALUE;
+
+            for (Chick chick : aliceChicks) {
+                minDistance = Math.min(minDistance, calculateDistance(chick, house));
+            }
+            totalDistance += minDistance;
+        }
+
+        return totalDistance;
+    }
+
+    int calculateDistance(Chick chick, House house) {
+        return Math.abs(chick.r - house.r) + Math.abs(chick.c - house.c);
+    }
+}
+
+class House {
+    int r;
+    int c;
+
+    public House(int r, int c) {
+        this.r = r;
+        this.c = c;
+    }
+}
+
+class Chick {
+    int r;
+    int c;
+
+    public Chick(int r, int c) {
+        this.r = r;
+        this.c = c;
+>>>>>>> 백준
     }
 }
