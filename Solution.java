@@ -1,129 +1,97 @@
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-
 class Solution {
-    final String EMPTY = "0";
-    final String HOUSE = "1";
-    final String CHICK = "2";
+    final int EMPTY = 0;
+    final int WALL = 1;
+    final int VIRUS = 2;
 
-    List<House> houses;
+    int result;
+    int[][] temp;
+    int[][] gTables;
 
-    int minValue;
+    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    private int gRow;
+    private int gCol;
 
-    int gChickLimit;
+    public int solution(int row, int col, int[][] tables) {
+        temp = new int[row][col];
+        gRow = row;
+        gCol = col;
+        gTables = tables;
 
-    public int solution(int tableSize, int chickLimit, String[][] tables) {
-        houses = new ArrayList<>();
-        minValue = Integer.MAX_VALUE;
-        gChickLimit = chickLimit;
+        dfs(0);
 
-        List<Chick> chicks = new ArrayList<>();
-
-        for (int r = 0; r < tableSize; r++) {
-            for (int c = 0; c < tableSize; c++) {
-                if (tables[r][c].equals(EMPTY)) {
-                    continue;
-                }
-
-                if (tables[r][c].equals(HOUSE)) {
-                    houses.add(new House(r, c));
-                } else if (tables[r][c].equals(CHICK)) {
-                    chicks.add(new Chick(r, c));
-                }
-            }
-        }
-
-        Deque<Chick> deque = new LinkedList<>();
-        combination(chicks, deque, 0);
-
-        return minValue;
+        return result;
     }
 
-    private void combination(List<Chick> chicks, Deque<Chick> aliceChicks, int startIdx) {
-        if (aliceChicks.size() >= gChickLimit) {
-            minValue = Math.min(minValue, calculateCityChickDistance(aliceChicks));
+    private void dfs(int count) {
+        if (count == 3) {
+            tableDeepCopy();
+
+            runAllVirus();
+
+            result = Math.max(result, getMaxScore());
+
             return;
         }
 
-        for (int curIdx = startIdx; curIdx < chicks.size(); curIdx++) {
-            aliceChicks.addLast(chicks.get(curIdx));
-            combination(chicks, aliceChicks, curIdx + 1);
-            aliceChicks.pollLast();
-        }
-        if (summary <= k) return -1;
-
-<<<<<<< HEAD
-        // 시간이 작은 음식부터 빼야 하므로 우선순위 큐를 이용
-        PriorityQueue<Food> pq = new PriorityQueue<>();
-        for (int i = 0; i < food_times.length; i++) {
-            // (음식 시간, 음식 번호) 형태로 우선순위 큐에 삽입
-            pq.offer(new Food(food_times[i], i + 1));
-        }
-
-        summary = 0; // 먹기 위해 사용한 시간
-        long previous = 0; // 직전에 다 먹은 음식 시간
-        long length = food_times.length; // 남은 음식의 개수
-
-        // summary + (현재의 음식 시간 - 이전 음식 시간) * 현재 음식 개수와 k 비교
-        while (summary + ((pq.peek().getTime() - previous) * length) <= k) {
-            int now = pq.poll().getTime();
-            summary += (now - previous) * length;
-            length -= 1; // 다 먹은 음식 제외
-            previous = now; // 이전 음식 시간 재설정
-        }
-
-        // 남은 음식 중에서 몇 번째 음식인지 확인하여 출력
-        ArrayList<Food> result = new ArrayList<>();
-        while (!pq.isEmpty()) {
-            result.add(pq.poll());
-        }
-        // 음식의 번호 기준으로 정렬
-        Collections.sort(result, new Comparator<Food>() {
-            @Override
-            public int compare(Food a, Food b) {
-                return Integer.compare(a.getIndex(), b.getIndex());
+        for (int r = 0; r < gTables.length; r++) {
+            for (int c = 0; c < gTables[r].length; c++) {
+                if (gTables[r][c] == EMPTY) {
+                    gTables[r][c] = WALL;
+                    dfs(count + 1);
+                    gTables[r][c] = EMPTY;
+                }
             }
-        });
-        return result.get((int) ((k - summary) % length)).getIndex();
-=======
-    private int calculateCityChickDistance(Deque<Chick> aliceChicks) {
-        int totalDistance = 0;
-        for (House house : houses) {
-            int minDistance = Integer.MAX_VALUE;
+        }
+    }
 
-            for (Chick chick : aliceChicks) {
-                minDistance = Math.min(minDistance, calculateDistance(chick, house));
+    private int getMaxScore() {
+        int maxScore = 0;
+
+        for (int[] rows : temp) {
+            for (int col : rows) {
+                if (col == EMPTY) {
+                    maxScore++;
+                }
             }
-            totalDistance += minDistance;
         }
 
-        return totalDistance;
+        return maxScore;
     }
 
-    int calculateDistance(Chick chick, House house) {
-        return Math.abs(chick.r - house.r) + Math.abs(chick.c - house.c);
+    private void runAllVirus() {
+        for (int r = 0; r < temp.length; r++) {
+            for (int c = 0; c < temp[r].length; c++) {
+                if (temp[r][c] == VIRUS) {
+                    runVirus(r, c);
+                }
+            }
+        }
     }
-}
 
-class House {
-    int r;
-    int c;
-
-    public House(int r, int c) {
-        this.r = r;
-        this.c = c;
+    private void tableDeepCopy() {
+        for (int i = 0; i < gTables.length; i++) {
+            System.arraycopy(gTables[i], 0, temp[i], 0, gTables[i].length);
+        }
     }
-}
 
-class Chick {
-    int r;
-    int c;
-
-    public Chick(int r, int c) {
-        this.r = r;
-        this.c = c;
->>>>>>> 백준
+    private boolean isOutOfTable(int e_r, int e_c) {
+        return e_r < 0 || e_c < 0 || e_r >= gRow || e_c >= gCol;
     }
+
+    private void runVirus(int r, int c) {
+        for (int[] dir : directions) {
+            int e_r = r + dir[0];
+            int e_c = c + dir[1];
+
+            if (isOutOfTable(e_r, e_c)) {
+                continue;
+            }
+
+            if (temp[e_r][e_c] == EMPTY) {
+                temp[e_r][e_c] = VIRUS;
+                runVirus(e_r, e_c);
+            }
+        }
+    }
+
 }
