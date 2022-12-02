@@ -1,94 +1,99 @@
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-
 class Solution {
-    final String EMPTY = "0";
-    final String HOUSE = "1";
-    final String CHICK = "2";
+    final int EMPTY = 0;
+    final int WALL = 1;
+    final int VIRUS = 2;
 
-    List<House> houses;
+    int result;
+    int[][] temp;
+    int[][] gTables;
 
-    int minValue;
+    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    private int gRow;
+    private int gCol;
 
-    int gChickLimit;
+    public int solution(int row, int col, int[][] tables) {
+        temp = new int[row][col];
+        gRow = row;
+        gCol = col;
+        gTables = tables;
 
-    public int solution(int tableSize, int chickLimit, String[][] tables) {
-        houses = new ArrayList<>();
-        minValue = Integer.MAX_VALUE;
-        gChickLimit = chickLimit;
+        dfs(0);
 
-        List<Chick> chicks = new ArrayList<>();
-
-        for (int r = 0; r < tableSize; r++) {
-            for (int c = 0; c < tableSize; c++) {
-                if (tables[r][c].equals(EMPTY)) {
-                    continue;
-                }
-
-                if (tables[r][c].equals(HOUSE)) {
-                    houses.add(new House(r, c));
-                } else if (tables[r][c].equals(CHICK)) {
-                    chicks.add(new Chick(r, c));
-                }
-            }
-        }
-
-        Deque<Chick> deque = new LinkedList<>();
-        combination(chicks, deque, 0);
-
-        return minValue;
+        return result;
     }
 
-    private void combination(List<Chick> chicks, Deque<Chick> aliceChicks, int startIdx) {
-        if (aliceChicks.size() >= gChickLimit) {
-            minValue = Math.min(minValue, calculateCityChickDistance(aliceChicks));
+    private void dfs(int count) {
+        if (count == 3) {
+            tableDeepCopy();
+
+            runAllVirus();
+
+            result = Math.max(result, getMaxScore());
+
             return;
         }
 
-        for (int curIdx = startIdx; curIdx < chicks.size(); curIdx++) {
-            aliceChicks.addLast(chicks.get(curIdx));
-            combination(chicks, aliceChicks, curIdx + 1);
-            aliceChicks.pollLast();
-        }
-    }
-
-    private int calculateCityChickDistance(Deque<Chick> aliceChicks) {
-        int totalDistance = 0;
-        for (House house : houses) {
-            int minDistance = Integer.MAX_VALUE;
-
-            for (Chick chick : aliceChicks) {
-                minDistance = Math.min(minDistance, calculateDistance(chick, house));
+        for (int r = 0; r < gTables.length; r++) {
+            for (int c = 0; c < gTables[r].length; c++) {
+                if (gTables[r][c] == EMPTY) {
+                    gTables[r][c] = WALL;
+                    dfs(count + 1);
+                    gTables[r][c] = EMPTY;
+                }
             }
-            totalDistance += minDistance;
+        }
+    }
+
+    private int getMaxScore() {
+        int maxScore = 0;
+
+        for (int[] rows : temp) {
+            for (int col : rows) {
+                if (col == EMPTY) {
+                    maxScore++;
+                }
+            }
         }
 
-        return totalDistance;
+        return maxScore;
     }
 
-    int calculateDistance(Chick chick, House house) {
-        return Math.abs(chick.r - house.r) + Math.abs(chick.c - house.c);
+    private void runAllVirus() {
+        for (int r = 0; r < temp.length; r++) {
+            for (int c = 0; c < temp[r].length; c++) {
+                if (temp[r][c] == VIRUS) {
+                    runVirus(r, c);
+                }
+            }
+        }
     }
+
+    private void tableDeepCopy() {
+        for (int i = 0; i < gTables.length; i++) {
+            System.arraycopy(gTables[i], 0, temp[i], 0, gTables[i].length);
+        }
+    }
+
+    private boolean isOutOfTable(int e_r, int e_c) {
+        return e_r < 0 || e_c < 0 || e_r >= gRow || e_c >= gCol;
+    }
+
+    private void runVirus(int r, int c) {
+        for (int[] dir : directions) {
+            int e_r = r + dir[0];
+            int e_c = c + dir[1];
+
+            if (isOutOfTable(e_r, e_c)) {
+                continue;
+            }
+
+            if (temp[e_r][e_c] == EMPTY) {
+                temp[e_r][e_c] = VIRUS;
+                runVirus(e_r, e_c);
+            }
+        }
+    }
+
 }
 
-class House {
-    int r;
-    int c;
 
-    public House(int r, int c) {
-        this.r = r;
-        this.c = c;
-    }
-}
-
-class Chick {
-    int r;
-    int c;
-
-    public Chick(int r, int c) {
-        this.r = r;
-        this.c = c;
-    }
-}

@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -10,15 +11,15 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] firstInput = br.readLine().split(" ");
-        int tableSize = Integer.parseInt(firstInput[0]);
-        int restaurantNumber = Integer.parseInt(firstInput[1]);
+        int row = Integer.parseInt(firstInput[0]);
+        int col = Integer.parseInt(firstInput[1]);
 
-        String[][] tables = new String[tableSize][tableSize];
+        int[][] tables = new int[row][col];
         for (int i = 0; i < tables.length; i++) {
-            tables[i] = br.readLine().split(" ");
+            tables[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         }
 
-        System.out.println(ts.solution(tableSize, restaurantNumber, tables));
+        System.out.println(ts.solution(row, col, tables));
     }
 }
 
