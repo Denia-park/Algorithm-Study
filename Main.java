@@ -1,25 +1,12 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-//      *BufferedReader*
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        String[] firstInput = br.readLine().split(" ");
-        int row = Integer.parseInt(firstInput[0]);
-        int col = Integer.parseInt(firstInput[1]);
-
-        int[][] tables = new int[row][col];
-        for (int i = 0; i < tables.length; i++) {
-            tables[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        }
-
-        System.out.println(ts.solution(row, col, tables));
+//        System.out.println(ts.solution(5, new int[]{2, 4}, new int[]{1, 3, 5}));
+//        System.out.println(ts.solution(4, new int[]{1, 3}, new int[]{2, 4}));
+        System.out.println(ts.solution(5, new int[]{2, 4}, new int[]{3}));
     }
 }
 //public class Main{
