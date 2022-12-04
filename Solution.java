@@ -20,13 +20,13 @@ class Solution {
         }
 
         for (int stuIdx = 1; stuIdx < n + 1; stuIdx++) {
-            if (students[stuIdx] == 0) {
-                if (students[stuIdx - 1] > 0) {
-                    students[stuIdx - 1]--;
-                } else if (students[stuIdx + 1] > 0) {
-                    students[stuIdx + 1]--;
+            if (students[stuIdx] == 2) {
+                if (stuIdx != 1 & students[stuIdx - 1] == 0) {
+                    students[stuIdx - 1]++;
+                } else if (stuIdx != n & students[stuIdx + 1] == 0) {
+                    students[stuIdx + 1]++;
                 }
-                students[stuIdx]++;
+                students[stuIdx]--;
             }
         }
 
