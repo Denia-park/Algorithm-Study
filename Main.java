@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -16,10 +15,17 @@ public class Main {
 
         int[][] tables = new int[rowCol][rowCol];
         for (int i = 0; i < tables.length; i++) {
-            tables[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            String[] tempSplits = br.readLine().split(" ");
+            for (int j = 0; j < tempSplits.length; j++) {
+                tables[i][j] = Integer.parseInt(tempSplits[j]);
+            }
         }
 
-        int[] condition = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int[] condition = new int[3];
+        String[] tempSplits = br.readLine().split(" ");
+        for (int j = 0; j < tempSplits.length; j++) {
+            condition[j] = Integer.parseInt(tempSplits[j]);
+        }
 
         System.out.println(ts.solution(rowCol, timeLimit, tables, condition));
     }
