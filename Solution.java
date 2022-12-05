@@ -9,22 +9,19 @@ class Solution {
 
         int count = 0;
 
-        Map<Integer, Tangerine> counter = new HashMap<>();
+        Map<Integer, Integer> counter = new HashMap<>();
 
         for (int tangerineNumber : tangerine) {
-            Tangerine curTangerine = counter.getOrDefault(tangerineNumber, new Tangerine(tangerineNumber, 0));
-            curTangerine.count++;
+            int curTangerine = counter.getOrDefault(tangerineNumber, 0);
+            curTangerine++;
             counter.put(tangerineNumber, curTangerine);
         }
+        List<Integer> tangerines = new ArrayList<>(counter.keySet());
 
-        List<Tangerine> tangerines = new ArrayList<>(counter.values());
+        tangerines.sort((a, b) -> counter.get(b) - counter.get(a));
 
-        tangerines.sort(null);
-
-        for (Tangerine curTangerine : tangerines) {
-            int tempCount = curTangerine.count;
-
-            count += tempCount;
+        for (Integer keyIdx : tangerines) {
+            count += counter.get(keyIdx);
             answer++;
 
             if (count >= limit) {
@@ -33,20 +30,5 @@ class Solution {
         }
 
         return answer;
-    }
-}
-
-class Tangerine implements Comparable<Tangerine> {
-    int number;
-    int count;
-
-    public Tangerine(int number, int count) {
-        this.number = number;
-        this.count = count;
-    }
-
-    @Override
-    public int compareTo(Tangerine o) {
-        return -Integer.compare(this.count, o.count);
     }
 }
