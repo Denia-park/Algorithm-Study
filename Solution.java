@@ -21,19 +21,13 @@ class Solution {
 
         tangerines.sort(null);
 
-        for (int i = 0; i < tangerines.size(); i++) {
-            Tangerine curTangerine = tangerines.get(i);
-
+        for (Tangerine curTangerine : tangerines) {
             int tempCount = curTangerine.count;
-
-            if (tempCount > limit) {
-                continue;
-            }
 
             count += tempCount;
             answer++;
 
-            if (count == limit) {
+            if (count >= limit) {
                 break;
             }
         }
