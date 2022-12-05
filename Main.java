@@ -1,5 +1,7 @@
+import java.io.IOException;
+
 public class Main {
-    static public void main(String[] args) {
+    static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
         System.out.println(ts.solution(6, new int[]{1, 3, 2, 5, 4, 5, 2, 3}));
