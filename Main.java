@@ -11,15 +11,17 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] firstInput = br.readLine().split(" ");
-        int row = Integer.parseInt(firstInput[0]);
-        int col = Integer.parseInt(firstInput[1]);
+        int rowCol = Integer.parseInt(firstInput[0]);
+        int timeLimit = Integer.parseInt(firstInput[1]);
 
-        int[][] tables = new int[row][col];
+        int[][] tables = new int[rowCol][rowCol];
         for (int i = 0; i < tables.length; i++) {
             tables[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         }
 
-        System.out.println(ts.solution(row, col, tables));
+        int[] condition = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        System.out.println(ts.solution(rowCol, timeLimit, tables, condition));
     }
 }
 
