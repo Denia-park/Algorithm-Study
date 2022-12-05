@@ -1,38 +1,58 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
-    public int solution(int n, int[] lostArr, int[] reserveArr) {
+    public int solution(int limit, int[] tangerine) {
         int answer = 0;
 
-        int[] students = new int[n + 2];
+        int count = 0;
 
-        Arrays.fill(students, 1);
+        Map<Integer, Tangerine> counter = new HashMap<>();
 
-        students[0] = 0;
-        students[n + 1] = 0;
-
-        for (int lostStuNum : lostArr) {
-            students[lostStuNum]--;
+        for (int tangerineNumber : tangerine) {
+            Tangerine curTangerine = counter.getOrDefault(tangerineNumber, new Tangerine(tangerineNumber, 0));
+            curTangerine.count++;
+            counter.put(tangerineNumber, curTangerine);
         }
 
-        for (int reserveStuNum : reserveArr) {
-            students[reserveStuNum]++;
-        }
+        List<Tangerine> tangerines = new ArrayList<>(counter.values());
 
-        for (int stuIdx = 1; stuIdx < n + 1; stuIdx++) {
-            if (students[stuIdx] == 0) {
-                if (students[stuIdx - 1] == 2) {
-                    students[stuIdx]++;
-                    students[stuIdx - 1]--;
-                } else if (students[stuIdx + 1] == 2) {
-                    students[stuIdx]++;
-                    students[stuIdx + 1]--;
-                }
+        tangerines.sort(null);
+
+        for (int i = 0; i < tangerines.size(); i++) {
+            Tangerine curTangerine = tangerines.get(i);
+
+            int tempCount = curTangerine.count;
+
+            if (tempCount > limit) {
+                continue;
+            }
+
+            count += tempCount;
+            answer++;
+
+            if (count == limit) {
+                break;
             }
         }
 
-        answer = (int) Arrays.stream(students).filter(val -> val > 0).count();
-
         return answer;
+    }
+}
+
+class Tangerine implements Comparable<Tangerine> {
+    int number;
+    int count;
+
+    public Tangerine(int number, int count) {
+        this.number = number;
+        this.count = count;
+    }
+
+    @Override
+    public int compareTo(Tangerine o) {
+        return -Integer.compare(this.count, o.count);
     }
 }
