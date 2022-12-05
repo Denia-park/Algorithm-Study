@@ -1,10 +1,32 @@
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(6, new int[]{1, 3, 2, 5, 4, 5, 2, 3}));
+//      *BufferedReader*
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] firstInput = br.readLine().split(" ");
+        int rowCol = Integer.parseInt(firstInput[0]);
+        int timeLimit = Integer.parseInt(firstInput[1]);
+
+        int[][] tables = new int[rowCol][rowCol];
+        for (int i = 0; i < tables.length; i++) {
+            String[] tempSplits = br.readLine().split(" ");
+            for (int j = 0; j < tempSplits.length; j++) {
+                tables[i][j] = Integer.parseInt(tempSplits[j]);
+            }
+        }
+
+        int[] condition = new int[3];
+        String[] tempSplits = br.readLine().split(" ");
+        for (int j = 0; j < tempSplits.length; j++) {
+            condition[j] = Integer.parseInt(tempSplits[j]);
+        }
+
+        System.out.println(ts.solution(rowCol, timeLimit, tables, condition));
     }
 }
 //public class Main{
