@@ -1,90 +1,75 @@
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 class Solution {
-    final int EMPTY = 0;
-
-    int[][] gTables;
-
     int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    private int gRowCol;
+    boolean[][] isVisited;
+    int maxValue;
+    int[][] table;
+    private int gRow;
+    private int gCol;
 
-    public int solution(int rowCol, int virusCount, int[][] tables, int[] condition) {
-        gRowCol = rowCol;
-        gTables = tables;
+    public int solution(int row, int col, int[][] trashCoordinates) {
+        gRow = row;
+        gCol = col;
+        table = new int[row][col];
 
-        int timeLimit = condition[0];
-        int targetRow = condition[1];
-        int targetCol = condition[2];
-
-        PriorityQueue<Virus> pq = new PriorityQueue<>();
-        Queue<Virus> waitingQue = new LinkedList<>();
-
-        for (int r = 0; r < gRowCol; r++) {
-            for (int c = 0; c < gRowCol; c++) {
-                if (tables[r][c] != EMPTY) {
-                    pq.offer(new Virus(tables[r][c], r, c));
-                }
-            }
+        for (int[] trashCoordinate : trashCoordinates) {
+            table[trashCoordinate[0] - 1][trashCoordinate[1] - 1] = 1;
         }
 
-        int curTime = 0;
+        maxValue = Integer.MIN_VALUE;
+        isVisited = new boolean[row][col];
 
-        while (!pq.isEmpty()) {
-            if (curTime == timeLimit) {
-                break;
-            }
+        Queue<int[]> queue = new LinkedList<>();
 
-            Virus virus = pq.poll();
-
-            int curRow = virus.row;
-            int curCol = virus.col;
-
-            for (int[] direction : directions) {
-                int editRow = curRow + direction[0];
-                int editCol = curCol + direction[1];
-
-                if (isOutOfTable(editRow, editCol)) {
+        for (int r = 0; r < gRow; r++) {
+            for (int c = 0; c < gCol; c++) {
+                if (table[r][c] == 0 || isVisited[r][c]) {
                     continue;
                 }
 
-                if (tables[editRow][editCol] == EMPTY) {
-                    tables[editRow][editCol] = virus.priority;
-                    waitingQue.offer(new Virus(virus.priority, editRow, editCol));
-                }
-            }
-
-            if (pq.isEmpty()) {
-                curTime += 1;
-                while (!waitingQue.isEmpty()) {
-                    Virus tempVirus = waitingQue.poll();
-                    pq.offer(tempVirus);
-                }
+                bfs(r, c, queue);
             }
         }
 
-        return tables[targetRow - 1][targetCol - 1];
+        return maxValue;
+    }
+
+    private void bfs(int row, int col, Queue<int[]> queue) {
+        int tempCount = 0;
+
+        queue.offer(new int[]{row, col});
+        while (!queue.isEmpty()) {
+            int[] curCoordinates = queue.poll();
+            int curRow = curCoordinates[0];
+            int curCol = curCoordinates[1];
+
+            for (int[] dir : directions) {
+                int newRow = curRow + dir[0];
+                int newCol = curCol + dir[1];
+                if (isOutOfTable(newRow, newCol)) {
+                    continue;
+                }
+
+                if (isVisited[newRow][newCol]) {
+                    continue;
+                }
+
+                if (table[newRow][newCol] == 0) {
+                    continue;
+                }
+
+                tempCount++;
+                isVisited[newRow][newCol] = true;
+                queue.offer(new int[]{newRow, newCol});
+            }
+        }
+
+        maxValue = Math.max(tempCount, maxValue);
     }
 
     boolean isOutOfTable(int row, int col) {
-        return row < 0 || col < 0 || row >= gRowCol || col >= gRowCol;
-    }
-}
-
-class Virus implements Comparable<Virus> {
-    int priority;
-    int row;
-    int col;
-
-    public Virus(int priority, int row, int col) {
-        this.priority = priority;
-        this.row = row;
-        this.col = col;
-    }
-
-    @Override
-    public int compareTo(Virus o) {
-        return Integer.compare(this.priority, o.priority);
+        return row < 0 || col < 0 || row >= gRow || col >= gCol;
     }
 }

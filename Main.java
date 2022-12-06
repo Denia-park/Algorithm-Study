@@ -10,24 +10,19 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] firstInput = br.readLine().split(" ");
-        int rowCol = Integer.parseInt(firstInput[0]);
-        int timeLimit = Integer.parseInt(firstInput[1]);
+        int row = Integer.parseInt(firstInput[0]);
+        int col = Integer.parseInt(firstInput[1]);
+        int trashCount = Integer.parseInt(firstInput[2]);
 
-        int[][] tables = new int[rowCol][rowCol];
-        for (int i = 0; i < tables.length; i++) {
+        int[][] trashCoordinates = new int[trashCount][2];
+        for (int i = 0; i < trashCount; i++) {
             String[] tempSplits = br.readLine().split(" ");
             for (int j = 0; j < tempSplits.length; j++) {
-                tables[i][j] = Integer.parseInt(tempSplits[j]);
+                trashCoordinates[i][j] = Integer.parseInt(tempSplits[j]);
             }
         }
 
-        int[] condition = new int[3];
-        String[] tempSplits = br.readLine().split(" ");
-        for (int j = 0; j < tempSplits.length; j++) {
-            condition[j] = Integer.parseInt(tempSplits[j]);
-        }
-
-        System.out.println(ts.solution(rowCol, timeLimit, tables, condition));
+        System.out.println(ts.solution(row, col, trashCoordinates));
     }
 }
 //public class Main{
