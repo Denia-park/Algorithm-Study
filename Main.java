@@ -15,11 +15,13 @@ public class Main {
         int counselCount = Integer.parseInt(firstInput[0]);
 
         List<Counsel> counsels = new ArrayList<>();
+        counsels.add(new Counsel("0", "0"));
         for (int i = 0; i < counselCount; i++) {
             String[] tempSplits = br.readLine().split(" ");
 
             counsels.add(new Counsel(tempSplits[0], tempSplits[1]));
         }
+        counsels.add(new Counsel("0", "0"));
 
         System.out.println(ts.solution(counselCount, counsels));
     }
