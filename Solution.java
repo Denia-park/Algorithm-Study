@@ -8,7 +8,7 @@ class Solution {
 
         for (int day = 0; day < counselCount; day++) {
             for (int idx = 0; idx <= day; idx++) {
-                if (counselingTimer[idx] < day) {
+                if (counselingTimer[idx] <= day) {
                     Counsel curCounsel = counsels.get(day);
 
                     if (day + curCounsel.time <= counselCount) {
