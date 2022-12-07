@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -10,21 +12,29 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] firstInput = br.readLine().split(" ");
-        int row = Integer.parseInt(firstInput[0]);
-        int col = Integer.parseInt(firstInput[1]);
-        int trashCount = Integer.parseInt(firstInput[2]);
+        int counselCount = Integer.parseInt(firstInput[0]);
 
-        int[][] trashCoordinates = new int[trashCount][2];
-        for (int i = 0; i < trashCount; i++) {
+        List<Counsel> counsels = new ArrayList<>();
+        for (int i = 0; i < counselCount; i++) {
             String[] tempSplits = br.readLine().split(" ");
-            for (int j = 0; j < tempSplits.length; j++) {
-                trashCoordinates[i][j] = Integer.parseInt(tempSplits[j]);
-            }
+
+            counsels.add(new Counsel(tempSplits[0], tempSplits[1]));
         }
 
-        System.out.println(ts.solution(row, col, trashCoordinates));
+        System.out.println(ts.solution(counselCount, counsels));
     }
 }
+
+class Counsel {
+    int time;
+    int price;
+
+    public Counsel(String time, String price) {
+        this.time = Integer.parseInt(time);
+        this.price = Integer.parseInt(price);
+    }
+}
+
 //public class Main{
 //
 //    public static void main(String[] args) throws IOException {
