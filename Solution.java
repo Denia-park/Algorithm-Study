@@ -40,8 +40,13 @@ class Solution {
         PriorityQueue<PlanetDistance> pq = new PriorityQueue<PlanetDistance>();
 
         for (int i = 0; i < tableLength; i++) {
+            PriorityQueue<PlanetDistance> tempPq = new PriorityQueue<PlanetDistance>();
+
             for (int j = i + 1; j < tableLength; j++) {
-                pq.add(new PlanetDistance(getDistance(tables[i], tables[j]), i, j));
+                tempPq.add(new PlanetDistance(getDistance(tables[i], tables[j]), i, j));
+            }
+            if (!tempPq.isEmpty()) {
+                pq.add(tempPq.poll());
             }
         }
 
