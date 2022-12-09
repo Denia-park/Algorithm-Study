@@ -1,34 +1,38 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 class Solution {
-    public int solution(int limit, int[] tangerine) {
-        int answer = 0;
+    int answer;
+    int[] gEnemy;
 
-        int count = 0;
+    public int solution(int mySoldierNum, int superPass, int[] enemy) {
+        answer = Integer.MIN_VALUE;
+        gEnemy = enemy;
 
-        Map<Integer, Integer> counter = new HashMap<>();
+        int round = 0;
 
-        for (int tangerineNumber : tangerine) {
-            int curTangerine = counter.getOrDefault(tangerineNumber, 0);
-            curTangerine++;
-            counter.put(tangerineNumber, curTangerine);
-        }
-        List<Integer> tangerines = new ArrayList<>(counter.keySet());
+        defeatEnemy(mySoldierNum, superPass, round);
 
-        tangerines.sort((a, b) -> counter.get(b) - counter.get(a));
-
-        for (Integer keyIdx : tangerines) {
-            count += counter.get(keyIdx);
-            answer++;
-
-            if (count >= limit) {
-                break;
-            }
-        }
 
         return answer;
+    }
+
+    private void defeatEnemy(int mySoldierNum, int superPass, int round) {
+        if (round >= gEnemy.length) {
+            answer = round;
+            return;
+        } else if (mySoldierNum < gEnemy[round] && superPass == 0) {
+            answer = Math.max(answer, round);
+            return;
+        }
+
+        for (int i = 0; i < 2; i++) {
+            if (i == 0) {
+                if (mySoldierNum >= gEnemy[round]) {
+                    defeatEnemy(mySoldierNum - gEnemy[round], superPass, round + 1);
+                }
+            } else {
+                if (superPass > 0) {
+                    defeatEnemy(mySoldierNum, superPass - 1, round + 1);
+                }
+            }
+        }
     }
 }
