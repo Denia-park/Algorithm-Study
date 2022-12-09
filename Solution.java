@@ -1,91 +1,86 @@
-import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 class Solution {
-    final int EMPTY = 0;
+    //두 부모 노드를 합치는 함수
+    private static void unionParent(int[] parents, int element1, int element2) {
+        int parentOfElem1 = getParent(parents, element1);
+        int parentOfElem2 = getParent(parents, element2);
 
-    int[][] gTables;
+        if (parentOfElem1 == parentOfElem2) return;
 
-    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    private int gRowCol;
-
-    public int solution(int rowCol, int virusCount, int[][] tables, int[] condition) {
-        gRowCol = rowCol;
-        gTables = tables;
-
-        int timeLimit = condition[0];
-        int targetRow = condition[1];
-        int targetCol = condition[2];
-
-        PriorityQueue<Virus> pq = new PriorityQueue<>();
-        Queue<Virus> waitingQue = new LinkedList<>();
-
-        for (int r = 0; r < gRowCol; r++) {
-            for (int c = 0; c < gRowCol; c++) {
-                if (tables[r][c] != EMPTY) {
-                    pq.offer(new Virus(tables[r][c], r, c));
-                }
-            }
-        }
-
-        int curTime = 0;
-
-        while (!pq.isEmpty()) {
-            if (curTime == timeLimit) {
-                break;
-            }
-
-            Virus virus = pq.poll();
-
-            int curRow = virus.row;
-            int curCol = virus.col;
-
-            for (int[] direction : directions) {
-                int editRow = curRow + direction[0];
-                int editCol = curCol + direction[1];
-
-                if (isOutOfTable(editRow, editCol)) {
-                    continue;
-                }
-
-                if (tables[editRow][editCol] == EMPTY) {
-                    tables[editRow][editCol] = virus.priority;
-                    waitingQue.offer(new Virus(virus.priority, editRow, editCol));
-                }
-            }
-
-            if (pq.isEmpty()) {
-                curTime += 1;
-                while (!waitingQue.isEmpty()) {
-                    Virus tempVirus = waitingQue.poll();
-                    pq.offer(tempVirus);
-                }
-            }
-        }
-
-        return tables[targetRow - 1][targetCol - 1];
+        if (parentOfElem1 < parentOfElem2) parents[parentOfElem2] = parentOfElem1;
+        else parents[parentOfElem1] = parentOfElem2;
     }
 
-    boolean isOutOfTable(int row, int col) {
-        return row < 0 || col < 0 || row >= gRowCol || col >= gRowCol;
+    //부모 노드를 찾는 함수
+    private static int getParent(int[] parents, int element) {
+        int myParent = parents[element];
+
+        if (myParent == element) return element;
+
+        return parents[element] = getParent(parents, myParent);
+    }
+
+    //같은 부모를 가지는지 확인
+    private static boolean findParent(int[] parents, int element1, int element2) {
+        int parentOfElem1 = getParent(parents, element1);
+        int parentOfElem2 = getParent(parents, element2);
+
+        return parentOfElem1 == parentOfElem2;
+    }
+
+    public long solution(int tableLength, int[][] tables) {
+        long answer = 0;
+
+        int[] parents = new int[tableLength];
+        for (int i = 0; i < tableLength; i++) {
+            parents[i] = i;
+        }
+
+        PriorityQueue<PlanetDistance> pq = new PriorityQueue<PlanetDistance>();
+
+        for (int i = 0; i < tableLength; i++) {
+            for (int j = i + 1; j < tableLength; j++) {
+                pq.add(new PlanetDistance(getDistance(tables[i], tables[j]), i, j));
+            }
+        }
+
+        while (!pq.isEmpty()) {
+            PlanetDistance planetDistance = pq.poll();
+            int planetNum1 = planetDistance.planetNum1;
+            int planetNum2 = planetDistance.planetNum2;
+
+            if (!findParent(parents, planetNum1, planetNum2)) {
+                unionParent(parents, planetNum1, planetNum2);
+                answer += planetDistance.distance;
+            }
+        }
+
+
+        return answer;
+    }
+
+    int getDistance(int[] coordi1, int[] coordi2) {
+        return Math.min(Math.abs(coordi1[0] - coordi2[0]),
+                Math.min(Math.abs(coordi1[1] - coordi2[1]),
+                        Math.abs(coordi1[2] - coordi2[2])));
     }
 }
 
-class Virus implements Comparable<Virus> {
-    int priority;
-    int row;
-    int col;
+class PlanetDistance implements Comparable<PlanetDistance> {
+    int distance;
+    int planetNum1;
+    int planetNum2;
 
-    public Virus(int priority, int row, int col) {
-        this.priority = priority;
-        this.row = row;
-        this.col = col;
+    public PlanetDistance(int distance, int planetNum1, int planetNum2) {
+        this.distance = distance;
+        this.planetNum1 = planetNum1;
+        this.planetNum2 = planetNum2;
     }
 
     @Override
-    public int compareTo(Virus o) {
-        return Integer.compare(this.priority, o.priority);
+    public int compareTo(PlanetDistance o) {
+        return Integer.compare(this.distance, o.distance);
     }
 }
 

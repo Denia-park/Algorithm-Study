@@ -10,10 +10,9 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] firstInput = br.readLine().split(" ");
-        int rowCol = Integer.parseInt(firstInput[0]);
-        int timeLimit = Integer.parseInt(firstInput[1]);
+        int planetCount = Integer.parseInt(firstInput[0]);
 
-        int[][] tables = new int[rowCol][rowCol];
+        int[][] tables = new int[planetCount][3];
         for (int i = 0; i < tables.length; i++) {
             String[] tempSplits = br.readLine().split(" ");
             for (int j = 0; j < tempSplits.length; j++) {
@@ -21,13 +20,7 @@ public class Main {
             }
         }
 
-        int[] condition = new int[3];
-        String[] tempSplits = br.readLine().split(" ");
-        for (int j = 0; j < tempSplits.length; j++) {
-            condition[j] = Integer.parseInt(tempSplits[j]);
-        }
-
-        System.out.println(ts.solution(rowCol, timeLimit, tables, condition));
+        System.out.println(ts.solution(planetCount, tables));
     }
 }
 
