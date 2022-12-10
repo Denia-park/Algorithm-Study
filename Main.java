@@ -1,26 +1,10 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-//      *BufferedReader*
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        String[] firstInput = br.readLine().split(" ");
-        int planetCount = Integer.parseInt(firstInput[0]);
-
-        int[][] tables = new int[planetCount][3];
-        for (int i = 0; i < tables.length; i++) {
-            String[] tempSplits = br.readLine().split(" ");
-            for (int j = 0; j < tempSplits.length; j++) {
-                tables[i][j] = Integer.parseInt(tempSplits[j]);
-            }
-        }
-
-        System.out.println(ts.solution(planetCount, tables));
+        System.out.println(ts.solution(7, 3, new int[]{4, 2, 4, 5, 3, 3, 1}));
     }
 }
 
