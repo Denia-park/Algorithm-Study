@@ -35,7 +35,7 @@ class Solution {
 
         int myParent = parents[node];
 
-        return parents[myParent] = getParent(parents, myParent);
+        return parents[node] = getParent(parents, myParent);
     }
 
     public long solution(int tableLength, int[][] tables) {
@@ -60,14 +60,14 @@ class Solution {
         PlanetCoordinate saveY = y.poll();
         PlanetCoordinate saveZ = z.poll();
 
-        for (int i = 0; i < x.size(); i++) {
+        while (!x.isEmpty()) {
             PlanetCoordinate tempX = x.poll();
             PlanetCoordinate tempY = y.poll();
             PlanetCoordinate tempZ = z.poll();
 
-            PlanetDistance pdX = new PlanetDistance((saveX.coordinate - tempX.coordinate), saveX.planetNum, tempX.planetNum);
-            PlanetDistance pdY = new PlanetDistance((saveY.coordinate - tempY.coordinate), saveY.planetNum, tempY.planetNum);
-            PlanetDistance pdZ = new PlanetDistance((saveZ.coordinate - tempZ.coordinate), saveZ.planetNum, tempZ.planetNum);
+            PlanetDistance pdX = new PlanetDistance((tempX.coordinate - saveX.coordinate), tempX.planetNum, saveX.planetNum);
+            PlanetDistance pdY = new PlanetDistance((tempY.coordinate - saveY.coordinate), tempY.planetNum, saveY.planetNum);
+            PlanetDistance pdZ = new PlanetDistance((tempZ.coordinate - saveZ.coordinate), tempZ.planetNum, saveZ.planetNum);
 
             pq.add(pdX);
             pq.add(pdY);
@@ -88,14 +88,8 @@ class Solution {
                 answer += planetDistance.distance;
             }
         }
-        
-        return answer;
-    }
 
-    int getDistance(int[] coordi1, int[] coordi2) {
-        return Math.min(Math.abs(coordi1[0] - coordi2[0]),
-                Math.min(Math.abs(coordi1[1] - coordi2[1]),
-                        Math.abs(coordi1[2] - coordi2[2])));
+        return answer;
     }
 }
 
