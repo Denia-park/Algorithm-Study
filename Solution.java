@@ -1,34 +1,128 @@
-import java.util.List;
-
-// 정답 참고
-// https://velog.io/@hammii/%EB%B0%B1%EC%A4%80-14501-%ED%87%B4%EC%82%AC-java
+import java.util.PriorityQueue;
 
 class Solution {
-    public int solution(int counselCount, List<Counsel> counsels) {
+    void initParents(int[] parents) {
+        for (int i = 0; i < parents.length; i++) {
+            parents[i] = i;
+        }
+    }
 
-        // 구현한 방식의 DP 배열은 그 날짜부터 시작했을 때의 최댓값
+    //unionParent : 두 노드의 부모를 합친다
+    void unionParent(int[] parents, int node1, int node2) {
+        int node1Parent = getParent(parents, node1);
+        int node2Parent = getParent(parents, node2);
 
-        // 즉, DP[4]는 4일부터 N일까지 최댓값
-        // 우리가 원하는 것은 1일부터이므로 DP[1]의 값을 구해주면 된다.
+        if (node1Parent < node2Parent) {
+            parents[node2Parent] = node1Parent;
+        } else {
+            parents[node1Parent] = node2Parent;
+        }
+    }
 
-        // 뒤에서부터 생각하는 게 더 쉽다.
+    //findParent : 두 노드의 부모가 같은지 확인
+    boolean findParent(int[] parents, int node1, int node2) {
+        int node1Parent = getParent(parents, node1);
+        int node2Parent = getParent(parents, node2);
 
-        // 일할 수 있는 날짜를 넘어가는 경우: 어차피 일을 하지 못하므로 바로 다음 dp 값으로 설정해 준다.
-        // 일할 수 있는 날짜인 경우: 일하지 않았을 때(dp[i+1])와 일했을 때 총 벌 수 있는 금액(dp[next]+P[i])을 비교해 준다.
+        return node1Parent == node2Parent;
+    }
 
-        int[] dp = new int[counselCount + 2]; // 0 과 마지막 날에 + 1 를 고려
+    //getParent : 부모의 노드를 찾는다.
+    int getParent(int[] parents, int node) {
+        if (parents[node] == node) {
+            return node;
+        }
 
-        for (int curDay = counselCount; curDay >= 1; curDay--) {
-            Counsel curCounsel = counsels.get(curDay);
-            int nextDay = curDay + curCounsel.time;
+        int myParent = parents[node];
 
-            if (nextDay > counselCount + 1) {
-                dp[curDay] = dp[curDay + 1];
-            } else {
-                dp[curDay] = Math.max(dp[curDay + 1], dp[nextDay] + curCounsel.price);
+        return parents[node] = getParent(parents, myParent);
+    }
+
+    public long solution(int tableLength, int[][] tables) {
+        long answer = 0;
+
+        int[] parents = new int[tableLength];
+        initParents(parents);
+
+        PriorityQueue<PlanetCoordinate> x = new PriorityQueue<>();
+        PriorityQueue<PlanetCoordinate> y = new PriorityQueue<>();
+        PriorityQueue<PlanetCoordinate> z = new PriorityQueue<>();
+
+        PriorityQueue<PlanetDistance> pq = new PriorityQueue<PlanetDistance>();
+
+        for (int i = 0; i < tables.length; i++) {
+            x.add(new PlanetCoordinate(tables[i][0], i));
+            y.add(new PlanetCoordinate(tables[i][1], i));
+            z.add(new PlanetCoordinate(tables[i][2], i));
+        }
+
+        PlanetCoordinate saveX = x.poll();
+        PlanetCoordinate saveY = y.poll();
+        PlanetCoordinate saveZ = z.poll();
+
+        while (!x.isEmpty()) {
+            PlanetCoordinate tempX = x.poll();
+            PlanetCoordinate tempY = y.poll();
+            PlanetCoordinate tempZ = z.poll();
+
+            PlanetDistance pdX = new PlanetDistance((tempX.coordinate - saveX.coordinate), tempX.planetNum, saveX.planetNum);
+            PlanetDistance pdY = new PlanetDistance((tempY.coordinate - saveY.coordinate), tempY.planetNum, saveY.planetNum);
+            PlanetDistance pdZ = new PlanetDistance((tempZ.coordinate - saveZ.coordinate), tempZ.planetNum, saveZ.planetNum);
+
+            pq.add(pdX);
+            pq.add(pdY);
+            pq.add(pdZ);
+
+            saveX = tempX;
+            saveY = tempY;
+            saveZ = tempZ;
+        }
+
+        while (!pq.isEmpty()) {
+            PlanetDistance planetDistance = pq.poll();
+            int planetNum1 = planetDistance.planetNum1;
+            int planetNum2 = planetDistance.planetNum2;
+
+            if (!findParent(parents, planetNum1, planetNum2)) {
+                unionParent(parents, planetNum1, planetNum2);
+                answer += planetDistance.distance;
             }
         }
 
-        return dp[1];
+        return answer;
     }
 }
+
+class PlanetCoordinate implements Comparable<PlanetCoordinate> {
+    int coordinate;
+    int planetNum;
+
+    public PlanetCoordinate(int coordinate, int planetNum) {
+        this.coordinate = coordinate;
+        this.planetNum = planetNum;
+    }
+
+    @Override
+    public int compareTo(PlanetCoordinate o) {
+        return Integer.compare(this.coordinate, o.coordinate);
+    }
+}
+
+class PlanetDistance implements Comparable<PlanetDistance> {
+    int distance;
+    int planetNum1;
+    int planetNum2;
+
+    public PlanetDistance(int distance, int planetNum1, int planetNum2) {
+        this.distance = distance;
+        this.planetNum1 = planetNum1;
+        this.planetNum2 = planetNum2;
+    }
+
+    @Override
+    public int compareTo(PlanetDistance o) {
+        return Integer.compare(this.distance, o.distance);
+    }
+}
+
+

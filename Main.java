@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -12,28 +10,17 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] firstInput = br.readLine().split(" ");
-        int counselCount = Integer.parseInt(firstInput[0]);
+        int planetCount = Integer.parseInt(firstInput[0]);
 
-        List<Counsel> counsels = new ArrayList<>();
-        counsels.add(new Counsel("0", "0"));
-        for (int i = 0; i < counselCount; i++) {
+        int[][] tables = new int[planetCount][3];
+        for (int i = 0; i < tables.length; i++) {
             String[] tempSplits = br.readLine().split(" ");
-
-            counsels.add(new Counsel(tempSplits[0], tempSplits[1]));
+            for (int j = 0; j < tempSplits.length; j++) {
+                tables[i][j] = Integer.parseInt(tempSplits[j]);
+            }
         }
-        counsels.add(new Counsel("0", "0"));
 
-        System.out.println(ts.solution(counselCount, counsels));
-    }
-}
-
-class Counsel {
-    int time;
-    int price;
-
-    public Counsel(String time, String price) {
-        this.time = Integer.parseInt(time);
-        this.price = Integer.parseInt(price);
+        System.out.println(ts.solution(planetCount, tables));
     }
 }
 
