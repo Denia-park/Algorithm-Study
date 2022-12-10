@@ -1,20 +1,37 @@
+import java.util.PriorityQueue;
+
 class Solution {
     public int solution(int mySoldierNum, int superPass, int[] enemys) {
-        int roundCheck = 0;
+        if (superPass >= enemys.length) {
+            return enemys.length;
+        }
 
-        for (int enemy : enemys) {
-            if (mySoldierNum < enemy && superPass == 0) {
-                break;
-            }
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
 
-            if (mySoldierNum - enemy > enemy) {
-                mySoldierNum -= enemy;
-            } else if (superPass > 0) {
-                superPass--;
-            } else if (mySoldierNum >= enemy) {
-                mySoldierNum -= enemy;
+        for (int i = 0; i < superPass; i++) {
+            pq.offer(enemys[i]);
+        }
+
+        int roundCheck = superPass;
+
+        for (int i = superPass; i < enemys.length; i++) {
+            int superPassMinValue = pq.peek();
+
+            if (enemys[i] > superPassMinValue) {
+                pq.poll();
+                pq.offer(enemys[i]);
+
+                if (superPassMinValue > mySoldierNum) {
+                    break;
+                } else {
+                    mySoldierNum -= superPassMinValue;
+                }
             } else {
-                break;
+                if (enemys[i] > mySoldierNum) {
+                    break;
+                } else {
+                    mySoldierNum -= enemys[i];
+                }
             }
 
             roundCheck++;
