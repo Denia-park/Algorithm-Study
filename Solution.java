@@ -1,53 +1,81 @@
 import java.util.PriorityQueue;
 
 class Solution {
-    //두 부모 노드를 합치는 함수
-    private static void unionParent(int[] parents, int element1, int element2) {
-        int parentOfElem1 = getParent(parents, element1);
-        int parentOfElem2 = getParent(parents, element2);
-
-        if (parentOfElem1 == parentOfElem2) return;
-
-        if (parentOfElem1 < parentOfElem2) parents[parentOfElem2] = parentOfElem1;
-        else parents[parentOfElem1] = parentOfElem2;
+    void initParents(int[] parents) {
+        for (int i = 0; i < parents.length; i++) {
+            parents[i] = i;
+        }
     }
 
-    //부모 노드를 찾는 함수
-    private static int getParent(int[] parents, int element) {
-        int myParent = parents[element];
+    //unionParent : 두 노드의 부모를 합친다
+    void unionParent(int[] parents, int node1, int node2) {
+        int node1Parent = getParent(parents, node1);
+        int node2Parent = getParent(parents, node2);
 
-        if (myParent == element) return element;
-
-        return parents[element] = getParent(parents, myParent);
+        if (node1Parent < node2Parent) {
+            parents[node2Parent] = node1Parent;
+        } else {
+            parents[node1Parent] = node2Parent;
+        }
     }
 
-    //같은 부모를 가지는지 확인
-    private static boolean findParent(int[] parents, int element1, int element2) {
-        int parentOfElem1 = getParent(parents, element1);
-        int parentOfElem2 = getParent(parents, element2);
+    //findParent : 두 노드의 부모가 같은지 확인
+    boolean findParent(int[] parents, int node1, int node2) {
+        int node1Parent = getParent(parents, node1);
+        int node2Parent = getParent(parents, node2);
 
-        return parentOfElem1 == parentOfElem2;
+        return node1Parent == node2Parent;
+    }
+
+    //getParent : 부모의 노드를 찾는다.
+    int getParent(int[] parents, int node) {
+        if (parents[node] == node) {
+            return node;
+        }
+
+        int myParent = parents[node];
+
+        return parents[myParent] = getParent(parents, myParent);
     }
 
     public long solution(int tableLength, int[][] tables) {
         long answer = 0;
 
         int[] parents = new int[tableLength];
-        for (int i = 0; i < tableLength; i++) {
-            parents[i] = i;
-        }
+        initParents(parents);
+
+        PriorityQueue<PlanetCoordinate> x = new PriorityQueue<>();
+        PriorityQueue<PlanetCoordinate> y = new PriorityQueue<>();
+        PriorityQueue<PlanetCoordinate> z = new PriorityQueue<>();
 
         PriorityQueue<PlanetDistance> pq = new PriorityQueue<PlanetDistance>();
 
-        for (int i = 0; i < tableLength; i++) {
-            PriorityQueue<PlanetDistance> tempPq = new PriorityQueue<PlanetDistance>();
+        for (int i = 0; i < tables.length; i++) {
+            x.add(new PlanetCoordinate(tables[i][0], i));
+            y.add(new PlanetCoordinate(tables[i][1], i));
+            z.add(new PlanetCoordinate(tables[i][2], i));
+        }
 
-            for (int j = i + 1; j < tableLength; j++) {
-                tempPq.add(new PlanetDistance(getDistance(tables[i], tables[j]), i, j));
-            }
-            if (!tempPq.isEmpty()) {
-                pq.add(tempPq.poll());
-            }
+        PlanetCoordinate saveX = x.poll();
+        PlanetCoordinate saveY = y.poll();
+        PlanetCoordinate saveZ = z.poll();
+
+        for (int i = 0; i < x.size(); i++) {
+            PlanetCoordinate tempX = x.poll();
+            PlanetCoordinate tempY = y.poll();
+            PlanetCoordinate tempZ = z.poll();
+
+            PlanetDistance pdX = new PlanetDistance((saveX.coordinate - tempX.coordinate), saveX.planetNum, tempX.planetNum);
+            PlanetDistance pdY = new PlanetDistance((saveY.coordinate - tempY.coordinate), saveY.planetNum, tempY.planetNum);
+            PlanetDistance pdZ = new PlanetDistance((saveZ.coordinate - tempZ.coordinate), saveZ.planetNum, tempZ.planetNum);
+
+            pq.add(pdX);
+            pq.add(pdY);
+            pq.add(pdZ);
+
+            saveX = tempX;
+            saveY = tempY;
+            saveZ = tempZ;
         }
 
         while (!pq.isEmpty()) {
@@ -60,8 +88,7 @@ class Solution {
                 answer += planetDistance.distance;
             }
         }
-
-
+        
         return answer;
     }
 
@@ -69,6 +96,21 @@ class Solution {
         return Math.min(Math.abs(coordi1[0] - coordi2[0]),
                 Math.min(Math.abs(coordi1[1] - coordi2[1]),
                         Math.abs(coordi1[2] - coordi2[2])));
+    }
+}
+
+class PlanetCoordinate implements Comparable<PlanetCoordinate> {
+    int coordinate;
+    int planetNum;
+
+    public PlanetCoordinate(int coordinate, int planetNum) {
+        this.coordinate = coordinate;
+        this.planetNum = planetNum;
+    }
+
+    @Override
+    public int compareTo(PlanetCoordinate o) {
+        return Integer.compare(this.coordinate, o.coordinate);
     }
 }
 
