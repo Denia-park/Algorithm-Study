@@ -3,36 +3,55 @@ import java.util.Map;
 
 class Solution {
     final int UNIT_PRICE = 100;
+    Map<String, Member> members;
+    int[] answer;
 
-    public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
-        int[] answer = new int[enroll.length];
-        Map<String, Member> members = new HashMap<>();
+    public int[] solution(String[] enrollNameList, String[] referralNameList, String[] sellerNameList, int[] sellAmount) {
+        answer = new int[enrollNameList.length];
+        members = new HashMap<>();
 
-        for (String name : enroll) {
-            members.put(name, new Member(name));
-        }
+        enrollMembers(enrollNameList);
 
-        for (int i = 0; i < referral.length; i++) {
-            if (referral[i].equals("-")) continue;
+        updateMemberReferral(enrollNameList, referralNameList);
 
-            Member curMember = members.get(enroll[i]);
-            Member referralMember = members.get(referral[i]);
+        calculateMemberCreditBySellAmount(sellerNameList, sellAmount);
+
+        updateAnswer(enrollNameList);
+
+        return answer;
+    }
+
+    private void updateMemberReferral(String[] enrollNameList, String[] referralNameList) {
+        for (int i = 0; i < referralNameList.length; i++) {
+            if (referralNameList[i].equals("-")) continue;
+
+            Member curMember = members.get(enrollNameList[i]);
+            Member referralMember = members.get(referralNameList[i]);
 
             curMember.setReferral(referralMember);
         }
+    }
 
-        for (int i = 0; i < seller.length; i++) {
-            Member tempSeller = members.get(seller[i]);
-            int tempSellAmount = amount[i] * UNIT_PRICE;
+    private void enrollMembers(String[] enrollNameList) {
+        for (String name : enrollNameList) {
+            members.put(name, new Member(name));
+        }
+    }
+
+    private void calculateMemberCreditBySellAmount(String[] sellerNameList, int[] sellAmount) {
+        for (int i = 0; i < sellerNameList.length; i++) {
+            Member tempSeller = members.get(sellerNameList[i]);
+            int tempSellAmount = sellAmount[i] * UNIT_PRICE;
 
             tempSeller.calculateCredit(tempSellAmount);
         }
+    }
 
-        for (int i = 0; i < enroll.length; i++) {
-            int memberCredit = members.get(enroll[i]).getCredit();
+    private void updateAnswer(String[] enrollNameList) {
+        for (int i = 0; i < enrollNameList.length; i++) {
+            int memberCredit = members.get(enrollNameList[i]).getCredit();
             answer[i] = memberCredit;
         }
-        return answer;
     }
 }
 
@@ -50,7 +69,7 @@ class Member {
     public String getName() {
         return name;
     }
-    
+
     public void setReferral(Member referral) {
         this.referral = referral;
     }
