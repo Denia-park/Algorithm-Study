@@ -10,10 +10,16 @@ public class Main {
         String[] seller = {"young", "john", "tod", "emily", "mary"};
         int[] amount = {12, 4, 2, 5, 10};
 
-        System.out.println(Arrays.toString(ts.solution(enroll,
-                referral,
-                seller,
-                amount)));
+        int[][] tables = new int[4][18];
+        for (int i = 0; i < tables.length; i++) {
+            String[] strings = br.readLine().split(" ");
+
+            for (int j = 0; j < strings.length; j++) {
+                tables[i][j] = Integer.parseInt(strings[j]);
+            }
+        }
+
+        ts.solution(tables);
     }
 }
 
