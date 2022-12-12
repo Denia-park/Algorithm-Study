@@ -87,7 +87,7 @@ class Member {
         int myCredit = tempSellAmount - restCredit;
         this.addCredit(myCredit);
 
-        if (referral == null) {
+        if (restCredit == 0 || referral == null) {
             return;
         }
 
