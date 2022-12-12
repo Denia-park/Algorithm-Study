@@ -9,18 +9,16 @@ public class Main {
 //      *BufferedReader*
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] firstInput = br.readLine().split(" ");
-        int planetCount = Integer.parseInt(firstInput[0]);
-
-        int[][] tables = new int[planetCount][3];
+        int[][] tables = new int[4][18];
         for (int i = 0; i < tables.length; i++) {
-            String[] tempSplits = br.readLine().split(" ");
-            for (int j = 0; j < tempSplits.length; j++) {
-                tables[i][j] = Integer.parseInt(tempSplits[j]);
+            String[] firstInput = br.readLine().split(" ");
+
+            for (int j = 0; j < firstInput.length; j++) {
+                tables[i][j] = Integer.parseInt(firstInput[j]);
             }
         }
 
-        System.out.println(ts.solution(planetCount, tables));
+        ts.solution(tables);
     }
 }
 
