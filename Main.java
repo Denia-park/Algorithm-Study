@@ -11,10 +11,10 @@ public class Main {
 
         int[][] tables = new int[4][18];
         for (int i = 0; i < tables.length; i++) {
-            String[] firstInput = br.readLine().split(" ");
+            String[] strings = br.readLine().split(" ");
 
-            for (int j = 0; j < firstInput.length; j++) {
-                tables[i][j] = Integer.parseInt(firstInput[j]);
+            for (int j = 0; j < strings.length; j++) {
+                tables[i][j] = Integer.parseInt(strings[j]);
             }
         }
 
