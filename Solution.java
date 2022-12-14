@@ -72,20 +72,13 @@ class Solution {
         boolean hasUnderBar = false;
         boolean hasUpper = false;
 
-        char saveCh = ' ';
-
         for (int i = 0; i < str.length(); i++) {
             char curCh = str.charAt(i);
             if (curCh == '_') {
                 hasUnderBar = true;
-                if (saveCh == '_') {
-                    return true;
-                }
             } else if (Character.isUpperCase(curCh)) {
                 hasUpper = true;
             }
-
-            saveCh = curCh;
         }
 
         if (hasUnderBar && hasUpper) {
@@ -100,6 +93,13 @@ class Solution {
         char finalCh = str.charAt(str.length() - 1);
         if (finalCh == '_') {
             return true;
+        }
+
+        // '_'이 연속해서 나오는지 판단한다.
+        for (int i = 0; i < str.length() - 1; ++i) {
+            if (str.charAt(i) == '_' && str.charAt(i + 1) == '_') {
+                return true;
+            }
         }
 
         return false;
