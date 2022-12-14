@@ -1,9 +1,14 @@
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.InputStreamReader;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
+
+        // *BufferedReader*
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
 
         String[] enroll = {"john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"};
         String[] referral = {"-", "-", "mary", "edward", "mary", "mary", "jaimie", "edward"};
