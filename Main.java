@@ -8,11 +8,20 @@ public class Main {
 
         // *BufferedReader*
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] variable = br.readLine().split(" ");
+        int row = Integer.parseInt(variable[0]);
+        int col = Integer.parseInt(variable[1]);
 
-        System.out.println(ts.solution(br.readLine()));
-//        System.out.println(ts.solution("long_and_mnemonic_identifier"));
-//        System.out.println(ts.solution("long_and_mnemonic_identifier").equals("longAndMnemonicIdentifier"));
-//        System.out.println(ts.solution("longAndMnemonicIdentifier").equals("long_and_mnemonic_identifier"));
+        int[][] matrix = new int[row][col];
+
+        for (int r = 0; r < row; r++) {
+            String[] tempLine = br.readLine().split(" ");
+            for (int c = 0; c < tempLine.length; c++) {
+                matrix[r][c] = Integer.parseInt(tempLine[c]);
+            }
+        }
+
+        System.out.println(ts.solution(row, col, matrix));
     }
 }
 

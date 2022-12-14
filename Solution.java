@@ -1,115 +1,76 @@
-// 백준 - 3613 - Java vs C++
-
-// 정답 참고
-// https://codejin.tistory.com/127
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Solution {
-    public String solution(String quizString) {
-        String answer = quizString;
+    int answer;
+    int gRow;
+    int gCol;
+    int[][] gMatrix;
 
-        if (isError(quizString)) {
-            return "Error!";
-        } else if (isJava(quizString)) {
-            answer = makeJavaToCpp(quizString);
-        } else if (isCpp(quizString)) {
-            answer = makeCppToJava(quizString);
+    int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
+
+    public int solution(int row, int col, int[][] matrix) {
+        answer = 0;
+        gMatrix = matrix;
+        gRow = row;
+        gCol = col;
+
+        for (int r = 0; r < row; r++) {
+            for (int c = 0; c < col; c++) {
+                bfs(r, c);
+            }
         }
 
         return answer;
     }
 
-    String makeJavaToCpp(String quizString) {
-        StringBuilder sb = new StringBuilder();
+    void bfs(int row, int col) {
+        boolean[][] visited = new boolean[gRow][gCol];
 
-        for (int i = 0; i < quizString.length(); i++) {
-            char curCh = quizString.charAt(i);
-            
-            if (Character.isUpperCase(curCh)) {
-                sb.append('_').append(Character.toLowerCase(curCh));
-            } else {
-                sb.append(curCh);
+        Queue<Coordi> queue = new LinkedList<>();
+
+        visited[row][col] = true;
+        queue.add(new Coordi(row, col, 0));
+
+        while (!queue.isEmpty()) {
+            Coordi cur = queue.poll();
+
+            if (gMatrix[cur.r][cur.c] == 1) {
+                answer = Math.max(answer, cur.dis);
+                return;
             }
-        }
 
-        return sb.toString();
-    }
+            for (int[] dir : directions) {
+                int eR = cur.r + dir[0];
+                int eC = cur.c + dir[1];
+                int eD = cur.dis + 1;
 
-    String makeCppToJava(String quizString) {
-        StringBuilder sb = new StringBuilder();
-        boolean changeFlag = false;
+                if (isOutOfMatrix(eR, eC)) {
+                    continue;
+                }
 
-        for (int i = 0; i < quizString.length(); i++) {
-            char curCh = quizString.charAt(i);
-
-            if (curCh == '_') {
-                changeFlag = true;
-            } else {
-                if (changeFlag) {
-                    sb.append(Character.toUpperCase(curCh));
-                    changeFlag = false;
-                } else {
-                    sb.append(curCh);
+                if (!visited[eR][eC]) {
+                    visited[eR][eC] = true;
+                    queue.add(new Coordi(eR, eC, eD));
                 }
             }
         }
 
-        return sb.toString();
     }
 
-    boolean isJava(String str) {
-        for (int i = 0; i < str.length(); i++) {
-            if (Character.isUpperCase(str.charAt(i))) {
-                return true;
-            }
-        }
-
-        return false;
+    boolean isOutOfMatrix(int r, int c) {
+        return r < 0 || r >= gRow || c < 0 || c >= gCol;
     }
+}
 
-    boolean isCpp(String str) {
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == '_') {
-                return true;
-            }
-        }
+class Coordi {
+    int r;
+    int c;
+    int dis;
 
-        return false;
-    }
-
-    boolean isError(String str) {
-        boolean hasUnderBar = false;
-        boolean hasUpper = false;
-
-        for (int i = 0; i < str.length(); i++) {
-            char curCh = str.charAt(i);
-            if (curCh == '_') {
-                hasUnderBar = true;
-            } else if (Character.isUpperCase(curCh)) {
-                hasUpper = true;
-            }
-        }
-
-        if (hasUnderBar && hasUpper) {
-            return true;
-        }
-
-        char startCh = str.charAt(0);
-        if (startCh == '_' || Character.isUpperCase(startCh)) {
-            return true;
-        }
-
-        char finalCh = str.charAt(str.length() - 1);
-        if (finalCh == '_') {
-            return true;
-        }
-
-        // '_'이 연속해서 나오는지 판단한다.
-        for (int i = 0; i < str.length() - 1; ++i) {
-            if (str.charAt(i) == '_' && str.charAt(i + 1) == '_') {
-                return true;
-            }
-        }
-
-        return false;
+    public Coordi(int r, int c, int dis) {
+        this.r = r;
+        this.c = c;
+        this.dis = dis;
     }
 }
