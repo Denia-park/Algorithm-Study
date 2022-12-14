@@ -9,22 +9,10 @@ public class Main {
         // *BufferedReader*
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-
-        String[] enroll = {"john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"};
-        String[] referral = {"-", "-", "mary", "edward", "mary", "mary", "jaimie", "edward"};
-        String[] seller = {"young", "john", "tod", "emily", "mary"};
-        int[] amount = {12, 4, 2, 5, 10};
-
-        int[][] tables = new int[4][18];
-        for (int i = 0; i < tables.length; i++) {
-            String[] strings = br.readLine().split(" ");
-
-            for (int j = 0; j < strings.length; j++) {
-                tables[i][j] = Integer.parseInt(strings[j]);
-            }
-        }
-
-        ts.solution(tables);
+        System.out.println(ts.solution(br.readLine()));
+//        System.out.println(ts.solution("long_and_mnemonic_identifier"));
+//        System.out.println(ts.solution("long_and_mnemonic_identifier").equals("longAndMnemonicIdentifier"));
+//        System.out.println(ts.solution("longAndMnemonicIdentifier").equals("long_and_mnemonic_identifier"));
     }
 }
 
