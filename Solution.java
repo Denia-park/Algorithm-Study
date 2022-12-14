@@ -7,12 +7,25 @@ class Solution {
         boolean errFlag = false;
         boolean changeFlag = false;
 
-        StringBuilder sb = new StringBuilder();
-
         Stack<Character> stack = new Stack<>();
+
+        char startCh = quizString.charAt(0);
+
+        if (startCh == '_' || Character.isUpperCase(startCh) ||
+                quizString.charAt(quizString.length() - 1) == '_') {
+            return "Error!";
+        }
 
         for (int i = 0; i < quizString.length(); i++) {
             char ch = quizString.charAt(i);
+
+            if (ch == '_') {
+                errFlag = true;
+            } else {
+                if (errFlag && Character.isUpperCase(ch)) {
+                    return "Error!";
+                }
+            }
 
             if (stack.isEmpty()) {
                 stack.push(ch);
@@ -21,14 +34,6 @@ class Solution {
 
             char topChar = stack.peek();
 
-            if (Character.isUpperCase(topChar) && Character.isUpperCase(ch)) {
-                errFlag = true;
-                break;
-            } else if (topChar == '_' && Character.isUpperCase(ch)) {
-                errFlag = true;
-                break;
-            }
-
             if (changeFlag) {
                 stack.push(ch);
                 changeFlag = false;
@@ -36,6 +41,9 @@ class Solution {
             }
 
             if (topChar == '_') {
+                if (ch == '_') {
+                    return "Error!";
+                }
                 stack.pop();
                 stack.push(Character.toUpperCase(ch));
                 changeFlag = true;
@@ -50,13 +58,11 @@ class Solution {
             }
         }
 
-        if (errFlag) {
-            return "Error!";
-        } else {
-            for (Character tempCh : stack) {
-                sb.append(tempCh);
-            }
-            return sb.toString();
+        StringBuilder sb = new StringBuilder();
+
+        for (Character tempCh : stack) {
+            sb.append(tempCh);
         }
+        return sb.toString();
     }
 }
