@@ -19,11 +19,15 @@ class Solution {
     }
 
     String makeJavaToCpp(String quizString) {
-        StringBuilder sb = new StringBuilder(quizString);
+        StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < sb.length(); i++) {
-            if (Character.isUpperCase(sb.charAt(i))) {
-                sb.replace(i, i + 1, "_" + Character.toLowerCase(sb.charAt(i)));
+        for (int i = 0; i < quizString.length(); i++) {
+            char curCh = quizString.charAt(i);
+            
+            if (Character.isUpperCase(curCh)) {
+                sb.append('_').append(Character.toLowerCase(curCh));
+            } else {
+                sb.append(curCh);
             }
         }
 
@@ -31,16 +35,20 @@ class Solution {
     }
 
     String makeCppToJava(String quizString) {
-        StringBuilder sb = new StringBuilder(quizString);
+        StringBuilder sb = new StringBuilder();
         boolean changeFlag = false;
 
-        for (int i = 0; i < sb.length(); i++) {
-            if (sb.charAt(i) == '_') {
+        for (int i = 0; i < quizString.length(); i++) {
+            char curCh = quizString.charAt(i);
+
+            if (curCh == '_') {
                 changeFlag = true;
             } else {
                 if (changeFlag) {
-                    sb.replace(i - 1, i + 1, String.valueOf(Character.toUpperCase(sb.charAt(i))));
+                    sb.append(Character.toUpperCase(curCh));
                     changeFlag = false;
+                } else {
+                    sb.append(curCh);
                 }
             }
         }
