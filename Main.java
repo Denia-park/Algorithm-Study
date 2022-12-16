@@ -5,6 +5,7 @@ public class Main {
         Solution ts = new Solution();
 
         int[][] jobs = {{0, 3}, {1, 9}, {2, 6}};
+//        int[][] jobs = {{0, 1}, {1, 1}, {50, 7}};
 
         System.out.println(ts.solution(jobs));
     }

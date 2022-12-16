@@ -18,7 +18,7 @@ class Solution {
             if (!readyQueue.isEmpty()) {
                 Task readyTask = readyQueue.peek();
 
-                if (waitingQueue.isEmpty() || readyTask.startTime >= curTime) {
+                if (readyTask.startTime <= curTime) {
                     Task tempTask = readyQueue.poll();
                     waitingQueue.offer(tempTask);
                 }
