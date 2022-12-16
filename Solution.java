@@ -1,14 +1,8 @@
-//정답 코드 참조
-//https://zoosso.tistory.com/414
-
 import java.util.*;
 
 class Solution {
-    Character[] tableKey = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
-
     public void solution(String[] table) {
         Map<Character, Integer> changeTable = new HashMap<>();
-        initTable(changeTable);
 
         Arrays.sort(table, (a, b) -> -Integer.compare(a.length(), b.length()));
 
@@ -17,7 +11,7 @@ class Solution {
             for (int i = 0; i < str.length(); i++) {
                 char tempChar = str.charAt(i);
 
-                int defaultScore = changeTable.get(tempChar);
+                int defaultScore = changeTable.getOrDefault(tempChar, -1);
                 int addScore = (int) Math.pow(10, len);
                 changeTable.put(tempChar, defaultScore + addScore);
                 len--;
@@ -51,11 +45,5 @@ class Solution {
         }
 
         System.out.println(result);
-    }
-
-    private void initTable(Map<Character, Integer> changeTable) {
-        for (Character s : tableKey) {
-            changeTable.put(s, -1);
-        }
     }
 }
