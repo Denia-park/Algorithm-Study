@@ -1,76 +1,49 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class Solution {
-    int answer;
-    int gRow;
-    int gCol;
-    int[][] gMatrix;
+    public void solution(String[] table) {
+        Map<Character, Integer> changeTable = new HashMap<>();
 
-    int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
+        Arrays.sort(table, (a, b) -> -Integer.compare(a.length(), b.length()));
 
-    public int solution(int row, int col, int[][] matrix) {
-        answer = 0;
-        gMatrix = matrix;
-        gRow = row;
-        gCol = col;
+        for (String str : table) {
+            int len = str.length();
+            for (int i = 0; i < str.length(); i++) {
+                char tempChar = str.charAt(i);
 
-        for (int r = 0; r < row; r++) {
-            for (int c = 0; c < col; c++) {
-                bfs(r, c);
+                int defaultScore = changeTable.getOrDefault(tempChar, -1);
+                int addScore = (int) Math.pow(10, len);
+                changeTable.put(tempChar, defaultScore + addScore);
+                len--;
             }
         }
 
-        return answer;
-    }
+        List<Map.Entry<Character, Integer>> entryList = new LinkedList<>(changeTable.entrySet());
+        entryList.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
 
-    void bfs(int row, int col) {
-        boolean[][] visited = new boolean[gRow][gCol];
-
-        Queue<Coordi> queue = new LinkedList<>();
-
-        visited[row][col] = true;
-        queue.add(new Coordi(row, col, 0));
-
-        while (!queue.isEmpty()) {
-            Coordi cur = queue.poll();
-
-            if (gMatrix[cur.r][cur.c] == 1) {
-                answer = Math.max(answer, cur.dis);
-                return;
-            }
-
-            for (int[] dir : directions) {
-                int eR = cur.r + dir[0];
-                int eC = cur.c + dir[1];
-                int eD = cur.dis + 1;
-
-                if (isOutOfMatrix(eR, eC)) {
-                    continue;
-                }
-
-                if (!visited[eR][eC]) {
-                    visited[eR][eC] = true;
-                    queue.add(new Coordi(eR, eC, eD));
-                }
+        int startValue = 9;
+        for (Map.Entry<Character, Integer> ciEntry : entryList) {
+            if (ciEntry.getValue() != 0) {
+                changeTable.put(ciEntry.getKey(), startValue);
+                startValue--;
+            } else {
+                changeTable.put(ciEntry.getKey(), 0);
             }
         }
 
-    }
+        int result = 0;
 
-    boolean isOutOfMatrix(int r, int c) {
-        return r < 0 || r >= gRow || c < 0 || c >= gCol;
-    }
-}
+        for (String str : table) {
+            StringBuilder sb = new StringBuilder();
 
-class Coordi {
-    int r;
-    int c;
-    int dis;
+            for (int i = 0; i < str.length(); i++) {
+                char eachCh = str.charAt(i);
+                sb.append(changeTable.get(eachCh));
+            }
 
-    public Coordi(int r, int c, int dis) {
-        this.r = r;
-        this.c = c;
-        this.dis = dis;
+            result += Integer.parseInt(sb.toString());
+        }
+
+        System.out.println(result);
     }
 }

@@ -12,16 +12,17 @@ public class Main {
         int row = Integer.parseInt(variable[0]);
         int col = Integer.parseInt(variable[1]);
 
-        int[][] matrix = new int[row][col];
+        int testCaseNum = Integer.parseInt(br.readLine());
 
-        for (int r = 0; r < row; r++) {
-            String[] tempLine = br.readLine().split(" ");
-            for (int c = 0; c < tempLine.length; c++) {
-                matrix[r][c] = Integer.parseInt(tempLine[c]);
-            }
+        String[] quizTable = new String[testCaseNum];
+
+        for (int i = 0; i < testCaseNum; i++) {
+            String strings = br.readLine();
+
+            quizTable[i] = strings;
         }
 
-        System.out.println(ts.solution(row, col, matrix));
+        ts.solution(quizTable);
     }
 }
 
