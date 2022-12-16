@@ -1,19 +1,12 @@
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        String[] enroll = {"john", "mary", "edward", "sam", "emily", "jaimie", "tod", "young"};
-        String[] referral = {"-", "-", "mary", "edward", "mary", "mary", "jaimie", "edward"};
-        String[] seller = {"young", "john", "tod", "emily", "mary"};
-        int[] amount = {12, 4, 2, 5, 10};
+        int[][] jobs = {{0, 3}, {1, 9}, {2, 6}};
 
-        System.out.println(Arrays.toString(ts.solution(enroll,
-                referral,
-                seller,
-                amount)));
+        System.out.println(ts.solution(jobs));
     }
 }
 //public class Main{
