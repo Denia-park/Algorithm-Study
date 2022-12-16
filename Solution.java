@@ -1,78 +1,61 @@
 //정답 코드 참조
 //https://zoosso.tistory.com/414
 
-class Solution {
-    final int[] team1 = {0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4};
-    final int[] team2 = {1, 2, 3, 4, 5, 2, 3, 4, 5, 3, 4, 5, 4, 5, 5};
-    final int WIN = 0;
-    final int DRAW = 1;
-    final int LOSE = 2;
-    int[] answer = new int[4];
-    int[][] match = new int[6][3];
-    int[][] result = new int[6][3];
+import java.util.*;
 
-    public void solution(int[][] tables) {
-        for (int tc = 0; tc < tables.length; tc++) {
-            for (int r = 0; r < 6; r++) {
-                for (int c = 0; c < 3; c++) {
-                    match[r][c] = tables[tc][(3 * r) + c];
-                }
+class Solution {
+    Character[] tableKey = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
+
+    public void solution(String[] table) {
+        Map<Character, Integer> changeTable = new HashMap<>();
+        initTable(changeTable);
+
+        Arrays.sort(table, (a, b) -> -Integer.compare(a.length(), b.length()));
+
+        for (String str : table) {
+            int len = str.length();
+            for (int i = 0; i < str.length(); i++) {
+                char tempChar = str.charAt(i);
+
+                int defaultScore = changeTable.get(tempChar);
+                int addScore = (int) Math.pow(10, len);
+                changeTable.put(tempChar, defaultScore + addScore);
+                len--;
+            }
+        }
+
+        List<Map.Entry<Character, Integer>> entryList = new LinkedList<>(changeTable.entrySet());
+        entryList.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
+
+        int startValue = 9;
+        for (Map.Entry<Character, Integer> ciEntry : entryList) {
+            if (ciEntry.getValue() != 0) {
+                changeTable.put(ciEntry.getKey(), startValue);
+                startValue--;
+            } else {
+                changeTable.put(ciEntry.getKey(), 0);
+            }
+        }
+
+        int result = 0;
+
+        for (String str : table) {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < str.length(); i++) {
+                char eachCh = str.charAt(i);
+                sb.append(changeTable.get(eachCh));
             }
 
-            dfs(tc, 0);
+            result += Integer.parseInt(sb.toString());
         }
 
-        String[] answerString = new String[4];
-
-        for (int i = 0; i < answer.length; i++) {
-            answerString[i] = String.valueOf(answer[i]);
-        }
-
-        System.out.println(String.join(" ", answerString));
+        System.out.println(result);
     }
 
-    private void dfs(int tc, int round) {
-        // 15개 경기 종료
-        if (round == 15) {
-            //이미 가능한 경우로 판단되는 경우
-            if (answer[tc] == 1) {
-                return;
-            }
-
-            for (int r = 0; r < 6; r++) {
-                for (int c = 0; c < 3; c++) {
-                    //한 곳이라도 맞지 않는 경우에는 false
-                    if (match[r][c] != result[r][c]) {
-                        return;
-                    }
-                }
-            }
-
-            answer[tc] = 1;
-            return;
+    private void initTable(Map<Character, Integer> changeTable) {
+        for (Character s : tableKey) {
+            changeTable.put(s, -1);
         }
-
-        // 승리 0, 무승부 1, 패배 2
-        int t1 = team1[round];
-        int t2 = team2[round];
-
-        // t1 승, t2 패
-        result[t1][WIN]++;
-        result[t2][LOSE]++;
-        dfs(tc, round + 1);
-        result[t1][WIN]--;
-        result[t2][LOSE]--;
-        // t1 무, t2 무
-        result[t1][DRAW]++;
-        result[t2][DRAW]++;
-        dfs(tc, round + 1);
-        result[t1][DRAW]--;
-        result[t2][DRAW]--;
-        // t1 패, t2 승
-        result[t1][LOSE]++;
-        result[t2][WIN]++;
-        dfs(tc, round + 1);
-        result[t1][LOSE]--;
-        result[t2][WIN]--;
     }
 }

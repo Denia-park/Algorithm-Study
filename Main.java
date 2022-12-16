@@ -9,16 +9,17 @@ public class Main {
 //      *BufferedReader*
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int[][] tables = new int[4][18];
-        for (int i = 0; i < tables.length; i++) {
-            String[] strings = br.readLine().split(" ");
+        int testCaseNum = Integer.parseInt(br.readLine());
 
-            for (int j = 0; j < strings.length; j++) {
-                tables[i][j] = Integer.parseInt(strings[j]);
-            }
+        String[] quizTable = new String[testCaseNum];
+
+        for (int i = 0; i < testCaseNum; i++) {
+            String strings = br.readLine();
+
+            quizTable[i] = strings;
         }
 
-        ts.solution(tables);
+        ts.solution(quizTable);
     }
 }
 
