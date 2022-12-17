@@ -1,88 +1,37 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.PriorityQueue;
+
+//정답 참고
+//https://codevang.tistory.com/316
 
 class Solution {
     public int solution(int[][] jobs) {
+        int answer = 0;
         int curTime = 0;
+        int jobsIdx = 0;
+        int completeCount = 0;
 
-        PriorityQueue<Task> readyQueue = new PriorityQueue<>();
-        PriorityQueue<Task> waitingQueue = new PriorityQueue<>((a, b) -> a.taskTime - b.taskTime);
-        List<Task> quitTaskList = new ArrayList<Task>();
+        Arrays.sort(jobs, Comparator.comparingInt(a -> a[0]));
 
-        for (int[] job : jobs) {
-            readyQueue.offer(new Task(job[0], job[1]));
-        }
+        PriorityQueue<int[]> waitingQueue = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
 
-        while (quitTaskList.size() != jobs.length) {
-            if (!readyQueue.isEmpty()) {
-                Task readyTask = readyQueue.peek();
-
-                if (readyTask.startTime <= curTime) {
-                    Task tempTask = readyQueue.poll();
-                    waitingQueue.offer(tempTask);
-                }
+        while (completeCount < jobs.length) {
+            while (jobsIdx < jobs.length && jobs[jobsIdx][0] <= curTime) {
+                waitingQueue.add(jobs[jobsIdx]);
+                jobsIdx++;
             }
 
-            if (!waitingQueue.isEmpty()) {
-                Task runTask = waitingQueue.peek();
-                if (!runTask.taskStartFlag) {
-                    runTask.taskStartFlag = true;
-                    runTask.taskStartTime = curTime;
-                }
-
-                if (curTime >= runTask.taskStartTime + runTask.taskTime) {
-                    Task quitTask = waitingQueue.poll();
-                    quitTask.endTime = curTime;
-                    quitTaskList.add(quitTask);
-
-                    if (!waitingQueue.isEmpty()) {
-                        Task nextTask = waitingQueue.peek();
-                        if (!nextTask.taskStartFlag) {
-                            nextTask.taskStartFlag = true;
-                            nextTask.taskStartTime = curTime;
-                        }
-                    }
-                }
+            if (waitingQueue.isEmpty()) {
+                curTime = jobs[jobsIdx][0];
+            } else {
+                int[] job = waitingQueue.poll();
+                answer += curTime + job[1] - job[0];
+                curTime += job[1];
+                completeCount++;
             }
-            curTime++;
         }
 
-        int sum = 0;
-        for (Task task : quitTaskList) {
-            sum += task.getCompleteTime();
-        }
-
-        return sum / quitTaskList.size();
-    }
-}
-
-class Task implements Comparable<Task> {
-    int startTime;
-    int endTime;
-    int taskStartTime;
-    boolean taskStartFlag;
-    int taskTime;
-
-    public Task(int startTime, int taskTime) {
-        this.startTime = startTime;
-        this.taskTime = taskTime;
-        taskStartTime = 0;
-        taskStartFlag = false;
-    }
-
-    public int getCompleteTime() {
-        return endTime - startTime;
-    }
-
-    @Override
-    public int compareTo(Task o) {
-        if (this.startTime < o.startTime) {
-            return -1;
-        } else if (this.startTime == o.startTime) {
-            return this.taskTime - o.taskTime;
-        } else {
-            return 1;
-        }
+        return answer / jobs.length;
     }
 }
