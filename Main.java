@@ -1,28 +1,14 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        // *BufferedReader*
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] variable = br.readLine().split(" ");
-        int row = Integer.parseInt(variable[0]);
-        int col = Integer.parseInt(variable[1]);
+        int[][] jobs = {{0, 3}, {1, 9}, {2, 6}};
+//        int[][] jobs = {{0, 1}, {1, 1}, {50, 7}};
 
-        int testCaseNum = Integer.parseInt(br.readLine());
-
-        String[] quizTable = new String[testCaseNum];
-
-        for (int i = 0; i < testCaseNum; i++) {
-            String strings = br.readLine();
-
-            quizTable[i] = strings;
-        }
-
-        ts.solution(quizTable);
+        System.out.println(ts.solution(jobs));
     }
 }
 
