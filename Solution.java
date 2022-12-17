@@ -1,20 +1,20 @@
 import java.util.Arrays;
 
 class Solution {
-    int answer;
+    long answer;
     int gNeedNum;
 
-    public int solution(int lineNum, int needNum, int[] lineNums) {
+    public long solution(int lineNum, int needNum, int[] lineNums) {
         answer = 0;
         gNeedNum = needNum;
 
         Arrays.sort(lineNums);
 
-        int start = 0;
-        int end = lineNums[lineNum - 1];
+        long start = 1;
+        long end = lineNums[lineNum - 1];
 
         while (start <= end) {
-            int mid = (start + end) / 2;
+            long mid = (start + end) / 2;
 
             if (calculateCount(lineNums, mid)) {
                 start = mid + 1;
@@ -26,8 +26,8 @@ class Solution {
         return answer;
     }
 
-    private boolean calculateCount(int[] lineNums, int mid) {
-        int tempCount = 0;
+    private boolean calculateCount(int[] lineNums, long mid) {
+        long tempCount = 0;
 
         for (int lineNum : lineNums) {
             tempCount += lineNum / mid;
