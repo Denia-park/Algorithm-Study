@@ -1,14 +1,25 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        int[][] jobs = {{0, 3}, {1, 9}, {2, 6}};
-//        int[][] jobs = {{0, 1}, {1, 1}, {50, 7}};
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] strs = br.readLine().split(" ");
+        int lineNum = Integer.parseInt(strs[0]);
+        int needNum = Integer.parseInt(strs[1]);
 
-        System.out.println(ts.solution(jobs));
+        int[] lineNums = new int[lineNum];
+
+        for (int i = 0; i < lineNum; i++) {
+            String tempStr = br.readLine();
+            lineNums[i] = Integer.parseInt(tempStr);
+        }
+
+        System.out.println(ts.solution(lineNum, needNum, lineNums));
     }
 }
 

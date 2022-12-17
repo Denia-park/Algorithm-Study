@@ -1,37 +1,43 @@
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
-//정답 참고
-//https://codevang.tistory.com/316
 
 class Solution {
-    public int solution(int[][] jobs) {
-        int answer = 0;
-        int curTime = 0;
-        int jobsIdx = 0;
-        int completeCount = 0;
+    int answer;
+    int gNeedNum;
 
-        Arrays.sort(jobs, Comparator.comparingInt(a -> a[0]));
+    public int solution(int lineNum, int needNum, int[] lineNums) {
+        answer = 0;
+        gNeedNum = needNum;
 
-        PriorityQueue<int[]> waitingQueue = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        Arrays.sort(lineNums);
 
-        while (completeCount < jobs.length) {
-            while (jobsIdx < jobs.length && jobs[jobsIdx][0] <= curTime) {
-                waitingQueue.add(jobs[jobsIdx]);
-                jobsIdx++;
-            }
+        int start = 0;
+        int end = lineNums[0];
 
-            if (waitingQueue.isEmpty()) {
-                curTime = jobs[jobsIdx][0];
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (calculateCount(lineNums, mid)) {
+                start = mid + 1;
             } else {
-                int[] job = waitingQueue.poll();
-                answer += curTime + job[1] - job[0];
-                curTime += job[1];
-                completeCount++;
+                end = mid - 1;
             }
         }
 
-        return answer / jobs.length;
+        return answer;
+    }
+
+    private boolean calculateCount(int[] lineNums, int mid) {
+        int tempCount = 0;
+
+        for (int lineNum : lineNums) {
+            tempCount += lineNum / mid;
+        }
+
+        if (tempCount >= gNeedNum) {
+            answer = Math.max(answer, mid);
+            return true;
+        }
+
+        return false;
     }
 }
