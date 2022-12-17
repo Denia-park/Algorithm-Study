@@ -11,7 +11,7 @@ class Solution {
         Arrays.sort(lineNums);
 
         int start = 0;
-        int end = lineNums[0];
+        int end = lineNums[lineNum - 1];
 
         while (start <= end) {
             int mid = (start + end) / 2;
