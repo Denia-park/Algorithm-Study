@@ -9,7 +9,7 @@ public class Main {
 
         int scvNum = sc.nextInt();
 
-        int[] scvs = new int[scvNum];
+        int[] scvs = new int[3];
 
         for (int i = 0; i < scvNum; i++) {
             scvs[i] = sc.nextInt();
