@@ -7,15 +7,18 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
-        int scvNum = sc.nextInt();
+        int studentNum = sc.nextInt();
+        int lineNum = sc.nextInt();
 
-        int[] scvs = new int[3];
+        int[][] studentDiff = new int[lineNum][2];
 
-        for (int i = 0; i < scvNum; i++) {
-            scvs[i] = sc.nextInt();
+        for (int i = 0; i < lineNum; i++) {
+            for (int j = 0; j < 2; j++) {
+                studentDiff[i][j] = sc.nextInt();
+            }
         }
-
-        System.out.println(ts.solution(scvNum, scvs));
+        
+        System.out.println(String.join(" ", ts.solution(studentNum, studentDiff)));
     }
 }
 

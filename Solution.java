@@ -1,56 +1,50 @@
-//정답 참고
-//https://luv-n-interest.tistory.com/1423
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 class Solution {
-    int[][][] dp;
+    public List<String> solution(int studentNum, int[][] studentDiff) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i <= studentNum; i++) {
+            graph.add(new ArrayList<>());
+        }
 
-    public long solution(int scvNum, int[] scvs) {
-        dp = new int[61][61][61];
-        initArray(dp);
+        int[] indegree = new int[studentNum + 1];
 
-        return calculateCount(scvs[0], scvs[1], scvs[2]);
-    }
+        for (int i = 0; i < studentDiff.length; i++) {
+            int[] eachGraph = studentDiff[i];
+            int small = eachGraph[0];
+            int big = eachGraph[1];
+            graph.get(small).add(big);
+            indegree[big]++;
+        }
 
-    private void initArray(int[][][] dp) {
-        for (int i = 0; i < dp.length; i++) {
-            for (int j = 0; j < dp[0].length; j++) {
-                for (int k = 0; k < dp[0][0].length; k++) {
-                    dp[i][j][k] = -1;
+        Queue<Integer> queue = new LinkedList<>();
+
+        for (int i = 1; i <= studentNum; i++) {
+            if (indegree[i] == 0) queue.offer(i);
+        }
+
+        List<String> result = new ArrayList<>();
+
+        while (!queue.isEmpty()) {
+            int curStu = queue.poll();
+
+            result.add(String.valueOf(curStu));
+            List<Integer> tempList = graph.get(curStu);
+
+            for (int nextStu : tempList) {
+                if (indegree[nextStu] > 0) {
+                    indegree[nextStu]--;
+
+                    if (indegree[nextStu] == 0) {
+                        queue.offer(nextStu);
+                    }
                 }
             }
         }
-    }
 
-    private int calculateCount(int a, int b, int c) {
-        if (a < 0) {
-            return calculateCount(0, b, c);
-        }
-
-        if (b < 0) {
-            return calculateCount(a, 0, c);
-        }
-
-        if (c < 0) {
-            return calculateCount(a, b, 0);
-        }
-
-        if (a == 0 && b == 0 && c == 0) {
-            return 0;
-        }
-
-        if (dp[a][b][c] != -1) {
-            return dp[a][b][c];
-        }
-
-        dp[a][b][c] = Integer.MAX_VALUE;
-
-        dp[a][b][c] = Math.min(dp[a][b][c], calculateCount(a - 9, b - 3, c - 1) + 1);
-        dp[a][b][c] = Math.min(dp[a][b][c], calculateCount(a - 9, b - 1, c - 3) + 1);
-        dp[a][b][c] = Math.min(dp[a][b][c], calculateCount(a - 3, b - 9, c - 1) + 1);
-        dp[a][b][c] = Math.min(dp[a][b][c], calculateCount(a - 1, b - 9, c - 3) + 1);
-        dp[a][b][c] = Math.min(dp[a][b][c], calculateCount(a - 3, b - 1, c - 9) + 1);
-        dp[a][b][c] = Math.min(dp[a][b][c], calculateCount(a - 1, b - 3, c - 9) + 1);
-
-        return dp[a][b][c];
+        return result;
     }
 }
-
