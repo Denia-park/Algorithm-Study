@@ -1,43 +1,87 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 class Solution {
-    long answer;
-    int gNeedNum;
+    int[] gScvs;
+    int gScvNum;
+    boolean[] visited;
+    List<List<Integer>> permutations;
+    int answer;
 
-    public long solution(int lineNum, int needNum, int[] lineNums) {
-        answer = 0;
-        gNeedNum = needNum;
+    int[] attackValues = {9, 3, 1};
 
-        Arrays.sort(lineNums);
+    public long solution(int scvNum, int[] scvs) {
+        answer = Integer.MAX_VALUE;
+        permutations = new ArrayList<>();
+        visited = new boolean[scvNum];
+        gScvNum = scvNum;
+        gScvs = scvs;
 
-        long start = 1;
-        long end = lineNums[lineNum - 1];
+        Deque<Integer> dq = new LinkedList<>();
 
-        while (start <= end) {
-            long mid = (start + end) / 2;
+        getPermutations(dq);
 
-            if (calculateCount(lineNums, mid)) {
-                start = mid + 1;
-            } else {
-                end = mid - 1;
-            }
-        }
+        int[] tempScvs = new int[gScvNum];
+        System.arraycopy(scvs, 0, tempScvs, 0, gScvNum);
+
+        calculateCount(tempScvs, 0);
 
         return answer;
     }
 
-    private boolean calculateCount(int[] lineNums, long mid) {
-        long tempCount = 0;
-
-        for (int lineNum : lineNums) {
-            tempCount += lineNum / mid;
+    private void calculateCount(int[] scvs, int count) {
+        if (count > answer) {
+            return;
         }
 
-        if (tempCount >= gNeedNum) {
-            answer = Math.max(answer, mid);
-            return true;
+        if (isAllHpZero(scvs)) {
+            answer = count;
+            return;
         }
 
-        return false;
+        for (List<Integer> permutation : permutations) {
+            int[] tempScvs = new int[gScvNum];
+            System.arraycopy(scvs, 0, tempScvs, 0, gScvNum);
+
+            for (int j = 0; j < permutation.size(); j++) {
+                if (tempScvs[permutation.get(j)] < 0) {
+                    continue;
+                }
+
+                tempScvs[permutation.get(j)] -= attackValues[j];
+            }
+
+            calculateCount(tempScvs, count + 1);
+        }
+    }
+
+    private boolean isAllHpZero(int[] scvs) {
+        for (int scv : scvs) {
+            if (scv > 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void getPermutations(Deque<Integer> list) {
+        if (list.size() == gScvNum) {
+            List<Integer> tempList = new ArrayList<>(list);
+            permutations.add(tempList);
+            return;
+        }
+
+        for (int i = 0; i < gScvNum; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                list.addLast(i);
+                getPermutations(list);
+                list.pollLast();
+                visited[i] = false;
+            }
+        }
     }
 }

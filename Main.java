@@ -1,25 +1,21 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-
+import java.util.Scanner;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] strs = br.readLine().split(" ");
-        int lineNum = Integer.parseInt(strs[0]);
-        int needNum = Integer.parseInt(strs[1]);
+        Scanner sc = new Scanner(System.in);
 
-        int[] lineNums = new int[lineNum];
+        int scvNum = sc.nextInt();
 
-        for (int i = 0; i < lineNum; i++) {
-            String tempStr = br.readLine();
-            lineNums[i] = Integer.parseInt(tempStr);
+        int[] scvs = new int[scvNum];
+
+        for (int i = 0; i < scvNum; i++) {
+            scvs[i] = sc.nextInt();
         }
 
-        System.out.println(ts.solution(lineNum, needNum, lineNums));
+        System.out.println(ts.solution(scvNum, scvs));
     }
 }
 
