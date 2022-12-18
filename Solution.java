@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Queue;
 
 class Solution {
-    public List<String> solution(int studentNum, int[][] studentDiff) {
+    public String solution(int studentNum, int[][] studentDiff) {
         List<List<Integer>> graph = new ArrayList<>();
         for (int i = 0; i <= studentNum; i++) {
             graph.add(new ArrayList<>());
@@ -12,8 +12,7 @@ class Solution {
 
         int[] indegree = new int[studentNum + 1];
 
-        for (int i = 0; i < studentDiff.length; i++) {
-            int[] eachGraph = studentDiff[i];
+        for (int[] eachGraph : studentDiff) {
             int small = eachGraph[0];
             int big = eachGraph[1];
             graph.get(small).add(big);
@@ -26,12 +25,12 @@ class Solution {
             if (indegree[i] == 0) queue.offer(i);
         }
 
-        List<String> result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
 
         while (!queue.isEmpty()) {
             int curStu = queue.poll();
 
-            result.add(String.valueOf(curStu));
+            sb.append(curStu).append(" ");
             List<Integer> tempList = graph.get(curStu);
 
             for (int nextStu : tempList) {
@@ -45,6 +44,6 @@ class Solution {
             }
         }
 
-        return result;
+        return sb.toString();
     }
 }

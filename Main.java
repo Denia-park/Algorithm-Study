@@ -1,24 +1,28 @@
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        Scanner sc = new Scanner(System.in);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int studentNum = sc.nextInt();
-        int lineNum = sc.nextInt();
+        String[] firstLine = br.readLine().split(" ");
+        int studentNum = Integer.parseInt(firstLine[0]);
+        int lineNum = Integer.parseInt(firstLine[1]);
 
         int[][] studentDiff = new int[lineNum][2];
 
         for (int i = 0; i < lineNum; i++) {
-            for (int j = 0; j < 2; j++) {
-                studentDiff[i][j] = sc.nextInt();
+            String[] tempLine = br.readLine().split(" ");
+
+            for (int j = 0; j < tempLine.length; j++) {
+                studentDiff[i][j] = Integer.parseInt(tempLine[j]);
             }
         }
-        
-        System.out.println(String.join(" ", ts.solution(studentNum, studentDiff)));
+
+        System.out.println(ts.solution(studentNum, studentDiff));
     }
 }
 
