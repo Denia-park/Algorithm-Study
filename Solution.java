@@ -1,49 +1,26 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
 class Solution {
-    public String solution(int studentNum, int[][] studentDiff) {
-        List<List<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i <= studentNum; i++) {
-            graph.add(new ArrayList<>());
-        }
+    public int solution(String[] inputLine) {
+        int answer = 0;
 
-        int[] indegree = new int[studentNum + 1];
+        int addFatiguePerOneHour = Integer.parseInt(inputLine[0]);
+        int workAmount = Integer.parseInt(inputLine[1]);
+        int healing = Integer.parseInt(inputLine[2]);
+        int maxFatigue = Integer.parseInt(inputLine[3]);
 
-        for (int[] eachGraph : studentDiff) {
-            int small = eachGraph[0];
-            int big = eachGraph[1];
-            graph.get(small).add(big);
-            indegree[big]++;
-        }
+        int curFatigue = 0;
 
-        Queue<Integer> queue = new LinkedList<>();
-
-        for (int i = 1; i <= studentNum; i++) {
-            if (indegree[i] == 0) queue.offer(i);
-        }
-
-        StringBuilder sb = new StringBuilder();
-
-        while (!queue.isEmpty()) {
-            int curStu = queue.poll();
-
-            sb.append(curStu).append(" ");
-            List<Integer> tempList = graph.get(curStu);
-
-            for (int nextStu : tempList) {
-                if (indegree[nextStu] > 0) {
-                    indegree[nextStu]--;
-
-                    if (indegree[nextStu] == 0) {
-                        queue.offer(nextStu);
-                    }
+        for (int i = 0; i < 24; i++) {
+            if (curFatigue + addFatiguePerOneHour <= maxFatigue) {
+                curFatigue += addFatiguePerOneHour;
+                answer += workAmount;
+            } else {
+                curFatigue -= healing;
+                if (curFatigue <= 0) {
+                    curFatigue = 0;
                 }
             }
         }
 
-        return sb.toString();
+        return answer;
     }
 }

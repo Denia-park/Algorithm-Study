@@ -9,20 +9,8 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] firstLine = br.readLine().split(" ");
-        int studentNum = Integer.parseInt(firstLine[0]);
-        int lineNum = Integer.parseInt(firstLine[1]);
 
-        int[][] studentDiff = new int[lineNum][2];
-
-        for (int i = 0; i < lineNum; i++) {
-            String[] tempLine = br.readLine().split(" ");
-
-            for (int j = 0; j < tempLine.length; j++) {
-                studentDiff[i][j] = Integer.parseInt(tempLine[j]);
-            }
-        }
-
-        System.out.println(ts.solution(studentNum, studentDiff));
+        System.out.println(ts.solution(firstLine));
     }
 }
 
