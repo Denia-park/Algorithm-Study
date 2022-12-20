@@ -16,7 +16,7 @@ class Solution {
 
             int defaultSize = sb.length();
             for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-                if (entry.getValue() >= nameLen - 1) {
+                if (entry.getValue() >= candiNum - 1) {
                     sb.append(entry.getKey());
                     break;
                 }
