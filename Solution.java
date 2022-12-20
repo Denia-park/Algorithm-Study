@@ -1,38 +1,33 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 class Solution {
-    List<Integer> answer;
-    int[] gTable;
-    boolean[] visited;
+    public void solution(int candiNum, int nameLen, String[] table) {
+        StringBuilder sb = new StringBuilder();
 
-    public void solution(int size, int[] table) {
-        answer = new ArrayList<>();
-        gTable = table;
+        for (int i = 0; i < nameLen; i++) {
+            Map<Character, Integer> map = new HashMap<>();
 
-        for (int i = 1; i <= size; i++) {
-            visited = new boolean[size + 1];
-            getParent(i, i);
-        }
-
-        System.out.println(answer.size());
-        for (Integer integer : answer) {
-            System.out.println(integer);
-        }
-    }
-
-    private void getParent(int origin, int idx) {
-        if (visited[idx]) {
-            if (origin == idx) {
-                answer.add(origin);
+            for (int j = 0; j < candiNum; j++) {
+                char c = table[j].charAt(i);
+                int count = map.getOrDefault(c, 0);
+                map.put(c, count + 1);
             }
 
-            return;
+            int defaultSize = sb.length();
+            for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+                if (entry.getValue() >= nameLen - 1) {
+                    sb.append(entry.getKey());
+                    break;
+                }
+            }
+
+            if (sb.length() == defaultSize) {
+                System.out.println("CALL FRIEND");
+                return;
+            }
         }
 
-        visited[idx] = true;
-
-        int parent = gTable[idx];
-        getParent(origin, parent);
+        System.out.println(sb);
     }
 }

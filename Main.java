@@ -7,17 +7,18 @@ public class Main {
         Solution ts = new Solution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] fl = br.readLine().split(" ");
+        int candiNum = Integer.parseInt(fl[0]);
+        int nameLen = Integer.parseInt(fl[1]);
 
-        int size = Integer.parseInt(br.readLine());
+        String[] table = new String[candiNum];
 
-        int[] table = new int[size + 1];
-
-        for (int i = 1; i <= size; i++) {
+        for (int i = 0; i < candiNum; i++) {
             String input = br.readLine();
-            table[i] = Integer.parseInt(input);
+            table[i] = input;
         }
 
-        ts.solution(size, table);
+        ts.solution(candiNum, nameLen, table);
     }
 }
 
