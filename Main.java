@@ -10,16 +10,14 @@ public class Main {
 
         int size = Integer.parseInt(br.readLine());
 
-        int[][] table = new int[size + 1][size + 1];
+        int[] table = new int[size + 1];
 
         for (int i = 1; i <= size; i++) {
-            String[] input = br.readLine().split(" ");
-            for (int j = 1; j <= size; j++) {
-                table[i][j] = Integer.parseInt(input[j - 1]);
-            }
+            String input = br.readLine();
+            table[i] = Integer.parseInt(input);
         }
 
-        System.out.println(ts.solution(size, table));
+        ts.solution(size, table);
     }
 }
 
