@@ -1,13 +1,13 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    Set<Integer> answer;
+    List<Integer> answer;
     int[] gTable;
     boolean[] visited;
 
     public void solution(int size, int[] table) {
-        answer = new HashSet<>();
+        answer = new ArrayList<>();
         gTable = table;
 
         for (int i = 1; i <= size; i++) {
