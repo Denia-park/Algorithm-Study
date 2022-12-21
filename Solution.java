@@ -1,33 +1,41 @@
-import java.util.HashMap;
-import java.util.Map;
-
+//정답 참고
+//전제
 class Solution {
     public void solution(int candiNum, int nameLen, String[] table) {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < nameLen; i++) {
-            Map<Character, Integer> map = new HashMap<>();
+        char[][] chars = new char[candiNum][nameLen];
+        for (int i = 0; i < chars.length; i++) {
+            chars[i] = table[i].toCharArray();
+        }
 
-            for (int j = 0; j < candiNum; j++) {
-                char c = table[j].charAt(i);
-                int count = map.getOrDefault(c, 0);
-                map.put(c, count + 1);
-            }
+        for (int col = 0; col < nameLen; col++) {
+            int digitDiff = 0;
 
-            int defaultSize = sb.length();
-            for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-                if (entry.getValue() >= candiNum - 1) {
-                    sb.append(entry.getKey());
-                    break;
+            for (int row = 1; row < candiNum; row++) {
+                //각 자리별로 몇개의 문자가 다른지 확인
+                if (chars[0][col] != chars[row][col]) {
+                    digitDiff++;
+                }
+
+                int rowDiff = 0;
+                for (int col2 = 0; col2 < nameLen; col2++) {
+                    if (chars[0][col2] != chars[row][col2]) {
+                        rowDiff++;
+                    }
+                }
+
+                if (rowDiff > 2) {
+                    System.out.println("CALL FRIEND");
+                    return;
                 }
             }
 
-            if (sb.length() == defaultSize) {
-                System.out.println("CALL FRIEND");
-                return;
+            if (digitDiff == (candiNum - 1)) {
+                chars[0][col] = chars[candiNum - 1][col];
             }
         }
 
-        System.out.println(sb);
+        System.out.println(chars[0]);
     }
 }
