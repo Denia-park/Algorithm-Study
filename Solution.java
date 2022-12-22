@@ -1,41 +1,95 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 //정답 참고
 //전제
 class Solution {
-    public void solution(int candiNum, int nameLen, String[] table) {
-        StringBuilder sb = new StringBuilder();
+    final char FIELD = '.';
+    final char FENCE = '#';
+    final char SHEEP = 'o';
+    final char WOLF = 'v';
+    int gRow;
+    int gCol;
+    char[][] gTable;
+    int sheep;
+    int wolf;
+    int[][] directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
-        char[][] chars = new char[candiNum][nameLen];
-        for (int i = 0; i < chars.length; i++) {
-            chars[i] = table[i].toCharArray();
+    public void solution(int R, int C, char[][] table) {
+        gRow = R;
+        gCol = C;
+        gTable = table;
+        sheep = 0;
+        wolf = 0;
+
+        int[] answer = new int[2];
+
+        for (int row = 0; row < gRow; row++) {
+            for (int col = 0; col < gCol; col++) {
+                if (table[row][col] != FENCE) {
+                    bfs(row, col);
+                }
+            }
         }
 
-        for (int col = 0; col < nameLen; col++) {
-            int digitDiff = 0;
+        answer[0] = sheep;
+        answer[1] = wolf;
 
-            for (int row = 1; row < candiNum; row++) {
-                //각 자리별로 몇개의 문자가 다른지 확인
-                if (chars[0][col] != chars[row][col]) {
-                    digitDiff++;
-                }
+        System.out.printf("%d %d\n", answer[0], answer[1]);
+    }
 
-                int rowDiff = 0;
-                for (int col2 = 0; col2 < nameLen; col2++) {
-                    if (chars[0][col2] != chars[row][col2]) {
-                        rowDiff++;
+    private void bfs(int row, int col) {
+        int tempWolf = 0;
+        int tempSheep = 0;
+
+        Queue<Coordination> queue = new LinkedList<>();
+
+
+        while (!queue.isEmpty()) {
+            Coordination tempCoordi = queue.poll();
+            int cR = tempCoordi.row;
+            int cC = tempCoordi.col;
+
+            for (int i = 0; i < directions.length; i++) {
+                int newRow = cR + directions[i][0];
+                int newCol = cC + directions[i][1];
+
+                if (isOutOfTable(newRow, newCol)) continue;
+
+                if (gTable[newRow][newCol] != FENCE) {
+                    if (gTable[cR][cC] == WOLF) {
+                        tempWolf++;
+                    } else if (gTable[cR][cC] == SHEEP) {
+                        tempSheep++;
                     }
+                    gTable[cR][cC] = FENCE;
+                    queue.add(new Coordination(newRow, newCol));
                 }
-
-                if (rowDiff > 2) {
-                    System.out.println("CALL FRIEND");
-                    return;
-                }
-            }
-
-            if (digitDiff == (candiNum - 1)) {
-                chars[0][col] = chars[candiNum - 1][col];
             }
         }
+    }
 
-        System.out.println(chars[0]);
+    private void checkTableValue(int row, int col, Queue<Coordination> queue, int tempWolf, int tempSheep) {
+        if (gTable[row][col] == WOLF) {
+            tempWolf++;
+        } else if (gTable[row][col] == SHEEP) {
+            tempSheep++;
+        }
+        gTable[row][col] = FENCE;
+        queue.add(new Coordination(row, col));
+    }
+
+    private boolean isOutOfTable(int row, int col) {
+        return row < 0 || row >= gRow || col < 0 || col >= gCol;
+    }
+}
+
+class Coordination {
+    int row;
+    int col;
+
+    Coordination(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 }
