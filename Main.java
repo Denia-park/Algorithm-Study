@@ -8,17 +8,10 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] fl = br.readLine().split(" ");
-        int R = Integer.parseInt(fl[0]);
-        int C = Integer.parseInt(fl[1]);
+        int N = Integer.parseInt(fl[0]);
+        int M = Integer.parseInt(fl[1]);
 
-        char[][] table = new char[R][C];
-
-        for (int i = 0; i < R; i++) {
-            char[] input = br.readLine().toCharArray();
-            table[i] = input;
-        }
-
-        ts.solution(R, C, table);
+        ts.solution(N, M);
     }
 }
 
