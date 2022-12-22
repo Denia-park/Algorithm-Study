@@ -1,8 +1,6 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-//정답 참고
-//전제
 class Solution {
     final char FIELD = '.';
     final char FENCE = '#';
@@ -43,7 +41,13 @@ class Solution {
         int tempSheep = 0;
 
         Queue<Coordination> queue = new LinkedList<>();
-
+        if (gTable[row][col] == WOLF) {
+            tempWolf++;
+        } else if (gTable[row][col] == SHEEP) {
+            tempSheep++;
+        }
+        gTable[row][col] = FENCE;
+        queue.add(new Coordination(row, col));
 
         while (!queue.isEmpty()) {
             Coordination tempCoordi = queue.poll();
@@ -57,27 +61,24 @@ class Solution {
                 if (isOutOfTable(newRow, newCol)) continue;
 
                 if (gTable[newRow][newCol] != FENCE) {
-                    if (gTable[cR][cC] == WOLF) {
+                    if (gTable[newRow][newCol] == WOLF) {
                         tempWolf++;
-                    } else if (gTable[cR][cC] == SHEEP) {
+                    } else if (gTable[newRow][newCol] == SHEEP) {
                         tempSheep++;
                     }
-                    gTable[cR][cC] = FENCE;
+                    gTable[newRow][newCol] = FENCE;
                     queue.add(new Coordination(newRow, newCol));
                 }
             }
         }
+
+        if (tempWolf < tempSheep) {
+            sheep += tempSheep;
+        } else {
+            wolf += tempWolf;
+        }
     }
 
-    private void checkTableValue(int row, int col, Queue<Coordination> queue, int tempWolf, int tempSheep) {
-        if (gTable[row][col] == WOLF) {
-            tempWolf++;
-        } else if (gTable[row][col] == SHEEP) {
-            tempSheep++;
-        }
-        gTable[row][col] = FENCE;
-        queue.add(new Coordination(row, col));
-    }
 
     private boolean isOutOfTable(int row, int col) {
         return row < 0 || row >= gRow || col < 0 || col >= gCol;
