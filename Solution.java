@@ -1,33 +1,15 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-
-//깊이에 해당하면 종료
-//깊이 도달할때마다 print문
 class Solution {
-    int maxNum;
-    int numCountLimit;
+    int[][] dp;
 
-    public void solution(int N, int M) {
-        maxNum = N;
-        numCountLimit = M;
-        Deque<Integer> queue = new ArrayDeque<>();
-        dfs(queue, 1);
-    }
+    public int solution(int houseNum, int[][] table) {
+        dp = new int[houseNum + 1][3];
 
-    private void dfs(Deque<Integer> queue, int startNum) {
-        if (queue.size() == numCountLimit) {
-            StringBuilder sb = new StringBuilder();
-            for (Integer integer : queue) {
-                sb.append(integer).append(" ");
-            }
-            System.out.println(sb);
-            return;
+        for (int i = 1; i <= houseNum; i++) {
+            dp[i][0] += table[i - 1][0] + Math.min(dp[i - 1][1], dp[i - 1][2]);
+            dp[i][1] += table[i - 1][1] + Math.min(dp[i - 1][0], dp[i - 1][2]);
+            dp[i][2] += table[i - 1][2] + Math.min(dp[i - 1][0], dp[i - 1][1]);
         }
 
-        for (int i = startNum; i <= maxNum; i++) {
-            queue.offerLast(i);
-            dfs(queue, i);
-            queue.pollLast();
-        }
+        return Math.min(dp[houseNum][0], Math.min(dp[houseNum][1], dp[houseNum][2]));
     }
 }
