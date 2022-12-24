@@ -36,20 +36,18 @@ class Solution {
     }
 
     boolean bfs() {
-        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+        int[][] directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
         int curSharkSize = shark.size;
         boolean[][] tempVisited = new boolean[gSize][gSize];
         Deque<Coordi> queue = new ArrayDeque<>();
 
         tempVisited[shark.row][shark.col] = true;
-        queue.addLast(new Coordi(shark.row, shark.col, 0));
+        queue.addLast(new Coordi(shark.row, shark.col, 0, false));
 
         while (!queue.isEmpty()) {
             Coordi coordi = queue.poll();
 
-            int tempFishSize = gTable[coordi.row][coordi.col];
-
-            if (tempFishSize != 0 && tempFishSize < curSharkSize) {
+            if (coordi.eatFlag) {
                 gTable[coordi.row][coordi.col] = 0;
                 answer += coordi.distance;
                 shark.eat();
@@ -63,9 +61,13 @@ class Solution {
                 if (isOutOfTable(newRow, newCol)) continue;
 
                 int newFishSize = gTable[newRow][newCol];
-                if (!tempVisited[newRow][newCol] && newFishSize != 0 && newFishSize <= curSharkSize) {
+                if (!tempVisited[newRow][newCol] && newFishSize <= curSharkSize) {
                     tempVisited[newRow][newCol] = true;
-                    queue.add(new Coordi(newRow, newCol, coordi.distance + 1));
+                    if (0 < newFishSize && newFishSize < curSharkSize) {
+                        queue.add(new Coordi(newRow, newCol, coordi.distance + 1, true));
+                    } else {
+                        queue.add(new Coordi(newRow, newCol, coordi.distance + 1, false));
+                    }
                 }
             }
         }
@@ -82,11 +84,13 @@ class Coordi {
     int row;
     int col;
     int distance;
+    boolean eatFlag;
 
-    public Coordi(int row, int col, int distance) {
+    public Coordi(int row, int col, int distance, boolean eatFlag) {
         this.row = row;
         this.col = col;
         this.distance = distance;
+        this.eatFlag = eatFlag;
     }
 }
 
