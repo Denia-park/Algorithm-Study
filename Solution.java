@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
     final int SHARK = 9;
@@ -15,57 +16,18 @@ class Solution {
         shark = null;
         gTable = table;
 
-        PriorityQueue<Fish> fishPQ = new PriorityQueue<>();
-
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 if (table[r][c] == SHARK) {
                     shark = new Shark(r, c, SHARK_SIZE);
-                } else if (table[r][c] != EMPTY) {
-                    fishPQ.add(new Fish(r, c, table[r][c]));
+                    break;
                 }
             }
         }
 
-        while (!fishPQ.isEmpty()) {
-            Fish fish = fishPQ.poll();
-            int curFishSize = fish.size;
-
-            List<Fish> fishList = new ArrayList<>();
-            fishList.add(fish);
-
-            while (true) {
-                if (!fishPQ.isEmpty() && fishPQ.peek().size == curFishSize) {
-                    fishList.add(fishPQ.poll());
-                    continue;
-                }
+        while (true) {
+            if (!bfs()) {
                 break;
-            }
-
-            fishList.sort(new Comparator<Fish>() {
-                @Override
-                public int compare(Fish o1, Fish o2) {
-                    int o1Distance = Math.abs(shark.row - o1.row) + Math.abs(shark.col - o1.col);
-                    int o2Distance = Math.abs(shark.row - o2.row) + Math.abs(shark.col - o2.col);
-
-                    if (o1Distance != o2Distance) {
-                        return o1Distance - o2Distance;
-                    } else {
-                        if (o1.row == o2.row) {
-                            return Integer.compare(o1.col, o2.col);
-                        } else {
-                            return Integer.compare(o1.row, o2.row);
-                        }
-                    }
-                }
-            });
-
-            if (curFishSize >= shark.size) {
-                break;
-            }
-
-            for (Fish fish1 : fishList) {
-                bfs(fish1);
             }
         }
 
@@ -73,24 +35,25 @@ class Solution {
         return answer;
     }
 
-    void bfs(Fish targetFish) {
-        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    boolean bfs() {
+        int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
         int curSharkSize = shark.size;
         boolean[][] tempVisited = new boolean[gSize][gSize];
-        int targetRow = targetFish.row;
-        int targetCol = targetFish.col;
         Deque<Coordi> queue = new ArrayDeque<>();
 
         tempVisited[shark.row][shark.col] = true;
-        queue.add(new Coordi(shark.row, shark.col, 0));
+        queue.addLast(new Coordi(shark.row, shark.col, 0));
 
         while (!queue.isEmpty()) {
             Coordi coordi = queue.poll();
 
-            if (coordi.row == targetRow && coordi.col == targetCol) {
+            int tempFishSize = gTable[coordi.row][coordi.col];
+
+            if (tempFishSize != 0 && tempFishSize < curSharkSize) {
+                gTable[coordi.row][coordi.col] = 0;
                 answer += coordi.distance;
                 shark.eat();
-                break;
+                return true;
             }
 
             for (int[] direction : directions) {
@@ -99,13 +62,15 @@ class Solution {
 
                 if (isOutOfTable(newRow, newCol)) continue;
 
-                int fishSize = gTable[newRow][newCol];
-                if (!tempVisited[newRow][newCol] && fishSize <= curSharkSize) {
+                int newFishSize = gTable[newRow][newCol];
+                if (!tempVisited[newRow][newCol] && newFishSize != 0 && newFishSize <= curSharkSize) {
                     tempVisited[newRow][newCol] = true;
                     queue.add(new Coordi(newRow, newCol, coordi.distance + 1));
                 }
             }
         }
+
+        return false;
     }
 
     boolean isOutOfTable(int row, int col) {
@@ -146,19 +111,3 @@ class Shark {
     }
 }
 
-class Fish implements Comparable<Fish> {
-    int row;
-    int col;
-    int size;
-
-    public Fish(int row, int col, int size) {
-        this.row = row;
-        this.col = col;
-        this.size = size;
-    }
-
-    @Override
-    public int compareTo(Fish o) {
-        return Integer.compare(size, o.size);
-    }
-}
