@@ -1,5 +1,4 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.PriorityQueue;
 
 class Solution {
     final int SHARK = 9;
@@ -16,50 +15,50 @@ class Solution {
         shark = null;
         gTable = table;
 
+        out:
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 if (table[r][c] == SHARK) {
                     shark = new Shark(r, c, SHARK_SIZE);
                     table[r][c] = 0;
-                    break;
+                    break out;
                 }
             }
         }
 
         while (true) {
-            if (!bfs()) {
+            if (!findFishToEatByBFS()) {
                 break;
             }
         }
 
-        //bfs 가 필요할듯 ? => 최단거리
         return answer;
     }
 
-    boolean bfs() {
+    boolean findFishToEatByBFS() {
         int[][] directions = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
         int curSharkSize = shark.size;
         boolean[][] tempVisited = new boolean[gSize][gSize];
-        Deque<Coordi> queue = new ArrayDeque<>();
+        PriorityQueue<Fish> queue = new PriorityQueue<>();
 
         tempVisited[shark.row][shark.col] = true;
-        queue.addLast(new Coordi(shark.row, shark.col, 0, false));
+        queue.add(new Fish(shark.row, shark.col, 0, false));
 
         while (!queue.isEmpty()) {
-            Coordi coordi = queue.poll();
+            Fish fish = queue.poll();
 
-            if (coordi.eatFlag) {
-                gTable[coordi.row][coordi.col] = 0;
-                shark.row = coordi.row;
-                shark.col = coordi.col;
-                answer += coordi.distance;
+            if (fish.eatFlag) {
+                gTable[fish.row][fish.col] = 0;
+                shark.row = fish.row;
+                shark.col = fish.col;
+                answer += fish.distance;
                 shark.eat();
                 return true;
             }
 
             for (int[] direction : directions) {
-                int newRow = coordi.row + direction[0];
-                int newCol = coordi.col + direction[1];
+                int newRow = fish.row + direction[0];
+                int newCol = fish.col + direction[1];
 
                 if (isOutOfTable(newRow, newCol)) continue;
 
@@ -67,9 +66,9 @@ class Solution {
                 if (!tempVisited[newRow][newCol] && newFishSize <= curSharkSize) {
                     tempVisited[newRow][newCol] = true;
                     if (0 < newFishSize && newFishSize < curSharkSize) {
-                        queue.add(new Coordi(newRow, newCol, coordi.distance + 1, true));
+                        queue.add(new Fish(newRow, newCol, fish.distance + 1, true));
                     } else {
-                        queue.add(new Coordi(newRow, newCol, coordi.distance + 1, false));
+                        queue.add(new Fish(newRow, newCol, fish.distance + 1, false));
                     }
                 }
             }
@@ -83,17 +82,28 @@ class Solution {
     }
 }
 
-class Coordi {
+class Fish implements Comparable<Fish> {
     int row;
     int col;
     int distance;
     boolean eatFlag;
 
-    public Coordi(int row, int col, int distance, boolean eatFlag) {
+    public Fish(int row, int col, int distance, boolean eatFlag) {
         this.row = row;
         this.col = col;
         this.distance = distance;
         this.eatFlag = eatFlag;
+    }
+
+    @Override
+    public int compareTo(Fish o) {
+        if (this.distance == o.distance) {
+            if (this.row == o.row) {
+                return Integer.compare(this.col, o.col);
+            }
+            return Integer.compare(this.row, o.row);
+        }
+        return Integer.compare(this.distance, o.distance);
     }
 }
 
