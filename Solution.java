@@ -3,11 +3,11 @@ import java.util.PriorityQueue;
 class Solution {
     final int SHARK = 9;
     final int SHARK_SIZE = 2;
-    final int EMPTY = 0;
     int answer;
     Shark shark;
     int[][] gTable;
     int gSize;
+    boolean[][] visited;
 
     public int solution(int size, int[][] table) {
         answer = 0;
@@ -15,61 +15,58 @@ class Solution {
         shark = null;
         gTable = table;
 
-        out:
-        for (int r = 0; r < size; r++) {
-            for (int c = 0; c < size; c++) {
-                if (table[r][c] == SHARK) {
-                    shark = new Shark(r, c, SHARK_SIZE);
-                    table[r][c] = 0;
-                    break out;
-                }
-            }
-        }
+        shark = findShark();
 
         while (true) {
-            if (!findFishToEatByBFS()) {
-                break;
-            }
+            if (!isFoundFishToEatByBFS()) break;
         }
 
         return answer;
     }
 
-    boolean findFishToEatByBFS() {
+    private Shark findShark() {
+        for (int r = 0; r < gSize; r++) {
+            for (int c = 0; c < gSize; c++) {
+                if (gTable[r][c] == SHARK) {
+                    gTable[r][c] = 0;
+                    return shark = new Shark(r, c, SHARK_SIZE);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    boolean isFoundFishToEatByBFS() {
         int[][] directions = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
-        int curSharkSize = shark.size;
-        boolean[][] tempVisited = new boolean[gSize][gSize];
-        PriorityQueue<Fish> queue = new PriorityQueue<>();
+        visited = new boolean[gSize][gSize];
+        PriorityQueue<Fish> pq = new PriorityQueue<>();
 
-        tempVisited[shark.row][shark.col] = true;
-        queue.add(new Fish(shark.row, shark.col, 0, false));
+        visited[shark.row][shark.col] = true;
+        pq.add(new Fish(shark.row, shark.col, 0, false));
 
-        while (!queue.isEmpty()) {
-            Fish fish = queue.poll();
+        while (!pq.isEmpty()) {
+            Fish fish = pq.poll();
+            int fishDis = fish.distance;
 
             if (fish.eatFlag) {
                 gTable[fish.row][fish.col] = 0;
-                shark.row = fish.row;
-                shark.col = fish.col;
-                answer += fish.distance;
+                shark.move(fish.row, fish.col);
                 shark.eat();
+                answer += fish.distance;
                 return true;
             }
 
             for (int[] direction : directions) {
-                int newRow = fish.row + direction[0];
-                int newCol = fish.col + direction[1];
+                int newR = fish.row + direction[0];
+                int newC = fish.col + direction[1];
 
-                if (isOutOfTable(newRow, newCol)) continue;
+                if (isOutOfTable(newR, newC)) continue;
 
-                int newFishSize = gTable[newRow][newCol];
-                if (!tempVisited[newRow][newCol] && newFishSize <= curSharkSize) {
-                    tempVisited[newRow][newCol] = true;
-                    if (0 < newFishSize && newFishSize < curSharkSize) {
-                        queue.add(new Fish(newRow, newCol, fish.distance + 1, true));
-                    } else {
-                        queue.add(new Fish(newRow, newCol, fish.distance + 1, false));
-                    }
+                int fishSize = gTable[newR][newC];
+                if (!visited[newR][newC] && shark.isMovable(fishSize)) {
+                    visited[newR][newC] = true;
+                    pq.add(new Fish(newR, newC, fishDis + 1, shark.isEatable(fishSize)));
                 }
             }
         }
@@ -83,9 +80,7 @@ class Solution {
 }
 
 class Fish implements Comparable<Fish> {
-    int row;
-    int col;
-    int distance;
+    int row, col, distance;
     boolean eatFlag;
 
     public Fish(int row, int col, int distance, boolean eatFlag) {
@@ -108,10 +103,7 @@ class Fish implements Comparable<Fish> {
 }
 
 class Shark {
-    int row;
-    int col;
-    int size;
-    int eatCount;
+    int row, col, size, eatCount;
 
     public Shark(int row, int col, int size) {
         this.row = row;
@@ -126,6 +118,19 @@ class Shark {
             eatCount = 0;
             size++;
         }
+    }
+
+    public void move(int row, int col) {
+        this.row = row;
+        this.col = col;
+    }
+
+    public boolean isMovable(int fishSize) {
+        return fishSize <= this.size;
+    }
+
+    public boolean isEatable(int fishSize) {
+        return 0 < fishSize && fishSize < this.size;
     }
 }
 
