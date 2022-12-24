@@ -20,6 +20,7 @@ class Solution {
             for (int c = 0; c < size; c++) {
                 if (table[r][c] == SHARK) {
                     shark = new Shark(r, c, SHARK_SIZE);
+                    table[r][c] = 0;
                     break;
                 }
             }
@@ -36,7 +37,7 @@ class Solution {
     }
 
     boolean bfs() {
-        int[][] directions = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+        int[][] directions = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
         int curSharkSize = shark.size;
         boolean[][] tempVisited = new boolean[gSize][gSize];
         Deque<Coordi> queue = new ArrayDeque<>();
@@ -49,6 +50,8 @@ class Solution {
 
             if (coordi.eatFlag) {
                 gTable[coordi.row][coordi.col] = 0;
+                shark.row = coordi.row;
+                shark.col = coordi.col;
                 answer += coordi.distance;
                 shark.eat();
                 return true;
@@ -110,6 +113,7 @@ class Shark {
     public void eat() {
         eatCount++;
         if (eatCount == size) {
+            eatCount = 0;
             size++;
         }
     }
