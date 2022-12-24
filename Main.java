@@ -7,16 +7,16 @@ public class Main {
         Solution ts = new Solution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int houseNum = Integer.parseInt(br.readLine());
-        int[][] table = new int[houseNum][3];
+        int size = Integer.parseInt(br.readLine());
+        int[][] table = new int[size][size];
 
-        for (int i = 0; i < houseNum; i++) {
+        for (int i = 0; i < size; i++) {
             String[] row = br.readLine().split(" ");
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j < size; j++) {
                 table[i][j] = Integer.parseInt(row[j]);
             }
         }
-        System.out.println(ts.solution(houseNum, table));
+        System.out.println(ts.solution(size, table));
     }
 }
 

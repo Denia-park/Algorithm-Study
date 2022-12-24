@@ -1,15 +1,63 @@
+import java.util.PriorityQueue;
+
 class Solution {
-    int[][] dp;
+    final int SHARK = 9;
+    final int SHARK_SIZE = 2;
+    final int EMPTY = 0;
+    int answer;
 
-    public int solution(int houseNum, int[][] table) {
-        dp = new int[houseNum + 1][3];
+    public int solution(int size, int[][] table) {
+        answer = 0;
+        PriorityQueue<Fish> pq = new PriorityQueue<>();
+        Shark shark = null;
 
-        for (int i = 1; i <= houseNum; i++) {
-            dp[i][0] += table[i - 1][0] + Math.min(dp[i - 1][1], dp[i - 1][2]);
-            dp[i][1] += table[i - 1][1] + Math.min(dp[i - 1][0], dp[i - 1][2]);
-            dp[i][2] += table[i - 1][2] + Math.min(dp[i - 1][0], dp[i - 1][1]);
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                if (table[r][c] == SHARK) {
+                    shark = new Shark(r, c, SHARK_SIZE);
+                } else if (table[r][c] != EMPTY) {
+                    pq.add(new Fish(r, c, table[r][c]));
+                }
+            }
         }
 
-        return Math.min(dp[houseNum][0], Math.min(dp[houseNum][1], dp[houseNum][2]));
+        while (!pq.isEmpty()) {
+            Fish fish = pq.poll();
+            if (fish.size >= shark.size) {
+                break;
+            }
+        }
+
+        //bfs 가 필요할듯 ? => 최단거리
+        return 0;
+    }
+}
+
+class Shark {
+    int row;
+    int col;
+    int size;
+
+    public Shark(int row, int col, int size) {
+        this.row = row;
+        this.col = col;
+        this.size = size;
+    }
+}
+
+class Fish implements Comparable<Fish> {
+    int row;
+    int col;
+    int size;
+
+    public Fish(int row, int col, int size) {
+        this.row = row;
+        this.col = col;
+        this.size = size;
+    }
+
+    @Override
+    public int compareTo(Fish o) {
+        return Integer.compare(size, o.size);
     }
 }
