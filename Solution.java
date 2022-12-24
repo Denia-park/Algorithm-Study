@@ -1,6 +1,4 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.PriorityQueue;
+import java.util.*;
 
 class Solution {
     final int SHARK = 9;
@@ -17,24 +15,58 @@ class Solution {
         shark = null;
         gTable = table;
 
-        PriorityQueue<Fish> pq = new PriorityQueue<>();
+        PriorityQueue<Fish> fishPQ = new PriorityQueue<>();
 
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 if (table[r][c] == SHARK) {
                     shark = new Shark(r, c, SHARK_SIZE);
                 } else if (table[r][c] != EMPTY) {
-                    pq.add(new Fish(r, c, table[r][c]));
+                    fishPQ.add(new Fish(r, c, table[r][c]));
                 }
             }
         }
 
-        while (!pq.isEmpty()) {
-            Fish fish = pq.poll();
-            if (fish.size >= shark.size) {
+        while (!fishPQ.isEmpty()) {
+            Fish fish = fishPQ.poll();
+            int curFishSize = fish.size;
+
+            List<Fish> fishList = new ArrayList<>();
+            fishList.add(fish);
+
+            while (true) {
+                if (!fishPQ.isEmpty() && fishPQ.peek().size == curFishSize) {
+                    fishList.add(fishPQ.poll());
+                    continue;
+                }
                 break;
             }
 
+            fishList.sort(new Comparator<Fish>() {
+                @Override
+                public int compare(Fish o1, Fish o2) {
+                    int o1Distance = Math.abs(shark.row - o1.row) + Math.abs(shark.col - o1.col);
+                    int o2Distance = Math.abs(shark.row - o2.row) + Math.abs(shark.col - o2.col);
+
+                    if (o1Distance != o2Distance) {
+                        return o1Distance - o2Distance;
+                    } else {
+                        if (o1.row == o2.row) {
+                            return Integer.compare(o1.col, o2.col);
+                        } else {
+                            return Integer.compare(o1.row, o2.row);
+                        }
+                    }
+                }
+            });
+
+            if (curFishSize >= shark.size) {
+                break;
+            }
+
+            for (Fish fish1 : fishList) {
+                bfs(fish1);
+            }
         }
 
         //bfs 가 필요할듯 ? => 최단거리
@@ -127,14 +159,6 @@ class Fish implements Comparable<Fish> {
 
     @Override
     public int compareTo(Fish o) {
-        if (this.size == o.size) {
-            if (this.row == o.row) {
-                return Integer.compare(this.col, o.col);
-            }
-
-            return Integer.compare(this.row, o.row);
-        }
-
         return Integer.compare(size, o.size);
     }
 }
