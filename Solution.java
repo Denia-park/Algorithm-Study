@@ -19,60 +19,58 @@ class Solution {
 
         Point p = new Point(0, 0);
 
-        // 로봇 팔이 격자 바깥으로 나가도록 하는 움직임 명령을 만나면, 무시
-        char saveDirec = ' ';
         char curMove = ' ';
-        for (int i = 0; i < moveChars.length; i++) {
-            curMove = moveChars[i];
+        for (char moveChar : moveChars) {
+            curMove = moveChar;
 
             if (curMove == UP) {
                 if (isOutOfBoard(p.r - 1, p.c)) continue;
-                if (saveDirec == HORIZONTAL) {
-                    board[p.r][p.c] = CROSS;
-                } else {
-                    if (board[p.r][p.c] != CROSS)
-                        board[p.r][p.c] = VERTICAL;
-                }
-                saveDirec = VERTICAL;
+
+                if (board[p.r][p.c] == HORIZONTAL) board[p.r][p.c] = CROSS;
+                else if (board[p.r][p.c] == CROSS) ;
+                else board[p.r][p.c] = VERTICAL;
+
+                if (board[p.r - 1][p.c] == HORIZONTAL) board[p.r - 1][p.c] = CROSS;
+                else if (board[p.r - 1][p.c] == CROSS) ;
+                else board[p.r - 1][p.c] = VERTICAL;
+
                 p.r--;
-                if (board[p.r][p.c] != CROSS)
-                    board[p.r][p.c] = VERTICAL;
             } else if (curMove == DOWN) {
                 if (isOutOfBoard(p.r + 1, p.c)) continue;
-                if (saveDirec == HORIZONTAL) {
-                    board[p.r][p.c] = CROSS;
-                } else {
-                    if (board[p.r][p.c] != CROSS)
-                        board[p.r][p.c] = VERTICAL;
-                }
-                saveDirec = VERTICAL;
+
+                if (board[p.r][p.c] == HORIZONTAL) board[p.r][p.c] = CROSS;
+                else if (board[p.r][p.c] == CROSS) ;
+                else board[p.r][p.c] = VERTICAL;
+
+                if (board[p.r + 1][p.c] == HORIZONTAL) board[p.r + 1][p.c] = CROSS;
+                else if (board[p.r + 1][p.c] == CROSS) ;
+                else board[p.r + 1][p.c] = VERTICAL;
+
                 p.r++;
-                if (board[p.r][p.c] != CROSS)
-                    board[p.r][p.c] = VERTICAL;
             } else if (curMove == RIGHT) {
                 if (isOutOfBoard(p.r, p.c + 1)) continue;
-                if (saveDirec == VERTICAL) {
-                    board[p.r][p.c] = CROSS;
-                } else {
-                    if (board[p.r][p.c] != CROSS)
-                        board[p.r][p.c] = HORIZONTAL;
-                }
-                saveDirec = HORIZONTAL;
+
+                if (board[p.r][p.c] == VERTICAL) board[p.r][p.c] = CROSS;
+                else if (board[p.r][p.c] == CROSS) ;
+                else board[p.r][p.c] = HORIZONTAL;
+
+                if (board[p.r][p.c + 1] == VERTICAL) board[p.r][p.c + 1] = CROSS;
+                else if (board[p.r][p.c + 1] == CROSS) ;
+                else board[p.r][p.c + 1] = HORIZONTAL;
+
                 p.c++;
-                if (board[p.r][p.c] != CROSS)
-                    board[p.r][p.c] = HORIZONTAL;
             } else if (curMove == LEFT) {
                 if (isOutOfBoard(p.r, p.c - 1)) continue;
-                if (saveDirec == VERTICAL) {
-                    board[p.r][p.c] = CROSS;
-                } else {
-                    if (board[p.r][p.c] != CROSS)
-                        board[p.r][p.c] = HORIZONTAL;
-                }
-                saveDirec = HORIZONTAL;
+
+                if (board[p.r][p.c] == VERTICAL) board[p.r][p.c] = CROSS;
+                else if (board[p.r][p.c] == CROSS) ;
+                else board[p.r][p.c] = HORIZONTAL;
+
+                if (board[p.r][p.c - 1] == VERTICAL) board[p.r][p.c - 1] = CROSS;
+                else if (board[p.r][p.c - 1] == CROSS) ;
+                else board[p.r][p.c - 1] = HORIZONTAL;
+
                 p.c--;
-                if (board[p.r][p.c] != CROSS)
-                    board[p.r][p.c] = HORIZONTAL;
             }
         }
 
@@ -95,8 +93,7 @@ class Solution {
 }
 
 class Point {
-    int r;
-    int c;
+    int r, c;
 
     public Point(int r, int c) {
         this.r = r;
