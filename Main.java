@@ -8,15 +8,9 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int size = Integer.parseInt(br.readLine());
-        int[][] table = new int[size][size];
+        String move = br.readLine();
 
-        for (int i = 0; i < size; i++) {
-            String[] row = br.readLine().split(" ");
-            for (int j = 0; j < size; j++) {
-                table[i][j] = Integer.parseInt(row[j]);
-            }
-        }
-        System.out.println(ts.solution(size, table));
+        ts.solution(size, move);
     }
 }
 

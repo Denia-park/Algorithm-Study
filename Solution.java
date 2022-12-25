@@ -1,136 +1,97 @@
-import java.util.PriorityQueue;
-
 class Solution {
-    final int SHARK = 9;
-    final int SHARK_SIZE = 2;
-    int answer;
-    Shark shark;
-    int[][] gTable;
+    final char UP = 'U';
+    final char DOWN = 'D';
+    final char LEFT = 'L';
+    final char RIGHT = 'R';
+
+    final char VERTICAL = '|';
+    final char HORIZONTAL = '-';
+    final char CROSS = '+';
+
     int gSize;
-    boolean[][] visited;
 
-    public int solution(int size, int[][] table) {
-        answer = 0;
+    public void solution(int size, String move) {
         gSize = size;
-        shark = null;
-        gTable = table;
+        char[][] board = new char[size][size];
+        char[] moveChars = move.toCharArray();
 
-        shark = findShark();
+        initBoard(board);
 
-        while (true) {
-            if (!isFoundFishToEatByBFS()) break;
+        Point p = new Point(0, 0);
+
+        // 로봇 팔이 격자 바깥으로 나가도록 하는 움직임 명령을 만나면, 무시
+        char saveDirec = ' ';
+        char curMove = ' ';
+        for (int i = 0; i < moveChars.length; i++) {
+            curMove = moveChars[i];
+
+            if (curMove == UP) {
+                if (isOutOfBoard(p.r - 1, p.c)) continue;
+                if (saveDirec == HORIZONTAL) {
+                    board[p.r][p.c] = CROSS;
+                } else {
+                    board[p.r][p.c] = VERTICAL;
+                }
+                saveDirec = VERTICAL;
+                p.r--;
+                board[p.r][p.c] = VERTICAL;
+            } else if (curMove == DOWN) {
+                if (isOutOfBoard(p.r + 1, p.c)) continue;
+                if (saveDirec == HORIZONTAL) {
+                    board[p.r][p.c] = CROSS;
+                } else {
+                    board[p.r][p.c] = VERTICAL;
+                }
+                saveDirec = VERTICAL;
+                p.r++;
+                board[p.r][p.c] = VERTICAL;
+            } else if (curMove == RIGHT) {
+                if (isOutOfBoard(p.r, p.c + 1)) continue;
+                if (saveDirec == VERTICAL) {
+                    board[p.r][p.c] = CROSS;
+                } else {
+                    board[p.r][p.c] = HORIZONTAL;
+                }
+                saveDirec = HORIZONTAL;
+                p.c++;
+                board[p.r][p.c] = HORIZONTAL;
+            } else if (curMove == LEFT) {
+                if (isOutOfBoard(p.r, p.c - 1)) continue;
+                if (saveDirec == VERTICAL) {
+                    board[p.r][p.c] = CROSS;
+                } else {
+                    board[p.r][p.c] = HORIZONTAL;
+                }
+                saveDirec = HORIZONTAL;
+                p.c--;
+                board[p.r][p.c] = HORIZONTAL;
+            }
         }
 
-        return answer;
+        for (char[] chars : board) {
+            System.out.println(chars);
+        }
     }
 
-    private Shark findShark() {
+    private void initBoard(char[][] board) {
         for (int r = 0; r < gSize; r++) {
             for (int c = 0; c < gSize; c++) {
-                if (gTable[r][c] == SHARK) {
-                    gTable[r][c] = 0;
-                    return shark = new Shark(r, c, SHARK_SIZE);
-                }
+                board[r][c] = '.';
             }
         }
-
-        return null;
     }
 
-    boolean isFoundFishToEatByBFS() {
-        int[][] directions = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
-        visited = new boolean[gSize][gSize];
-        PriorityQueue<Fish> pq = new PriorityQueue<>();
-
-        visited[shark.row][shark.col] = true;
-        pq.add(new Fish(shark.row, shark.col, 0, false));
-
-        while (!pq.isEmpty()) {
-            Fish fish = pq.poll();
-            int fishDis = fish.distance;
-
-            if (fish.eatFlag) {
-                gTable[fish.row][fish.col] = 0;
-                shark.move(fish.row, fish.col);
-                shark.eat();
-                answer += fish.distance;
-                return true;
-            }
-
-            for (int[] direction : directions) {
-                int newR = fish.row + direction[0];
-                int newC = fish.col + direction[1];
-
-                if (isOutOfTable(newR, newC)) continue;
-
-                int fishSize = gTable[newR][newC];
-                if (!visited[newR][newC] && shark.isMovable(fishSize)) {
-                    visited[newR][newC] = true;
-                    pq.add(new Fish(newR, newC, fishDis + 1, shark.isEatable(fishSize)));
-                }
-            }
-        }
-
-        return false;
-    }
-
-    boolean isOutOfTable(int row, int col) {
-        return row < 0 || col < 0 || row >= gSize || col >= gSize;
+    private boolean isOutOfBoard(int r, int c) {
+        return r < 0 || r >= gSize || c < 0 || c >= gSize;
     }
 }
 
-class Fish implements Comparable<Fish> {
-    int row, col, distance;
-    boolean eatFlag;
+class Point {
+    int r;
+    int c;
 
-    public Fish(int row, int col, int distance, boolean eatFlag) {
-        this.row = row;
-        this.col = col;
-        this.distance = distance;
-        this.eatFlag = eatFlag;
-    }
-
-    @Override
-    public int compareTo(Fish o) {
-        if (this.distance == o.distance) {
-            if (this.row == o.row) {
-                return Integer.compare(this.col, o.col);
-            }
-            return Integer.compare(this.row, o.row);
-        }
-        return Integer.compare(this.distance, o.distance);
+    public Point(int r, int c) {
+        this.r = r;
+        this.c = c;
     }
 }
-
-class Shark {
-    int row, col, size, eatCount;
-
-    public Shark(int row, int col, int size) {
-        this.row = row;
-        this.col = col;
-        this.size = size;
-        eatCount = 0;
-    }
-
-    public void eat() {
-        eatCount++;
-        if (eatCount == size) {
-            eatCount = 0;
-            size++;
-        }
-    }
-
-    public void move(int row, int col) {
-        this.row = row;
-        this.col = col;
-    }
-
-    public boolean isMovable(int fishSize) {
-        return fishSize <= this.size;
-    }
-
-    public boolean isEatable(int fishSize) {
-        return 0 < fishSize && fishSize < this.size;
-    }
-}
-
