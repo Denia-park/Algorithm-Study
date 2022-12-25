@@ -30,41 +30,49 @@ class Solution {
                 if (saveDirec == HORIZONTAL) {
                     board[p.r][p.c] = CROSS;
                 } else {
-                    board[p.r][p.c] = VERTICAL;
+                    if (board[p.r][p.c] != CROSS)
+                        board[p.r][p.c] = VERTICAL;
                 }
                 saveDirec = VERTICAL;
                 p.r--;
-                board[p.r][p.c] = VERTICAL;
+                if (board[p.r][p.c] != CROSS)
+                    board[p.r][p.c] = VERTICAL;
             } else if (curMove == DOWN) {
                 if (isOutOfBoard(p.r + 1, p.c)) continue;
                 if (saveDirec == HORIZONTAL) {
                     board[p.r][p.c] = CROSS;
                 } else {
-                    board[p.r][p.c] = VERTICAL;
+                    if (board[p.r][p.c] != CROSS)
+                        board[p.r][p.c] = VERTICAL;
                 }
                 saveDirec = VERTICAL;
                 p.r++;
-                board[p.r][p.c] = VERTICAL;
+                if (board[p.r][p.c] != CROSS)
+                    board[p.r][p.c] = VERTICAL;
             } else if (curMove == RIGHT) {
                 if (isOutOfBoard(p.r, p.c + 1)) continue;
                 if (saveDirec == VERTICAL) {
                     board[p.r][p.c] = CROSS;
                 } else {
-                    board[p.r][p.c] = HORIZONTAL;
+                    if (board[p.r][p.c] != CROSS)
+                        board[p.r][p.c] = HORIZONTAL;
                 }
                 saveDirec = HORIZONTAL;
                 p.c++;
-                board[p.r][p.c] = HORIZONTAL;
+                if (board[p.r][p.c] != CROSS)
+                    board[p.r][p.c] = HORIZONTAL;
             } else if (curMove == LEFT) {
                 if (isOutOfBoard(p.r, p.c - 1)) continue;
                 if (saveDirec == VERTICAL) {
                     board[p.r][p.c] = CROSS;
                 } else {
-                    board[p.r][p.c] = HORIZONTAL;
+                    if (board[p.r][p.c] != CROSS)
+                        board[p.r][p.c] = HORIZONTAL;
                 }
                 saveDirec = HORIZONTAL;
                 p.c--;
-                board[p.r][p.c] = HORIZONTAL;
+                if (board[p.r][p.c] != CROSS)
+                    board[p.r][p.c] = HORIZONTAL;
             }
         }
 
