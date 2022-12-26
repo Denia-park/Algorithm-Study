@@ -1,30 +1,64 @@
-//정답 참고
-//https://minhamina.tistory.com/147
-
-//반례
-//Input : 856 -> Output : 100
+import java.util.Arrays;
 
 class Solution {
-    final int DIVIDE_VALUE = 10007;
-    long[][] dp;
+    int gStart;
+    int gEnd;
+    int answer;
+    boolean[] primeTable;
+    boolean[][] visited;
 
-    public void solution(int size) {
-        dp = new long[1002][10];
+    public void solution(int size, int[][] table) {
+        int answer = 0;
 
-        //1자리 수 초기화
-        long sum = 0;
-        for (int i = 0; i < 10; i++) {
-            dp[1][i] = 1;
+        primeTable = new boolean[10000];
+        Arrays.fill(primeTable, true);
+
+        eratosthenes(primeTable);
+
+        for (int i = 0; i < size; i++) {
+            int[] quiz = table[i];
+            gStart = quiz[0];
+            gEnd = quiz[1];
+            answer = 0;
+            visited = new boolean[4][10];
+
+            dfs(gStart, 0);
+
+            System.out.println(answer);
+        }
+    }
+
+    void dfs(int curValue, int count) {
+        if (curValue == gEnd) {
+            answer = Math.min(answer, count);
+            return;
         }
 
-        for (int i = 2; i <= size + 1; i++) {
+        StringBuilder sb = new StringBuilder("" + curValue);
+
+        for (int i = 0; i < sb.length(); i++) {
             for (int j = 0; j < 10; j++) {
-                for (int k = j; k < 10; k++) {
-                    dp[i][j] += (dp[i - 1][k] % DIVIDE_VALUE);
-                }
+                if (i == 0 && j == 0) continue;
+
+                if (visited[i][j]) continue;
+
+                visited[i][j] = true;
+                sb.replace(i, i + 1, String.valueOf(j));
+                int newValue = Integer.parseInt(sb.toString());
+                if (!primeTable[newValue]) continue;
+                dfs(newValue, count + 1);
             }
         }
+    }
 
-        System.out.println(dp[size + 1][0] % DIVIDE_VALUE);
+    private void eratosthenes(boolean[] primeTable) {
+        for (int i = 2; i < 10000; i++) {
+            if (!primeTable[i]) {
+                continue;
+            }
+            for (int j = i + i; j < 10000; j += i) {
+                primeTable[j] = false;
+            }
+        }
     }
 }

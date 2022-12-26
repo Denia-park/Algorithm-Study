@@ -7,9 +7,16 @@ public class Main {
         Solution ts = new Solution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int size = Integer.parseInt(br.readLine());
+        int testCase = Integer.parseInt(br.readLine());
+        int[][] table = new int[testCase][2];
+        for (int i = 0; i < testCase; i++) {
+            String[] input = br.readLine().split(" ");
+            for (int j = 0; j < 2; j++) {
+                table[i][j] = Integer.parseInt(input[j]);
+            }
+        }
 
-        ts.solution(size);
+        ts.solution(testCase, table);
     }
 }
 
