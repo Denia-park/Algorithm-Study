@@ -8,9 +8,8 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int size = Integer.parseInt(br.readLine());
-        String move = br.readLine();
 
-        ts.solution(size, move);
+        ts.solution(size);
     }
 }
 
