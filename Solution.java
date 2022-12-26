@@ -1,12 +1,12 @@
 class Solution {
     final int DIVIDE_VALUE = 10007;
-    int[][] dp;
+    long[][] dp;
 
     public void solution(int size) {
-        dp = new int[1001][11];
+        dp = new long[1001][11];
 
         //1자리 수 초기화
-        int sum = 0;
+        long sum = 0;
         for (int i = 0; i < 10; i++) {
             dp[1][i] = 1;
             sum += dp[1][i];
