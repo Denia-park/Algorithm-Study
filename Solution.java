@@ -20,9 +20,9 @@ class Solution {
                 dp[i][j] = dp[i][j - 1] - dp[i - 1][j - 1];
                 sum += dp[i][j];
             }
-            dp[i][10] = sum % DIVIDE_VALUE;
+            dp[i][10] = sum;
         }
 
-        System.out.println(dp[size][10]);
+        System.out.println(dp[size][10] % DIVIDE_VALUE);
     }
 }
