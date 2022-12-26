@@ -4,77 +4,49 @@ class Solution {
     final char LEFT = 'L';
     final char RIGHT = 'R';
 
-    final char VERTICAL = '|';
-    final char HORIZONTAL = '-';
-    final char CROSS = '+';
-
     int gSize;
 
-    public void solution(int size, String move) {
+    public void solution(int size, String quizMove) {
         gSize = size;
         char[][] board = new char[size][size];
-        char[] moveChars = move.toCharArray();
+        char[] moveChars = quizMove.toCharArray();
 
         initBoard(board);
 
-        Point p = new Point(0, 0);
+        Point p = new Point(0, 0, board);
 
         char curMove = ' ';
-        for (char moveChar : moveChars) {
-            curMove = moveChar;
+        for (char move : moveChars) {
+            curMove = move;
 
             if (curMove == UP) {
                 if (isOutOfBoard(p.r - 1, p.c)) continue;
 
-                if (board[p.r][p.c] == HORIZONTAL) board[p.r][p.c] = CROSS;
-                else if (board[p.r][p.c] == CROSS) ;
-                else board[p.r][p.c] = VERTICAL;
-
-                if (board[p.r - 1][p.c] == HORIZONTAL) board[p.r - 1][p.c] = CROSS;
-                else if (board[p.r - 1][p.c] == CROSS) ;
-                else board[p.r - 1][p.c] = VERTICAL;
-
+                p.draw(Pattern.VERTICAL);
                 p.r--;
+                p.draw(Pattern.VERTICAL);
             } else if (curMove == DOWN) {
                 if (isOutOfBoard(p.r + 1, p.c)) continue;
 
-                if (board[p.r][p.c] == HORIZONTAL) board[p.r][p.c] = CROSS;
-                else if (board[p.r][p.c] == CROSS) ;
-                else board[p.r][p.c] = VERTICAL;
-
-                if (board[p.r + 1][p.c] == HORIZONTAL) board[p.r + 1][p.c] = CROSS;
-                else if (board[p.r + 1][p.c] == CROSS) ;
-                else board[p.r + 1][p.c] = VERTICAL;
-
+                p.draw(Pattern.VERTICAL);
                 p.r++;
+                p.draw(Pattern.VERTICAL);
             } else if (curMove == RIGHT) {
                 if (isOutOfBoard(p.r, p.c + 1)) continue;
 
-                if (board[p.r][p.c] == VERTICAL) board[p.r][p.c] = CROSS;
-                else if (board[p.r][p.c] == CROSS) ;
-                else board[p.r][p.c] = HORIZONTAL;
-
-                if (board[p.r][p.c + 1] == VERTICAL) board[p.r][p.c + 1] = CROSS;
-                else if (board[p.r][p.c + 1] == CROSS) ;
-                else board[p.r][p.c + 1] = HORIZONTAL;
-
+                p.draw(Pattern.HORIZONTAL);
                 p.c++;
+                p.draw(Pattern.HORIZONTAL);
             } else if (curMove == LEFT) {
                 if (isOutOfBoard(p.r, p.c - 1)) continue;
 
-                if (board[p.r][p.c] == VERTICAL) board[p.r][p.c] = CROSS;
-                else if (board[p.r][p.c] == CROSS) ;
-                else board[p.r][p.c] = HORIZONTAL;
-
-                if (board[p.r][p.c - 1] == VERTICAL) board[p.r][p.c - 1] = CROSS;
-                else if (board[p.r][p.c - 1] == CROSS) ;
-                else board[p.r][p.c - 1] = HORIZONTAL;
-
+                p.draw(Pattern.HORIZONTAL);
                 p.c--;
+                p.draw(Pattern.HORIZONTAL);
             }
         }
 
-        for (char[] chars : board) {
+        for (char[] chars : p.board) {
             System.out.println(chars);
         }
     }
@@ -94,9 +66,38 @@ class Solution {
 
 class Point {
     int r, c;
+    char[][] board;
 
-    public Point(int r, int c) {
+    public Point(int r, int c, char[][] board) {
         this.r = r;
         this.c = c;
+        this.board = board;
+    }
+
+    public void draw(char curPattern) {
+        if (this.board[this.r][this.c] == Pattern.CROSS)
+            return;
+
+        if (this.board[this.r][this.c] == Pattern.reverse(curPattern)) {
+            this.board[this.r][this.c] = Pattern.CROSS;
+        } else {
+            this.board[this.r][this.c] = curPattern;
+        }
+    }
+}
+
+class Pattern {
+    static final char VERTICAL = '|';
+    static final char HORIZONTAL = '-';
+    static final char CROSS = '+';
+
+    static char reverse(char curPattern) {
+        switch (curPattern) {
+            case VERTICAL:
+                return HORIZONTAL;
+            case HORIZONTAL:
+                return VERTICAL;
+        }
+        return curPattern;
     }
 }
