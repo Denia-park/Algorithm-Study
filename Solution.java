@@ -9,7 +9,7 @@ class Solution {
         int sum = 0;
         for (int i = 0; i < 10; i++) {
             dp[1][i] = 1;
-            sum += (dp[1][i] % DIVIDE_VALUE);
+            sum += dp[1][i];
         }
         dp[1][10] = sum;
 
@@ -18,9 +18,9 @@ class Solution {
             sum = dp[i][0];
             for (int j = 1; j < 10; j++) {
                 dp[i][j] = dp[i][j - 1] - dp[i - 1][j - 1];
-                sum += (dp[i][j] % DIVIDE_VALUE);
+                sum += dp[i][j];
             }
-            dp[i][10] = sum;
+            dp[i][10] = sum % DIVIDE_VALUE;
         }
 
         System.out.println(dp[size][10]);
