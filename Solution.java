@@ -1,6 +1,5 @@
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
+import java.util.PriorityQueue;
 
 class Solution {
     int gSize;
@@ -13,37 +12,34 @@ class Solution {
         gTable = table;
         answer = Integer.MAX_VALUE;
 
-        int[] minTable = new int[size * size];
-        Arrays.fill(minTable, Integer.MAX_VALUE);
+        int[][] dijkstra = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            Arrays.fill(dijkstra[i], Integer.MAX_VALUE);
+        }
 
-        Deque<Point> dq = new ArrayDeque<>();
-        dq.push(new Point(0, 0, table[0][0], 0));
+        dijkstra[0][0] = table[0][0];
 
-        while (!dq.isEmpty()) {
-            Point p = dq.pop();
+        PriorityQueue<Point> pq = new PriorityQueue<>();
+        pq.add(new Point(0, 0, table[0][0]));
+
+        while (!pq.isEmpty()) {
+            Point p = pq.poll();
             int r = p.r;
             int c = p.c;
-            int v = p.value;
-            int d = p.depth;
-
-            if (r == size - 1 && c == size - 1) {
-                answer = Math.min(answer, v);
-                continue;
-            }
 
             for (int[] direction : directions) {
                 int nr = r + direction[0];
                 int nc = c + direction[1];
                 if (isOutOfTable(nr, nc)) continue;
 
-                if (d < (size * size) && minTable[d] > v + table[nr][nc]) {
-                    minTable[d] = v + table[nr][nc];
-                    dq.push(new Point(nr, nc, v + table[nr][nc], d + 1));
+                if (dijkstra[nr][nc] > dijkstra[r][c] + table[nr][nc]) {
+                    dijkstra[nr][nc] = dijkstra[r][c] + table[nr][nc];
+                    pq.add(new Point(nr, nc, dijkstra[nr][nc]));
                 }
             }
         }
 
-        return String.valueOf(answer);
+        return String.valueOf(dijkstra[size - 1][size - 1]);
     }
 
     boolean isOutOfTable(int r, int c) {
@@ -51,16 +47,19 @@ class Solution {
     }
 }
 
-class Point {
+class Point implements Comparable<Point> {
     int r;
     int c;
     int value;
-    int depth;
 
-    public Point(int r, int c, int value, int depth) {
+    public Point(int r, int c, int value) {
         this.r = r;
         this.c = c;
         this.value = value;
-        this.depth = depth;
+    }
+
+    @Override
+    public int compareTo(Point o) {
+        return Integer.compare(this.value, o.value);
     }
 }

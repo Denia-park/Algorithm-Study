@@ -11,7 +11,7 @@ public class Main {
         while (true) {
             int tableSize = Integer.parseInt(br.readLine());
             if (tableSize == 0) break;
-            
+
             int[][] table = new int[tableSize][tableSize];
 
             for (int i = 0; i < tableSize; i++) {
@@ -24,6 +24,7 @@ public class Main {
             System.out.println("Problem " + idx + ": " + ts.solution(tableSize, table));
             idx++;
         }
+        br.close();
     }
 }
 
