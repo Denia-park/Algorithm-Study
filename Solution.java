@@ -1,81 +1,56 @@
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Deque;
 
 class Solution {
-    int gStart;
-    int gEnd;
+    int gSize;
+    int[][] gTable;
+    int[][] directions = {{0, 1}, {1, 0}};
     int answer;
-    boolean[] primeTable;
-    boolean[] visited;
 
-    public void solution(int size, int[][] table) {
-        primeTable = new boolean[10000];
-        Arrays.fill(primeTable, true);
+    public String solution(int size, int[][] table) {
+        gSize = size;
+        gTable = table;
+        answer = Integer.MAX_VALUE;
 
-        eratosthenes(primeTable);
-
-        for (int i = 0; i < size; i++) {
-            int[] quiz = table[i];
-            gStart = quiz[0];
-            gEnd = quiz[1];
-            answer = Integer.MAX_VALUE;
-            visited = new boolean[10000];
-
-            bfs(gStart);
-
-            if (answer == Integer.MAX_VALUE) {
-                System.out.println("Impossible");
-            } else {
-                System.out.println(answer);
-            }
-        }
-    }
-
-    void bfs(int curValue) {
-        Deque<Number> dq = new ArrayDeque<>();
-        dq.add(new Number(curValue, 0));
-        visited[curValue] = true;
+        Deque<Point> dq = new ArrayDeque<>();
+        dq.push(new Point(0, 0, table[0][0]));
 
         while (!dq.isEmpty()) {
-            Number n = dq.poll();
-            if (gEnd == n.number) {
-                answer = Math.min(answer, n.count);
-                return;
-            }
+            Point p = dq.pop();
+            int r = p.r;
+            int c = p.c;
+            int v = p.value;
 
-            for (int digitIdx = 0; digitIdx < 4; digitIdx++) {
-                char[] str = String.valueOf(n.number).toCharArray();
-                for (int i = 0; i < 10; i++) {
-                    str[digitIdx] = (char) ('0' + i);
-                    int newNum = Integer.parseInt(String.valueOf(str));
-                    if (primeTable[newNum] && newNum > 1000 && !visited[newNum]) {
-                        visited[newNum] = true;
-                        dq.add(new Number(newNum, n.count + 1));
-                    }
-                }
-            }
-        }
-    }
-
-    private void eratosthenes(boolean[] primeTable) {
-        for (int i = 2; i < 10000; i++) {
-            if (!primeTable[i]) {
+            if (r == size - 1 && c == size - 1) {
+                answer = Math.min(answer, v);
                 continue;
             }
-            for (int j = i + i; j < 10000; j += i) {
-                primeTable[j] = false;
+
+            for (int[] direction : directions) {
+                int nr = r + direction[0];
+                int nc = c + direction[1];
+                if (isOutOfTable(nr, nc)) continue;
+
+                dq.push(new Point(nr, nc, v + table[nr][nc]));
             }
         }
+
+        return String.valueOf(answer);
+    }
+
+    boolean isOutOfTable(int r, int c) {
+        return r < 0 || c < 0 || r >= gSize || c >= gSize;
     }
 }
 
-class Number {
-    int count;
-    int number;
+class Point {
+    int r;
+    int c;
+    int value;
 
-    public Number(int number, int count) {
-        this.number = number;
-        this.count = count;
+    public Point(int r, int c, int value) {
+        this.r = r;
+        this.c = c;
+        this.value = value;
     }
 }
