@@ -7,23 +7,13 @@ public class Main {
         Solution ts = new Solution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int idx = 1;
-        while (true) {
-            int tableSize = Integer.parseInt(br.readLine());
-            if (tableSize == 0) break;
+        int testCase = Integer.parseInt(br.readLine());
+        String[] table = new String[testCase];
 
-            int[][] table = new int[tableSize][tableSize];
-
-            for (int i = 0; i < tableSize; i++) {
-                String[] input = br.readLine().split(" ");
-                for (int j = 0; j < tableSize; j++) {
-                    table[i][j] = Integer.parseInt(input[j]);
-                }
-            }
-
-            System.out.println("Problem " + idx + ": " + ts.solution(tableSize, table));
-            idx++;
+        for (int i = 0; i < testCase; i++) {
+            table[i] = br.readLine();
         }
+        System.out.println(ts.solution(testCase, table));
         br.close();
     }
 }

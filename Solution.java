@@ -1,65 +1,48 @@
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.Map;
+import java.util.TreeMap;
 
 class Solution {
     int gSize;
-    int[][] gTable;
-    int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    String[] gTable;
     int answer;
 
-    public String solution(int size, int[][] table) {
+    public int solution(int size, String[] table) {
         gSize = size;
         gTable = table;
-        answer = Integer.MAX_VALUE;
+        answer = 0;
 
-        int[][] dijkstra = new int[size][size];
-        for (int i = 0; i < size; i++) {
-            Arrays.fill(dijkstra[i], Integer.MAX_VALUE);
+        Map<Character, Integer> standardMap = new TreeMap<>();
+        char[] defaultStr = table[0].toCharArray();
+        for (char c : defaultStr) {
+            standardMap.put(c, standardMap.getOrDefault(c, 0) + 1);
         }
 
-        dijkstra[0][0] = table[0][0];
+        int diff = 0;
 
-        PriorityQueue<Point> pq = new PriorityQueue<>();
-        pq.add(new Point(0, 0, table[0][0]));
+        for (int i = 1; i < size; i++) {
+            Map<Character, Integer> diffMap = new TreeMap<>();
 
-        while (!pq.isEmpty()) {
-            Point p = pq.poll();
-            int r = p.r;
-            int c = p.c;
+            char[] chars = gTable[i].toCharArray();
+            for (char c : chars) {
+                diffMap.put(c, diffMap.getOrDefault(c, 0) + 1);
+            }
 
-            for (int[] direction : directions) {
-                int nr = r + direction[0];
-                int nc = c + direction[1];
-                if (isOutOfTable(nr, nc)) continue;
-
-                if (dijkstra[nr][nc] > dijkstra[r][c] + table[nr][nc]) {
-                    dijkstra[nr][nc] = dijkstra[r][c] + table[nr][nc];
-                    pq.add(new Point(nr, nc, dijkstra[nr][nc]));
+            for (Character c : diffMap.keySet()) {
+                int tempCount = diffMap.get(c);
+                int stanCount = standardMap.getOrDefault(c, -1);
+                if (stanCount == -1) {
+                    diff += tempCount;
+                } else {
+                    diff += tempCount - stanCount;
                 }
+            }
+
+            if (diff <= 1) {
+                answer++;
             }
         }
 
-        return String.valueOf(dijkstra[size - 1][size - 1]);
-    }
-
-    boolean isOutOfTable(int r, int c) {
-        return r < 0 || c < 0 || r >= gSize || c >= gSize;
+        return answer;
     }
 }
 
-class Point implements Comparable<Point> {
-    int r;
-    int c;
-    int value;
-
-    public Point(int r, int c, int value) {
-        this.r = r;
-        this.c = c;
-        this.value = value;
-    }
-
-    @Override
-    public int compareTo(Point o) {
-        return Integer.compare(this.value, o.value);
-    }
-}
