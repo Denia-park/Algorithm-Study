@@ -17,26 +17,19 @@ class Solution {
             standardMap.put(c, standardMap.getOrDefault(c, 0) + 1);
         }
 
-        int diff = 0;
-
         for (int i = 1; i < size; i++) {
-            Map<Character, Integer> diffMap = new TreeMap<>();
+            Map<Character, Integer> tempMap = new TreeMap<>();
+            int diff = 0;
 
             char[] chars = gTable[i].toCharArray();
             for (char c : chars) {
-                diffMap.put(c, diffMap.getOrDefault(c, 0) + 1);
+                tempMap.put(c, tempMap.getOrDefault(c, 0) + 1);
             }
 
-            for (Character c : diffMap.keySet()) {
-                int tempCount = diffMap.get(c);
-                int stanCount = standardMap.getOrDefault(c, -1);
-                if (stanCount == -1) {
-                    diff += tempCount;
-                } else {
-                    diff += tempCount - stanCount;
-                }
+            for (char c = 'A'; c <= 'Z'; c++) {
+                diff += Math.abs(standardMap.getOrDefault(c, 0) - tempMap.getOrDefault(c, 0));
             }
-
+            
             if (diff <= 1) {
                 answer++;
             }
