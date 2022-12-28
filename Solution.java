@@ -1,6 +1,9 @@
 import java.util.Map;
 import java.util.TreeMap;
 
+// 정답 참고
+// https://m.blog.naver.com/occidere/221095055060
+
 class Solution {
     int gSize;
     String[] gTable;
@@ -18,6 +21,8 @@ class Solution {
         }
 
         for (int i = 1; i < size; i++) {
+            if (Math.abs(table[0].length() - table[i].length()) > 1) continue;
+
             Map<Character, Integer> tempMap = new TreeMap<>();
             int diff = 0;
 
@@ -29,8 +34,8 @@ class Solution {
             for (char c = 'A'; c <= 'Z'; c++) {
                 diff += Math.abs(standardMap.getOrDefault(c, 0) - tempMap.getOrDefault(c, 0));
             }
-            
-            if (diff <= 1) {
+
+            if (diff <= 2) {
                 answer++;
             }
         }
