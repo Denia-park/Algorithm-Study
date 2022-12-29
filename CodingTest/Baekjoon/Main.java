@@ -37,9 +37,11 @@ class BjSolution {
             map.put(String.valueOf(i + 1), list[i]);
         }
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < quizNum; i++) {
-            System.out.println(map.get(quiz[i]));
+            sb.append(map.get(quiz[i])).append("\n");
         }
+        System.out.println(sb);
     }
 }
 
