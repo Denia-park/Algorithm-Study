@@ -3,45 +3,67 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] st = br.readLine().split(" ");
-        int listNum = Integer.parseInt(st[0]);
-        int quizNum = Integer.parseInt(st[1]);
-        String[] listTable = new String[listNum];
-        String[] quizTable = new String[quizNum];
-
-        for (int i = 0; i < listNum; i++) {
-            listTable[i] = br.readLine();
-        }
-        for (int i = 0; i < quizNum; i++) {
-            quizTable[i] = br.readLine();
-        }
-        sol.solution(listNum, quizNum, listTable, quizTable);
+        int size = Integer.parseInt(br.readLine());
+        sol.solution(size);
         br.close();
     }
 }
 
 class BjSolution {
-    public void solution(int listNum, int quizNum, String[] list, String[] quiz) {
-        Map<String, String> map = new HashMap<>();
+    int answer;
+    int[] queen;
+    int gSize;
 
-        for (int i = 0; i < listNum; i++) {
-            map.put(list[i], String.valueOf(i + 1));
-            map.put(String.valueOf(i + 1), list[i]);
+    public void solution(int size) {
+        answer = 0;
+        gSize = size;
+        queen = new int[size];
+
+        simulate(0);
+
+
+        System.out.println(answer);
+    }
+
+    private void simulate(int row) {
+        if (isEndToPlace(row)) {
+            answer++;
+            return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < quizNum; i++) {
-            sb.append(map.get(quiz[i])).append("\n");
+        for (int col = 0; col < gSize; col++) {
+            queen[row] = col;
+            if (isAbleToPlace(row)) {
+                simulate(row + 1);
+            }
         }
-        System.out.println(sb);
+    }
+
+    private boolean isAbleToPlace(int curRow) {
+        int curCol = queen[curRow];
+        for (int preRow = 0; preRow < curRow; preRow++) {
+            int preCol = queen[preRow];
+            if (preCol == curCol || isDiagonal(preRow, preCol, curRow, curCol)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isDiagonal(int preRow, int preCol, int curRow, int curCol) {
+        int diffRow = Math.abs(preRow - curRow);
+        int diffCol = Math.abs(preCol - curCol);
+        return diffRow == diffCol;
+    }
+
+    private boolean isEndToPlace(int row) {
+        return row == gSize;
     }
 }
 
