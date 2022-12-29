@@ -39,10 +39,10 @@ class BjSolution {
         }
 
         for (int i = 0; i < quizNum; i++) {
-            try {
+            if (Character.isDigit(quiz[i].charAt(0))) {
                 int num = Integer.parseInt(quiz[i]);
                 System.out.println(numMap.get(num));
-            } catch (Exception e) {
+            } else {
                 System.out.println(nameMap.get(quiz[i]));
             }
         }
