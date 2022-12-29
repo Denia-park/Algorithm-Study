@@ -30,21 +30,15 @@ public class Main {
 
 class BjSolution {
     public void solution(int listNum, int quizNum, String[] list, String[] quiz) {
-        Map<String, Integer> nameMap = new HashMap<>();
-        Map<Integer, String> numMap = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
 
         for (int i = 0; i < listNum; i++) {
-            nameMap.put(list[i], i + 1);
-            numMap.put(i + 1, list[i]);
+            map.put(list[i], String.valueOf(i + 1));
+            map.put(String.valueOf(i + 1), list[i]);
         }
 
         for (int i = 0; i < quizNum; i++) {
-            if (Character.isDigit(quiz[i].charAt(0))) {
-                int num = Integer.parseInt(quiz[i]);
-                System.out.println(numMap.get(num));
-            } else {
-                System.out.println(nameMap.get(quiz[i]));
-            }
+            System.out.println(map.get(quiz[i]));
         }
     }
 }
