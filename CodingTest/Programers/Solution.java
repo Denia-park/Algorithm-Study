@@ -1,8 +1,7 @@
+package CodingTest.Programers;
+
 import java.util.Map;
 import java.util.TreeMap;
-
-// 정답 참고
-// https://m.blog.naver.com/occidere/221095055060
 
 class Solution {
     int gSize;
