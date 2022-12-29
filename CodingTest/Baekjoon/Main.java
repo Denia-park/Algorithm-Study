@@ -3,65 +3,49 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-
-// 정답 참고
-// https://m.blog.naver.com/occidere/221095055060
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int testCase = Integer.parseInt(br.readLine());
-        String[] table = new String[testCase];
+        String[] st = br.readLine().split(" ");
+        int listNum = Integer.parseInt(st[0]);
+        int quizNum = Integer.parseInt(st[1]);
+        String[] listTable = new String[listNum];
+        String[] quizTable = new String[quizNum];
 
-        for (int i = 0; i < testCase; i++) {
-            table[i] = br.readLine();
+        for (int i = 0; i < listNum; i++) {
+            listTable[i] = br.readLine();
         }
-        System.out.println(sol.solution(testCase, table));
+        for (int i = 0; i < quizNum; i++) {
+            quizTable[i] = br.readLine();
+        }
+        sol.solution(listNum, quizNum, listTable, quizTable);
         br.close();
     }
 }
 
 class BjSolution {
-    int gSize;
-    String[] gTable;
-    int answer;
+    public void solution(int listNum, int quizNum, String[] list, String[] quiz) {
+        Map<String, Integer> nameMap = new HashMap<>();
+        Map<Integer, String> numMap = new HashMap<>();
 
-    public int solution(int size, String[] table) {
-        gSize = size;
-        gTable = table;
-        answer = 0;
-
-        Map<Character, Integer> standardMap = new TreeMap<>();
-        char[] defaultStr = table[0].toCharArray();
-        for (char c : defaultStr) {
-            standardMap.put(c, standardMap.getOrDefault(c, 0) + 1);
+        for (int i = 0; i < listNum; i++) {
+            nameMap.put(list[i], i + 1);
+            numMap.put(i + 1, list[i]);
         }
 
-        for (int i = 1; i < size; i++) {
-            if (Math.abs(table[0].length() - table[i].length()) > 1) continue;
-
-            Map<Character, Integer> tempMap = new TreeMap<>();
-            int diff = 0;
-
-            char[] chars = gTable[i].toCharArray();
-            for (char c : chars) {
-                tempMap.put(c, tempMap.getOrDefault(c, 0) + 1);
-            }
-
-            for (char c = 'A'; c <= 'Z'; c++) {
-                diff += Math.abs(standardMap.getOrDefault(c, 0) - tempMap.getOrDefault(c, 0));
-            }
-
-            if (diff <= 2) {
-                answer++;
+        for (int i = 0; i < quizNum; i++) {
+            try {
+                int num = Integer.parseInt(quiz[i]);
+                System.out.println(numMap.get(num));
+            } catch (Exception e) {
+                System.out.println(nameMap.get(quiz[i]));
             }
         }
-
-        return answer;
     }
 }
 
