@@ -14,14 +14,16 @@ public class Main {
         int splitNum = Integer.parseInt(line[1]);
         int[] lectures = new int[lectureNum];
         long totalTime = 0;
+        int maxValue = -1;
         String[] lecturesLine = br.readLine().split(" ");
         for (int i = 0; i < lectureNum; i++) {
             int curTime = Integer.parseInt(lecturesLine[i]);
             lectures[i] = curTime;
             totalTime += curTime;
+            maxValue = Math.max(maxValue, curTime);
         }
 
-        sol.solution(lectureNum, splitNum, lectures, totalTime);
+        sol.solution(lectureNum, splitNum, lectures, totalTime, maxValue);
     }
 }
 
@@ -32,7 +34,7 @@ class BjSolution {
     long gTotalTime;
     int[] gLectures;
 
-    public void solution(int lectureNum, int splitNum, int[] lectures, long totalTime) {
+    public void solution(int lectureNum, int splitNum, int[] lectures, long totalTime, int maxValue) {
         answer = Long.MAX_VALUE;
         gLectureNum = lectureNum;
         gSplitNum = splitNum;
@@ -45,7 +47,7 @@ class BjSolution {
         while (start <= end) {
             long mid = (start + end) / 2;
 
-            if (checkLength(mid)) {
+            if (maxValue <= mid && checkLength(mid)) {
                 end = mid - 1;
                 answer = Math.min(answer, mid);
             } else {
@@ -86,4 +88,3 @@ class BjSolution {
 //        for (int i = 0; i < testCaseNum; i++) {
 //            testCase[i] = br.readLine();
 //        }
-
