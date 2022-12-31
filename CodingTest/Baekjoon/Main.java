@@ -10,52 +10,65 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] line = br.readLine().split(" ");
-        int size = Integer.parseInt(line[0]);
-        int row = Integer.parseInt(line[1]);
-        int col = Integer.parseInt(line[2]);
+        int lectureNum = Integer.parseInt(line[0]);
+        int splitNum = Integer.parseInt(line[1]);
+        int[] lectures = new int[lectureNum];
+        long totalTime = 0;
+        String[] lecturesLine = br.readLine().split(" ");
+        for (int i = 0; i < lectureNum; i++) {
+            int curTime = Integer.parseInt(lecturesLine[i]);
+            lectures[i] = curTime;
+            totalTime += curTime;
+        }
 
-        sol.solution(size, row, col);
+        sol.solution(lectureNum, splitNum, lectures, totalTime);
     }
 }
 
 class BjSolution {
-    int answer;
-    int gRow;
-    int gCol;
-    int gSize;
+    long answer;
+    int gLectureNum;
+    int gSplitNum;
+    long gTotalTime;
+    int[] gLectures;
 
-    public void solution(int size, int row, int col) {
-        answer = 0;
-        gSize = size;
-        gRow = row;
-        gCol = col;
+    public void solution(int lectureNum, int splitNum, int[] lectures, long totalTime) {
+        answer = Long.MAX_VALUE;
+        gLectureNum = lectureNum;
+        gSplitNum = splitNum;
+        gLectures = lectures;
+        gTotalTime = totalTime;
 
-        for (int i = size; i >= 1; i--) {
-            int halfLength = (int) Math.pow(2, (i - 1));
-            int areaOfQuarter = halfLength * halfLength;
-            answer += areaOfQuarter * getQuarterPosition(halfLength, row, col);
-            if (row >= halfLength) {
-                row -= halfLength;
-            }
-            if (col >= halfLength) {
-                col -= halfLength;
+        long start = 1;
+        long end = totalTime;
+
+        while (start <= end) {
+            long mid = (start + end) / 2;
+
+            if (checkLength(mid)) {
+                end = mid - 1;
+                answer = Math.min(answer, mid);
+            } else {
+                start = mid + 1;
             }
         }
 
         System.out.println(answer);
     }
 
-    int getQuarterPosition(int halfLength, int row, int col) {
-        if (row < halfLength && col < halfLength) {
-            return 0;
-        } else if (row < halfLength && col >= halfLength) {
-            return 1;
-        } else if (row >= halfLength && col < halfLength) {
-            return 2;
-        } else if (row >= halfLength && col >= halfLength) {
-            return 3;
+    private boolean checkLength(long mid) {
+        long tempSum = 0;
+        int tempCount = 1;
+        for (int i = 0; i < gLectureNum; i++) {
+            int curTime = gLectures[i];
+            if (tempSum + curTime <= mid) {
+                tempSum += curTime;
+            } else {
+                tempSum = curTime;
+                tempCount++;
+            }
         }
-        return -1;
+        return tempCount <= gSplitNum;
     }
 }
 
