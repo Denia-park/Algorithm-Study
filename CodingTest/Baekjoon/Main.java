@@ -9,61 +9,53 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int size = Integer.parseInt(br.readLine());
-        sol.solution(size);
-        br.close();
+        String[] line = br.readLine().split(" ");
+        int size = Integer.parseInt(line[0]);
+        int row = Integer.parseInt(line[1]);
+        int col = Integer.parseInt(line[2]);
+
+        sol.solution(size, row, col);
     }
 }
 
 class BjSolution {
     int answer;
-    int[] queen;
+    int gRow;
+    int gCol;
     int gSize;
 
-    public void solution(int size) {
+    public void solution(int size, int row, int col) {
         answer = 0;
         gSize = size;
-        queen = new int[size];
+        gRow = row;
+        gCol = col;
 
-        simulate(0);
-
+        for (int i = size; i >= 1; i--) {
+            int halfLength = (int) Math.pow(2, (i - 1));
+            int areaOfQuarter = halfLength * halfLength;
+            answer += areaOfQuarter * getQuarterPosition(halfLength, row, col);
+            if (row >= halfLength) {
+                row -= halfLength;
+            }
+            if (col >= halfLength) {
+                col -= halfLength;
+            }
+        }
 
         System.out.println(answer);
     }
 
-    private void simulate(int row) {
-        if (isEndToPlace(row)) {
-            answer++;
-            return;
+    int getQuarterPosition(int halfLength, int row, int col) {
+        if (row < halfLength && col < halfLength) {
+            return 0;
+        } else if (row < halfLength && col >= halfLength) {
+            return 1;
+        } else if (row >= halfLength && col < halfLength) {
+            return 2;
+        } else if (row >= halfLength && col >= halfLength) {
+            return 3;
         }
-
-        for (int col = 0; col < gSize; col++) {
-            queen[row] = col;
-            if (isAbleToPlace(row)) {
-                simulate(row + 1);
-            }
-        }
-    }
-
-    private boolean isAbleToPlace(int curRow) {
-        int curCol = queen[curRow];
-        for (int preRow = 0; preRow < curRow; preRow++) {
-            int preCol = queen[preRow];
-            if (preCol == curCol || isDiagonal(preRow, preCol, curRow, curCol)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isDiagonal(int preRow, int preCol, int curRow, int curCol) {
-        int diffRow = Math.abs(preRow - curRow);
-        int diffCol = Math.abs(preCol - curCol);
-        return diffRow == diffCol;
-    }
-
-    private boolean isEndToPlace(int row) {
-        return row == gSize;
+        return -1;
     }
 }
 
