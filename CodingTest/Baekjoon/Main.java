@@ -99,7 +99,6 @@ class BjSolution {
 
         System.out.println(machine.simulation());
     }
-
 }
 
 class Coordi {
@@ -189,7 +188,7 @@ class Machine {
     }
 
     public boolean isAbleToBackUp() {
-        Coordi backUpCoordi = getTurnCoordi(this.row, this.col);
+        Coordi backUpCoordi = getBackCoordi(this.row, this.col);
 
         return this.table[backUpCoordi.row][backUpCoordi.col] != Environment.WALL;
     }
