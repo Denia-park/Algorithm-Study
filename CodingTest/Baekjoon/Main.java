@@ -10,67 +10,59 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] line = br.readLine().split(" ");
-        int lectureNum = Integer.parseInt(line[0]);
-        int splitNum = Integer.parseInt(line[1]);
-        int[] lectures = new int[lectureNum];
-        long totalTime = 0;
-        int maxValue = -1;
-        String[] lecturesLine = br.readLine().split(" ");
-        for (int i = 0; i < lectureNum; i++) {
-            int curTime = Integer.parseInt(lecturesLine[i]);
-            lectures[i] = curTime;
-            totalTime += curTime;
-            maxValue = Math.max(maxValue, curTime);
-        }
+        int rows = Integer.parseInt(line[0]);
+        int cols = Integer.parseInt(line[1]);
+        int specialNum = Integer.parseInt(line[2]);
 
-        sol.solution(lectureNum, splitNum, lectures, totalTime, maxValue);
+        sol.solution(rows, cols, specialNum);
     }
 }
 
 class BjSolution {
-    long answer;
-    int gLectureNum;
-    int gSplitNum;
-    long gTotalTime;
-    int[] gLectures;
+    int answer, gRows, gCols, gSpecialNum;
+    int[][] directions = {{0, 1}, {1, 0}};
+    int[][] grid;
 
-    public void solution(int lectureNum, int splitNum, int[] lectures, long totalTime, int maxValue) {
-        answer = Long.MAX_VALUE;
-        gLectureNum = lectureNum;
-        gSplitNum = splitNum;
-        gLectures = lectures;
-        gTotalTime = totalTime;
+    public void solution(int rows, int cols, int specialNum) {
+        answer = 0;
+        gRows = rows;
+        gCols = cols;
+        gSpecialNum = specialNum;
 
-        long start = 1;
-        long end = totalTime;
+        grid = new int[rows][cols];
 
-        while (start <= end) {
-            long mid = (start + end) / 2;
-
-            if (maxValue <= mid && checkLength(mid)) {
-                end = mid - 1;
-                answer = Math.min(answer, mid);
-            } else {
-                start = mid + 1;
+        int tempVal = 1;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                grid[r][c] = tempVal;
+                tempVal++;
             }
         }
+
+        dfs(0, 0, false);
 
         System.out.println(answer);
     }
 
-    private boolean checkLength(long mid) {
-        long tempSum = 0;
-        int tempCount = 1;
-        for (int i = 0; i < gLectureNum; i++) {
-            int curTime = gLectures[i];
-            if (tempSum + curTime <= mid) {
-                tempSum += curTime;
+    private void dfs(int r, int c, boolean checkFlag) {
+        if (r == gRows - 1 && c == gCols - 1) {
+            if (gSpecialNum != 0) {
+                if (checkFlag)
+                    answer++;
             } else {
-                tempSum = curTime;
-                tempCount++;
+                answer++;
+            }
+            return;
+        }
+
+        for (int[] direction : directions) {
+            int nr = r + direction[0];
+            int nc = c + direction[1];
+            if (nr >= 0 && nr < gRows && nc >= 0 && nc < gCols) {
+                boolean tempCheckFlag = checkFlag || grid[nr][nc] == gSpecialNum;
+                dfs(nr, nc, tempCheckFlag);
             }
         }
-        return tempCount <= gSplitNum;
     }
 }
 
