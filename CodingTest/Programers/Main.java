@@ -1,22 +1,16 @@
 package CodingTest.Programers;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int testCase = Integer.parseInt(br.readLine());
-        String[] table = new String[testCase];
+        int arrowNum = 5;
+        int[] info = {2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0};
 
-        for (int i = 0; i < testCase; i++) {
-            table[i] = br.readLine();
-        }
-        System.out.println(ts.solution(testCase, table));
-        br.close();
+        System.out.println(Arrays.toString(ts.solution(arrowNum, info)));
     }
 }
 
