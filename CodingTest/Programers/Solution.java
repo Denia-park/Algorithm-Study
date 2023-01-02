@@ -15,9 +15,9 @@ class Solution {
             liHitNums = new int[11];
 
             for (int j = i; j < 11; j++) {
-                if (tempArrowNum - (info[i] + 1) >= 0) {
-                    tempArrowNum -= (info[i] + 1);
-                    liHitNums[i] = tempArrowNum;
+                if (tempArrowNum - (info[j] + 1) >= 0) {
+                    tempArrowNum -= (info[j] + 1);
+                    liHitNums[j] = (info[j] + 1);
                 }
             }
 
@@ -44,6 +44,10 @@ class Solution {
         int liTotalScore = 0;
         for (int idx = 0; idx < 11; idx++) {
             int curScore = (10 - idx);
+
+            if (appScores[idx] == 0 && liScores[idx] == 0) {
+                continue;
+            }
 
             if (appScores[idx] >= liScores[idx]) {
                 appTotalScore += curScore;
