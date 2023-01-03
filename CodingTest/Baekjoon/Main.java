@@ -4,97 +4,75 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] fl = br.readLine().split(" ");
-        int colNum = Integer.parseInt(fl[0]);
-        int rowNum = Integer.parseInt(fl[1]);
+        int comNum = Integer.parseInt(br.readLine());
+        int pairNum = Integer.parseInt(br.readLine());
 
-        char[][] table = new char[rowNum][colNum];
+        int[][] table = new int[pairNum][2];
 
-        for (int r = 0; r < rowNum; r++) {
-            table[r] = br.readLine().toCharArray();
+        for (int r = 0; r < pairNum; r++) {
+            String[] row = br.readLine().split(" ");
+            for (int i = 0; i < 2; i++) {
+                table[r][i] = Integer.parseInt(row[i]);
+            }
         }
 
-        sol.solution(rowNum, colNum, table);
+        sol.solution(comNum, pairNum, table);
     }
 }
 
 class BjSolution {
-    final char WHITE = 'W';
-    final char BLUE = 'B';
-    int gRowNum, gColNum;
-    int whitePower, bluePower;
-    char[][] gTable;
-    boolean[][] isVisited;
+    boolean[] isVisited;
+    List<List<Integer>> graph;
+    int answer;
 
-    int[][] directions = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 
-    public void solution(int rowNum, int colNum, char[][] table) {
-        gRowNum = rowNum;
-        gColNum = colNum;
-        gTable = table;
-        whitePower = 0;
-        bluePower = 0;
+    public void solution(int comNum, int pairNum, int[][] table) {
+        answer = -1;
+        graph = new ArrayList<>();
+        isVisited = new boolean[comNum + 1];
 
-        isVisited = new boolean[rowNum][colNum];
-
-        for (int r = 0; r < rowNum; r++) {
-            for (int c = 0; c < colNum; c++) {
-                if (isVisited[r][c]) continue;
-
-                bfs(r, c);
-            }
+        for (int i = 0; i < comNum + 1; i++) {
+            graph.add(new ArrayList<>());
         }
 
-        System.out.println("" + whitePower + " " + bluePower);
+        for (int r = 0; r < pairNum; r++) {
+            int start = table[r][0];
+            int end = table[r][1];
+
+            graph.get(start).add(end);
+            graph.get(end).add(start);
+        }
+
+        bfs();
+
+        System.out.println(answer);
     }
 
-    private void bfs(int r, int c) {
-        Deque<Coordi> dq = new ArrayDeque<>();
-        isVisited[r][c] = true;
-        dq.addLast(new Coordi(r, c));
-        char curColor = gTable[r][c];
-        int count = 0;
+    private void bfs() {
+        Deque<Integer> dq = new ArrayDeque<>();
+        isVisited[1] = true;
+        dq.addLast(1);
 
         while (!dq.isEmpty()) {
-            Coordi curCoordi = dq.pollFirst();
-            int curRow = curCoordi.row;
-            int curCol = curCoordi.col;
-            count++;
+            int curNum = dq.pollFirst();
+            answer++;
 
-            for (int[] dir : directions) {
-                int nr = curRow + dir[0];
-                int nc = curCol + dir[1];
-
-                if (nr >= 0 && nr < gRowNum && nc >= 0 && nc < gColNum) {
-                    if (!isVisited[nr][nc] && gTable[nr][nc] == curColor) {
-                        isVisited[nr][nc] = true;
-                        dq.addLast(new Coordi(nr, nc));
-                    }
+            for (int nextNum : graph.get(curNum)) {
+                if (!isVisited[nextNum]) {
+                    isVisited[nextNum] = true;
+                    dq.addLast(nextNum);
                 }
             }
         }
-
-        if (curColor == WHITE) {
-            whitePower += Math.pow(count, 2);
-        } else {
-            bluePower += Math.pow(count, 2);
-        }
-    }
-}
-
-class Coordi {
-    int row, col;
-
-    Coordi(int row, int col) {
-        this.row = row;
-        this.col = col;
     }
 }
 
