@@ -16,7 +16,7 @@ public class Main {
 }
 
 class BjSolution {
-    int answer, gClickNum, gBufferCount, gStandardCount;
+    long answer, gClickNum, gBufferCount, gStandardCount;
     boolean gCopyFlag;
     boolean gSelectFlag;
 
