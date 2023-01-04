@@ -3,11 +3,14 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
+//[JAVA] contains 함수의 재밌는 원리
+//https://teambtd.tistory.com/12
+//[java] hashcode()와 equals() 메서드는 언제 사용하고 왜 사용할까?
+//https://jisooo.tistory.com/entry/java-hashcode%EC%99%80-equals-%EB%A9%94%EC%84%9C%EB%93%9C%EB%8A%94-%EC%96%B8%EC%A0%9C-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B3%A0-%EC%99%9C-%EC%82%AC%EC%9A%A9%ED%95%A0%EA%B9%8C
+//[Java] 자바 TreeMap 사용법 & 예제 총정리
+//https://coding-factory.tistory.com/557
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
@@ -37,19 +40,15 @@ public class Main {
 }
 
 class BjSolution {
-    final int NORTH = 0;
-    final int EAST = 1;
-    final int SOUTH = 2;
-    final int WEST = 3;
     int answer;
-    //북 동 남 서
-    int[][] directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    int[][] directions = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}}; //북 동 남 서
 
     public void solution(int boardSize, int[][] appleTable, String[][] commandTable) {
         answer = 0;
         Deque<Coordi> snake = new ArrayDeque<>();
 
         Map<Coordi, Integer> appleMap = new HashMap<>();
+        //1행 1열 기준으로 해서 좌표가 주어짐
         for (int[] apple : appleTable) {
             appleMap.put(new Coordi(apple[0] - 1, apple[1] - 1), 1);
         }
@@ -62,7 +61,7 @@ class BjSolution {
         //처음 뱀의 길이는 1 , (0,0) 좌표 추가
         snake.addLast(new Coordi(0, 0));
         //처음에는 오른쪽으로 이동
-        int snakeDirection = EAST;
+        int snakeDirection = 1;
 
         while (true) {
             answer++;
@@ -78,29 +77,12 @@ class BjSolution {
             if (newCoordi.r < 0 || newCoordi.r >= boardSize
                     || newCoordi.c < 0 || newCoordi.c >= boardSize) break;
             //내 몸이랑 부딪히지 않는지 확인
-            boolean isCrashExist = false;
-            for (Coordi snakeCoordi : snake) {
-                if (snakeCoordi.r == newCoordi.r && snakeCoordi.c == newCoordi.c) {
-                    isCrashExist = true;
-                    break;
-                }
-            }
-            if (isCrashExist) {
-                break;
-            }
+            if (snake.contains(newCoordi)) break;
 
             snake.addFirst(newCoordi);
             //사과 있는지 확인 , 존재할 경우 remove 하면 value를 반환
             //없으면 null
-            boolean isAppleExist = false;
-            for (Coordi appCoordi : appleMap.keySet()) {
-                if (appCoordi.r == newCoordi.r && appCoordi.c == newCoordi.c) {
-                    appleMap.remove(appCoordi);
-                    isAppleExist = true;
-                    break;
-                }
-            }
-            if (!isAppleExist) {
+            if (appleMap.remove(newCoordi) == null) {
                 snake.pollLast();
             }
 
@@ -124,6 +106,19 @@ class Coordi {
     public Coordi(int r, int c) {
         this.r = r;
         this.c = c;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coordi coordi = (Coordi) o;
+        return r == coordi.r && c == coordi.c;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(r, c);
     }
 }
 
