@@ -16,31 +16,33 @@ public class Main {
 }
 
 class BjSolution {
-    int answer, gClickNum, gBufferCount;
+    int answer, gClickNum, gBufferCount, gStandardCount;
     boolean gCopyFlag;
     boolean gSelectFlag;
 
     public void solution(int clickNum) {
-        answer = 0;
-        gClickNum = clickNum;
-        gBufferCount = 0;
+        if (clickNum <= 6) {
+            System.out.println(clickNum);
+            return;
+        }
+
+        answer = 6;
+        gBufferCount = 3;
         gSelectFlag = false;
-        gCopyFlag = false;
+        gCopyFlag = true;
+        gStandardCount = 3; // con v 한번에 나오는 값
+        gClickNum = (clickNum - 6);
+
+        //남아있는 N을 기준으로 계산을 해야함.
+        //남아있는 N 과 answer의 상태 , 버퍼의 값
 
         while (gClickNum != 0) {
-            if (answer < 3) {
-                comPrintA();
-                continue;
+            if (gClickNum >= 3 && (answer + gStandardCount * 3 <= answer * 2)) {
+                comSelectAll();
+                comCopyData();
+                comPaste();
             } else {
-                if (!gSelectFlag) {
-                    comSelectAll();
-                } else {
-                    if (!gCopyFlag) {
-                        comCopyData();
-                    } else {
-                        comPaste();
-                    }
-                }
+                comPaste();
             }
         }
 
@@ -57,14 +59,13 @@ class BjSolution {
     //화면 전체 선택
     void comSelectAll() {
         gClickNum--;
-        gSelectFlag = true;
     }
 
     //화면 버퍼에 복사
     void comCopyData() {
         gClickNum--;
-        gCopyFlag = true;
         gBufferCount = answer;
+        gStandardCount = gBufferCount;
     }
 
     //화면에 복사한거 붙이기
