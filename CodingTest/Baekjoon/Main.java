@@ -3,75 +3,62 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int clickNum = Integer.parseInt(br.readLine());
+        while (true) {
+            String[] line = br.readLine().split(" ");
+            if (line[0].equals("0")) {
+                break;
+            }
 
-        sol.solution(clickNum);
+            sol.solution(line);
+            System.out.println();
+        }
     }
 }
 
 class BjSolution {
-    long answer, gClickNum, gBufferCount, gStandardCount;
-    boolean gCopyFlag;
-    boolean gSelectFlag;
+    Deque<String> queue;
+    String[] gQuiz;
 
-    public void solution(int clickNum) {
-        if (clickNum <= 6) {
-            System.out.println(clickNum);
+    public void solution(String[] quiz) {
+        gQuiz = quiz;
+        queue = new ArrayDeque<>();
+        int numCount = Integer.parseInt(quiz[0]);
+        String[] numbers = new String[numCount];
+        for (int i = 1; i < 7; i++) {
+            numbers[i] = quiz[i];
+        }
+
+        dfs(0, queue);
+    }
+
+    private void dfs(int depth, Deque<String> queue) {
+        if (depth == 7) {
+            StringBuilder sb = new StringBuilder();
+            List<String> tempList = new ArrayList<>(queue);
+
+            for (String integer : tempList) {
+                sb.append(integer).append(" ");
+            }
+
+            System.out.println(sb);
             return;
         }
 
-        answer = 6;
-        gBufferCount = 3;
-        gSelectFlag = false;
-        gCopyFlag = true;
-        gStandardCount = 3; // con v 한번에 나오는 값
-        gClickNum = (clickNum - 6);
-
-        //남아있는 N을 기준으로 계산을 해야함.
-        //남아있는 N 과 answer의 상태 , 버퍼의 값
-
-        while (gClickNum != 0) {
-            if (gClickNum >= 3 && (answer + gStandardCount * 3 <= answer * 2)) {
-                comSelectAll();
-                comCopyData();
-                comPaste();
-            } else {
-                comPaste();
-            }
+        for (int i = depth + 1; i < 7; i++) {
+            queue.addLast(gQuiz[i]);
+            dfs(i + 1, queue);
+            queue.removeLast();
         }
-
-        System.out.println(answer);
-    }
-
-    //화면에 A 출력 -> answer + 1
-    void comPrintA() {
-        answer++;
-
-        gClickNum--;
-    }
-
-    //화면 전체 선택
-    void comSelectAll() {
-        gClickNum--;
-    }
-
-    //화면 버퍼에 복사
-    void comCopyData() {
-        gClickNum--;
-        gBufferCount = answer;
-        gStandardCount = gBufferCount;
-    }
-
-    //화면에 복사한거 붙이기
-    void comPaste() {
-        gClickNum--;
-        answer += gBufferCount;
     }
 }
 
