@@ -26,23 +26,21 @@ public class Main {
 }
 
 class BjSolution {
+    final int LOTTO_NUM = 6;
     Deque<String> queue;
     String[] gQuiz;
+    int gNumCount;
 
     public void solution(String[] quiz) {
         gQuiz = quiz;
         queue = new ArrayDeque<>();
-        int numCount = Integer.parseInt(quiz[0]);
-        String[] numbers = new String[numCount];
-        for (int i = 1; i < 7; i++) {
-            numbers[i] = quiz[i];
-        }
+        gNumCount = Integer.parseInt(quiz[0]);
 
-        dfs(0, queue);
+        dfs(1, queue);
     }
 
     private void dfs(int depth, Deque<String> queue) {
-        if (depth == 7) {
+        if (queue.size() == LOTTO_NUM) {
             StringBuilder sb = new StringBuilder();
             List<String> tempList = new ArrayList<>(queue);
 
@@ -54,7 +52,7 @@ class BjSolution {
             return;
         }
 
-        for (int i = depth + 1; i < 7; i++) {
+        for (int i = depth; i < gNumCount + 1; i++) {
             queue.addLast(gQuiz[i]);
             dfs(i + 1, queue);
             queue.removeLast();
