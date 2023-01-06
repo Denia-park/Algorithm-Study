@@ -3,60 +3,45 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+
+//동전 1 [2293]
+//정답 참고 : https://yabmoons.tistory.com/491
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            String[] line = br.readLine().split(" ");
-            if (line[0].equals("0")) {
-                break;
-            }
+        String[] input = br.readLine().split(" ");
+        int coinCount = Integer.parseInt(input[0]);
+        int totalValue = Integer.parseInt(input[1]);
 
-            sol.solution(line);
-            System.out.println();
+        int[] coinValues = new int[coinCount];
+        for (int i = 0; i < coinCount; i++) {
+            coinValues[i] = Integer.parseInt(br.readLine());
         }
+
+        sol.solution(coinCount, totalValue, coinValues);
     }
 }
 
 class BjSolution {
-    final int LOTTO_NUM = 6;
-    Deque<String> queue;
-    String[] gQuiz;
-    int gNumCount;
+    public void solution(int coinCount, int totalValue, int[] coinValues) {
+        int[] dp = new int[totalValue + 1];
 
-    public void solution(String[] quiz) {
-        gQuiz = quiz;
-        queue = new ArrayDeque<>();
-        gNumCount = Integer.parseInt(quiz[0]);
+        dp[0] = 1; // 0원을 만드는 경우는 1개
 
-        dfs(1, queue);
-    }
-
-    private void dfs(int depth, Deque<String> queue) {
-        if (queue.size() == LOTTO_NUM) {
-            StringBuilder sb = new StringBuilder();
-            List<String> tempList = new ArrayList<>(queue);
-
-            for (String integer : tempList) {
-                sb.append(integer).append(" ");
+        for (int coinIdx = 0; coinIdx < coinCount; coinIdx++) {
+            int curCoin = coinValues[coinIdx];
+            for (int curValue = curCoin; curValue < totalValue + 1; curValue++) {
+                // 이전에 다른 코인들로 만들어둔 경우의 수 +
+                // 이번에 사용할 코인으로 만들수 있는 경우의 수
+                // [ = 현재 사용할 코인 값을 추가해서 만들수 있는 경우 이므로 현재 값에서 - 현재 코인 값을 뺐을 때의 경우를 그대로 가져오면 된다.]
+                dp[curValue] = dp[curValue] + dp[curValue - curCoin];
             }
-
-            System.out.println(sb);
-            return;
         }
 
-        for (int i = depth; i < gNumCount + 1; i++) {
-            queue.addLast(gQuiz[i]);
-            dfs(i + 1, queue);
-            queue.removeLast();
-        }
+        System.out.println(dp[totalValue]);
     }
 }
 
