@@ -40,6 +40,11 @@ class BjSolution {
 
     private boolean isPrime(int i) {
         boolean flag = true;
+
+        if (i == 1) {
+            return false;
+        }
+
         for (int j = 2; j <= Math.sqrt(i); j++) {
             if (i % j == 0) {
                 flag = false;
