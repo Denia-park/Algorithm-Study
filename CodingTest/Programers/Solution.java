@@ -1,75 +1,58 @@
 package CodingTest.Programers;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 class Solution {
-    public int[] solution(int arrowNum, int[] info) {
-        int[] answer = {};
-        //완탐을 돌려야 할 것 같다.
-        //10점부터 비교해서 넣어보고 점수 비교
-        //다음 점수 비교해서 넣어보고 점수 비교 ... 이렇게 쭉쭉
+    public int[] solution(String today, String[] terms, String[] privacies) {
+        String[] todayWords = today.split("\\.");
+        int y = Integer.parseInt(todayWords[0]);
+        int m = Integer.parseInt(todayWords[1]);
+        int d = Integer.parseInt(todayWords[2]);
+        LocalDate tdy = LocalDate.of(y, m, d);
 
+        Map<String, String> termMap = new HashMap<>();
+        for (String term : terms) {
+            String[] words = term.split(" ");
+            String alpha = words[0];
+            String month = words[1];
 
-        int maxDiff = Integer.MIN_VALUE;
-        int[] liHitNums = {};
-        for (int i = 0; i < 11; i++) {
-            int tempArrowNum = arrowNum;
-            liHitNums = new int[11];
-
-            for (int j = i; j < 11; j++) {
-                if (tempArrowNum - (info[j] + 1) >= 0) {
-                    tempArrowNum -= (info[j] + 1);
-                    liHitNums[j] = (info[j] + 1);
-                }
-            }
-
-            int tempMaxDiff = calculateScoreDiff(info, liHitNums);
-            if (tempMaxDiff > 0 && tempMaxDiff >= maxDiff) {
-                maxDiff = tempMaxDiff;
-                if (answer.length == 0) {
-                    answer = liHitNums;
-                } else {
-                    answer = getMoreSmallValueArr(answer, liHitNums);
-                }
-            }
+            termMap.put(alpha, month);
         }
 
-        if (maxDiff == Integer.MIN_VALUE) {
-            return new int[]{-1};
+        List<Integer> tempList = new ArrayList<>();
+        int idx = 1;
+        for (String privacy : privacies) {
+            String[] words = privacy.split(" ");
+            String date = words[0];
+            String alpha = words[1];
+            if (isDestroied(tdy, date, termMap.get(alpha))) {
+                tempList.add(idx);
+            }
+            idx++;
+        }
+
+        int[] answer = new int[tempList.size()];
+        for (int i = 0; i < tempList.size(); i++) {
+            answer[i] = tempList.get(i);
         }
 
         return answer;
     }
 
-    int calculateScoreDiff(int[] appScores, int[] liScores) {
-        int appTotalScore = 0;
-        int liTotalScore = 0;
-        for (int idx = 0; idx < 11; idx++) {
-            int curScore = (10 - idx);
+    private boolean isDestroied(LocalDate tdy, String date, String period) {
+        String[] words = date.split("\\.");
+        int y = Integer.parseInt(words[0]);
+        int m = Integer.parseInt(words[1]);
+        int d = Integer.parseInt(words[2]);
 
-            if (appScores[idx] == 0 && liScores[idx] == 0) {
-                continue;
-            }
+        LocalDate getDate = LocalDate.of(y, m, d);
+        LocalDate afterDate = getDate.plusMonths(Integer.parseInt(period));
+//        System.out.println(afterDate + " " + tdy);
 
-            if (appScores[idx] >= liScores[idx]) {
-                appTotalScore += curScore;
-            } else {
-                liTotalScore += curScore;
-            }
-        }
-
-        return liTotalScore - appTotalScore;
-    }
-
-    int[] getMoreSmallValueArr(int[] origin, int[] newArr) {
-        for (int i = origin.length - 1; i >= 0; i--) {
-            int aVal = origin[i];
-            int bVal = newArr[i];
-
-            if (aVal > bVal) {
-                return origin;
-            } else if (aVal < bVal) {
-                return newArr;
-            }
-        }
-        return origin;
+        return afterDate.isBefore(tdy) || afterDate.isEqual(tdy);
     }
 }
