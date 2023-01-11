@@ -21,14 +21,6 @@ public class Main {
 
 class BjSolution {
     public void solution(int testCase, int[] quizArr) {
-        if (testCase == 1) {
-            System.out.println(quizArr[0]);
-            return;
-        } else if (testCase == 2) {
-            System.out.println(quizArr[0] + quizArr[1]);
-            return;
-        }
-
         int answer = 0;
 
         PriorityQueue<Integer> pq = new PriorityQueue<>();
