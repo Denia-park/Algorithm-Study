@@ -5,51 +5,40 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-//정답 참고 - 센서 [2212]
-
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] inputs = br.readLine().split(" ");
-        int studentNum = Integer.parseInt(inputs[0]);
-        int groupNum = Integer.parseInt(inputs[1]);
-        int[] students = new int[studentNum];
-        String[] studentInfos = br.readLine().split(" ");
-        for (int i = 0; i < studentNum; i++) {
-            students[i] = Integer.parseInt(studentInfos[i]);
+        int testCase = Integer.parseInt(br.readLine());
+        int[] quizArr = new int[testCase];
+        for (int i = 0; i < testCase; i++) {
+            quizArr[i] = Integer.parseInt(br.readLine());
         }
-        sol.solution(studentNum, groupNum, students);
+        sol.solution(testCase, quizArr);
     }
 }
 
 class BjSolution {
-    public void solution(int studentNum, int groupNum, int[] students) {
-        if (groupNum >= studentNum) {
-            System.out.println(0);
+    public void solution(int testCase, int[] quizArr) {
+        if (testCase == 1) {
+            System.out.println(quizArr[0]);
+            return;
+        } else if (testCase == 2) {
+            System.out.println(quizArr[0] + quizArr[1]);
             return;
         }
 
-        int[] diffs = new int[studentNum - 1];
+        long answer = 0;
 
-        for (int i = 0; i < studentNum - 1; i++) {
-            diffs[i] = students[i + 1] - students[i];
-        }
+        Arrays.sort(quizArr);
 
-        int jump = groupNum - 1;
-
-        //정렬
-        Arrays.sort(diffs);
-
-        int answer = 0;
-        for (int i = diffs.length - 1; i >= 0; i--) {
-            if (jump > 0) {
-                jump--;
-                continue;
+        for (int i = 0; i < testCase; i++) {
+            if (i < 2) {
+                answer += quizArr[i];
+            } else {
+                answer = answer * 2 + quizArr[i];
             }
-
-            answer += diffs[i];
         }
 
         System.out.println(answer);
