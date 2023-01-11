@@ -12,46 +12,44 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int sensorNum = Integer.parseInt(br.readLine());
-        int companyNum = Integer.parseInt(br.readLine());
-        String[] sensorDistances = br.readLine().split(" ");
-        int[] sensors = new int[sensorNum];
-        for (int i = 0; i < sensorNum; i++) {
-            sensors[i] = Integer.parseInt(sensorDistances[i]);
+        String[] inputs = br.readLine().split(" ");
+        int studentNum = Integer.parseInt(inputs[0]);
+        int groupNum = Integer.parseInt(inputs[1]);
+        int[] students = new int[studentNum];
+        String[] studentInfos = br.readLine().split(" ");
+        for (int i = 0; i < studentNum; i++) {
+            students[i] = Integer.parseInt(studentInfos[i]);
         }
-        sol.solution(sensorNum, companyNum, sensors);
+        sol.solution(studentNum, groupNum, students);
     }
 }
 
 class BjSolution {
-    public void solution(int sensorNum, int companyNum, int[] sensors) {
-        if (companyNum >= sensorNum) {
+    public void solution(int studentNum, int groupNum, int[] students) {
+        if (groupNum >= studentNum) {
             System.out.println(0);
             return;
         }
 
-        //sensor X 거리 기준으로 정렬
-        Arrays.sort(sensors);
+        int[] diffs = new int[studentNum - 1];
 
-        int[] sensorDistanceDiffs = new int[sensorNum - 1];
-
-        for (int i = 0; i < sensorNum - 1; i++) {
-            sensorDistanceDiffs[i] = sensors[i + 1] - sensors[i];
+        for (int i = 0; i < studentNum - 1; i++) {
+            diffs[i] = students[i + 1] - students[i];
         }
 
-        int jump = companyNum - 1;
+        int jump = groupNum - 1;
 
         //정렬
-        Arrays.sort(sensorDistanceDiffs);
+        Arrays.sort(diffs);
 
         int answer = 0;
-        for (int i = sensorDistanceDiffs.length - 1; i >= 0; i--) {
+        for (int i = diffs.length - 1; i >= 0; i--) {
             if (jump > 0) {
                 jump--;
                 continue;
             }
 
-            answer += sensorDistanceDiffs[i];
+            answer += diffs[i];
         }
 
         System.out.println(answer);
