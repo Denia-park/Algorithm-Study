@@ -8,8 +8,19 @@ public class Main {
 
         System.out.println(ts.solution(16));
         System.out.println(ts.solution(2554));
+        System.out.println(ts.solution(12345));
+        System.out.println(ts.solution(199));
+        System.out.println(ts.solution(1));
+        System.out.println(ts.solution(11));
+        System.out.println(ts.solution(23));
+        System.out.println(ts.solution(2555));
+        System.out.println(ts.solution(100));
+        System.out.println(ts.solution(6));
+        System.out.println(ts.solution(100000000));
     }
 }
+
+// 12345
 
 //        *StringTokenizer*
 //        StringTokenizer st;

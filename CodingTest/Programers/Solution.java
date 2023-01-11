@@ -16,15 +16,33 @@ class Solution {
 
         String stVal = String.valueOf(storey);
         char[] chars = stVal.toCharArray();
+        int[] ints = new int[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+            ints[i] = chars[i] - '0';
+        }
 
-        for (int i = chars.length - 1; i >= 0; i--) {
-            char aChar = chars[i];
+        for (int i = ints.length - 1; i >= 0; i--) {
+            int anInt = ints[i];
 
-            int diff = aChar - '0';
-            if (diff > 5) {
-                answer += (10 - diff) + 1;
+            if (anInt == 10) {
+                if (i - 1 < 0) {
+                    answer += 1;
+                    continue;
+                }
+
+                ints[i - 1]++;
+                continue;
+            }
+
+            if (anInt > 5) {
+                answer += (10 - anInt);
+                if (i - 1 < 0) {
+                    answer += 1;
+                    continue;
+                }
+                ints[i - 1]++;
             } else {
-                answer += diff;
+                answer += anInt;
             }
         }
 
