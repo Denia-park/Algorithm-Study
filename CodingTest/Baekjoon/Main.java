@@ -3,7 +3,7 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.PriorityQueue;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -29,16 +29,20 @@ class BjSolution {
             return;
         }
 
-        long answer = 0;
+        int answer = 0;
 
-        Arrays.sort(quizArr);
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int i : quizArr) {
+            pq.add(i);
+        }
 
-        for (int i = 0; i < testCase; i++) {
-            if (i < 2) {
-                answer += quizArr[i];
-            } else {
-                answer = answer * 2 + quizArr[i];
-            }
+        while (pq.size() > 1) {
+            int val1 = pq.poll();
+            int val2 = pq.poll();
+
+            answer += val1 + val2;
+
+            pq.add(answer);
         }
 
         System.out.println(answer);
