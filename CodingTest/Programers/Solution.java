@@ -1,55 +1,33 @@
 package CodingTest.Programers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+//마법의 엘리베이터
 
+//절댓값이 10 ^ c ( c >= 0 인 정수)
+//더한 값으로 이동
+//0보다 작으면 엘리베이터는 움직이지 않습니다.
+//0층이 가장 아래층 -> 엘리베이터 와 민수 모두 0층
+
+
+//절반보다 크면 더해서 큰 값을 만드는게 이득
+//절반보다 작으면 빼서 작은 값을 만드는게 이득
 class Solution {
-    public int[] solution(String today, String[] terms, String[] privacies) {
-        int todayDayCounts = getDays(today);
+    public int solution(int storey) {
+        int answer = 0;
 
-        Map<String, String> termMap = new HashMap<>();
-        for (String term : terms) {
-            String[] words = term.split(" ");
-            String alpha = words[0];
-            String month = words[1];
+        String stVal = String.valueOf(storey);
+        char[] chars = stVal.toCharArray();
 
-            termMap.put(alpha, month);
-        }
+        for (int i = chars.length - 1; i >= 0; i--) {
+            char aChar = chars[i];
 
-        List<Integer> destroyList = new ArrayList<>();
-        int idx = 1;
-        for (String privacy : privacies) {
-            String[] words = privacy.split(" ");
-            String date = words[0];
-            String alpha = words[1];
-            int monthLimit = Integer.parseInt(termMap.get(alpha));
-
-            int limitDayDayCount = getDays(date) + getDays(monthLimit);
-            if (todayDayCounts >= limitDayDayCount) {
-                destroyList.add(idx);
+            int diff = aChar - '0';
+            if (diff > 5) {
+                answer += (10 - diff) + 1;
+            } else {
+                answer += diff;
             }
-            idx++;
-        }
-
-        int[] answer = new int[destroyList.size()];
-        for (int i = 0; i < destroyList.size(); i++) {
-            answer[i] = destroyList.get(i);
         }
 
         return answer;
-    }
-
-    private int getDays(String strOfDate) {
-        String[] todayWords = strOfDate.split("\\.");
-        int y = Integer.parseInt(todayWords[0]);
-        int m = Integer.parseInt(todayWords[1]);
-        int d = Integer.parseInt(todayWords[2]);
-        return (y * (28 * 12)) + (m * 28) + d;
-    }
-
-    private int getDays(int month) {
-        return (month * 28);
     }
 }
