@@ -40,9 +40,10 @@ class BjSolution {
             int val1 = pq.poll();
             int val2 = pq.poll();
 
-            answer += val1 + val2;
+            int sumVal = val1 + val2;
+            answer += sumVal;
 
-            pq.add(answer);
+            pq.add(sumVal);
         }
 
         System.out.println(answer);
