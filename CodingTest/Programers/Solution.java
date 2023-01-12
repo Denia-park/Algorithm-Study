@@ -34,15 +34,27 @@ class Solution {
                 continue;
             }
 
-            if (anInt > 5) {
+            if (anInt >= 6) {
                 answer += (10 - anInt);
                 if (i - 1 < 0) {
                     answer += 1;
                     continue;
                 }
                 ints[i - 1]++;
-            } else {
+            } else if (anInt <= 4) {
                 answer += anInt;
+            } else if (anInt == 5) {
+                if (i - 1 < 0) {
+                    answer += 5;
+                    continue;
+                } else {
+                    if (ints[i - 1] < 5) {
+                        answer += anInt;
+                    } else {
+                        answer += 5;
+                        ints[i - 1]++;
+                    }
+                }
             }
         }
 

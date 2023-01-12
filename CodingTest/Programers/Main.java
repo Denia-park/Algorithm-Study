@@ -6,17 +6,16 @@ public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(16));
-        System.out.println(ts.solution(2554));
-        System.out.println(ts.solution(12345));
-        System.out.println(ts.solution(199));
-        System.out.println(ts.solution(1));
-        System.out.println(ts.solution(11));
-        System.out.println(ts.solution(23));
-        System.out.println(ts.solution(2555));
-        System.out.println(ts.solution(100));
-        System.out.println(ts.solution(6));
-        System.out.println(ts.solution(100000000));
+//        System.out.println(ts.solution(16));
+//        System.out.println(ts.solution(2554));
+//        System.out.println(ts.solution(12345));
+//        System.out.println(ts.solution(199));
+//        System.out.println(ts.solution(1));
+        System.out.println(ts.solution(95));
+        System.out.println(ts.solution(45));
+
+        //앞자리 보고 계산해줘야함.
+        //65 [1,3,5] , 45 [4,5]
     }
 }
 
