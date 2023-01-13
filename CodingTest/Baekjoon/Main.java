@@ -29,9 +29,9 @@ class BjSolution {
         int[] answer = new int[testCase + 1];
         int[] time = new int[testCase + 1];
         int[] indgree = new int[testCase + 1];
-        List<List<Integer>> waitList = new ArrayList<>();
+        List<List<Integer>> nextBuildList = new ArrayList<>();
         for (int i = 0; i < testCase + 1; i++) {
-            waitList.add(new ArrayList<>());
+            nextBuildList.add(new ArrayList<>());
         }
 
         for (int i = 0; i < quizArr.size(); i++) {
@@ -43,7 +43,7 @@ class BjSolution {
                 if (preBuildingNum == -1) {
                     break;
                 }
-                waitList.get(preBuildingNum).add(curBuildingNum);
+                nextBuildList.get(preBuildingNum).add(curBuildingNum);
                 indgree[curBuildingNum]++;
             }
         }
@@ -53,17 +53,21 @@ class BjSolution {
         for (int i = 1; i < testCase + 1; i++) {
             if (indgree[i] == 0) {
                 queue.addLast(i);
+                answer[i] = time[i];
             }
         }
 
         while (!queue.isEmpty()) {
-            int cur = queue.removeFirst();
-            answer[cur] += time[cur];
-            for (int i : waitList.get(cur)) {
-                indgree[i]--;
-                if (indgree[i] == 0) {
-                    answer[i] += answer[cur];
-                    queue.addLast(i);
+            int curBuilding = queue.removeFirst();
+
+            for (int nextBuilding : nextBuildList.get(curBuilding)) {
+                indgree[nextBuilding]--;
+
+                answer[nextBuilding] = Math.max(answer[nextBuilding], (time[curBuilding] + time[nextBuilding]));
+
+                if (indgree[nextBuilding] == 0) {
+                    time[nextBuilding] = answer[nextBuilding];
+                    queue.addLast(nextBuilding);
                 }
             }
         }
