@@ -11,8 +11,8 @@ public class Main {
 //        System.out.println(ts.solution(12345));
 //        System.out.println(ts.solution(199));
 //        System.out.println(ts.solution(1));
-        System.out.println(ts.solution(95));
-        System.out.println(ts.solution(45));
+        System.out.println(ts.solution(3, 4, new int[]{1, 2, 3, 1, 2, 3, 1}));
+        System.out.println(ts.solution(4, 3, new int[]{4, 1, 2, 2, 4, 4, 4, 4, 1, 2, 4, 2}));
 
         //앞자리 보고 계산해줘야함.
         //65 [1,3,5] , 45 [4,5]
