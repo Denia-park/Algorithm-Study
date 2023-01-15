@@ -14,8 +14,7 @@ class Solution {
         while (pq.size() >= appleNum) {
             int min = Integer.MAX_VALUE;
             for (int i = 0; i < appleNum; i++) {
-                int appleScore = pq.poll();
-                min = Math.min(min, appleScore);
+                min = pq.poll();
             }
             answer += (min * appleNum);
         }
