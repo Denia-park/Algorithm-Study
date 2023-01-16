@@ -1,19 +1,24 @@
 package CodingTest.Programers;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 class Solution {
-    public int solution(int scoreMax, int appleNum, int[] scores) {
-        int answer = 0;
+    public int[] solution(String s) {
+        int[] answer = new int[s.length()];
 
-        Arrays.sort(scores);
+        Map<Character, Integer> map = new HashMap<>();
 
-        int idx = scores.length;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            int val = -1;
 
-        while (idx >= appleNum) {
-            answer += (scores[idx - appleNum] * appleNum);
+            if (map.containsKey(c)) {
+                val = (i - map.get(c));
+            }
 
-            idx -= appleNum;
+            map.put(c, i);
+            answer[i] = val;
         }
 
         return answer;
