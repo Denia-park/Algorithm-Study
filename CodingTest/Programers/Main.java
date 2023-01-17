@@ -1,14 +1,13 @@
 package CodingTest.Programers;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution("banana")));
-        System.out.println(Arrays.toString(ts.solution("foobar")));
+        System.out.println(ts.solution(4, 5, new int[]{1, 0, 3, 1, 2}, new int[]{0, 3, 0, 4, 0}));
+        System.out.println(ts.solution(2, 7, new int[]{1, 0, 2, 0, 1, 0, 2}, new int[]{0, 2, 0, 1, 0, 2, 0}));
     }
 }
 

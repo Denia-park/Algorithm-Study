@@ -1,24 +1,52 @@
 package CodingTest.Programers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
-    public int[] solution(String s) {
-        int[] answer = new int[s.length()];
+    public long solution(int cap, int n, int[] deliveries, int[] pickups) {
+        long answer = 0;
+        boolean flag = false;
 
-        Map<Character, Integer> map = new HashMap<>();
-
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            int val = -1;
-
-            if (map.containsKey(c)) {
-                val = (i - map.get(c));
+        int houseIdx = n - 1;
+        while (houseIdx >= 0) {
+            if (deliveries[houseIdx] == 0 && pickups[houseIdx] == 0) {
+                houseIdx--;
+                continue;
             }
 
-            map.put(c, i);
-            answer[i] = val;
+            int myCap = 0;
+            for (int i = houseIdx; i >= 0; i--) {
+                if (deliveries[i] == 0 || myCap == cap) {
+                    continue;
+                }
+
+                if (myCap + deliveries[i] <= cap) {
+                    myCap += deliveries[i];
+                    deliveries[i] = 0;
+                } else {
+                    deliveries[i] -= (cap - myCap);
+                    myCap = cap;
+                }
+                flag = true;
+            }
+
+            myCap = 0;
+            for (int i = houseIdx; i >= 0; i--) {
+                if (pickups[i] == 0 || myCap == cap) {
+                    continue;
+                }
+
+                if (myCap + pickups[i] <= cap) {
+                    myCap += pickups[i];
+                    pickups[i] = 0;
+                } else {
+                    pickups[i] -= (cap - myCap);
+                    myCap = cap;
+                }
+                flag = true;
+            }
+
+            if (flag) {
+                answer += ((houseIdx + 1) * 2L);
+            }
         }
 
         return answer;
