@@ -8,6 +8,7 @@ public class Main {
 
         System.out.println(ts.solution(4, 5, new int[]{1, 0, 3, 1, 2}, new int[]{0, 3, 0, 4, 0}));
         System.out.println(ts.solution(2, 7, new int[]{1, 0, 2, 0, 1, 0, 2}, new int[]{0, 2, 0, 1, 0, 2, 0}));
+        System.out.println(ts.solution(2, 2, new int[]{0, 6}, new int[]{0, 0}));
     }
 }
 

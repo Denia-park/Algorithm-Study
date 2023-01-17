@@ -1,57 +1,25 @@
 package CodingTest.Programers;
 
+//정답 참고
+// https://ddingmin00.tistory.com/82
 class Solution {
     public long solution(int cap, int n, int[] deliveries, int[] pickups) {
         long answer = 0;
-        boolean flag = false;
+        int delivery = 0;
+        int pickup = 0;
 
-        int houseIdx = n - 1;
-        while (houseIdx >= 0) {
-            if (deliveries[houseIdx] == 0 && pickups[houseIdx] == 0) {
-                houseIdx--;
-                continue;
-            }
+        for (int i = n - 1; i >= 0; i--) {
+            delivery += deliveries[i];
+            pickup += pickups[i];
 
-            int myCap = 0;
-            for (int i = houseIdx; i >= 0; i--) {
-                if (myCap == cap) break;
-                if (deliveries[i] == 0) {
-                    continue;
-                }
+            while (delivery > 0 || pickup > 0) {
+                delivery -= cap;
+                pickup -= cap;
 
-                if (myCap + deliveries[i] <= cap) {
-                    myCap += deliveries[i];
-                    deliveries[i] = 0;
-                } else {
-                    deliveries[i] -= (cap - myCap);
-                    myCap = cap;
-                }
-                flag = true;
-            }
-
-            myCap = 0;
-            for (int i = houseIdx; i >= 0; i--) {
-                if (myCap == cap) break;
-
-                if (pickups[i] == 0) {
-                    continue;
-                }
-
-                if (myCap + pickups[i] <= cap) {
-                    myCap += pickups[i];
-                    pickups[i] = 0;
-                } else {
-                    pickups[i] -= (cap - myCap);
-                    myCap = cap;
-                }
-                flag = true;
-            }
-
-            if (flag) {
-                answer += ((houseIdx + 1) * 2L);
+                answer += ((i + 1) * 2);
             }
         }
-
+        
         return answer;
     }
 }
