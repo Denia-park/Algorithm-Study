@@ -14,7 +14,8 @@ class Solution {
 
             int myCap = 0;
             for (int i = houseIdx; i >= 0; i--) {
-                if (deliveries[i] == 0 || myCap == cap) {
+                if (myCap == cap) break;
+                if (deliveries[i] == 0) {
                     continue;
                 }
 
@@ -30,7 +31,9 @@ class Solution {
 
             myCap = 0;
             for (int i = houseIdx; i >= 0; i--) {
-                if (pickups[i] == 0 || myCap == cap) {
+                if (myCap == cap) break;
+
+                if (pickups[i] == 0) {
                     continue;
                 }
 
