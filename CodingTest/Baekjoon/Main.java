@@ -9,42 +9,40 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int quizNum = Integer.parseInt(br.readLine());
+        int testCase = Integer.parseInt(br.readLine());
+        for (int i = 0; i < testCase; i++) {
+            String[] input = br.readLine().split(" ");
 
-        sol.solution(quizNum);
+            sol.solution(input);
+        }
     }
 }
 
 class BjSolution {
-    public void solution(int quizNum) {
+    public void solution(String[] quizNum) {
         StringBuilder sb = new StringBuilder();
 
-        long digitNum = 1;
-        long checkNum = 1;
-        long saveNum = 0;
+        int rowMax = Integer.parseInt(quizNum[0]);
+        int target = Integer.parseInt(quizNum[2]);
 
-        while (true) {
-            checkNum = (1L << digitNum) + saveNum;
-            if (quizNum <= checkNum) {
-                break;
-            }
-
-            digitNum++;
-            saveNum = checkNum;
+        int floor = target % rowMax;
+        if (floor == 0) {
+            floor = rowMax;
         }
 
-        long newQuizNum = quizNum - saveNum;
-        long numCount = 1L << digitNum;
+        sb.append(floor);
 
-        while (sb.length() != digitNum) {
-            long divideNum = numCount / 2;
-            if (newQuizNum > divideNum) {
-                sb.append(7);
-                newQuizNum = newQuizNum - divideNum;
-            } else {
-                sb.append(4);
-            }
-            numCount /= 2;
+        int width = 0;
+        if ((double) target / rowMax == Math.floor((double) target / rowMax)) {
+            width = target / rowMax;
+        } else {
+            width = target / rowMax + 1;
+        }
+
+        if (width < 10) {
+            sb.append(0).append(width);
+        } else {
+            sb.append(width);
         }
 
         System.out.println(sb);
