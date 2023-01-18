@@ -26,24 +26,11 @@ class BjSolution {
         int target = Integer.parseInt(quizNum[2]);
 
         int floor = target % rowMax;
-        if (floor == 0) {
-            floor = rowMax;
-        }
+        if (floor == 0) floor = rowMax;
 
-        sb.append(floor);
+        int width = ((target - 1) / rowMax) + 1;
 
-        int width = 0;
-        if ((double) target / rowMax == Math.floor((double) target / rowMax)) {
-            width = target / rowMax;
-        } else {
-            width = target / rowMax + 1;
-        }
-
-        if (width < 10) {
-            sb.append(0).append(width);
-        } else {
-            sb.append(width);
-        }
+        sb.append(floor).append(width < 10 ? 0 : "").append(width);
 
         System.out.println(sb);
     }
