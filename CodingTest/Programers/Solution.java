@@ -1,25 +1,44 @@
 package CodingTest.Programers;
 
-//정답 참고
-// https://ddingmin00.tistory.com/82
+import java.util.HashMap;
+import java.util.Map;
+
+//3분 -> 21분 = 18분 걸림
+//처음에 set을 이용하여 풀이하려고 했으나 set은 이전의 값들을 기억하지 못하므로 효율적이지 못함
+
+//그래서 토핑의 가지수가 다르다 => hash의 key가 다르다에서 착안하여 map을 사용함
 class Solution {
-    public long solution(int cap, int n, int[] deliveries, int[] pickups) {
-        long answer = 0;
-        int delivery = 0;
-        int pickup = 0;
+    public int solution(int[] topping) {
+        int answer = 0;
 
-        for (int i = n - 1; i >= 0; i--) {
-            delivery += deliveries[i];
-            pickup += pickups[i];
+        if (topping.length == 1) {
+            return 0;
+        }
 
-            while (delivery > 0 || pickup > 0) {
-                delivery -= cap;
-                pickup -= cap;
+        Map<Integer, Integer> leftSet = new HashMap<>();
+        Map<Integer, Integer> rightSet = new HashMap<>();
 
-                answer += ((i + 1) * 2);
+        for (int topp : topping) {
+            rightSet.put(topp, rightSet.getOrDefault(topp, 0) + 1);
+        }
+
+        for (int topp : topping) {
+            leftSet.put(topp, leftSet.getOrDefault(topp, 0) + 1);
+
+            int moveVal = rightSet.getOrDefault(topp, 0);
+            if (moveVal - 1 == 0) {
+                //이번에 삭제
+                rightSet.remove(topp);
+            } else {
+                //수정값 적용
+                rightSet.put(topp, moveVal - 1);
+            }
+
+            if (leftSet.size() == rightSet.size()) {
+                answer++;
             }
         }
-        
+
         return answer;
     }
 }
