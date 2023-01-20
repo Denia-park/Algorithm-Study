@@ -6,24 +6,18 @@ class Solution {
 
         for (int one = 0; one < weights.length; one++) {
             for (int two = one + 1; two < weights.length; two++) {
-                if (weights[one] == weights[two]) {
-                    answer++;
-                } else if (weights[one] * 2 == weights[two] * 3) {
-                    answer++;
-                } else if (weights[one] * 2 == weights[two] * 4) {
-                    answer++;
-                } else if (weights[one] * 3 == weights[two] * 2) {
-                    answer++;
-                } else if (weights[one] * 3 == weights[two] * 4) {
-                    answer++;
-                } else if (weights[one] * 4 == weights[two] * 2) {
-                    answer++;
-                } else if (weights[one] * 4 == weights[two] * 3) {
+                int gcd = gcd(weights[one], weights[two]);
+
+                if (weights[one] / gcd <= 4 && weights[two] / gcd <= 4) {
                     answer++;
                 }
             }
         }
 
         return answer;
+    }
+
+    int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
     }
 }
