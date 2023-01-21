@@ -9,45 +9,23 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int arraySize = Integer.parseInt(br.readLine());
         String[] input = br.readLine().split(" ");
 
-        sol.solution(arraySize, input);
+        sol.solution(input);
     }
 }
 
 class BjSolution {
-    public void solution(int arraySize, String[] quizNum) {
-        int left = 0;
-        int right = arraySize - 1;
+    public void solution(String[] quizNum) {
+        int ans = 0;
 
-        int lSaveVal = 0;
-        int rSaveVal = arraySize - 1;
+        double up = Integer.parseInt(quizNum[0]);
+        double slip = Integer.parseInt(quizNum[1]);
+        double height = Integer.parseInt(quizNum[2]);
 
-        int curDiffVal = Integer.MAX_VALUE;
+        ans = (int) Math.ceil((height - slip) / (up - slip));
 
-        while (left < right) {
-            int lVal = Integer.parseInt(quizNum[left]);
-            int rVal = Integer.parseInt(quizNum[right]);
-            if (lVal + rVal == 0) {
-                System.out.println(lVal + " " + rVal);
-                return;
-            }
-
-            if (Math.abs(lVal + rVal) < curDiffVal) {
-                curDiffVal = Math.abs(lVal + rVal);
-                lSaveVal = lVal;
-                rSaveVal = rVal;
-            }
-
-            if (lVal + rVal > 0) {
-                right--;
-            } else {
-                left++;
-            }
-        }
-
-        System.out.println(lSaveVal + " " + rSaveVal);
+        System.out.println(ans);
     }
 }
 
