@@ -9,30 +9,45 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int testCase = Integer.parseInt(br.readLine());
-        for (int i = 0; i < testCase; i++) {
-            String[] input = br.readLine().split(" ");
+        int arraySize = Integer.parseInt(br.readLine());
+        String[] input = br.readLine().split(" ");
 
-            sol.solution(input);
-        }
+        sol.solution(arraySize, input);
     }
 }
 
 class BjSolution {
-    public void solution(String[] quizNum) {
-        StringBuilder sb = new StringBuilder();
+    public void solution(int arraySize, String[] quizNum) {
+        int left = 0;
+        int right = arraySize - 1;
 
-        int rowMax = Integer.parseInt(quizNum[0]);
-        int target = Integer.parseInt(quizNum[2]);
+        int lSaveVal = 0;
+        int rSaveVal = arraySize - 1;
 
-        int floor = target % rowMax;
-        if (floor == 0) floor = rowMax;
+        int curDiffVal = Integer.MAX_VALUE;
 
-        int width = ((target - 1) / rowMax) + 1;
+        while (left < right) {
+            int lVal = Integer.parseInt(quizNum[left]);
+            int rVal = Integer.parseInt(quizNum[right]);
+            if (lVal + rVal == 0) {
+                System.out.println(lVal + " " + rVal);
+                return;
+            }
 
-        sb.append(floor).append(width < 10 ? 0 : "").append(width);
+            if (Math.abs(lVal + rVal) < curDiffVal) {
+                curDiffVal = Math.abs(lVal + rVal);
+                lSaveVal = lVal;
+                rSaveVal = rVal;
+            }
 
-        System.out.println(sb);
+            if (lVal + rVal > 0) {
+                right--;
+            } else {
+                left++;
+            }
+        }
+
+        System.out.println(lSaveVal + " " + rSaveVal);
     }
 }
 
