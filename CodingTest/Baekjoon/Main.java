@@ -54,9 +54,9 @@ class BjSolution {
 
     private void bfs(int row, int col) {
         Deque<Node> dq = new ArrayDeque<>();
-        Node node = new Node(row, col, 1, 0);
-        isVisited[node.row][node.col][node.brokenWallNum] = node.distance;
-        dq.offerLast(node);
+        Node startNode = new Node(row, col, 1, 0);
+        isVisited[startNode.row][startNode.col][startNode.brokenWallNum] = startNode.distance;
+        dq.offerLast(startNode);
 
         while (!dq.isEmpty()) {
             Node curNode = dq.pollFirst();
@@ -70,15 +70,15 @@ class BjSolution {
                 if (isOutOfBoard(nextRow, nextCol)) continue;
 
                 if (gBoard[nextRow][nextCol] == '0') {
-                    if (isVisited[nextRow][nextCol][node.brokenWallNum] != 0) continue;
+                    if (isVisited[nextRow][nextCol][curNode.brokenWallNum] != 0) continue;
 
-                    nextBrokenWallNum = node.brokenWallNum;
+                    nextBrokenWallNum = curNode.brokenWallNum;
 
                 } else if (gBoard[nextRow][nextCol] == '1') {
-                    if (node.brokenWallNum + 1 > WALL_COUNT) continue;
-                    if (isVisited[nextRow][nextCol][node.brokenWallNum + 1] != 0) continue;
+                    if (curNode.brokenWallNum + 1 > WALL_COUNT) continue;
+                    if (isVisited[nextRow][nextCol][curNode.brokenWallNum + 1] != 0) continue;
 
-                    nextBrokenWallNum = node.brokenWallNum + 1;
+                    nextBrokenWallNum = curNode.brokenWallNum + 1;
                 }
                 isVisited[nextRow][nextCol][nextBrokenWallNum] = nextDistance;
 
