@@ -27,25 +27,22 @@ public class Main {
 }
 
 class BjSolution {
-    int WALL_COUNT;
-    int K; // WALL_COUNT 개까지 가능 => 배열에는 WALL_COUNT + 1개 까지 가능
-    int answer, gRow, gCol;
+    int answer, gRow, gCol, WALL_COUNT;
     int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
     int[][][] isVisited;
     char[][] gBoard;
 
     public void solution(int row, int col, int wallNum, char[][] board) {
         WALL_COUNT = wallNum;
-        K = WALL_COUNT + 1;
         answer = Integer.MAX_VALUE;
         gRow = row;
         gCol = col;
-        isVisited = new int[row][col][K];
+        isVisited = new int[row][col][WALL_COUNT + 1];
         gBoard = board;
 
         bfs(0, 0);
 
-        for (int i = 0; i < K; i++) {
+        for (int i = 0; i < WALL_COUNT + 1; i++) {
             if (isVisited[row - 1][col - 1][i] == 0) {
                 isVisited[row - 1][col - 1][i] = Integer.MAX_VALUE;
             }
