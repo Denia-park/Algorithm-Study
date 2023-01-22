@@ -3,6 +3,8 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -24,58 +26,80 @@ public class Main {
 }
 
 class BjSolution {
+    final int WALL_COUNT = 1;
+    final int K = WALL_COUNT + 1; // 1개까지 가능 => 즉 2개의 상태 [0,1]
     int answer, gRow, gCol;
     int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-    boolean isBrokenWall;
-    boolean[][] isVisited;
+    int[][][] isVisited;
     char[][] gBoard;
 
     public void solution(int row, int col, char[][] board) {
         answer = Integer.MAX_VALUE;
         gRow = row;
         gCol = col;
-        isBrokenWall = false;
-        isVisited = new boolean[row][col];
+        isVisited = new int[row][col][K];
         gBoard = board;
 
-        dfs(0, 0, 1);
+        bfs(0, 0);
 
-        if (answer == Integer.MAX_VALUE) {
-            System.out.println(-1);
-            return;
+        for (int i = 0; i < K; i++) {
+            if (isVisited[row - 1][col - 1][i] == 0) {
+                isVisited[row - 1][col - 1][i] = Integer.MAX_VALUE;
+            }
+            answer = Math.min(answer, isVisited[row - 1][col - 1][i]);
         }
 
-        System.out.println(answer);
+        System.out.println(answer == Integer.MAX_VALUE ? -1 : answer);
     }
 
-    private void dfs(int row, int col, int distance) {
-        if (row == gRow - 1 && col == gCol - 1) {
-            answer = Math.min(answer, distance);
-            return;
-        }
+    private void bfs(int row, int col) {
+        Deque<Node> dq = new ArrayDeque<>();
+        Node node = new Node(row, col, 1, 0);
+        isVisited[node.row][node.col][node.brokenWallNum] = node.distance;
+        dq.offerLast(node);
 
-        for (int[] direction : directions) {
-            int nextRow = row + direction[0];
-            int nextCol = col + direction[1];
+        while (!dq.isEmpty()) {
+            Node curNode = dq.pollFirst();
 
-            if (isOutOfBoard(nextRow, nextCol)) continue;
+            for (int[] direction : directions) {
+                int nextRow = curNode.row + direction[0];
+                int nextCol = curNode.col + direction[1];
+                int nextBrokenWallNum = 0;
+                int nextDistance = curNode.distance + 1;
 
-            if (gBoard[nextRow][nextCol] == '1' && !isBrokenWall) {
-                if (isVisited[nextRow][nextCol]) continue;
+                if (isOutOfBoard(nextRow, nextCol)) continue;
 
-                isBrokenWall = true;
-                isVisited[nextRow][nextCol] = true;
-                dfs(nextRow, nextCol, distance + 1);
-            } else if (gBoard[nextRow][nextCol] == '0') {
-                if (isVisited[nextRow][nextCol]) continue;
-                isVisited[nextRow][nextCol] = true;
-                dfs(nextRow, nextCol, distance + 1);
+                if (gBoard[nextRow][nextCol] == '0') {
+                    if (isVisited[nextRow][nextCol][node.brokenWallNum] != 0) continue;
+
+                    nextBrokenWallNum = node.brokenWallNum;
+
+                } else if (gBoard[nextRow][nextCol] == '1') {
+                    if (node.brokenWallNum + 1 > WALL_COUNT) continue;
+                    if (isVisited[nextRow][nextCol][node.brokenWallNum + 1] != 0) continue;
+
+                    nextBrokenWallNum = node.brokenWallNum + 1;
+                }
+                isVisited[nextRow][nextCol][nextBrokenWallNum] = nextDistance;
+
+                dq.offerLast(new Node(nextRow, nextCol, nextDistance, nextBrokenWallNum));
             }
         }
     }
 
     boolean isOutOfBoard(int row, int col) {
         return row < 0 || row >= gRow || col < 0 || col >= gCol;
+    }
+}
+
+class Node {
+    int row, col, distance, brokenWallNum;
+
+    public Node(int row, int col, int distance, int brokenWallNum) {
+        this.row = row;
+        this.col = col;
+        this.distance = distance;
+        this.brokenWallNum = brokenWallNum;
     }
 }
 
