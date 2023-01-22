@@ -14,6 +14,7 @@ public class Main {
         String[] input = br.readLine().split(" ");
         int row = Integer.parseInt(input[0]);
         int col = Integer.parseInt(input[1]);
+        int wallNum = Integer.parseInt(input[2]);
         char[][] board = new char[row][col];
 
         for (int i = 0; i < row; i++) {
@@ -21,19 +22,21 @@ public class Main {
             board[i] = line.toCharArray();
         }
 
-        sol.solution(row, col, board);
+        sol.solution(row, col, wallNum, board);
     }
 }
 
 class BjSolution {
-    final int WALL_COUNT = 1;
-    final int K = WALL_COUNT + 1; // 1개까지 가능 => 즉 2개의 상태 [0,1]
+    int WALL_COUNT;
+    int K; // WALL_COUNT 개까지 가능 => 배열에는 WALL_COUNT + 1개 까지 가능
     int answer, gRow, gCol;
     int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
     int[][][] isVisited;
     char[][] gBoard;
 
-    public void solution(int row, int col, char[][] board) {
+    public void solution(int row, int col, int wallNum, char[][] board) {
+        WALL_COUNT = wallNum;
+        K = WALL_COUNT + 1;
         answer = Integer.MAX_VALUE;
         gRow = row;
         gCol = col;
