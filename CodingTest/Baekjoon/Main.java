@@ -10,22 +10,72 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] input = br.readLine().split(" ");
+        int row = Integer.parseInt(input[0]);
+        int col = Integer.parseInt(input[1]);
+        char[][] board = new char[row][col];
 
-        sol.solution(input);
+        for (int i = 0; i < row; i++) {
+            String line = br.readLine();
+            board[i] = line.toCharArray();
+        }
+
+        sol.solution(row, col, board);
     }
 }
 
 class BjSolution {
-    public void solution(String[] quizNum) {
-        int ans = 0;
+    int answer, gRow, gCol;
+    int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    boolean isBrokenWall;
+    boolean[][] isVisited;
+    char[][] gBoard;
 
-        double up = Integer.parseInt(quizNum[0]);
-        double slip = Integer.parseInt(quizNum[1]);
-        double height = Integer.parseInt(quizNum[2]);
+    public void solution(int row, int col, char[][] board) {
+        answer = Integer.MAX_VALUE;
+        gRow = row;
+        gCol = col;
+        isBrokenWall = false;
+        isVisited = new boolean[row][col];
+        gBoard = board;
 
-        ans = (int) Math.ceil((height - slip) / (up - slip));
+        dfs(0, 0, 1);
 
-        System.out.println(ans);
+        if (answer == Integer.MAX_VALUE) {
+            System.out.println(-1);
+            return;
+        }
+
+        System.out.println(answer);
+    }
+
+    private void dfs(int row, int col, int distance) {
+        if (row == gRow - 1 && col == gCol - 1) {
+            answer = Math.min(answer, distance);
+            return;
+        }
+
+        for (int[] direction : directions) {
+            int nextRow = row + direction[0];
+            int nextCol = col + direction[1];
+
+            if (isOutOfBoard(nextRow, nextCol)) continue;
+
+            if (gBoard[nextRow][nextCol] == '1' && !isBrokenWall) {
+                if (isVisited[nextRow][nextCol]) continue;
+
+                isBrokenWall = true;
+                isVisited[nextRow][nextCol] = true;
+                dfs(nextRow, nextCol, distance + 1);
+            } else if (gBoard[nextRow][nextCol] == '0') {
+                if (isVisited[nextRow][nextCol]) continue;
+                isVisited[nextRow][nextCol] = true;
+                dfs(nextRow, nextCol, distance + 1);
+            }
+        }
+    }
+
+    boolean isOutOfBoard(int row, int col) {
+        return row < 0 || row >= gRow || col < 0 || col >= gCol;
     }
 }
 
