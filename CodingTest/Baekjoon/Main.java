@@ -24,6 +24,7 @@ class BjSolution {
     int TotalA, TotalB, TotalC;
     Set<Integer> set;
     boolean[][][] visited;
+    int[] waterMaxArr;
 
     public void solution(String[] input) {
         set = new TreeSet<>();
@@ -32,6 +33,7 @@ class BjSolution {
         TotalA = Integer.parseInt(input[0]);
         TotalB = Integer.parseInt(input[1]);
         TotalC = Integer.parseInt(input[2]);
+        waterMaxArr = new int[]{TotalA, TotalB, TotalC};
 
         bfs(0, 0, TotalC);
 
@@ -45,72 +47,41 @@ class BjSolution {
 
         WATER startWater = new WATER(A, B, C);
 
-        isIncluded(startWater);
+        visited[startWater.A][startWater.B][startWater.C] = true;
         dq.offerLast(startWater);
 
         while (!dq.isEmpty()) {
             WATER curWater = dq.pollFirst();
-            
+
             if (curWater.A == 0) {
                 set.add(curWater.C);
             }
 
-            //A->B
-            int moveWater = Math.min(curWater.A, TotalB - curWater.B);
-            if (moveWater != 0) {
-                WATER newWater = new WATER(curWater.A - moveWater, curWater.B + moveWater, curWater.C);
-                if (!isIncluded(newWater)) {
-                    dq.offerLast(newWater);
-                }
-            }
-            //A->C
-            moveWater = Math.min(curWater.A, TotalC - curWater.C);
-            if (moveWater != 0) {
-                WATER newWater = new WATER(curWater.A - moveWater, curWater.B, curWater.C + moveWater);
-                if (!isIncluded(newWater)) {
-                    dq.offerLast(newWater);
-                }
-            }
-            //B->A
-            moveWater = Math.min(curWater.B, TotalA - curWater.A);
-            if (moveWater != 0) {
-                WATER newWater = new WATER(curWater.A + moveWater, curWater.B - moveWater, curWater.C);
-                if (!isIncluded(newWater)) {
-                    dq.offerLast(newWater);
-                }
-            }
-            //B->C
-            moveWater = Math.min(curWater.B, TotalC - curWater.C);
-            if (moveWater != 0) {
-                WATER newWater = new WATER(curWater.A, curWater.B - moveWater, curWater.C + moveWater);
-                if (!isIncluded(newWater)) {
-                    dq.offerLast(newWater);
-                }
-            }
-            //C->A
-            moveWater = Math.min(curWater.C, TotalA - curWater.A);
-            if (moveWater != 0) {
-                WATER newWater = new WATER(curWater.A + moveWater, curWater.B, curWater.C - moveWater);
-                if (!isIncluded(newWater)) {
-                    dq.offerLast(newWater);
-                }
-            }
-            //C->B
-            moveWater = Math.min(curWater.C, TotalB - curWater.B);
-            if (moveWater != 0) {
-                WATER newWater = new WATER(curWater.A, curWater.B + moveWater, curWater.C - moveWater);
-                if (!isIncluded(newWater)) {
-                    dq.offerLast(newWater);
+            for (int from = 0; from < 3; from++) {
+                for (int to = 0; to < 3; to++) {
+                    if (from == to) continue;
+
+                    moveWater(dq, curWater, from, to);
                 }
             }
         }
     }
 
-    private boolean isIncluded(WATER water) {
-        if (visited[water.A][water.B][water.C]) return true;
+    private void moveWater(Deque<WATER> dq, WATER curWater, int from, int to) {
+        int[] waterArr = {curWater.A, curWater.B, curWater.C};
+        int moveWater = Math.min(waterArr[from], waterMaxArr[to] - waterArr[to]);
 
-        visited[water.A][water.B][water.C] = true;
-        return false;
+        if (moveWater == 0) return;
+        
+        waterArr[from] -= moveWater;
+        waterArr[to] += moveWater;
+
+        WATER newWater = new WATER(waterArr[0], waterArr[1], waterArr[2]);
+
+        if (visited[newWater.A][newWater.B][newWater.C]) return;
+
+        visited[newWater.A][newWater.B][newWater.C] = true;
+        dq.offerLast(newWater);
     }
 }
 
