@@ -3,7 +3,10 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -17,11 +20,14 @@ public class Main {
 }
 
 class BjSolution {
-    Set<WATER> set;
+    final int WATER_MAX_SIZE = 200;
     int TotalA, TotalB, TotalC;
+    Set<Integer> set;
+    boolean[][][] visited;
 
     public void solution(String[] input) {
         set = new TreeSet<>();
+        visited = new boolean[WATER_MAX_SIZE + 1][WATER_MAX_SIZE + 1][WATER_MAX_SIZE + 1];
 
         TotalA = Integer.parseInt(input[0]);
         TotalB = Integer.parseInt(input[1]);
@@ -29,29 +35,31 @@ class BjSolution {
 
         bfs(0, 0, TotalC);
 
-        for (WATER water : set) {
-            System.out.print(water.C + " ");
+        for (int val : set) {
+            System.out.print(val + " ");
         }
     }
 
     private void bfs(int A, int B, int C) {
         Deque<WATER> dq = new ArrayDeque<>();
-        Map<String, Integer> visited = new HashMap<>();
 
         WATER startWater = new WATER(A, B, C);
+
+        isIncluded(startWater);
         dq.offerLast(startWater);
-        isIncluded(visited, startWater);
+
         while (!dq.isEmpty()) {
             WATER curWater = dq.pollFirst();
+            
             if (curWater.A == 0) {
-                set.add(curWater);
+                set.add(curWater.C);
             }
 
             //A->B
             int moveWater = Math.min(curWater.A, TotalB - curWater.B);
             if (moveWater != 0) {
                 WATER newWater = new WATER(curWater.A - moveWater, curWater.B + moveWater, curWater.C);
-                if (!isIncluded(visited, newWater)) {
+                if (!isIncluded(newWater)) {
                     dq.offerLast(newWater);
                 }
             }
@@ -59,7 +67,7 @@ class BjSolution {
             moveWater = Math.min(curWater.A, TotalC - curWater.C);
             if (moveWater != 0) {
                 WATER newWater = new WATER(curWater.A - moveWater, curWater.B, curWater.C + moveWater);
-                if (!isIncluded(visited, newWater)) {
+                if (!isIncluded(newWater)) {
                     dq.offerLast(newWater);
                 }
             }
@@ -67,7 +75,7 @@ class BjSolution {
             moveWater = Math.min(curWater.B, TotalA - curWater.A);
             if (moveWater != 0) {
                 WATER newWater = new WATER(curWater.A + moveWater, curWater.B - moveWater, curWater.C);
-                if (!isIncluded(visited, newWater)) {
+                if (!isIncluded(newWater)) {
                     dq.offerLast(newWater);
                 }
             }
@@ -75,7 +83,7 @@ class BjSolution {
             moveWater = Math.min(curWater.B, TotalC - curWater.C);
             if (moveWater != 0) {
                 WATER newWater = new WATER(curWater.A, curWater.B - moveWater, curWater.C + moveWater);
-                if (!isIncluded(visited, newWater)) {
+                if (!isIncluded(newWater)) {
                     dq.offerLast(newWater);
                 }
             }
@@ -83,7 +91,7 @@ class BjSolution {
             moveWater = Math.min(curWater.C, TotalA - curWater.A);
             if (moveWater != 0) {
                 WATER newWater = new WATER(curWater.A + moveWater, curWater.B, curWater.C - moveWater);
-                if (!isIncluded(visited, newWater)) {
+                if (!isIncluded(newWater)) {
                     dq.offerLast(newWater);
                 }
             }
@@ -91,52 +99,28 @@ class BjSolution {
             moveWater = Math.min(curWater.C, TotalB - curWater.B);
             if (moveWater != 0) {
                 WATER newWater = new WATER(curWater.A, curWater.B + moveWater, curWater.C - moveWater);
-                if (!isIncluded(visited, newWater)) {
+                if (!isIncluded(newWater)) {
                     dq.offerLast(newWater);
                 }
             }
         }
     }
 
-    private boolean isIncluded(Map<String, Integer> visit, WATER water) {
-        if (visit.containsKey(water.toString())) return true;
+    private boolean isIncluded(WATER water) {
+        if (visited[water.A][water.B][water.C]) return true;
 
-        visit.put(water.toString(), 1);
+        visited[water.A][water.B][water.C] = true;
         return false;
     }
 }
 
-class WATER implements Comparable<WATER> {
-    int A;
-    int B;
-    int C;
+class WATER {
+    int A, B, C;
 
     public WATER(int A, int B, int C) {
         this.A = A;
         this.B = B;
         this.C = C;
-    }
-
-    public String toString() {
-        return A + " " + B + " " + C;
-    }
-
-    @Override
-    public int compareTo(WATER o) {
-        return Integer.compare(this.C, o.C);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WATER water = (WATER) o;
-        return A == water.A && B == water.B && C == water.C;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(A, B, C);
     }
 }
 
