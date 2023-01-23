@@ -3,8 +3,7 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -12,94 +11,132 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] input = br.readLine().split(" ");
-        int row = Integer.parseInt(input[0]);
-        int col = Integer.parseInt(input[1]);
-        int wallNum = Integer.parseInt(input[2]);
-        char[][] board = new char[row][col];
 
-        for (int i = 0; i < row; i++) {
-            String line = br.readLine();
-            board[i] = line.toCharArray();
-        }
-
-        sol.solution(row, col, wallNum, board);
+        sol.solution(input);
     }
 }
 
 class BjSolution {
-    int answer, gRow, gCol, WALL_COUNT;
-    int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-    int[][][] isVisited;
-    char[][] gBoard;
+    Set<WATER> set;
+    int TotalA, TotalB, TotalC;
 
-    public void solution(int row, int col, int wallNum, char[][] board) {
-        WALL_COUNT = wallNum;
-        answer = Integer.MAX_VALUE;
-        gRow = row;
-        gCol = col;
-        isVisited = new int[row][col][WALL_COUNT + 1];
-        gBoard = board;
+    public void solution(String[] input) {
+        set = new TreeSet<>();
 
-        bfs(0, 0);
+        TotalA = Integer.parseInt(input[0]);
+        TotalB = Integer.parseInt(input[1]);
+        TotalC = Integer.parseInt(input[2]);
 
-        for (int i = 0; i < WALL_COUNT + 1; i++) {
-            if (isVisited[row - 1][col - 1][i] == 0) {
-                isVisited[row - 1][col - 1][i] = Integer.MAX_VALUE;
-            }
-            answer = Math.min(answer, isVisited[row - 1][col - 1][i]);
+        bfs(0, 0, TotalC);
+
+        for (WATER water : set) {
+            System.out.print(water.C + " ");
         }
-
-        System.out.println(answer == Integer.MAX_VALUE ? -1 : answer);
     }
 
-    private void bfs(int row, int col) {
-        Deque<Node> dq = new ArrayDeque<>();
-        Node startNode = new Node(row, col, 1, 0);
-        isVisited[startNode.row][startNode.col][startNode.brokenWallNum] = startNode.distance;
-        dq.offerLast(startNode);
+    private void bfs(int A, int B, int C) {
+        Deque<WATER> dq = new ArrayDeque<>();
+        Map<String, Integer> visited = new HashMap<>();
 
+        WATER startWater = new WATER(A, B, C);
+        dq.offerLast(startWater);
+        isIncluded(visited, startWater);
         while (!dq.isEmpty()) {
-            Node curNode = dq.pollFirst();
+            WATER curWater = dq.pollFirst();
+            if (curWater.A == 0) {
+                set.add(curWater);
+            }
 
-            for (int[] direction : directions) {
-                int nextRow = curNode.row + direction[0];
-                int nextCol = curNode.col + direction[1];
-                int nextBrokenWallNum = 0;
-                int nextDistance = curNode.distance + 1;
-
-                if (isOutOfBoard(nextRow, nextCol)) continue;
-
-                if (gBoard[nextRow][nextCol] == '0') {
-                    if (isVisited[nextRow][nextCol][curNode.brokenWallNum] != 0) continue;
-
-                    nextBrokenWallNum = curNode.brokenWallNum;
-
-                } else if (gBoard[nextRow][nextCol] == '1') {
-                    if (curNode.brokenWallNum + 1 > WALL_COUNT) continue;
-                    if (isVisited[nextRow][nextCol][curNode.brokenWallNum + 1] != 0) continue;
-
-                    nextBrokenWallNum = curNode.brokenWallNum + 1;
+            //A->B
+            int moveWater = Math.min(curWater.A, TotalB - curWater.B);
+            if (moveWater != 0) {
+                WATER newWater = new WATER(curWater.A - moveWater, curWater.B + moveWater, curWater.C);
+                if (!isIncluded(visited, newWater)) {
+                    dq.offerLast(newWater);
                 }
-                isVisited[nextRow][nextCol][nextBrokenWallNum] = nextDistance;
-
-                dq.offerLast(new Node(nextRow, nextCol, nextDistance, nextBrokenWallNum));
+            }
+            //A->C
+            moveWater = Math.min(curWater.A, TotalC - curWater.C);
+            if (moveWater != 0) {
+                WATER newWater = new WATER(curWater.A - moveWater, curWater.B, curWater.C + moveWater);
+                if (!isIncluded(visited, newWater)) {
+                    dq.offerLast(newWater);
+                }
+            }
+            //B->A
+            moveWater = Math.min(curWater.B, TotalA - curWater.A);
+            if (moveWater != 0) {
+                WATER newWater = new WATER(curWater.A + moveWater, curWater.B - moveWater, curWater.C);
+                if (!isIncluded(visited, newWater)) {
+                    dq.offerLast(newWater);
+                }
+            }
+            //B->C
+            moveWater = Math.min(curWater.B, TotalC - curWater.C);
+            if (moveWater != 0) {
+                WATER newWater = new WATER(curWater.A, curWater.B - moveWater, curWater.C + moveWater);
+                if (!isIncluded(visited, newWater)) {
+                    dq.offerLast(newWater);
+                }
+            }
+            //C->A
+            moveWater = Math.min(curWater.C, TotalA - curWater.A);
+            if (moveWater != 0) {
+                WATER newWater = new WATER(curWater.A + moveWater, curWater.B, curWater.C - moveWater);
+                if (!isIncluded(visited, newWater)) {
+                    dq.offerLast(newWater);
+                }
+            }
+            //C->B
+            moveWater = Math.min(curWater.C, TotalB - curWater.B);
+            if (moveWater != 0) {
+                WATER newWater = new WATER(curWater.A, curWater.B + moveWater, curWater.C - moveWater);
+                if (!isIncluded(visited, newWater)) {
+                    dq.offerLast(newWater);
+                }
             }
         }
     }
 
-    boolean isOutOfBoard(int row, int col) {
-        return row < 0 || row >= gRow || col < 0 || col >= gCol;
+    private boolean isIncluded(Map<String, Integer> visit, WATER water) {
+        if (visit.containsKey(water.toString())) return true;
+
+        visit.put(water.toString(), 1);
+        return false;
     }
 }
 
-class Node {
-    int row, col, distance, brokenWallNum;
+class WATER implements Comparable<WATER> {
+    int A;
+    int B;
+    int C;
 
-    public Node(int row, int col, int distance, int brokenWallNum) {
-        this.row = row;
-        this.col = col;
-        this.distance = distance;
-        this.brokenWallNum = brokenWallNum;
+    public WATER(int A, int B, int C) {
+        this.A = A;
+        this.B = B;
+        this.C = C;
+    }
+
+    public String toString() {
+        return A + " " + B + " " + C;
+    }
+
+    @Override
+    public int compareTo(WATER o) {
+        return Integer.compare(this.C, o.C);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WATER water = (WATER) o;
+        return A == water.A && B == water.B && C == water.C;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(A, B, C);
     }
 }
 
