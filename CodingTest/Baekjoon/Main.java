@@ -20,15 +20,18 @@ class BjSolution {
         int level = 0;
         long ans = 0;
 
-        String newInput = input.replace("()", ".");
+        int len = input.length();
 
-        for (int i = 0; i < newInput.length(); i++) {
-            char c = newInput.charAt(i);
+        for (int i = 0; i < len; i++) {
+            char c = input.charAt(i);
 
-            if (c == '.') {
-                ans += level;
-            } else if (c == '(') {
-                level += 1;
+            if (c == '(') {
+                if (c != len - 1 && input.charAt(i + 1) == ')') {
+                    ans += level;
+                    i += 1;
+                } else {
+                    level += 1;
+                }
             } else if (c == ')') {
                 level -= 1;
                 ans += 1;
