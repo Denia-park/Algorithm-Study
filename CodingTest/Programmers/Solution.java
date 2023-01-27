@@ -1,82 +1,83 @@
 package CodingTest.Programmers;
 
-import java.util.*;
-
-//정답 참고
-//https://velog.io/@fufru/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%EC%8B%9C%EC%86%8C-%EC%A7%9D%EA%B6%81
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class Solution {
+    public int solution(int[] arrayA, int[] arrayB) {
+        int answer = 0;
 
-    public long solution(int[] weights) {
-        long answer = 0;
+        Arrays.sort(arrayA);
+        Arrays.sort(arrayB);
 
-        Map<Integer, List<Integer>> hm = new HashMap<>();
+        int minA = arrayA[0];
+        int minB = arrayB[0];
 
-        Set<Integer> mySet = new HashSet<>();
+        List<Integer> dividersA = getDividers(minA);
+        List<Integer> dividersB = getDividers(minB);
 
-        int leng = weights.length;
-
-        for (int i = 0; i < leng; i++) {
-            if (!hm.containsKey(weights[i])) {
-                List<Integer> myList = new ArrayList<>();
-                myList.add(i);
-                hm.put(weights[i], myList);
-            } else {
-                hm.get(weights[i]).add(i);
+        for (int idx = dividersA.size() - 1; idx >= 0; idx--) {
+            boolean parentDivide = true;
+            int divideVal = dividersA.get(idx);
+            for (int arrVal : arrayA) {
+                if (arrVal % divideVal != 0) {
+                    parentDivide = false;
+                    break;
+                }
             }
-            mySet.add(weights[i]);
+
+            if (parentDivide) {
+                boolean doNotDivide = true;
+                for (int arrVal : arrayB) {
+                    if (arrVal % divideVal == 0) {
+                        doNotDivide = false;
+                        break;
+                    }
+                }
+                if (doNotDivide) {
+                    answer = divideVal;
+                    break;
+                }
+            }
         }
 
-        for (int key : mySet) {
-
-            int dupli = hm.get(key).size();
-
-            int wX2 = key * 2;
-            if (wX2 % 3 == 0) {
-                if (hm.containsKey(wX2 / 3)) {
-                    answer += (long) hm.get(wX2 / 3).size() * dupli;
+        for (int idx = dividersB.size() - 1; idx >= 0; idx--) {
+            boolean parentDivide = true;
+            int divideVal = dividersB.get(idx);
+            for (int arrVal : arrayB) {
+                if (arrVal % divideVal != 0) {
+                    parentDivide = false;
+                    break;
                 }
             }
 
-            if (wX2 % 4 == 0) {
-                if (hm.containsKey(wX2 / 4)) {
-                    answer += (long) hm.get(wX2 / 4).size() * dupli;
+            if (parentDivide) {
+                boolean doNotDivide = true;
+                for (int arrVal : arrayA) {
+                    if (arrVal % divideVal == 0) {
+                        doNotDivide = false;
+                        break;
+                    }
+                }
+                if (doNotDivide) {
+                    answer = Math.max(answer, divideVal);
+                    break;
                 }
             }
-
-            int wX3 = key * 3;
-            if (wX3 % 2 == 0) {
-                if (hm.containsKey(wX3 / 2)) {
-                    answer += (long) hm.get(wX3 / 2).size() * dupli;
-                }
-            }
-
-            if (wX3 % 4 == 0) {
-                if (hm.containsKey(wX3 / 4)) {
-                    answer += (long) hm.get(wX3 / 4).size() * dupli;
-                }
-            }
-
-            int wX4 = key * 4;
-            if (wX4 % 2 == 0) {
-                if (hm.containsKey(wX4 / 2)) {
-                    answer += (long) hm.get(wX4 / 2).size() * dupli;
-                }
-            }
-
-            if (wX4 % 3 == 0) {
-                if (hm.containsKey(wX4 / 3)) {
-                    answer += (long) hm.get(wX4 / 3).size() * dupli;
-                }
-            }
-
-            if (dupli > 1) {
-                answer += (long) dupli * (long) (dupli - 1) / 2;
-            }
-
-            hm.remove(key);
-
         }
+
         return answer;
+    }
+
+    List<Integer> getDividers(int n) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            if (n % i == 0) {
+                list.add(i);
+            }
+        }
+
+        return list;
     }
 }
