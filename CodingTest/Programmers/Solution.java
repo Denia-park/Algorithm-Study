@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 class Solution {
+    private int answer;
+
     public int solution(int[] arrayA, int[] arrayB) {
-        int answer = 0;
+        answer = 0;
 
         Arrays.sort(arrayA);
         Arrays.sort(arrayB);
@@ -17,57 +19,41 @@ class Solution {
         List<Integer> dividersA = getDividers(minA);
         List<Integer> dividersB = getDividers(minB);
 
-        for (int idx = dividersA.size() - 1; idx >= 0; idx--) {
-            boolean parentDivide = true;
-            int divideVal = dividersA.get(idx);
-            for (int arrVal : arrayA) {
-                if (arrVal % divideVal != 0) {
-                    parentDivide = false;
-                    break;
-                }
-            }
-
-            if (parentDivide) {
-                boolean doNotDivide = true;
-                for (int arrVal : arrayB) {
-                    if (arrVal % divideVal == 0) {
-                        doNotDivide = false;
-                        break;
-                    }
-                }
-                if (doNotDivide) {
-                    answer = divideVal;
-                    break;
-                }
-            }
-        }
-
-        for (int idx = dividersB.size() - 1; idx >= 0; idx--) {
-            boolean parentDivide = true;
-            int divideVal = dividersB.get(idx);
-            for (int arrVal : arrayB) {
-                if (arrVal % divideVal != 0) {
-                    parentDivide = false;
-                    break;
-                }
-            }
-
-            if (parentDivide) {
-                boolean doNotDivide = true;
-                for (int arrVal : arrayA) {
-                    if (arrVal % divideVal == 0) {
-                        doNotDivide = false;
-                        break;
-                    }
-                }
-                if (doNotDivide) {
-                    answer = Math.max(answer, divideVal);
-                    break;
-                }
-            }
-        }
+        checkMaxDivideValue(dividersA, arrayA, arrayB);
+        checkMaxDivideValue(dividersB, arrayB, arrayA);
 
         return answer;
+    }
+
+    private void checkMaxDivideValue(List<Integer> dividers, int[] doDivideArr, int[] doNotDivideArr) {
+        for (int idx = dividers.size() - 1; idx >= 0; idx--) {
+
+            boolean doDivideFlag = true;
+            int divideVal = dividers.get(idx);
+
+            for (int arrVal : doDivideArr) {
+                if (arrVal % divideVal != 0) {
+                    doDivideFlag = false;
+                    break;
+                }
+            }
+
+            if (doDivideFlag) {
+                boolean doNotDivideFlag = true;
+
+                for (int arrVal : doNotDivideArr) {
+                    if (arrVal % divideVal == 0) {
+                        doNotDivideFlag = false;
+                        break;
+                    }
+                }
+
+                if (doNotDivideFlag) {
+                    answer = Math.max(answer, divideVal);
+                    return;
+                }
+            }
+        }
     }
 
     List<Integer> getDividers(int n) {
