@@ -3,7 +3,8 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -24,7 +25,7 @@ public class Main {
 class BjSolution {
     public void solution(int arrNum, int[] arr) {
         StringBuilder sb = new StringBuilder();
-        Stack<Integer> stack = new Stack<>();
+        Deque<Integer> deque = new ArrayDeque<>();
 
         int targetIdx = 0;
         int curValue = 1;
@@ -32,9 +33,9 @@ class BjSolution {
         while (targetIdx != arrNum) {
             int targetVal = arr[targetIdx];
 
-            if (!stack.isEmpty()) {
-                if (targetVal == stack.peek()) {
-                    stack.pop();
+            if (!deque.isEmpty()) {
+                if (targetVal == deque.peekLast()) {
+                    deque.pollLast();
                     sb.append("-").append("\n");
                     targetIdx++;
                     continue;
@@ -42,7 +43,7 @@ class BjSolution {
             }
 
             if (targetVal >= curValue) {
-                stack.push(curValue);
+                deque.addLast(curValue);
                 sb.append("+").append("\n");
                 curValue++;
             } else {
