@@ -9,34 +9,31 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
+        while (true) {
+            String input = br.readLine();
+            if (input.equals("#")) {
+                break;
+            }
 
-        sol.solution(input);
+            sol.solution(input);
+        }
+
     }
 }
 
 class BjSolution {
     public void solution(String input) {
-        int level = 0;
-        long ans = 0;
-
         int len = input.length();
+        int ans = 0;
 
         for (int i = 0; i < len; i++) {
-            char c = input.charAt(i);
+            char c = Character.toLowerCase(input.charAt(i));
 
-            if (c == '(') {
-                if (c != len - 1 && input.charAt(i + 1) == ')') {
-                    ans += level;
-                    i += 1;
-                } else {
-                    level += 1;
-                }
-            } else if (c == ')') {
-                level -= 1;
+            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
                 ans += 1;
             }
         }
+        
         System.out.println(ans);
     }
 }
