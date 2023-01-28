@@ -3,38 +3,59 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            String input = br.readLine();
-            if (input.equals("#")) {
-                break;
-            }
-
-            sol.solution(input);
+        String input = br.readLine();
+        int arrNum = Integer.parseInt(input);
+        int[] arr = new int[arrNum];
+        for (int i = 0; i < arrNum; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
         }
 
+        sol.solution(arrNum, arr);
     }
 }
 
 class BjSolution {
-    public void solution(String input) {
-        int len = input.length();
-        int ans = 0;
+    public void solution(int arrNum, int[] arr) {
+        List<String> answers = new ArrayList<>();
+        Stack<Integer> stack = new Stack<>();
 
-        for (int i = 0; i < len; i++) {
-            char c = Character.toLowerCase(input.charAt(i));
+        int targetIdx = 0;
+        int curValue = 1;
 
-            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
-                ans += 1;
+        while (targetIdx != arrNum) {
+            int targetVal = arr[targetIdx];
+
+            if (!stack.isEmpty()) {
+                if (targetVal == stack.peek()) {
+                    stack.pop();
+                    answers.add("-");
+                    targetIdx++;
+                    continue;
+                }
+            }
+
+            if (targetVal >= curValue) {
+                stack.push(curValue);
+                answers.add("+");
+                curValue++;
+            } else {
+                System.out.println("NO");
+                return;
             }
         }
-        
-        System.out.println(ans);
+
+        for (String answer : answers) {
+            System.out.println(answer);
+        }
     }
 }
 
