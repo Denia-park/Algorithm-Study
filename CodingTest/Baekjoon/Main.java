@@ -3,8 +3,6 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class Main {
@@ -25,7 +23,7 @@ public class Main {
 
 class BjSolution {
     public void solution(int arrNum, int[] arr) {
-        List<String> answers = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
         Stack<Integer> stack = new Stack<>();
 
         int targetIdx = 0;
@@ -37,7 +35,7 @@ class BjSolution {
             if (!stack.isEmpty()) {
                 if (targetVal == stack.peek()) {
                     stack.pop();
-                    answers.add("-");
+                    sb.append("-").append("\n");
                     targetIdx++;
                     continue;
                 }
@@ -45,7 +43,7 @@ class BjSolution {
 
             if (targetVal >= curValue) {
                 stack.push(curValue);
-                answers.add("+");
+                sb.append("+").append("\n");
                 curValue++;
             } else {
                 System.out.println("NO");
@@ -53,9 +51,7 @@ class BjSolution {
             }
         }
 
-        for (String answer : answers) {
-            System.out.println(answer);
-        }
+        System.out.println(sb);
     }
 }
 
