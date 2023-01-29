@@ -3,56 +3,39 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
-        int arrNum = Integer.parseInt(input);
-        int[] arr = new int[arrNum];
-        for (int i = 0; i < arrNum; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
-        }
+        String input = null;
 
-        sol.solution(arrNum, arr);
+        while ((input = br.readLine()) != null) {
+            sol.solution(input);
+        }
     }
 }
 
 class BjSolution {
-    public void solution(int arrNum, int[] arr) {
-        StringBuilder sb = new StringBuilder();
-        Deque<Integer> deque = new ArrayDeque<>();
+    public void solution(String input) {
+        int small = 0, big = 0, num = 0, space = 0;
 
-        int targetIdx = 0;
-        int curValue = 1;
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
 
-        while (targetIdx != arrNum) {
-            int targetVal = arr[targetIdx];
-
-            if (!deque.isEmpty()) {
-                if (targetVal == deque.peekLast()) {
-                    deque.pollLast();
-                    sb.append("-").append("\n");
-                    targetIdx++;
-                    continue;
-                }
-            }
-
-            if (targetVal >= curValue) {
-                deque.addLast(curValue);
-                sb.append("+").append("\n");
-                curValue++;
-            } else {
-                System.out.println("NO");
-                return;
+            if (Character.isDigit(c)) {
+                num++;
+            } else if (c == ' ') {
+                space++;
+            } else if (c >= 'a' && c <= 'z') {
+                small++;
+            } else if (c >= 'A' && c <= 'Z') {
+                big++;
             }
         }
 
-        System.out.println(sb);
+        System.out.println("" + small + " " + big + " " + num + " " + space);
     }
 }
 
