@@ -9,33 +9,28 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = null;
+        String input = br.readLine();
 
-        while ((input = br.readLine()) != null) {
-            sol.solution(input);
-        }
+        sol.solution(input);
     }
 }
 
 class BjSolution {
     public void solution(String input) {
-        int small = 0, big = 0, num = 0, space = 0;
+        int num = Integer.parseInt(input);
+        StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-
-            if (Character.isDigit(c)) {
-                num++;
-            } else if (c == ' ') {
-                space++;
-            } else if (c >= 'a' && c <= 'z') {
-                small++;
-            } else if (c >= 'A' && c <= 'Z') {
-                big++;
+        while (num != 1) {
+            for (int i = 2; i <= num; i++) {
+                if (num % i == 0) {
+                    sb.append(i).append("\n");
+                    num /= i;
+                    break;
+                }
             }
         }
 
-        System.out.println("" + small + " " + big + " " + num + " " + space);
+        System.out.println(sb);
     }
 }
 
