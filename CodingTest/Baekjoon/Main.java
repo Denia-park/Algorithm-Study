@@ -16,21 +16,27 @@ public class Main {
 }
 
 class BjSolution {
-    public void solution(String input) {
-        int num = Integer.parseInt(input);
-        StringBuilder sb = new StringBuilder();
 
-        while (num != 1) {
-            for (int i = 2; i <= num; i++) {
-                if (num % i == 0) {
-                    sb.append(i).append("\n");
-                    num /= i;
-                    break;
-                }
-            }
+    public void solution(String originInput) {
+        String[] input = originInput.split(" ");
+        int fixedCost = Integer.parseInt(input[0]);
+        int variableCost = Integer.parseInt(input[1]);
+        int productCost = Integer.parseInt(input[2]);
+
+        if (variableCost >= productCost) {
+            System.out.println(-1);
+            return;
         }
 
-        System.out.println(sb);
+        int diff = productCost - variableCost;
+        int answer;
+        if (fixedCost % diff != 0) {
+            answer = (int) Math.ceil((float) (fixedCost) / diff);
+        } else {
+            answer = (fixedCost / diff) + 1;
+        }
+
+        System.out.println(answer);
     }
 }
 
