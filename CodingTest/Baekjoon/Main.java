@@ -29,14 +29,8 @@ class BjSolution {
         }
 
         int diff = productCost - variableCost;
-        int answer;
-        if (fixedCost % diff != 0) {
-            answer = (int) Math.ceil((float) (fixedCost) / diff);
-        } else {
-            answer = (fixedCost / diff) + 1;
-        }
 
-        System.out.println(answer);
+        System.out.println((fixedCost / diff) + 1);
     }
 }
 
