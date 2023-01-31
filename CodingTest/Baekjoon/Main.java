@@ -3,34 +3,61 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Stack;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int inputCount = Integer.parseInt(br.readLine());
         String input = br.readLine();
 
-        sol.solution(input);
+        int[] nums = new int[inputCount];
+        for (int i = 0; i < inputCount; i++) {
+            nums[i] = Integer.parseInt(br.readLine());
+        }
+
+        sol.solution(input, nums);
     }
 }
 
 class BjSolution {
 
-    public void solution(String originInput) {
-        String[] input = originInput.split(" ");
-        int fixedCost = Integer.parseInt(input[0]);
-        int variableCost = Integer.parseInt(input[1]);
-        int productCost = Integer.parseInt(input[2]);
+    public void solution(String originInput, int[] nums) {
+        Stack<Double> stack = new Stack<>();
 
-        if (variableCost >= productCost) {
-            System.out.println(-1);
-            return;
+        for (int i = 0; i < originInput.length(); i++) {
+            char ch = originInput.charAt(i);
+
+            //영문자인 경우 값으로 바꿔서 Stack에 push
+            if (isCapitalLetter(ch)) {
+                stack.push((double) nums[ch - 'A']);
+            } else {
+                //계산식인 경우
+                double rearVal = stack.pop();
+                double frontVal = stack.pop();
+                double finalVal = 0;
+
+                if (ch == '+') {
+                    finalVal = frontVal + rearVal;
+                } else if (ch == '-') {
+                    finalVal = frontVal - rearVal;
+                } else if (ch == '*') {
+                    finalVal = frontVal * rearVal;
+                } else if (ch == '/') {
+                    finalVal = frontVal / rearVal;
+                }
+
+                stack.push(finalVal);
+            }
         }
 
-        int diff = productCost - variableCost;
+        System.out.printf("%.2f", stack.peek());
+    }
 
-        System.out.println((fixedCost / diff) + 1);
+    private boolean isCapitalLetter(char c) {
+        return c >= 'A' && c <= 'Z';
     }
 }
 
