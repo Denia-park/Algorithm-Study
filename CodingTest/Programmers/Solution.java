@@ -1,69 +1,39 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Stack;
 
 class Solution {
-    private int answer;
+    final int[] hamberger = {1, 2, 3, 1};
 
-    public int solution(int[] arrayA, int[] arrayB) {
-        answer = 0;
+    public int solution(int[] ingredient) {
+        int answer = 0;
 
-        Arrays.sort(arrayA);
-        Arrays.sort(arrayB);
+        Stack<Integer> stack = new Stack<>();
 
-        int minA = arrayA[0];
-        int minB = arrayB[0];
+        for (int val : ingredient) {
+            stack.push(val);
 
-        List<Integer> dividersA = getDividers(minA);
-        List<Integer> dividersB = getDividers(minB);
+            if (stack.size() >= 4 && stack.peek() == 1) {
+                int changeIdx = stack.size() - 4;
+                boolean makeFlag = true;
 
-        checkMaxDivideValue(dividersA, arrayA, arrayB);
-        checkMaxDivideValue(dividersB, arrayB, arrayA);
-
-        return answer;
-    }
-
-    private void checkMaxDivideValue(List<Integer> dividers, int[] doDivideArr, int[] doNotDivideArr) {
-        for (int idx = dividers.size() - 1; idx >= 0; idx--) {
-
-            boolean doDivideFlag = true;
-            int divideVal = dividers.get(idx);
-
-            for (int arrVal : doDivideArr) {
-                if (arrVal % divideVal != 0) {
-                    doDivideFlag = false;
-                    break;
-                }
-            }
-
-            if (doDivideFlag) {
-                boolean doNotDivideFlag = true;
-
-                for (int arrVal : doNotDivideArr) {
-                    if (arrVal % divideVal == 0) {
-                        doNotDivideFlag = false;
+                for (int tmpIdx = 0; tmpIdx < 4; tmpIdx++) {
+                    if (stack.get(changeIdx + tmpIdx) != hamberger[tmpIdx]) {
+                        makeFlag = false;
                         break;
                     }
                 }
 
-                if (doNotDivideFlag) {
-                    answer = Math.max(answer, divideVal);
-                    return;
+                if (makeFlag) {
+                    for (int j = 0; j < 4; j++) {
+                        stack.pop();
+                    }
+
+                    answer++;
                 }
             }
         }
-    }
 
-    List<Integer> getDividers(int n) {
-        List<Integer> list = new ArrayList<>();
-        for (int i = 1; i <= n; i++) {
-            if (n % i == 0) {
-                list.add(i);
-            }
-        }
-
-        return list;
+        return answer;
     }
 }
