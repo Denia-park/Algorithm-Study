@@ -14,29 +14,25 @@ class Solution {
     public int solution(String[] babbling) {
         int answer = 0;
 
-
         out:
         for (String str : babbling) {
             String newStr = str;
-            int idx = 0;
-            for (String babble : babyBabbling) {
-                newStr = newStr.replace(babble, "" + idx);
-                idx++;
-            }
 
-            for (int i = 0; i < newStr.length() - 1; i++) {
-                char ch = newStr.charAt(i);
-                if (!Character.isDigit(ch) || ch == newStr.charAt(i + 1)) {
+            for (String s : noBabbling) {
+                if (newStr.contains(s)) {
                     continue out;
                 }
             }
 
-            if (!Character.isDigit(newStr.charAt(newStr.length() - 1))) {
-                continue out;
+            for (String s : babyBabbling) {
+                newStr = newStr.replace(s, " ");
             }
 
-            answer++;
+            if (newStr.trim().length() == 0) {
+                answer++;
+            }
         }
+
         return answer;
     }
 }
