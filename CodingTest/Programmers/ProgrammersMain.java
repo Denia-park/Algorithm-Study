@@ -6,8 +6,7 @@ public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(new int[]{2, 1, 1, 2, 3, 1, 2, 3, 1}));
-        System.out.println(ts.solution(new int[]{1, 3, 2, 1, 2, 1, 3, 1, 2}));
+        System.out.println(ts.solution(new String[]{"ayayewooma"}));
     }
 }
 
