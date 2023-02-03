@@ -6,7 +6,8 @@ public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(2, 3));
+        System.out.println(ts.solution(new int[]{1, 3, 4, 6}).equals("1223330333221"));
+        System.out.println(ts.solution(new int[]{1, 7, 1, 2}).equals("111303111"));
     }
 }
 
