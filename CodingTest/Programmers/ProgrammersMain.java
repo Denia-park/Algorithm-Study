@@ -6,11 +6,7 @@ public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(new String[]{"aya", "yee", "u", "maa"}));
-        System.out.println(ts.solution(new String[]{"ayayewooma"}));
-        System.out.println(ts.solution(new String[]{"maayama"}));
-        System.out.println(ts.solution(new String[]{"yemayemayemayemayemayemayemaye"}));
-        System.out.println(ts.solution(new String[]{"ayaye", "uuu", "yeye", "yemawoo", "ayaayaa"}));
+        System.out.println(ts.solution(2, 3));
     }
 }
 
