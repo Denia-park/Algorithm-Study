@@ -19,9 +19,21 @@ public class Main {
 class BjSolution {
 
     public void solution(String quizString, String quiz) {
-        String[] splitStr = quizString.split(quiz);
+        String splitStr = quizString.replace(quiz, "*");
 
-        System.out.println(splitStr.length - 1);
+        int idx = -1;
+        int answer = 0;
+
+        while (true) {
+            idx = splitStr.indexOf("*", idx + 1);
+            if (idx == -1) {
+                break;
+            }
+
+            answer++;
+        }
+
+        System.out.println(answer);
     }
 }
 
