@@ -3,10 +3,10 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.PriorityQueue;
+
+//주식
+//정답 참고
+//https://velog.io/@ehdcks3421/%EB%B0%B1%EC%A4%80-%EC%A3%BC%EC%8B%9D-11501
 
 public class Main {
     static public void main(String[] args) throws IOException {
@@ -20,7 +20,6 @@ public class Main {
 
             sol.solution(day, stockPrices);
         }
-
     }
 }
 
@@ -28,26 +27,21 @@ class BjSolution {
 
     public void solution(int day, String[] stockStrPrices) {
         long answer = 0;
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
+        long max = Long.MIN_VALUE;
 
         int[] stockIntPrices = new int[stockStrPrices.length];
+
         for (int idx = 0; idx < stockStrPrices.length; idx++) {
-            int i1 = Integer.parseInt(stockStrPrices[idx]);
-            stockIntPrices[idx] = i1;
-            pq.offer(i1);
+            stockIntPrices[idx] = Integer.parseInt(stockStrPrices[idx]);
         }
 
-        Deque<Integer> list = new ArrayDeque<>();
+        for (int idx = stockIntPrices.length - 1; idx >= 0; idx--) {
+            int stockIntPrice = stockIntPrices[idx];
 
-        for (int idx = 0; idx < day; idx++) {
-            int curVal = stockIntPrices[idx];
-            if (curVal == pq.peek()) {
-                while (!list.isEmpty()) {
-                    answer += (curVal - list.poll());
-                }
-                pq.poll();
+            if (stockIntPrice >= max) {
+                max = stockIntPrice;
             } else {
-                list.addLast(curVal);
+                answer += (max - stockIntPrice);
             }
         }
 
