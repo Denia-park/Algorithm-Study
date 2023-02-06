@@ -13,35 +13,25 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int testCase = Integer.parseInt(br.readLine());
-        for (int i = 0; i < testCase; i++) {
-            int day = Integer.parseInt(br.readLine());
-            String[] stockPrices = br.readLine().split(" ");
+        int inputVal = Integer.parseInt(br.readLine());
 
-            sol.solution(day, stockPrices);
-        }
+        sol.solution(inputVal);
     }
 }
 
 class BjSolution {
+    int[] coins = {500, 100, 50, 10, 5, 1};
 
-    public void solution(int day, String[] stockStrPrices) {
-        long answer = 0;
-        long max = Long.MIN_VALUE;
+    public void solution(int inputVal) {
+        int answer = 0;
 
-        int[] stockIntPrices = new int[stockStrPrices.length];
+        int restVal = 1000 - inputVal;
 
-        for (int idx = 0; idx < stockStrPrices.length; idx++) {
-            stockIntPrices[idx] = Integer.parseInt(stockStrPrices[idx]);
-        }
-
-        for (int idx = stockIntPrices.length - 1; idx >= 0; idx--) {
-            int stockIntPrice = stockIntPrices[idx];
-
-            if (stockIntPrice >= max) {
-                max = stockIntPrice;
-            } else {
-                answer += (max - stockIntPrice);
+        for (int coin : coins) {
+            if (restVal > coin) {
+                int mod = restVal / coin;
+                restVal -= mod * coin;
+                answer += mod;
             }
         }
 
