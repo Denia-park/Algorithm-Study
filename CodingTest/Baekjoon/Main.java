@@ -4,10 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-//주식
-//정답 참고
-//https://velog.io/@ehdcks3421/%EB%B0%B1%EC%A4%80-%EC%A3%BC%EC%8B%9D-11501
-
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
@@ -28,7 +24,7 @@ class BjSolution {
         int restVal = 1000 - inputVal;
 
         for (int coin : coins) {
-            if (restVal > coin) {
+            if (restVal >= coin) {
                 int mod = restVal / coin;
                 restVal -= mod * coin;
                 answer += mod;
