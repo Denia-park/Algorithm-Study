@@ -16,22 +16,25 @@ public class Main {
 }
 
 class BjSolution {
-    int[] coins = {500, 100, 50, 10, 5, 1};
+    int[] seconds = {300, 60, 10};
 
     public void solution(int inputVal) {
-        int answer = 0;
+        int[] answer = new int[seconds.length];
 
-        int restVal = 1000 - inputVal;
 
-        for (int coin : coins) {
-            if (restVal >= coin) {
-                int mod = restVal / coin;
-                restVal -= mod * coin;
-                answer += mod;
+        for (int i = 0; i < seconds.length; i++) {
+            if (inputVal >= seconds[i]) {
+                int mod = inputVal / seconds[i];
+                inputVal -= (seconds[i] * mod);
+                answer[i] = mod;
             }
         }
 
-        System.out.println(answer);
+        if (inputVal == 0) {
+            System.out.println(answer[0] + " " + answer[1] + " " + answer[2]);
+        } else {
+            System.out.println(-1);
+        }
     }
 }
 
