@@ -5,9 +5,11 @@ import java.io.IOException;
 public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
+        String[][] bookTime1 = {{"15:00", "17:00"}, {"16:40", "18:20"}, {"14:20", "15:20"}, {"14:10", "19:20"}, {"18:20", "21:20"}};
+        String[][] bookTime2 = {{"09:10", "10:10"}, {"10:20", "12:20"}};
 
-        System.out.println(ts.solution(new int[]{1, 3, 4, 6}).equals("1223330333221"));
-        System.out.println(ts.solution(new int[]{1, 7, 1, 2}).equals("111303111"));
+        System.out.println(ts.solution(bookTime1));
+        System.out.println(ts.solution(bookTime2));
     }
 }
 
