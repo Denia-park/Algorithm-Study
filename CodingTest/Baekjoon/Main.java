@@ -9,32 +9,31 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int inputVal = Integer.parseInt(br.readLine());
 
-        sol.solution(inputVal);
+        sol.solution(br.readLine());
     }
 }
 
 class BjSolution {
-    int[] seconds = {300, 60, 10};
+    public void solution(String inputVal) {
+        int ans = 0;
 
-    public void solution(int inputVal) {
-        int[] answer = new int[seconds.length];
+        if (inputVal.length() == 1) {
+            System.out.println(Integer.parseInt(inputVal));
+            return;
+        }
 
-
-        for (int i = 0; i < seconds.length; i++) {
-            if (inputVal >= seconds[i]) {
-                int mod = inputVal / seconds[i];
-                inputVal -= (seconds[i] * mod);
-                answer[i] = mod;
+        if (inputVal.startsWith("0")) {
+            if (inputVal.charAt(1) == 'x') {
+                ans = Integer.parseInt(inputVal.substring(2), 16);
+            } else {
+                ans = Integer.parseInt(inputVal, 8);
             }
+        } else {
+            ans = Integer.parseInt(inputVal, 10);
         }
 
-        if (inputVal == 0) {
-            System.out.println(answer[0] + " " + answer[1] + " " + answer[2]);
-        } else {
-            System.out.println(-1);
-        }
+        System.out.println(ans);
     }
 }
 
