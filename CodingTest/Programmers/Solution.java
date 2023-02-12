@@ -2,8 +2,6 @@ package CodingTest.Programmers;
 
 class Solution {
     private int getDividers(int num) {
-        if (num == 1) return 1;
-
         int rootVal = (int) Math.sqrt(num);
         int count = 0;
 
@@ -15,11 +13,7 @@ class Solution {
 
         int answer = (count * 2);
 
-        if (Math.pow(rootVal, 2) == num) {
-            answer--;
-        }
-
-        return answer;
+        return Math.pow(rootVal, 2) == num ? answer - 1 : answer;
     }
 
     public int solution(int number, int limit, int power) {
@@ -31,9 +25,8 @@ class Solution {
             if (dividers > limit) {
                 dividers = power;
             }
-
+            
             answer += dividers;
-
         }
 
         return answer;
