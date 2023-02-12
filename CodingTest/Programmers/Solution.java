@@ -4,43 +4,26 @@ package CodingTest.Programmers;
 //뒷 큰수의 배열
 //존재하지 않으면 -1을 담는다.
 
+import java.util.Arrays;
 import java.util.Stack;
 
 class Solution {
     public int[] solution(int[] numbers) {
         int[] answer = new int[numbers.length];
 
-        Stack<Number> stack = new Stack<>();
+        Arrays.fill(answer, -1);
 
-        for (int i = 0; i < numbers.length; i++) {
-            if (stack.isEmpty()) {
-                stack.push(new Number(numbers[i], i));
-                continue;
-            }
-            
-            while (!stack.isEmpty() && numbers[i] > stack.peek().num) {
-                Number top = stack.pop();
-                answer[top.idx] = numbers[i];
+        Stack<Integer> stack = new Stack<>();
+
+        for (int arrIdx = 0; arrIdx < numbers.length; arrIdx++) {
+            while (!stack.isEmpty() && numbers[arrIdx] > numbers[stack.peek()]) {
+                int stkIdx = stack.pop();
+                answer[stkIdx] = numbers[arrIdx];
             }
 
-            stack.push(new Number(numbers[i], i));
-        }
-
-        while (!stack.isEmpty()) {
-            Number top = stack.pop();
-            answer[top.idx] = -1;
+            stack.push(arrIdx);
         }
 
         return answer;
-    }
-}
-
-class Number {
-    int num;
-    int idx;
-
-    public Number(int num, int idx) {
-        this.num = num;
-        this.idx = idx;
     }
 }
