@@ -3,37 +3,43 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     static public void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] arrSizes = br.readLine().split(" ");
+        String[] arrA = br.readLine().split(" ");
+        String[] arrB = br.readLine().split(" ");
 
-        sol.solution(br.readLine());
+        sol.solution(arrSizes, arrA, arrB);
     }
 }
 
 class BjSolution {
-    public void solution(String inputVal) {
+    public void solution(String[] arrSizes, String[] arrA, String[] arrB) {
         int ans = 0;
+        List<Integer> list = new ArrayList<>();
 
-        if (inputVal.length() == 1) {
-            System.out.println(Integer.parseInt(inputVal));
-            return;
+        for (String s : arrA) {
+            list.add(Integer.parseInt(s));
+        }
+        for (String s : arrB) {
+            list.add(Integer.parseInt(s));
         }
 
-        if (inputVal.startsWith("0")) {
-            if (inputVal.charAt(1) == 'x') {
-                ans = Integer.parseInt(inputVal.substring(2), 16);
-            } else {
-                ans = Integer.parseInt(inputVal, 8);
-            }
-        } else {
-            ans = Integer.parseInt(inputVal, 10);
+        list.sort(null);
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Integer i : list) {
+            sb.append(i).append(" ");
         }
 
-        System.out.println(ans);
+        System.out.println(sb);
     }
 }
 
