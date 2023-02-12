@@ -1,34 +1,46 @@
 package CodingTest.Programmers;
 
+//자신보다 크면서 , 가장 가까이 있는 수 => 뒷 큰수
+//뒷 큰수의 배열
+//존재하지 않으면 -1을 담는다.
+
+import java.util.Stack;
+
 class Solution {
-    private int getDividers(int num) {
-        int rootVal = (int) Math.sqrt(num);
-        int count = 0;
+    public int[] solution(int[] numbers) {
+        int[] answer = new int[numbers.length];
 
-        for (int i = 1; i <= rootVal; i++) {
-            if (num % i == 0) {
-                count++;
-            }
-        }
+        Stack<Number> stack = new Stack<>();
 
-        int answer = (count * 2);
-
-        return Math.pow(rootVal, 2) == num ? answer - 1 : answer;
-    }
-
-    public int solution(int number, int limit, int power) {
-        int answer = 0;
-
-        for (int i = 1; i <= number; i++) {
-            int dividers = getDividers(i);
-
-            if (dividers > limit) {
-                dividers = power;
+        for (int i = 0; i < numbers.length; i++) {
+            if (stack.isEmpty()) {
+                stack.push(new Number(numbers[i], i));
+                continue;
             }
             
-            answer += dividers;
+            while (!stack.isEmpty() && numbers[i] > stack.peek().num) {
+                Number top = stack.pop();
+                answer[top.idx] = numbers[i];
+            }
+
+            stack.push(new Number(numbers[i], i));
+        }
+
+        while (!stack.isEmpty()) {
+            Number top = stack.pop();
+            answer[top.idx] = -1;
         }
 
         return answer;
+    }
+}
+
+class Number {
+    int num;
+    int idx;
+
+    public Number(int num, int idx) {
+        this.num = num;
+        this.idx = idx;
     }
 }
