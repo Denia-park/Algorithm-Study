@@ -1,13 +1,12 @@
 package CodingTest.Programmers;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new int[]{2, 3, 3, 5})));
+        System.out.println((ts.solution("3141592", "9000000")));
     }
 }
 
