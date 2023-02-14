@@ -1,16 +1,13 @@
 package CodingTest.Programmers;
 
 class Solution {
-    public int solution(String main, String sub) {
-        int answer = 0;
-        long subVal = Long.parseLong(sub);
+    public int[] solution(int[] num_list) {
+        int[] answer = new int[num_list.length];
 
-        for (int i = 0; i < main.length() - sub.length() + 1; i++) {
-            long mainVal = Long.parseLong(main.substring(i, i + sub.length()));
+        for (int i = num_list.length - 1, j = 0; i >= 0; i--, j++) {
+            int i1 = num_list[i];
 
-            if (mainVal <= subVal) {
-                answer++;
-            }
+            answer[j] = i1;
         }
 
         return answer;
