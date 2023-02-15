@@ -1,70 +1,35 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 class Solution {
-    boolean[][] isVisited;
-    int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    private int[][] map;
-    private int rowNum;
-    private int colNum;
+    public String solution(String s, String skip, int index) {
+        StringBuilder answer = new StringBuilder();
 
-    public int[] solution(String[] maps) {
-        List<Integer> answer = new ArrayList<>();
+        Set<Character> set = new HashSet<>();
 
-        rowNum = maps.length;
-        colNum = maps[0].length();
+        for (Character c : skip.toCharArray()) {
+            set.add(c);
+        }
 
-        map = new int[rowNum][colNum];
-        isVisited = new boolean[rowNum][colNum];
+        StringBuilder sb = new StringBuilder();
 
-        for (int r = 0; r < rowNum; r++) {
-            for (int c = 0; c < colNum; c++) {
-                char ch = maps[r].charAt(c);
-
-                map[r][c] = ch == 'X' ? -1 : ch - '0';
+        for (char i = 'a'; i <= 'z'; i++) {
+            if (!set.contains(i)) {
+                sb.append(i);
             }
         }
 
-        for (int r = 0; r < rowNum; r++) {
-            for (int c = 0; c < colNum; c++) {
-                if (map[r][c] == -1 || isVisited[r][c]) continue;
+        String checkString = sb.toString().repeat(3);
 
-                answer.add(bfs(r, c));
-            }
+        for (int i = 0; i < s.length(); i++) {
+            char curChar = s.charAt(i);
+
+            answer.append(checkString.charAt(checkString.indexOf(curChar) + index));
         }
 
-        return answer.size() == 0 ? new int[]{-1} : answer.stream().sorted().mapToInt(i -> i).toArray();
-    }
 
-    public int bfs(int r, int c) {
-        int sumVal = 0;
-
-        Deque<int[]> queue = new ArrayDeque<>();
-        queue.addLast(new int[]{r, c});
-        isVisited[r][c] = true;
-
-        while (!queue.isEmpty()) {
-            int[] curr = queue.pollFirst();
-            sumVal += map[curr[0]][curr[1]];
-
-            for (int[] direction : directions) {
-                int rNext = curr[0] + direction[0];
-                int cNext = curr[1] + direction[1];
-
-                if (rNext < 0 || rNext >= rowNum
-                        || cNext < 0 || cNext >= colNum
-                        || isVisited[rNext][cNext]
-                        || map[rNext][cNext] == -1) continue;
-
-                queue.addLast(new int[]{rNext, cNext});
-                isVisited[rNext][cNext] = true;
-            }
-        }
-
-        return sumVal;
+        return answer.toString();
     }
 }
