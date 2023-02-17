@@ -1,12 +1,13 @@
 package CodingTest.Programmers;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution("aukks", "wbqd", 5));
+        System.out.println(Arrays.toString(ts.solution(new String[]{"left", "right", "up", "right", "right"}, new int[]{11, 11})));
     }
 }
 
