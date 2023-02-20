@@ -1,17 +1,38 @@
 package CodingTest.Programmers;
 
 class Solution {
-    public long solution(String numbers) {
-        numbers = numbers.replaceAll("one", "1");
-        numbers = numbers.replaceAll("two", "2");
-        numbers = numbers.replaceAll("three", "3");
-        numbers = numbers.replaceAll("four", "4");
-        numbers = numbers.replaceAll("five", "5");
-        numbers = numbers.replaceAll("six", "6");
-        numbers = numbers.replaceAll("seven", "7");
-        numbers = numbers.replaceAll("eight", "8");
-        numbers = numbers.replaceAll("nine", "9");
-        numbers = numbers.replaceAll("zero", "0");
-        return Long.parseLong(numbers);
+    public int solution(String s) {
+        int answer = 0;
+
+        char firstCh = '0';
+        int firstChNum = 0;
+        int otherChNum = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (firstCh == '0') {
+                firstCh = s.charAt(i);
+                firstChNum++;
+                continue;
+            }
+
+            if (firstCh == s.charAt(i)) {
+                firstChNum++;
+            } else {
+                otherChNum++;
+            }
+
+            if (firstChNum == otherChNum) {
+                answer++;
+                firstCh = '0';
+                firstChNum = 0;
+                otherChNum = 0;
+            }
+        }
+
+        if (firstChNum != 0) {
+            answer++;
+        }
+
+        return answer;
     }
 }
