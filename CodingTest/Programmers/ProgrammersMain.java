@@ -6,8 +6,9 @@ public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution("3people unFollowed me"));
-        System.out.println(ts.solution("for the last week"));
+//        System.out.println(ts.solution("3people unFollowed me"));
+//        System.out.println(ts.solution("for the last week"));
+        System.out.println(ts.solution("4man    the    Last  unFFoloewd"));
     }
 }
 

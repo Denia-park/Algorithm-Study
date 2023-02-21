@@ -13,12 +13,10 @@ class Solution {
         boolean firstCharFlag = true;
         StringBuilder answer = new StringBuilder();
 
-        char saveChar = '-';
-
         for (int idx = 0; idx < s.length(); idx++) {
             char ch = s.charAt(idx);
 
-            if (firstCharFlag) {
+            if (ch != ' ' && firstCharFlag) {
                 answer.append(Character.toUpperCase(ch));
                 firstCharFlag = false;
             } else {
@@ -26,9 +24,8 @@ class Solution {
             }
 
             if (ch == ' ') {
-                firstCharFlag = saveChar != ' ';
+                firstCharFlag = true;
             }
-            saveChar = ch;
         }
 
         return answer.toString();
