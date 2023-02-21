@@ -10,8 +10,8 @@ package CodingTest.Programmers;
 //공백문자 연속
 class Solution {
     public String solution(String s) {
-        boolean firstCharFlag = true;
         StringBuilder answer = new StringBuilder();
+        boolean firstCharFlag = true;
 
         for (int idx = 0; idx < s.length(); idx++) {
             char ch = s.charAt(idx);
@@ -19,13 +19,12 @@ class Solution {
             if (ch != ' ' && firstCharFlag) {
                 answer.append(Character.toUpperCase(ch));
                 firstCharFlag = false;
-            } else {
-                answer.append(Character.toLowerCase(ch));
+
+                continue;
             }
 
-            if (ch == ' ') {
-                firstCharFlag = true;
-            }
+            answer.append(Character.toLowerCase(ch));
+            if (ch == ' ') firstCharFlag = true;
         }
 
         return answer.toString();
