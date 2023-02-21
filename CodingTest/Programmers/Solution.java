@@ -22,7 +22,7 @@ class Solution {
                 answer.append(Character.toUpperCase(ch));
                 firstCharFlag = false;
             } else {
-                answer.append(ch);
+                answer.append(Character.toLowerCase(ch));
             }
 
             if (ch == ' ') {
