@@ -1,26 +1,15 @@
 package CodingTest.Programmers;
 
 class Solution {
-    int D;
-
     public long solution(int k, int d) {
-        int divide = (d / k) + 1;
-        long answer = (long) divide * divide;
-        D = d;
+        long answer = 0;
 
-        for (int y = d; y >= 0; y -= k) {
-            for (int x = (d - y); x <= d; x += k) {
-                if (isOutside(x, y)) {
-                    answer--;
-                    System.out.println(x + " " + y);
-                }
-            }
+        for (int x = 0; x <= d; x += k) {
+            long y = (long) Math.sqrt(((long) d * d) - ((long) x * x));
+
+            answer += ((y / k) + 1);
         }
 
         return answer;
-    }
-
-    private boolean isOutside(int x, int y) {
-        return ((long) x * x) + ((long) y * y) > ((long) D * D);
     }
 }
