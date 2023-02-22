@@ -4,13 +4,15 @@ class Solution {
     int D;
 
     public long solution(int k, int d) {
-        long answer = 0;
+        int divide = (d / k) + 1;
+        long answer = (long) divide * divide;
         D = d;
 
-        for (int x = 0; x <= d; x += k) {
-            for (int y = 0; y <= d; y += k) {
-                if (isInside(x, y)) {
-                    answer++;
+        for (int y = d; y >= 0; y -= k) {
+            for (int x = (d - y); x <= d; x += k) {
+                if (isOutside(x, y)) {
+                    answer--;
+                    System.out.println(x + " " + y);
                 }
             }
         }
@@ -18,7 +20,7 @@ class Solution {
         return answer;
     }
 
-    private boolean isInside(int x, int y) {
-        return ((long) x * x) + ((long) y * y) <= ((long) D * D);
+    private boolean isOutside(int x, int y) {
+        return ((long) x * x) + ((long) y * y) > ((long) D * D);
     }
 }
