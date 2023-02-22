@@ -1,32 +1,24 @@
 package CodingTest.Programmers;
 
-//JadenCase 문자열 만들기
-//모든 단어의 첫 문자가 대문자
-//나머지는 소문자
-
-//알파벳, 숫자, 공백 으로 이루어짐
-//숫자는 단어의 첫문자로만 나옴
-//숫자로만 이루어진 단어 X
-//공백문자 연속
 class Solution {
-    public String solution(String s) {
-        StringBuilder answer = new StringBuilder();
-        boolean firstCharFlag = true;
+    int D;
 
-        for (int idx = 0; idx < s.length(); idx++) {
-            char ch = s.charAt(idx);
+    public long solution(int k, int d) {
+        long answer = 0;
+        D = d;
 
-            if (ch != ' ' && firstCharFlag) {
-                answer.append(Character.toUpperCase(ch));
-                firstCharFlag = false;
-
-                continue;
+        for (int x = 0; x <= d; x += k) {
+            for (int y = 0; y <= d; y += k) {
+                if (isInside(x, y)) {
+                    answer++;
+                }
             }
-
-            answer.append(Character.toLowerCase(ch));
-            if (ch == ' ') firstCharFlag = true;
         }
 
-        return answer.toString();
+        return answer;
+    }
+
+    private boolean isInside(int x, int y) {
+        return ((long) x * x) + ((long) y * y) <= ((long) D * D);
     }
 }

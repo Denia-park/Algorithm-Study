@@ -8,7 +8,7 @@ public class ProgrammersMain {
 
 //        System.out.println(ts.solution("3people unFollowed me"));
 //        System.out.println(ts.solution("for the last week"));
-        System.out.println(ts.solution("4man    the    Last  unFFoloewd"));
+        System.out.println(ts.solution(2, 4));
     }
 }
 
