@@ -1,6 +1,7 @@
 package CodingTest.Programmers;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
@@ -8,7 +9,7 @@ public class ProgrammersMain {
 
 //        System.out.println(ts.solution("3people unFollowed me"));
 //        System.out.println(ts.solution("for the last week"));
-        System.out.println(ts.solution(2, 4));
+        System.out.println(Arrays.toString(ts.solution(5500)));
     }
 }
 
