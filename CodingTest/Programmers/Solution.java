@@ -28,18 +28,25 @@ class Solution {
         int idx = 0;
         for (String target : targets) {
             int tempVal = 0;
+            boolean fail = false;
 
             for (int i = 0; i < target.length(); i++) {
                 char curChar = target.charAt(i);
                 int findPushNum = dict.getOrDefault(curChar, NOT_VALID);
 
                 if (findPushNum == NOT_VALID) {
-                    return new int[]{IMPOSSIBLE};
+                    fail = true;
+                    break;
                 }
 
                 tempVal += findPushNum;
             }
-            answer[idx] = tempVal;
+            
+            if (fail) {
+                answer[idx] = IMPOSSIBLE;
+            } else {
+                answer[idx] = tempVal;
+            }
 
             idx++;
         }
