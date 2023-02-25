@@ -1,14 +1,22 @@
 package CodingTest.Programmers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution {
-    final int COFFEE_PRICE = 5500;
+    public String solution(String s) {
+        String[] arr = s.split(" ");
+        List<Long> list = new ArrayList<>();
 
-    public int[] solution(int money) {
-        int[] answer = new int[2];
+        for (String str : arr) {
+            list.add(Long.parseLong(str));
+        }
 
-        answer[0] = money / COFFEE_PRICE;
-        answer[1] = money % COFFEE_PRICE;
+        list.sort(null);
 
-        return answer;
+        long min = list.get(0);
+        long max = list.get(list.size() - 1);
+
+        return min + " " + max;
     }
 }
