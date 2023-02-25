@@ -25,13 +25,13 @@ class Solution {
             }
         }
 
-        int idx = 0;
-        for (String target : targets) {
+        for (int idx = 0; idx < targets.length; idx++) {
             int tempVal = 0;
             boolean fail = false;
 
-            for (int i = 0; i < target.length(); i++) {
-                char curChar = target.charAt(i);
+            String curStr = targets[idx];
+            for (int i = 0; i < curStr.length(); i++) {
+                char curChar = curStr.charAt(i);
                 int findPushNum = dict.getOrDefault(curChar, NOT_VALID);
 
                 if (findPushNum == NOT_VALID) {
@@ -41,14 +41,12 @@ class Solution {
 
                 tempVal += findPushNum;
             }
-            
+
             if (fail) {
                 answer[idx] = IMPOSSIBLE;
             } else {
                 answer[idx] = tempVal;
             }
-
-            idx++;
         }
 
         return answer;
