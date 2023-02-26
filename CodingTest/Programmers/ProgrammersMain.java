@@ -7,11 +7,7 @@ public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-//        System.out.println(ts.solution("3people unFollowed me"));
-//        System.out.println(ts.solution("for the last week"));
-        System.out.println(Arrays.toString(ts.solution(new String[]{"ABACD", "BCEFD"}, new String[]{"ABCD", "AABB"})));
-        System.out.println(Arrays.toString(ts.solution(new String[]{"AA"}, new String[]{"B"})));
-        System.out.println(Arrays.toString(ts.solution(new String[]{"AGZ", "BSSS"}, new String[]{"ASA", "BGZ"})));
+        System.out.println(Arrays.toString(ts.solution(new int[]{3, 76, 24})));
     }
 }
 
