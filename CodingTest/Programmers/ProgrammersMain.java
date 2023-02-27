@@ -7,7 +7,7 @@ public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new int[]{3, 76, 24})));
+        System.out.println(Arrays.toString(ts.solution(3, 5)));
     }
 }
 
