@@ -44,6 +44,7 @@ class Solution {
                 isVisited[i] = true;
                 list.addLast(i);
                 dfs(n, k, count + 1);
+                if (answer != null) return;
                 list.removeLast();
                 isVisited[i] = false;
             }
