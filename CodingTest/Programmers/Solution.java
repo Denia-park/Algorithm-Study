@@ -10,43 +10,44 @@ import java.util.Deque;
 class Solution {
     Deque<Integer> list;
     long[] factArr;
-    boolean[] isVisited;
-    int gCount;
+    long gCount;
     int[] answer;
+    boolean[] isVisited;
 
     public int[] solution(int n, long k) {
         factArr = new long[n + 1];
-        factArr[0] = 1;
-        for (int i = 1; i <= n; i++) {
-            factArr[i] = (factArr[i - 1] * i);
+        factArr[n - 1] = 1;
+        for (int i = n - 2, j = 2; i >= 0; i--, j++) {
+            factArr[i] = (factArr[i + 1] * j);
         }
 
-        isVisited = new boolean[n + 1];
         list = new ArrayDeque<>();
+        answer = new int[n];
+        isVisited = new boolean[n + 1];
 
         gCount = 1;
 
-        dfs(n, k, 0);
+
+        dfs(n, k, 1);
 
         return answer;
     }
 
     private void dfs(int n, long k, int count) {
-        if (count == n) {
-            if (gCount == k) {
-                answer = list.stream().mapToInt(i -> i).toArray();
-            }
-            gCount++;
+        if (count == n + 1) {
+            answer = list.stream().mapToInt(i -> i).toArray();
+            return;
         }
 
         for (int i = 1; i < n + 1; i++) {
-            if (!isVisited[i]) {
+            if (factArr[count] == 0 || gCount <= k && k < gCount + factArr[count]) {
+                if (isVisited[i]) continue;
                 isVisited[i] = true;
                 list.addLast(i);
                 dfs(n, k, count + 1);
                 if (answer != null) return;
-                list.removeLast();
-                isVisited[i] = false;
+            } else {
+                gCount += factArr[count];
             }
         }
 

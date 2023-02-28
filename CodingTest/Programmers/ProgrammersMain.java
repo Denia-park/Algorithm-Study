@@ -8,6 +8,7 @@ public class ProgrammersMain {
         Solution ts = new Solution();
 
         System.out.println(Arrays.toString(ts.solution(3, 5)));
+        System.out.println(Arrays.toString(ts.solution(3, 6)));
     }
 }
 
