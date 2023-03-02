@@ -16,6 +16,12 @@ class Solution {
     int[] answer;
 
     public int[] solution(int n, long k) {
+        long[] factorial = new long[n + 1];
+        factorial[0] = 1;
+        for (int i = 1; i < n + 1; i++) {
+            factorial[i] = factorial[i - 1] * i;
+        }
+
         list = new LinkedList<>();
         for (int i = 1; i < n + 1; i++) {
             list.add(i);
@@ -27,7 +33,7 @@ class Solution {
 
         int idx = 0;
         while (idx != n) {
-            long duplicationNum = factorial(n - idx - 1);
+            long duplicationNum = factorial[n - idx - 1];
 
             int digitIdx = (int) (k / duplicationNum);
 
@@ -40,11 +46,5 @@ class Solution {
         }
 
         return answer;
-    }
-
-    private long factorial(long n) {
-        if (n == 0) return 1;
-
-        return n * factorial(n - 1);
     }
 }
