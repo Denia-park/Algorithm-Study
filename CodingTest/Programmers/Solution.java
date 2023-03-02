@@ -1,55 +1,50 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
+// 문제
 //https://school.programmers.co.kr/learn/courses/30/lessons/12936
+
+// 정답
+// https://hongcoding.tistory.com/55
 
 //1번부터 n번까지 줄 서기
 
 class Solution {
-    Deque<Integer> list;
-    long[] factArr;
-    long gCount;
+    List<Integer> list;
     int[] answer;
-    boolean[] isVisited;
 
     public int[] solution(int n, long k) {
-        factArr = new long[n + 1];
-        factArr[n - 1] = 1;
-        for (int i = n - 2, j = 2; i >= 0; i--, j++) {
-            factArr[i] = (factArr[i + 1] * j);
+        list = new LinkedList<>();
+        for (int i = 1; i < n + 1; i++) {
+            list.add(i);
         }
 
-        list = new ArrayDeque<>();
+        k = k - 1; // 0번째부터 시작하기 때문에 기존 값에서 -1을 더해서 순서 값을 다시 설정한다.
+
         answer = new int[n];
-        isVisited = new boolean[n + 1];
 
-        gCount = 1;
+        int idx = 0;
+        while (idx != n) {
+            long duplicationNum = factorial(n - idx - 1);
 
+            int digitIdx = (int) (k / duplicationNum);
 
-        dfs(n, k, 1);
+            answer[idx] = list.get(digitIdx);
+            list.remove(digitIdx);
+
+            k %= duplicationNum;
+
+            idx++;
+        }
 
         return answer;
     }
 
-    private void dfs(int n, long k, int count) {
-        if (count == n + 1) {
-            answer = list.stream().mapToInt(i -> i).toArray();
-            return;
-        }
+    private long factorial(long n) {
+        if (n == 0) return 1;
 
-        for (int i = 1; i < n + 1; i++) {
-            if (factArr[count] == 0 || gCount <= k && k < gCount + factArr[count]) {
-                if (isVisited[i]) continue;
-                isVisited[i] = true;
-                list.addLast(i);
-                dfs(n, k, count + 1);
-                if (answer != null) return;
-            } else {
-                gCount += factArr[count];
-            }
-        }
-
+        return n * factorial(n - 1);
     }
 }
