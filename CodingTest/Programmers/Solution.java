@@ -2,28 +2,19 @@ package CodingTest.Programmers;
 
 class Solution {
 
-    private int answer, balls, share;
+    public long solution(int balls, int share) {
+        long answer = 0;
 
-    public int solution(int balls, int share) {
-        answer = 0;
-        this.balls = balls;
-        this.share = share;
-
-        for (int i = 0; i < balls; i++) {
-            combination(i, 1);
-        }
+        answer = factorial(balls) / (factorial(balls - share)) * factorial(share);
 
         return answer;
     }
 
-    private void combination(int curIdx, int curCount) {
-        if (curCount == share) {
-            answer++;
-            return;
-        }
-
-        for (int i = curIdx + 1; i < balls; i++) {
-            combination(i, curCount + 1);
+    private long factorial(int n) {
+        if (n == 0) {
+            return 1;
+        } else {
+            return n * factorial(n - 1);
         }
     }
 }
