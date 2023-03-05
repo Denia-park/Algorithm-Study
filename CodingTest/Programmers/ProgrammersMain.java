@@ -6,8 +6,7 @@ public class ProgrammersMain {
     static public void main(String[] args) throws IOException {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(3, 2));
-        System.out.println(ts.solution(5, 3));
+        System.out.println(ts.solution("ab6CDE443fgh22iJKlmn1o", "6CD"));
     }
 }
 
