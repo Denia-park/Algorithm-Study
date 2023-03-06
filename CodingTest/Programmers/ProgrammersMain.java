@@ -1,12 +1,10 @@
 package CodingTest.Programmers;
 
-import java.io.IOException;
-
 public class ProgrammersMain {
-    static public void main(String[] args) throws IOException {
+    static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution("ab6CDE443fgh22iJKlmn1o", "6CD"));
+        System.out.println(ts.solution(2, 10));
     }
 }
 
