@@ -1,12 +1,10 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new String[]{".#...", "..#..", "...#."})));
+        System.out.println((ts.solution(new int[]{1, 1, 2, 3, 4, 5}, 1)));
     }
 }
 

@@ -1,28 +1,16 @@
 package CodingTest.Programmers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class Solution {
-    public int[] solution(String[] wallpaper) {
-        int minRow, minCol;
-        int maxRow, maxCol;
-        
-        minRow = minCol = Integer.MAX_VALUE;
-        maxRow = maxCol = Integer.MIN_VALUE;
+    public int solution(int[] array, int n) {
+        Map<Integer, Integer> map = new HashMap<>();
 
-        int row = wallpaper.length;
-        int col = wallpaper[0].length();
-
-        for (int r = 0; r < row; r++) {
-            for (int c = 0; c < col; c++) {
-                if (wallpaper[r].charAt(c) == '#') {
-                    minRow = Math.min(minRow, r);
-                    minCol = Math.min(minCol, c);
-                    maxRow = Math.max(maxRow, r);
-                    maxCol = Math.max(maxCol, c);
-                }
-            }
+        for (int element : array) {
+            map.put(element, map.getOrDefault(element, 0) + 1);
         }
 
-        //max 값에 + 1을 하는 이유는 드래그를 하려면 끝점을 선택해야 함
-        return new int[]{minRow, minCol, maxRow + 1, maxCol + 1};
+        return map.getOrDefault(n, 0);
     }
 }
