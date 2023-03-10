@@ -1,16 +1,14 @@
 package CodingTest.Programmers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Scanner;
 
-class Solution {
-    public int solution(int[] array, int n) {
-        Map<Integer, Integer> map = new HashMap<>();
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
 
-        for (int element : array) {
-            map.put(element, map.getOrDefault(element, 0) + 1);
+        for (int i = 1; i < n + 1; i++) {
+            System.out.println("*".repeat(i));
         }
-
-        return map.getOrDefault(n, 0);
     }
 }
