@@ -6,6 +6,7 @@ public class ProgrammersMain {
 
         System.out.println((ts.solution(3)));
         System.out.println((ts.solution(5)));
+        System.out.println((ts.solution(100000)));
     }
 }
 
