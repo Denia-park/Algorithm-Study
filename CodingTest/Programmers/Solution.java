@@ -1,14 +1,23 @@
 package CodingTest.Programmers;
 
-import java.util.Scanner;
+class Solution {
+    int[] dp;
 
-public class Solution {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
+    public int solution(int n) {
+        dp = new int[n + 1];
+        dp[1] = 1;
+        dp[2] = 1;
 
-        for (int i = 1; i < n + 1; i++) {
-            System.out.println("*".repeat(i));
+
+        return getDp(n) % 1234567;
+    }
+
+    private int getDp(int n) {
+        if (dp[n] != 0) {
+            return dp[n];
+        } else {
+            dp[n] = getDp(n - 1) + getDp(n - 2);
+            return dp[n];
         }
     }
 }
