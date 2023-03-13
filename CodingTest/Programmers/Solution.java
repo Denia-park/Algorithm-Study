@@ -1,21 +1,38 @@
 package CodingTest.Programmers;
 
+import java.util.ArrayList;
+
 class Solution {
-    long[] dp;
 
-    public int solution(int n) {
-        dp = new long[n + 1];
-        dp[1] = 1;
-        dp[2] = 1;
+    private final int START = 1;
+    private final int END = 3;
+    private int TOTAL_VALUE = 1 + 2 + 3;
+    private ArrayList<int[]> answerList;
 
-        return (int) (getDp(n) % 1234567);
+    public int[][] solution(int n) {
+        this.answerList = new ArrayList<>();
+
+        hanoi(n);
+
+        return answerList.toArray(new int[0][0]);
     }
 
-    private long getDp(int n) {
-        for (int i = 3; i <= n; i++) {
-            dp[i] = (dp[i - 1] + dp[i - 2]) % 1234567;
+    private void hanoi(int blockNum) {
+        hanoiMove(blockNum - 1, START, TOTAL_VALUE - START - END);
+        hanoiMove(1, START, END);
+        hanoiMove(blockNum - 1, TOTAL_VALUE - START - END, END);
+    }
+
+    private void hanoiMove(int num, int from, int to) {
+        if (num == 1) {
+            this.answerList.add(new int[]{from, to});
+            return;
         }
 
-        return dp[n];
+        hanoiMove(num - 1, from, TOTAL_VALUE - from - to);
+        hanoiMove(1, from, to);
+        hanoiMove(num - 1, TOTAL_VALUE - from - to, to);
     }
 }
+
+

@@ -1,12 +1,13 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(3)));
-        System.out.println((ts.solution(5)));
-        System.out.println((ts.solution(100000)));
+        System.out.println((Arrays.deepToString(ts.solution(2))));
+        System.out.println((Arrays.deepToString(ts.solution(3))));
     }
 }
 
