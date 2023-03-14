@@ -1,38 +1,58 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 class Solution {
+    private int SIZE;
+    private int[] rows;
+    private int answer;
 
-    private final int START = 1;
-    private final int END = 3;
-    private int TOTAL_VALUE = 1 + 2 + 3;
-    private ArrayList<int[]> answerList;
+    public int solution(int n) {
+        answer = 0;
+        SIZE = n;
 
-    public int[][] solution(int n) {
-        this.answerList = new ArrayList<>();
+        for (int col = 0; col < n; col++) {
+            rows = new int[n];
+            Arrays.fill(rows, -1);
 
-        hanoi(n);
+            nQueen(0, col);
+        }
 
-        return answerList.toArray(new int[0][0]);
+        return answer;
     }
 
-    private void hanoi(int blockNum) {
-        hanoiMove(blockNum - 1, START, TOTAL_VALUE - START - END);
-        hanoiMove(1, START, END);
-        hanoiMove(blockNum - 1, TOTAL_VALUE - START - END, END);
-    }
-
-    private void hanoiMove(int num, int from, int to) {
-        if (num == 1) {
-            this.answerList.add(new int[]{from, to});
+    private void nQueen(int row, int col) {
+        if (row == SIZE - 1) {
+            answer++;
             return;
         }
 
-        hanoiMove(num - 1, from, TOTAL_VALUE - from - to);
-        hanoiMove(1, from, to);
-        hanoiMove(num - 1, TOTAL_VALUE - from - to, to);
+        rows[row] = col;
+
+        for (int c = 0; c < SIZE; c++) {
+            if (isNotAvailableToPlace(row + 1, c)) {
+                continue;
+            }
+            nQueen(row + 1, c);
+        }
+
+    }
+
+    private boolean isNotAvailableToPlace(int row, int col) {
+        for (int r = 0; r < row; r++) {
+            if (isSameRow(r, col) || isDiagonal(r, row, col)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isSameRow(int row, int col) {
+        return rows[row] == col;
+    }
+
+    private boolean isDiagonal(int r, int row, int col) {
+        return Math.abs(r - row) == Math.abs(rows[r] - col);
     }
 }
-
-
