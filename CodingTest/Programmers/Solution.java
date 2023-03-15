@@ -79,6 +79,7 @@ class Solution {
 
 
                 if (!visited[newR][newC]) {
+                    visited[newR][newC] = true;
                     deque.add(new Info(newR, newC, moveCount + 1));
                 }
             }
