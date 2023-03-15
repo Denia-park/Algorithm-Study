@@ -53,15 +53,15 @@ class Solution {
     }
 
     private void bfs(char startChar, char targetChar) {
-        Deque<int[]> deque = new ArrayDeque<>();
+        Deque<Info> deque = new ArrayDeque<>();
         int[] info = mapInfo.get(startChar);
-        deque.add(new int[]{info[0], info[1], 0});
+        deque.add(new Info(info[0], info[1], 0));
 
         while (!deque.isEmpty()) {
-            int[] tempInfo = deque.poll();
-            int r = tempInfo[0];
-            int c = tempInfo[1];
-            int moveCount = tempInfo[2];
+            Info tempInfo = deque.poll();
+            int r = tempInfo.r;
+            int c = tempInfo.c;
+            int moveCount = tempInfo.moveCount;
 
             if (map[r][c] == targetChar) {
                 answer += moveCount;
@@ -79,7 +79,7 @@ class Solution {
 
 
                 if (!visited[newR][newC]) {
-                    deque.add(new int[]{newR, newC, moveCount + 1});
+                    deque.add(new Info(newR, newC, moveCount + 1));
                 }
             }
         }
@@ -89,4 +89,16 @@ class Solution {
         return r < 0 || r >= map.length || c < 0 || c >= map[0].length;
     }
 
+}
+
+class Info {
+    int r;
+    int c;
+    int moveCount;
+
+    public Info(int r, int c, int moveCount) {
+        this.r = r;
+        this.c = c;
+        this.moveCount = moveCount;
+    }
 }
