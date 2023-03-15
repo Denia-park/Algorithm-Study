@@ -1,58 +1,92 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 
 class Solution {
-    private int SIZE;
-    private int[] rows;
+
+    private char[][] map;
+    private boolean[][] visited;
     private int answer;
+    private Map<Character, int[]> mapInfo;
+    private int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
-    public int solution(int n) {
+    public int solution(String[] maps) {
         answer = 0;
-        SIZE = n;
+        map = new char[maps.length][maps[0].length()];
 
-        for (int col = 0; col < n; col++) {
-            rows = new int[n];
-            Arrays.fill(rows, -1);
+        mapInfo = new HashMap<>();
 
-            nQueen(0, col);
-        }
+        //Data들을 Map으로 변환
+        for (int r = 0; r < maps.length; r++) {
+            for (int c = 0; c < maps[r].length(); c++) {
+                char data = maps[r].charAt(c);
 
-        return answer;
-    }
+                if (data == 'S') {
+                    mapInfo.put('S', new int[]{r, c});
+                } else if (data == 'L') {
+                    mapInfo.put('L', new int[]{r, c});
+                } else if (data == 'E') {
+                    mapInfo.put('E', new int[]{r, c});
+                }
 
-    private void nQueen(int row, int col) {
-        if (row == SIZE - 1) {
-            answer++;
-            return;
-        }
-
-        rows[row] = col;
-
-        for (int c = 0; c < SIZE; c++) {
-            if (isNotAvailableToPlace(row + 1, c)) {
-                continue;
-            }
-            nQueen(row + 1, c);
-        }
-
-    }
-
-    private boolean isNotAvailableToPlace(int row, int col) {
-        for (int r = 0; r < row; r++) {
-            if (isSameRow(r, col) || isDiagonal(r, row, col)) {
-                return true;
+                map[r][c] = data;
             }
         }
 
-        return false;
+        visited = new boolean[maps.length][maps[0].length()];
+        //S에서 L을 찾는 과정
+        bfs('S', 'L');
+
+        //L을 못 찾았으면 그대로 종료
+        if (answer == 0) {
+            return -1;
+        }
+
+        visited = new boolean[maps.length][maps[0].length()];
+        //L에서 E를 찾는 과정
+        bfs('L', 'E');
+
+        return answer == 0 ? -1 : answer;
     }
 
-    private boolean isSameRow(int row, int col) {
-        return rows[row] == col;
+    private void bfs(char startChar, char targetChar) {
+        Deque<int[]> deque = new ArrayDeque<>();
+        int[] info = mapInfo.get(startChar);
+        deque.add(new int[]{info[0], info[1], 0});
+
+        while (!deque.isEmpty()) {
+            int[] tempInfo = deque.poll();
+            int r = tempInfo[0];
+            int c = tempInfo[1];
+            int moveCount = tempInfo[2];
+
+            if (map[r][c] == targetChar) {
+                answer += moveCount;
+                return;
+            }
+
+            visited[r][c] = true;
+
+            for (int[] direction : directions) {
+                int newR = r + direction[0];
+                int newC = c + direction[1];
+
+                if (isOutOfBound(newR, newC) || map[newR][newC] == 'X')
+                    continue;
+
+
+                if (!visited[newR][newC]) {
+                    deque.add(new int[]{newR, newC, moveCount + 1});
+                }
+            }
+        }
     }
 
-    private boolean isDiagonal(int r, int row, int col) {
-        return Math.abs(r - row) == Math.abs(rows[r] - col);
+    private boolean isOutOfBound(int r, int c) {
+        return r < 0 || r >= map.length || c < 0 || c >= map[0].length;
     }
+
 }

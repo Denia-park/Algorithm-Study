@@ -4,7 +4,8 @@ public class ProgrammersMain {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(4)));
+        System.out.println((ts.solution(new String[]{"SOOOL", "XXXXO", "OOOOO", "OXXXX", "OOOOE"})));
+        System.out.println((ts.solution(new String[]{"LOOXS", "OOOOX", "OOOOO", "OOOOO", "EOOOO"})));
     }
 }
 
