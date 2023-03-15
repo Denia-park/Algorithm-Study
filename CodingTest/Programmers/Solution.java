@@ -1,9 +1,6 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class Solution {
 
@@ -45,7 +42,10 @@ class Solution {
             return -1;
         }
 
-        visited = new boolean[maps.length][maps[0].length()];
+        for (boolean[] booleans : visited) {
+            Arrays.fill(booleans, false);
+        }
+
         //L에서 E를 찾는 과정
         bfs('L', 'E');
 
