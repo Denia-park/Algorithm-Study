@@ -1,21 +1,24 @@
-package CodingTest.Programmers;
+package CodingTest.Programmers;// you can also use imports, for example:
 
 class Solution {
-    public String solution(String rsp) {
-        StringBuilder sb = new StringBuilder();
+    public int solution(int N) {
+        // Implement your solution here
 
-        for (int idx = 0; idx < rsp.length(); idx++) {
-            char c = rsp.charAt(idx);
+        String binary = Integer.toBinaryString(N);
 
-            if (c == '2') {
-                sb.append("0");
-            } else if (c == '0') {
-                sb.append("5");
-            } else if (c == '5') {
-                sb.append("2");
+        int answer = 0;
+        int idxStart = binary.indexOf("1");
+        while (idxStart != -1) {
+            int idxEnd = binary.indexOf("1", idxStart + 1);
+            if (idxEnd == -1) {
+                break;
             }
+
+            answer = Math.max(answer, idxEnd - idxStart - 1);
+
+            idxStart = idxEnd;
         }
 
-        return sb.toString();
+        return answer;
     }
 }
