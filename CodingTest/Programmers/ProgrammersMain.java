@@ -4,10 +4,10 @@ public class ProgrammersMain {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(1)));
-        System.out.println((ts.solution(4)));
-        System.out.println((ts.solution(5)));
-        System.out.println((ts.solution(9)));
+        System.out.println((ts.solution(new String[]{"O.X", ".O.", "..X"})));
+        System.out.println((ts.solution(new String[]{"OOO", "...", "XXX"})));
+        System.out.println((ts.solution(new String[]{"...", ".X.", "..."})));
+        System.out.println((ts.solution(new String[]{"...", "...", "..."})));
     }
 }
 

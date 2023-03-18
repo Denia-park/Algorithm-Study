@@ -1,24 +1,79 @@
-package CodingTest.Programmers;// you can also use imports, for example:
+package CodingTest.Programmers;
 
+//정답 참고
+//출처 : https://velog.io/@qodlstjd12/%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-%ED%98%BC%EC%9E%90%EC%84%9C-%ED%95%98%EB%8A%94-%ED%8B%B1%ED%83%9D%ED%86%A0-java
 class Solution {
-    public int solution(int N) {
-        // Implement your solution here
+    char[][] gBoard;
 
-        String binary = Integer.toBinaryString(N);
+    public int solution(String[] board) {
+        int firstPlaceCount = 0;
+        int secondPlaceCount = 0;
 
-        int answer = 0;
-        int idxStart = binary.indexOf("1");
-        while (idxStart != -1) {
-            int idxEnd = binary.indexOf("1", idxStart + 1);
-            if (idxEnd == -1) {
-                break;
+        gBoard = new char[3][3];
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                char ch = board[r].charAt(c);
+                gBoard[r][c] = ch;
+                if (ch == 'O') {
+                    firstPlaceCount++;
+                } else if (ch == 'X') {
+                    secondPlaceCount++;
+                }
             }
-
-            answer = Math.max(answer, idxEnd - idxStart - 1);
-
-            idxStart = idxEnd;
         }
 
-        return answer;
+        boolean[] winArr = checkWin();
+
+        boolean firstWin = winArr[0];
+        boolean secondWin = winArr[1];
+
+
+        //둘 다 이겼다는 안됨
+        //선공이 이겼는데 개수가 동일하면 안됨
+        //후공이 이겼는데 선공의 수가 더 많아도 안됨
+        //아직 승부가 안났는데 엑스가 많아도 안됨 (== 후공의 개수가 더 많을 수가 없다.)
+        if ((firstWin && secondWin) ||
+                (firstWin && firstPlaceCount == secondPlaceCount) ||
+                (secondWin && firstPlaceCount > secondPlaceCount) ||
+                (firstPlaceCount < secondPlaceCount)) {
+            return 0;
+        }
+
+        return 1;
+    }
+
+    private boolean[] checkWin() {
+        boolean firstWin = false;
+        boolean secondWin = false;
+
+        for (int c = 0; c < 3; c++) {
+            if (gBoard[0][c] == gBoard[1][c] && gBoard[1][c] == gBoard[2][c]) {
+                if (gBoard[0][c] == 'O') {
+                    firstWin = true;
+                } else if (gBoard[0][c] == 'X') {
+                    secondWin = true;
+                }
+            }
+        }
+
+        for (int r = 0; r < 3; r++) {
+            if (gBoard[r][0] == gBoard[r][1] && gBoard[r][1] == gBoard[r][2]) {
+                if (gBoard[r][0] == 'O') {
+                    firstWin = true;
+                } else if (gBoard[r][0] == 'X') {
+                    secondWin = true;
+                }
+            }
+        }
+
+        if (gBoard[0][0] == gBoard[1][1] && gBoard[1][1] == gBoard[2][2]) {
+            if (gBoard[0][0] == 'O') {
+                firstWin = true;
+            } else if (gBoard[0][0] == 'X') {
+                secondWin = true;
+            }
+        }
+
+        return new boolean[]{firstWin, secondWin};
     }
 }
