@@ -27,15 +27,21 @@ class Solution {
         boolean firstWin = winArr[0];
         boolean secondWin = winArr[1];
 
-
         //둘 다 이겼다는 안됨
+        if (firstWin && secondWin) {
+            return 0;
+        }
+        //후공의 개수가 더 많을 수가 없다. , 선공이 2개 차이나게 둘 수 없다.
+        else if ((firstPlaceCount < secondPlaceCount) ||
+                ((firstPlaceCount - secondPlaceCount) > 1)) {
+            return 0;
+        }
         //선공이 이겼는데 개수가 동일하면 안됨
+        else if ((firstWin && firstPlaceCount == secondPlaceCount)) {
+            return 0;
+        }
         //후공이 이겼는데 선공의 수가 더 많아도 안됨
-        //아직 승부가 안났는데 엑스가 많아도 안됨 (== 후공의 개수가 더 많을 수가 없다.)
-        if ((firstWin && secondWin) ||
-                (firstWin && firstPlaceCount == secondPlaceCount) ||
-                (secondWin && firstPlaceCount > secondPlaceCount) ||
-                (firstPlaceCount < secondPlaceCount)) {
+        else if ((secondWin && firstPlaceCount > secondPlaceCount)) {
             return 0;
         }
 
@@ -75,9 +81,9 @@ class Solution {
         }
 
         if (gBoard[0][2] == gBoard[1][1] && gBoard[1][1] == gBoard[2][0]) {
-            if (gBoard[0][0] == 'O') {
+            if (gBoard[0][2] == 'O') {
                 firstWin = true;
-            } else if (gBoard[0][0] == 'X') {
+            } else if (gBoard[0][2] == 'X') {
                 secondWin = true;
             }
         }
