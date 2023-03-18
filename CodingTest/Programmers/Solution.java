@@ -74,6 +74,14 @@ class Solution {
             }
         }
 
+        if (gBoard[0][2] == gBoard[1][1] && gBoard[1][1] == gBoard[2][0]) {
+            if (gBoard[0][0] == 'O') {
+                firstWin = true;
+            } else if (gBoard[0][0] == 'X') {
+                secondWin = true;
+            }
+        }
+
         return new boolean[]{firstWin, secondWin};
     }
 }
