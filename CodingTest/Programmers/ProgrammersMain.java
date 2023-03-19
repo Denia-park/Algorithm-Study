@@ -1,13 +1,12 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(new String[]{"O.X", ".O.", "..X"})));
-        System.out.println((ts.solution(new String[]{"OOO", "...", "XXX"})));
-        System.out.println((ts.solution(new String[]{"...", ".X.", "..."})));
-        System.out.println((ts.solution(new String[]{"...", "...", "..."})));
+        System.out.println((Arrays.toString(ts.solution(10, 10, 3, 7, new int[][]{{7, 7}, {2, 7}, {7, 3}}))));
     }
 }
 
