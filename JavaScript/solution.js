@@ -1,18 +1,16 @@
 function solution(N) {
     // Implement your solution here
     let binaryString = dec2bin(N);
-    let arr = binaryString.split("1");
-
-    console.log(arr)
-
-    if (arr.length === 2) {
-        return 0;
-    }
 
     let answer = 0;
-
-    for (const element of arr) {
-        answer = Math.max(answer, element.length);
+    let zeroCount = 0;
+    for (let i = 0; i < binaryString.length; i++) {
+        if (binaryString.charAt(i) === "1") {
+            answer = Math.max(answer, zeroCount);
+            zeroCount = 0;
+        } else {
+            zeroCount++;
+        }
     }
 
     return answer;
@@ -26,3 +24,4 @@ console.log(solution(5));
 console.log(solution(9));
 console.log(solution(32));
 console.log(solution(1041));
+console.log(solution(328));
