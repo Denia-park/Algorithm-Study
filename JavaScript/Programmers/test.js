@@ -1,17 +1,13 @@
-function solution(x) {
-    let sum = getDigitSum(x);
+function solution(a, b) {
+    var answer = 0;
 
-    return Math.floor(x / sum) === x / sum;
-}
+    let start = Math.min(a, b);
+    let end = Math.max(a, b);
 
-function getDigitSum(number) {
-    let sum = 0;
-
-    let arr = number.toString().split('');
-
-    for (let i = 0; i < arr.length; i++) {
-        sum += Number(arr[i]);
+    while (start <= end) {
+        answer += start;
+        start++;
     }
 
-    return sum;
+    return answer;
 }
