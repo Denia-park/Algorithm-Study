@@ -1,12 +1,11 @@
-function solution(n) {
-    const arr = Array.from(String(n));
+function solution(x, n) {
+    var answer = [];
 
-    let sum = 0;
-    for (const arrElement of arr) {
-        sum += parseInt(arrElement);
+    let curVal = x;
+    answer.push(curVal);
+    while (answer.length !== n) {
+        curVal += x;
+        answer.push(curVal);
     }
-
-    return sum;
+    return answer;
 }
-
-console.log(solution(123));
