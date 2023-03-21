@@ -1,23 +1,45 @@
-function solution(wallpaper) {
-    let answer = [];
+function solution(id_list, report, k) {
+    var answer = [];
 
-    let minX, minY, maxX, maxY;
+    let totalRepoList = {};
+    let repoHistory = {};
 
-    minX = 100;
-    minY = 100;
-    maxX = -1;
-    maxY = -1;
+    for (const eachElement of report) {
+        let [from, to] = eachElement.split(" ");
 
-    for (let r = 0; r < wallpaper.length; r++) {
-        for (let c = 0; c < wallpaper[r].length; c++) {
-            if (wallpaper[r][c] === "#") {
-                minX = Math.min(minX, r);
-                minY = Math.min(minY, c);
-                maxX = Math.max(maxX, r);
-                maxY = Math.max(maxY, c);
-            }
+        if (repoHistory[from] === undefined) {
+            repoHistory[from] = [];
+            repoHistory[from].push(to);
+        } else {
+            repoHistory[from].push(to);
+        }
+
+        if (totalRepoList[to] === undefined) {
+            totalRepoList[to] = 1;
+        } else {
+            totalRepoList[to]++;
         }
     }
 
-    return [minX, minY, maxX + 1, maxY + 1];
+    let stoppedIdList = id_list.filter(id => totalRepoList[id] >= k);
+
+    for (const id of id_list) {
+        let tempCount = 0;
+        if (repoHistory[id] !== undefined) {
+
+            for (const repoId of repoHistory[id]) {
+                if (stoppedIdList.includes(repoId)) {
+                    tempCount++;
+                }
+            }
+        }
+
+        answer.push(tempCount);
+    }
+
+    return answer;
 }
+
+// let val = solution(["muzi", "frodo", "apeach", "neo"], ["muzi frodo", "apeach frodo", "frodo neo", "muzi neo", "apeach muzi"], 2);
+let val = solution(["con", "ryan"], ["ryan con", "ryan con", "ryan con", "ryan con"], 3);
+console.log(val)
