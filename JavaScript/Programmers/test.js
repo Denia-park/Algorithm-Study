@@ -1,17 +1,8 @@
 function solution(n) {
-    var answer = 0;
+    let arr = Array.from(String(n));
+    arr = arr.sort().reverse();
 
-    let newN = n - 1;
+    let str = arr.reduce((a, b) => a + b, "");
 
-    return getDividers(newN)[1];
-}
-
-function getDividers(number) {
-    let arr = [];
-    for (let i = 1; i <= number; i++) {
-        if (number % i === 0) {
-            arr.push(i);
-        }
-    }
-    return arr
+    return parseInt(str);
 }
