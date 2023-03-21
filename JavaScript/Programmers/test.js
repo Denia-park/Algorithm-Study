@@ -1,16 +1,7 @@
-function solution(n) {
-
-    return getDividers(n).reduce((a, b) => a + b, 0);
-}
-
-function getDividers(number) {
-    let dividers = [];
-
-    for (let i = 1; i <= number; i++) {
-        if (number % i === 0) {
-            dividers.push(i);
-        }
+function solution(num) {
+    if (num % 2 === 0) {
+        return 'Even';
+    } else {
+        return 'Odd';
     }
-
-    return dividers
 }
