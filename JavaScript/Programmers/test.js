@@ -1,10 +1,15 @@
 function solution(n) {
-    let arr = Array.from(String(n));
-
-    let answer = [];
-    for (let i = arr.length - 1; i >= 0; i--) {
-        answer.push(parseInt(arr[i]));
+    var answer = 0;
+    let sqrt = Math.floor(Math.sqrt(n));
+    if (Math.pow(sqrt, 2) === n) {
+        answer = (sqrt + 1) ** 2;
+    } else {
+        answer = -1;
     }
 
     return answer;
 }
+
+console.log(solution(1))
+console.log(solution(25))
+console.log(solution(121))
