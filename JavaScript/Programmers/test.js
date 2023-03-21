@@ -1,8 +1,16 @@
-function solution(n, k) {
-    var answer = 0;
-    const sheepFood = 12000;
-    const drink = 2000;
-    const service = parseInt(String(n / 10));
-    answer = 12000 * n + 2000 * (k - service);
-    return answer;
+function solution(n) {
+
+    return getDividers(n).reduce((a, b) => a + b, 0);
+}
+
+function getDividers(number) {
+    let dividers = [];
+
+    for (let i = 1; i <= number; i++) {
+        if (number % i === 0) {
+            dividers.push(i);
+        }
+    }
+
+    return dividers
 }
