@@ -1,11 +1,10 @@
-function solution(x, n) {
-    var answer = [];
+function solution(n) {
+    let arr = Array.from(String(n));
 
-    let curVal = x;
-    answer.push(curVal);
-    while (answer.length !== n) {
-        curVal += x;
-        answer.push(curVal);
+    let answer = [];
+    for (let i = arr.length - 1; i >= 0; i--) {
+        answer.push(parseInt(arr[i]));
     }
+
     return answer;
 }
