@@ -1,7 +1,4 @@
-function solution(num) {
-    if (num % 2 === 0) {
-        return 'Even';
-    } else {
-        return 'Odd';
-    }
+function solution(arr) {
+    let length = arr.length;
+    return arr.reduce((a, b) => a + b, 0) / length;
 }
