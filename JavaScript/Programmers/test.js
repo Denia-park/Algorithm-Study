@@ -11,6 +11,10 @@ function solution(id_list, report, k) {
             repoHistory[from] = [];
             repoHistory[from].push(to);
         } else {
+            if (repoHistory[from].includes(to)) {
+                continue;
+            }
+            
             repoHistory[from].push(to);
         }
 
