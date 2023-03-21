@@ -1,13 +1,23 @@
-function solution(a, b) {
-    var answer = 0;
+function solution(wallpaper) {
+    let answer = [];
 
-    let start = Math.min(a, b);
-    let end = Math.max(a, b);
+    let minX, minY, maxX, maxY;
 
-    while (start <= end) {
-        answer += start;
-        start++;
+    minX = 100;
+    minY = 100;
+    maxX = -1;
+    maxY = -1;
+
+    for (let r = 0; r < wallpaper.length; r++) {
+        for (let c = 0; c < wallpaper[r].length; c++) {
+            if (wallpaper[r][c] === "#") {
+                minX = Math.min(minX, r);
+                minY = Math.min(minY, c);
+                maxX = Math.max(maxX, r);
+                maxY = Math.max(maxY, c);
+            }
+        }
     }
 
-    return answer;
+    return [minX, minY, maxX + 1, maxY + 1];
 }
