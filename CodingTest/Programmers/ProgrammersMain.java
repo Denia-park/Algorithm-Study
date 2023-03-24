@@ -6,7 +6,7 @@ public class ProgrammersMain {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((Arrays.toString(ts.solution(10, 10, 3, 7, new int[][]{{7, 7}, {2, 7}, {7, 3}}))));
+        System.out.println((Arrays.toString(ts.solution(new String[]{"SOO", "OOO", "OOO"}, new String[]{"E 2", "S 2", "W 1"}))));
     }
 }
 
