@@ -1,23 +1,15 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 class Solution {
     public int solution(int totalSectionNum, int rollerLength, int[] sectionsToPaint) {
         int answer = 0;
-        
-        Deque<Integer> deque = new ArrayDeque<>();
-        for (int section : sectionsToPaint) {
-            deque.add(section);
-        }
 
-        int firstSection = deque.pollFirst();
+        int firstSection = sectionsToPaint[0];
         int paintRollerLength = firstSection + rollerLength - 1;
         answer++;
 
-        while (!deque.isEmpty()) {
-            int nextSection = deque.pollFirst();
+        for (int idx = 1; idx < sectionsToPaint.length; idx++) {
+            int nextSection = sectionsToPaint[idx];
 
             if (nextSection > paintRollerLength) {
                 paintRollerLength = nextSection + rollerLength - 1;
