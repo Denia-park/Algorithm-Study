@@ -1,11 +1,12 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
     int ROW, COL;
     int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    int[][] visited;
+    boolean[][] visited;
     char[][] map;
     int[] start, goal;
     private int answer;
@@ -14,10 +15,7 @@ class Solution {
         answer = Integer.MAX_VALUE;
         ROW = board.length;
         COL = board[0].length();
-        visited = new int[ROW][COL];
-        for (int[] ints : visited) {
-            Arrays.fill(ints, Integer.MAX_VALUE);
-        }
+        visited = new boolean[ROW][COL];
         this.map = new char[ROW][COL];
 
         for (int r = 0; r < ROW; r++) {
@@ -33,29 +31,39 @@ class Solution {
             }
         }
 
-        visited[start[0]][start[1]] = 0;
-        dfs(start[0], start[1], 0);
+        visited[start[0]][start[1]] = true;
+        bfs(start[0], start[1], 0);
 
         return answer == Integer.MAX_VALUE ? -1 : answer;
     }
 
-    private void dfs(int curRow, int curCol, int cnt) {
-        if (map[curRow][curCol] == 'G') {
-            answer = Math.min(answer, cnt);
-            return;
-        }
+    private void bfs(int curRow, int curCol, int cnt) {
+        Deque<int[]> deque = new ArrayDeque<>();
+        deque.add(new int[]{curRow, curCol, cnt});
 
-        for (int direction = 0; direction < directions.length; direction++) {
-            int[] nextRowCol = goStraight(curRow, curCol, direction);
-            int nextRow = nextRowCol[0];
-            int nextCol = nextRowCol[1];
+        while (!deque.isEmpty()) {
+            int[] cur = deque.poll();
+            int cR = cur[0];
+            int cC = cur[1];
+            int cCnt = cur[2];
 
-            if (visited[nextRow][nextCol] <= cnt + 1) {
-                continue;
+            if (cR == goal[0] && cC == goal[1]) {
+                answer = Math.min(answer, cCnt);
+                return;
             }
 
-            visited[nextRow][nextCol] = cnt + 1;
-            dfs(nextRow, nextCol, cnt + 1);
+            for (int direction = 0; direction < directions.length; direction++) {
+                int[] nextRowCol = goStraight(cR, cC, direction);
+                int nextRow = nextRowCol[0];
+                int nextCol = nextRowCol[1];
+
+                if (visited[nextRow][nextCol]) {
+                    continue;
+                }
+
+                visited[nextRow][nextCol] = true;
+                deque.add(new int[]{nextRow, nextCol, cCnt + 1});
+            }
         }
     }
 
