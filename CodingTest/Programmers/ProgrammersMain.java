@@ -8,7 +8,7 @@ public class ProgrammersMain {
         Solution ts = new Solution();
 
 //        System.out.println(ts.solution(8, 4, new int[]{2, 3, 6}));
-        ts.plusMinus(new ArrayList<>(Arrays.asList(-4, 3, -9, 0, 4, 1)));
+        ts.miniMaxSum(new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5)));
     }
 }
 

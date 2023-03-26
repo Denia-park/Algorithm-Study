@@ -3,27 +3,20 @@ package CodingTest.Programmers;
 import java.util.List;
 
 class Solution {
-    public static void plusMinus(List<Integer> arr) {
+    public static void miniMaxSum(List<Integer> arr) {
         // Write your code here
-        double size = arr.size();
+        arr.sort(null);
 
-        double plus = 0;
-        double minus = 0;
-        double zero = 0;
-
+        long sum = 0;
         for (Integer i : arr) {
-            if (i == 0) {
-                zero++;
-            } else if (i > 0) {
-                plus++;
-            } else {
-                minus++;
-            }
+            sum += i;
         }
 
-        System.out.printf("%.6f%n", plus / size);
-        System.out.printf("%.6f%n", minus / size);
-        System.out.printf("%.6f%n", zero / size);
+        int min = arr.get(0);
+        int max = arr.get(arr.size() - 1);
+
+        System.out.print(sum - max);
+        System.out.println(" " + (sum - min));
     }
 
     public int solution(int totalSectionNum, int rollerLength, int[] sectionsToPaint) {
