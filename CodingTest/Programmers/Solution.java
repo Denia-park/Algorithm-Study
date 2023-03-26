@@ -7,7 +7,7 @@ class Solution {
     int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
     boolean[][] visited;
     char[][] map;
-    int[] start;
+    int[] start, goal;
     private int answer;
 
     public int solution(String[] board) {
@@ -24,14 +24,37 @@ class Solution {
 
                 if (ch == 'R') {
                     start = new int[]{r, c};
+                } else if (ch == 'G') {
+                    goal = new int[]{r, c};
                 }
             }
+        }
+
+        if (isNotReachable(goal)) {
+            return -1;
         }
 
         visited[start[0]][start[1]] = true;
         dfs(start[0], start[1], 0);
 
-        return answer == Integer.MAX_VALUE ? -1 : answer;
+//        return answer == Integer.MAX_VALUE ? -1 : answer;
+        return answer;
+    }
+
+    private boolean isNotReachable(int[] goal) {
+        int goalRow = goal[0];
+        int goalCol = goal[1];
+
+        for (int[] direction : directions) {
+            int sideRow = goalRow + direction[0];
+            int sideCol = goalCol + direction[1];
+
+            if (isOutOfMap(sideRow, sideCol) || map[sideRow][sideCol] == 'D') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void dfs(int curRow, int curCol, int cnt) {
