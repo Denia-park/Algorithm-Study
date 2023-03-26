@@ -40,6 +40,10 @@ class Solution {
             return;
         }
 
+        if (cnt + 1 > answer) {
+            return;
+        }
+
         for (int direction = 0; direction < directions.length; direction++) {
             int[] nextRowCol = goStraight(curRow, curCol, direction);
             int nextRow = nextRowCol[0];
