@@ -1,11 +1,11 @@
 package CodingTest.Programmers;
 
-//리코쳇 로봇
-//완탐 돌리자
+import java.util.Arrays;
+
 class Solution {
     int ROW, COL;
     int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    boolean[][] visited;
+    int[][] visited;
     char[][] map;
     int[] start, goal;
     private int answer;
@@ -14,7 +14,10 @@ class Solution {
         answer = Integer.MAX_VALUE;
         ROW = board.length;
         COL = board[0].length();
-        visited = new boolean[ROW][COL];
+        visited = new int[ROW][COL];
+        for (int[] ints : visited) {
+            Arrays.fill(ints, Integer.MAX_VALUE);
+        }
         this.map = new char[ROW][COL];
 
         for (int r = 0; r < ROW; r++) {
@@ -30,31 +33,10 @@ class Solution {
             }
         }
 
-        if (isNotReachable(goal)) {
-            return -1;
-        }
-
-        visited[start[0]][start[1]] = true;
+        visited[start[0]][start[1]] = 0;
         dfs(start[0], start[1], 0);
 
-//        return answer == Integer.MAX_VALUE ? -1 : answer;
-        return answer;
-    }
-
-    private boolean isNotReachable(int[] goal) {
-        int goalRow = goal[0];
-        int goalCol = goal[1];
-
-        for (int[] direction : directions) {
-            int sideRow = goalRow + direction[0];
-            int sideCol = goalCol + direction[1];
-
-            if (isOutOfMap(sideRow, sideCol) || map[sideRow][sideCol] == 'D') {
-                return false;
-            }
-        }
-
-        return true;
+        return answer == Integer.MAX_VALUE ? -1 : answer;
     }
 
     private void dfs(int curRow, int curCol, int cnt) {
@@ -63,22 +45,17 @@ class Solution {
             return;
         }
 
-        if (cnt + 1 > answer) {
-            return;
-        }
-
         for (int direction = 0; direction < directions.length; direction++) {
             int[] nextRowCol = goStraight(curRow, curCol, direction);
             int nextRow = nextRowCol[0];
             int nextCol = nextRowCol[1];
 
-            if (visited[nextRow][nextCol]) {
+            if (visited[nextRow][nextCol] <= cnt + 1) {
                 continue;
             }
 
-            visited[nextRow][nextCol] = true;
+            visited[nextRow][nextCol] = cnt + 1;
             dfs(nextRow, nextCol, cnt + 1);
-            visited[nextRow][nextCol] = false;
         }
     }
 
