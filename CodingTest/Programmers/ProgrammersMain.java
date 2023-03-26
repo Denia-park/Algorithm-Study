@@ -1,14 +1,12 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class ProgrammersMain {
     static public void main(String[] args) {
         Solution ts = new Solution();
 
-//        System.out.println(ts.solution(8, 4, new int[]{2, 3, 6}));
-        ts.miniMaxSum(new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5)));
+        System.out.println(ts.solution(new String[]{"...D..R", ".D.G...", "....D.D", "D....D.", "..D...."}));
+        System.out.println(ts.solution(new String[]{".D.R", "....", ".G..", "...D"}));
+//        ts.miniMaxSum(new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5)));
     }
 }
 
