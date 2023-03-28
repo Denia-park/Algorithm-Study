@@ -1,39 +1,23 @@
 package CodingTest.Programmers.HackerRank;
 
+import java.util.List;
+
 public class Result {
     /*
-     * Complete the 'fizzBuzz' function below.
+     * Complete the 'findMedian' function below.
      *
-     * The function accepts INTEGER n as parameter.
+     * The function is expected to return an INTEGER.
+     * The function accepts INTEGER_ARRAY arr as parameter.
      */
-    static final String FIZZ = "Fizz";
-    static final String BUZZ = "Buzz";
-    static final String FIZZBUZZ = FIZZ + BUZZ;
 
-    public static void fizzBuzz(int n) {
-        //3으로 나누면 Fizz
-        //5로 나뉘면 Buzz
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= n; i++) {
-            boolean converted = false;
+    public static int findMedian(List<Integer> arr) {
+        // Write your code here
 
-            if (i % 3 == 0) {
-                sb.append(FIZZ);
-                converted = true;
-            }
-            if (i % 5 == 0) {
-                sb.append(BUZZ);
-                converted = true;
-            }
+        arr.sort(null);
 
-            if (!converted) {
-                sb.append(i);
-            }
+        int length = arr.size();
+        int mid = length / 2;
 
-            sb.append("\n");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-
-        System.out.println(sb);
+        return arr.get(mid);
     }
 }
