@@ -1,4 +1,4 @@
-package CodingTest.Programmers.HackerRank;
+package CodingTest.HackerRank;
 
 import java.util.List;
 
