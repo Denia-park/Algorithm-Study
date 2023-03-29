@@ -1,11 +1,12 @@
 package CodingTest.Programmers;
 
 public class ProgrammersMain {
-    static public void main(String[] args) {
+    public static void main(String[] args) {
         Solution ts = new Solution();
 
-//        System.out.println(ts.solution(new String[]{"...D..R", ".D.G...", "....D.D", "D....D.", "..D...."}));
-        System.out.println(ts.timeConversion("07:05:45PM"));
+        System.out.println(ts.solution(10, 40, 5));
+        System.out.println(ts.solution(10, 40, 30));
+        System.out.println(ts.solution(2, 5, 4));
     }
 }
 
