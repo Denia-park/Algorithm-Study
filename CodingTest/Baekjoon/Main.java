@@ -1,42 +1,31 @@
 package CodingTest.Baekjoon;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    static public void main(String[] args) {
-        System.out.println("Hello World!");
+    static public void main(String[] args) throws IOException {
+        BjSolution sol = new BjSolution();
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] arrSizes = br.readLine().split(" ");
+
+        sol.solution(arrSizes);
     }
 }
 
-//        BjSolution sol = new BjSolution();
-
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//        String[] arrSizes = br.readLine().split(" ");
-
-//        sol.solution(arrSizes, arrA, arrB);
 
 class BjSolution {
-    public void solution(String[] arrSizes, String[] arrA, String[] arrB) {
-        int ans = 0;
-        List<Integer> list = new ArrayList<>();
+    public void solution(String[] arrSizes) {
+        int A = Integer.parseInt(arrSizes[0]);
+        int B = Integer.parseInt(arrSizes[1]);
 
-        for (String s : arrA) {
-            list.add(Integer.parseInt(s));
-        }
-        for (String s : arrB) {
-            list.add(Integer.parseInt(s));
-        }
-
-        list.sort(null);
-
-        StringBuilder sb = new StringBuilder();
-
-        for (Integer i : list) {
-            sb.append(i).append(" ");
-        }
-
-        System.out.println(sb);
+        System.out.println(A + B);
+        System.out.println(A - B);
+        System.out.println(A * B);
+        System.out.println(A / B);
+        System.out.println(A % B);
     }
 }
 
