@@ -6,29 +6,32 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        BjSolution sol = new BjSolution();
+        BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        char[] chars = br.readLine().toCharArray();
-        System.out.println((int) chars[0]);
-
-//        sol.solution(inputs);
+        int testNum = Integer.parseInt(br.readLine());
+        for (int i = 0; i < testNum; i++) {
+            sol.solution(br.readLine());
+        }
     }
 }
 
 
 class BjSolution {
-    public void solution(int[] input) {
-        long multiplyValue = (long) input[0] * input[1] * input[2];
-        String str = String.valueOf(multiplyValue);
-        int[] output = new int[10];
-        for (char ch : str.toCharArray()) {
-            output[ch - '0']++;
+    public void solution(String input) {
+        String[] inputs = input.split(" ");
+        int mutiplyValue = Integer.parseInt(inputs[0]);
+        char[] chars = inputs[1].toCharArray();
+
+        StringBuilder sb = new StringBuilder();
+        for (char ch : chars) {
+            for (int i = 0; i < mutiplyValue; i++) {
+                sb.append(ch);
+            }
         }
-        for (int i : output) {
-            System.out.println(i);
-        }
+
+        System.out.println(sb);
     }
 }
 
