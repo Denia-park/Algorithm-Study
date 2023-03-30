@@ -7,14 +7,26 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        BjSolution sol = new BjSolution();
+//        BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String firstLine = br.readLine();
-        String secondLine = br.readLine();
 
-        sol.solution(firstLine, secondLine);
+        int[] arr = new int[9];
+        int maxVal = Integer.MIN_VALUE;
+        int idx = 0;
 
+        for (int i = 0; i < 9; i++) {
+            int val = Integer.parseInt(br.readLine());
+            arr[i] = val;
+            if (maxVal < val) {
+                maxVal = val;
+                idx = i;
+            }
+        }
+        System.out.println(maxVal);
+        System.out.println(idx + 1);
+
+//        sol.solution(firstLine, secondLine);
     }
 }
 
