@@ -1,23 +1,25 @@
 package CodingTest.HackerRank;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Result {
     /*
-     * Complete the 'findMedian' function below.
+     * Complete the 'countingSort' function below.
      *
-     * The function is expected to return an INTEGER.
+     * The function is expected to return an INTEGER_ARRAY.
      * The function accepts INTEGER_ARRAY arr as parameter.
      */
 
-    public static int findMedian(List<Integer> arr) {
+    public static List<Integer> countingSort(List<Integer> arr) {
         // Write your code here
+        int[] array = new int[100];
 
-        arr.sort(null);
+        for (int i : arr) {
+            array[i]++;
+        }
 
-        int length = arr.size();
-        int mid = length / 2;
-
-        return arr.get(mid);
+        return Arrays.stream(array).boxed().collect(Collectors.toList());
     }
 }
