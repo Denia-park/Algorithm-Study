@@ -3,6 +3,7 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -20,21 +21,22 @@ public class Main {
 
 class BjSolution {
     public void solution(String input) {
-        char[] quizResults = input.toCharArray();
+        int[] arr = Arrays.stream(input.split(" ")).mapToInt(Integer::parseInt).toArray();
+        int peopleNum = arr[0];
+        int sum = 0;
+        for (int i = 1; i <= peopleNum; i++) {
+            sum += arr[i];
+        }
+        float avg = (float) sum / peopleNum;
 
-        int answer = 0;
-
-        int score = 1;
-        for (char quizResult : quizResults) {
-            if (quizResult == 'O') {
-                answer += score;
-                score++;
-            } else {
-                score = 1;
+        int count = 0;
+        for (int i = 1; i <= peopleNum; i++) {
+            if (arr[i] > avg) {
+                count++;
             }
         }
 
-        System.out.println(answer);
+        System.out.printf("%.3f" + "%%" + "%n", (float) count * 100 / peopleNum);
     }
 }
 
