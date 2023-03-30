@@ -6,15 +6,14 @@ import java.io.InputStreamReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        BjSolution sol = new BjSolution();
+//        BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int[] inputs = new int[3];
-        for (int i = 0; i < 3; i++) {
-            inputs[i] = Integer.parseInt(br.readLine());
-        }
-        sol.solution(inputs);
+        char[] chars = br.readLine().toCharArray();
+        System.out.println((int) chars[0]);
+
+//        sol.solution(inputs);
     }
 }
 
