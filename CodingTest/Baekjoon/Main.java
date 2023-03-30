@@ -10,28 +10,20 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int testNum = Integer.parseInt(br.readLine());
-        for (int i = 0; i < testNum; i++) {
-            sol.solution(br.readLine());
-        }
+        sol.solution(br.readLine());
     }
 }
 
 
 class BjSolution {
     public void solution(String input) {
-        String[] inputs = input.split(" ");
-        int mutiplyValue = Integer.parseInt(inputs[0]);
-        char[] chars = inputs[1].toCharArray();
-
-        StringBuilder sb = new StringBuilder();
-        for (char ch : chars) {
-            for (int i = 0; i < mutiplyValue; i++) {
-                sb.append(ch);
-            }
+        String trimString = input.trim();
+        int answer = 0;
+        if (trimString.length() != 0) {
+            String[] newStrings = trimString.split(" ");
+            answer = newStrings.length;
         }
-
-        System.out.println(sb);
+        System.out.println(answer);
     }
 }
 
