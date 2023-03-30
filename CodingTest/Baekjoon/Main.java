@@ -3,7 +3,6 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -19,19 +18,11 @@ public class Main {
 
 class BjSolution {
     public void solution(String input) {
-        int[] inputs = Arrays.stream(input.split(" ")).mapToInt(Integer::parseInt).toArray();
-        int x = inputs[0];
-        int y = inputs[1];
-        int w = inputs[2];
-        int h = inputs[3];
+        int val = Integer.parseInt(input);
 
-        int up = h - y;
-        int down = y;
-        int left = x;
-        int right = w - x;
-
-        int[] values = new int[]{up, down, left, right};
-        System.out.println(Arrays.stream(values).min().getAsInt());
+        for (int idx = 1; idx < 10; idx++) {
+            System.out.printf("%d * %d = %d%n", val, idx, idx * val);
+        }
     }
 }
 
