@@ -17,13 +17,17 @@ public class Main {
 
 class BjSolution {
     public void solution(String input) {
-        String trimString = input.trim();
-        int answer = 0;
-        if (trimString.length() != 0) {
-            String[] newStrings = trimString.split(" ");
-            answer = newStrings.length;
+        String[] inputs = input.split(" ");
+        StringBuilder sb = new StringBuilder();
+        int[] answers = new int[2];
+        int idx = 0;
+        for (String str : inputs) {
+            answers[idx] = Integer.parseInt(sb.append(str).reverse().toString());
+            idx++;
+            sb.setLength(0);
         }
-        System.out.println(answer);
+
+        System.out.println(Math.max(answers[0], answers[1]));
     }
 }
 
