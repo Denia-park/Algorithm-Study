@@ -5,29 +5,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    static public void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String first = br.readLine();
-        String second = br.readLine();
 
-        sol.solution(first, second);
+        sol.solution(first);
     }
 }
 
 
 class BjSolution {
-    public void solution(String first, String second) {
-        int A = Integer.parseInt(first);
-        char[] charArray = second.toCharArray();
+    public void solution(String first) {
+        int score = Integer.parseInt(first);
 
-        for (int i = charArray.length - 1; i >= 0; i--) {
-            int val = charArray[i] - '0';
-            System.out.println(A * val);
+        String grade;
+        if (score >= 90) {
+            grade = "A";
+        } else if (score >= 80) {
+            grade = "B";
+        } else if (score >= 70) {
+            grade = "C";
+        } else if (score >= 60) {
+            grade = "D";
+        } else {
+            grade = "F";
         }
 
-        System.out.print(A * Integer.parseInt(second));
+        System.out.print(grade);
     }
 }
 
