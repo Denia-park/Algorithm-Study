@@ -9,31 +9,23 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String first = br.readLine();
+        String input = br.readLine();
 
-        sol.solution(first);
+        sol.solution(input);
     }
 }
 
 
 class BjSolution {
-    public void solution(String first) {
-        int score = Integer.parseInt(first);
+    public void solution(String input) {
+        boolean flag = false;
+        int year = Integer.parseInt(input);
 
-        String grade;
-        if (score >= 90) {
-            grade = "A";
-        } else if (score >= 80) {
-            grade = "B";
-        } else if (score >= 70) {
-            grade = "C";
-        } else if (score >= 60) {
-            grade = "D";
-        } else {
-            grade = "F";
+        if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) {
+            flag = true;
         }
 
-        System.out.print(grade);
+        System.out.print(flag ? 1 : 0);
     }
 }
 
