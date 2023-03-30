@@ -9,23 +9,25 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] arrSizes = br.readLine().split(" ");
+        String first = br.readLine();
+        String second = br.readLine();
 
-        sol.solution(arrSizes);
+        sol.solution(first, second);
     }
 }
 
 
 class BjSolution {
-    public void solution(String[] arrSizes) {
-        int A = Integer.parseInt(arrSizes[0]);
-        int B = Integer.parseInt(arrSizes[1]);
+    public void solution(String first, String second) {
+        int A = Integer.parseInt(first);
+        char[] charArray = second.toCharArray();
 
-        System.out.println(A + B);
-        System.out.println(A - B);
-        System.out.println(A * B);
-        System.out.println(A / B);
-        System.out.println(A % B);
+        for (int i = charArray.length - 1; i >= 0; i--) {
+            int val = charArray[i] - '0';
+            System.out.println(A * val);
+        }
+
+        System.out.print(A * Integer.parseInt(second));
     }
 }
 
