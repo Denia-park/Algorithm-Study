@@ -9,11 +9,7 @@ public class Main {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
-        int testNum = Integer.parseInt(input);
-        for (int i = 0; i < testNum; i++) {
-            sol.solution(br.readLine());
-        }
+        sol.solution(br.readLine());
 
     }
 }
@@ -21,11 +17,14 @@ public class Main {
 
 class BjSolution {
     public void solution(String input) {
-        String[] inputs = input.split(" ");
-        int A = Integer.parseInt(inputs[0]);
-        int B = Integer.parseInt(inputs[1]);
-
-        System.out.println(A + B);
+        int val = Integer.parseInt(input);
+        for (int i = 1; i <= val; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < i; j++) {
+                sb.append("*");
+            }
+            System.out.println(sb);
+        }
     }
 }
 
