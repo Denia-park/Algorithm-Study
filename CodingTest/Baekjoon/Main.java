@@ -1,23 +1,20 @@
 package CodingTest.Baekjoon;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    static public void main(String[] args) throws IOException {
-        BjSolution sol = new BjSolution();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] arrSizes = br.readLine().split(" ");
-        String[] arrA = br.readLine().split(" ");
-        String[] arrB = br.readLine().split(" ");
-
-        sol.solution(arrSizes, arrA, arrB);
+    static public void main(String[] args) {
+        System.out.println("Hello World!");
     }
 }
+
+//        BjSolution sol = new BjSolution();
+
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//        String[] arrSizes = br.readLine().split(" ");
+
+//        sol.solution(arrSizes, arrA, arrB);
 
 class BjSolution {
     public void solution(String[] arrSizes, String[] arrA, String[] arrB) {
