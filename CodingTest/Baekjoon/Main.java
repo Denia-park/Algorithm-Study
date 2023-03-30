@@ -10,19 +10,22 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();
+        int testNum = Integer.parseInt(input);
+        for (int i = 0; i < testNum; i++) {
+            sol.solution(br.readLine());
+        }
 
-        sol.solution(input);
     }
 }
 
 
 class BjSolution {
     public void solution(String input) {
-        int val = Integer.parseInt(input);
+        String[] inputs = input.split(" ");
+        int A = Integer.parseInt(inputs[0]);
+        int B = Integer.parseInt(inputs[1]);
 
-        for (int idx = 1; idx < 10; idx++) {
-            System.out.printf("%d * %d = %d%n", val, idx, idx * val);
-        }
+        System.out.println(A + B);
     }
 }
 
