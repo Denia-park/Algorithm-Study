@@ -3,9 +3,10 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
+//23년 4월 1일 오후 10시 53분
+//23분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -13,37 +14,52 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int[] arr = new int[9];
-        int sum = 0;
-        for (int i = 0; i < 9; i++) {
+        int tc = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < tc; i++) {
             int val = Integer.parseInt(br.readLine());
-            arr[i] = val;
-            sum += val;
+            sol.solution(val);
         }
-        sol.solution(arr, sum);
     }
 }
 
 
 class BjSolution {
-    public void solution(int[] input, int sum) {
-        List<int[]> combis = new ArrayList<>();
-        for (int i = 0; i < input.length - 1; i++) {
-            for (int j = i + 1; j < input.length; j++) {
-                combis.add(new int[]{i, j});
+    static boolean[] eratos;
+
+    public void solution(int input) {
+        if (eratos == null) {
+            eratos = getEratos();
+        }
+
+        int[] answer = new int[2];
+
+        int min = Integer.MAX_VALUE;
+        for (int i = 2; i < input; i++) {
+            if (eratos[i] && eratos[input - i] && (min > Math.abs(input - (2 * i)))) {
+                min = Math.abs(input - (2 * i));
+                answer = new int[]{Math.min(i, input - i), Math.max(i, input - i)};
             }
         }
 
-        for (int[] combi : combis) {
-            int tempVal1 = input[combi[0]];
-            int tempVal2 = input[combi[1]];
+        System.out.println(answer[0] + " " + answer[1]);
+    }
 
-            int restVal = sum - tempVal1 - tempVal2;
-            if (restVal == 100) {
-                Arrays.stream(input).filter(val -> val != tempVal1 && val != tempVal2).sorted().forEach(System.out::println);
-                return;
+    private boolean[] getEratos() {
+        boolean[] result = new boolean[10001];
+        Arrays.fill(result, true);
+        result[0] = false;
+        result[1] = false;
+
+        for (int i = 2; i <= Math.sqrt(10000); i++) {
+            if (!result[i]) continue;
+
+            for (int j = i * 2; j <= 10000; j += i) {
+                result[j] = false;
             }
         }
+
+        return result;
     }
 }
 
