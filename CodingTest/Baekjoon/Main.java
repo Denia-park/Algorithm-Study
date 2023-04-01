@@ -3,9 +3,11 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
-//23년 4월 2일 오전 12시 48분
-//14분 걸림
+//23년 4월 2일 오전 1시 2분
+//16분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -13,41 +15,59 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        sol.solution(br.readLine());
+        String l1 = br.readLine();
+        String l2 = br.readLine();
+        int tc = Integer.parseInt(l2);
+        String[] iArr = new String[tc];
+        for (int i = 0; i < tc; i++) {
+            iArr[i] = br.readLine();
+        }
+
+        sol.solution(l1, iArr);
     }
 }
 
-
 class BjSolution {
-    public void solution(String input) {
-        int val = Integer.parseInt(input);
+    public void solution(String l1, String[] iArr) {
+        String[] split = l1.split(" ");
+        int width = Integer.parseInt(split[0]);
+        int height = Integer.parseInt(split[1]);
 
-        if (val < 100) {
-            System.out.println(val);
-            return;
-        }
+        List<Integer> cutWidth = new ArrayList<>();
+        List<Integer> cutHeight = new ArrayList<>();
 
-        int ans = 99;
+        cutWidth.add(0);
+        cutWidth.add(height);
 
-        for (int i = 100; i <= val; i++) {
-            String str = String.valueOf(i);
+        cutHeight.add(0);
+        cutHeight.add(width);
 
-            int diff = (str.charAt(0) - '0') - (str.charAt(1) - '0');
-            boolean flag = true;
-            for (int j = 1; j < str.length() - 1; j++) {
-                char c = str.charAt(j);
-                char nc = str.charAt(j + 1);
-                if (diff != (c - '0') - (nc - '0')) {
-                    flag = false;
-                    break;
-                }
-            }
-            if (flag) {
-                ans++;
+        for (String str : iArr) {
+            String[] tempArr = str.split(" ");
+            if (tempArr[0].equals("0")) {
+                cutWidth.add(Integer.valueOf(tempArr[1]));
+            } else {
+                cutHeight.add(Integer.valueOf(tempArr[1]));
             }
         }
 
-        System.out.println(ans);
+        cutWidth.sort(null);
+        cutHeight.sort(null);
+
+        List<Integer> restWidth = new ArrayList<>();
+        List<Integer> restHeight = new ArrayList<>();
+
+        for (int i = 0; i < cutHeight.size() - 1; i++) {
+            restWidth.add(cutHeight.get(i + 1) - cutHeight.get(i));
+        }
+        for (int i = 0; i < cutWidth.size() - 1; i++) {
+            restHeight.add(cutWidth.get(i + 1) - cutWidth.get(i));
+        }
+
+        restWidth.sort(null);
+        restHeight.sort(null);
+
+        System.out.println(restWidth.get(restWidth.size() - 1) * restHeight.get(restHeight.size() - 1));
     }
 }
 
