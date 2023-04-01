@@ -3,10 +3,9 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
-//23년 4월 1일 오후 10시 53분
-//23분 걸림
+//23년 4월 2일 오전 12시 48분
+//14분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -14,52 +13,41 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int tc = Integer.parseInt(br.readLine());
-
-        for (int i = 0; i < tc; i++) {
-            int val = Integer.parseInt(br.readLine());
-            sol.solution(val);
-        }
+        sol.solution(br.readLine());
     }
 }
 
 
 class BjSolution {
-    static boolean[] eratos;
+    public void solution(String input) {
+        int val = Integer.parseInt(input);
 
-    public void solution(int input) {
-        if (eratos == null) {
-            eratos = getEratos();
+        if (val < 100) {
+            System.out.println(val);
+            return;
         }
 
-        int[] answer = new int[2];
+        int ans = 99;
 
-        int min = Integer.MAX_VALUE;
-        for (int i = 2; i < input; i++) {
-            if (eratos[i] && eratos[input - i] && (min > Math.abs(input - (2 * i)))) {
-                min = Math.abs(input - (2 * i));
-                answer = new int[]{Math.min(i, input - i), Math.max(i, input - i)};
+        for (int i = 100; i <= val; i++) {
+            String str = String.valueOf(i);
+
+            int diff = (str.charAt(0) - '0') - (str.charAt(1) - '0');
+            boolean flag = true;
+            for (int j = 1; j < str.length() - 1; j++) {
+                char c = str.charAt(j);
+                char nc = str.charAt(j + 1);
+                if (diff != (c - '0') - (nc - '0')) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                ans++;
             }
         }
 
-        System.out.println(answer[0] + " " + answer[1]);
-    }
-
-    private boolean[] getEratos() {
-        boolean[] result = new boolean[10001];
-        Arrays.fill(result, true);
-        result[0] = false;
-        result[1] = false;
-
-        for (int i = 2; i <= Math.sqrt(10000); i++) {
-            if (!result[i]) continue;
-
-            for (int j = i * 2; j <= 10000; j += i) {
-                result[j] = false;
-            }
-        }
-
-        return result;
+        System.out.println(ans);
     }
 }
 
