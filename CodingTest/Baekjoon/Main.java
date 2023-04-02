@@ -3,14 +3,10 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-//23년 4월 2일 오후 7시 35분
-//47분 걸림
-
-//정답 참고
-//https://velog.io/@yanghl98/%EB%B0%B1%EC%A4%80-10971-%EC%99%B8%ED%8C%90%EC%9B%90-%EC%88%9C%ED%9A%8C-2-JAVA
+//23년 4월 2일 오후 11시 55분
+//12분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -18,65 +14,55 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String l1 = br.readLine();
-        int caseNum = Integer.parseInt(l1);
-        String[] iArr = new String[caseNum];
-        for (int i = 0; i < caseNum; i++) {
-            iArr[i] = br.readLine();
-        }
+        String ignore = br.readLine();
+        String arrays = br.readLine();
+        ignore = br.readLine();
+        String testCases = br.readLine();
 
-        sol.solution(iArr);
+        sol.solution(arrays, testCases);
     }
 }
 
 class BjSolution {
-    private int ans;
-    private int totalNodeNum;
-    private boolean[] visited;
-    private List<List<Integer>> map;
 
-    public void solution(String[] iArr) {
-        ans = Integer.MAX_VALUE;
-        totalNodeNum = iArr.length;
-        visited = new boolean[iArr.length];
+    public void solution(String arr, String testcase) {
+        int[] arrInt = Arrays.stream(arr.split(" ")).mapToInt(Integer::parseInt).toArray();
+        int[] testCaseInt = Arrays.stream(testcase.split(" ")).mapToInt(Integer::parseInt).toArray();
 
-        map = new ArrayList<>();
+        Arrays.sort(arrInt);
 
-        for (String str : iArr) {
-            String[] s = str.split(" ");
-            List<Integer> l = new ArrayList<>();
-            for (String s1 : s) {
-                l.add(Integer.parseInt(s1));
+        int[] ans = new int[testCaseInt.length];
+        int idx = 0;
+        for (int tc : testCaseInt) {
+            int val = 0;
+            if (isExist(arrInt, tc)) {
+                val = 1;
             }
-            map.add(l);
+            ans[idx++] = val;
         }
 
-        // 외판원 순회 문제는 어디서 시작을 해도 답은 동일하므로
-        // 나는 0번 노드에서 무조건 시작하는걸로 한다.
-        visited[0] = true;
-        dfs(0, 0, 0, 0);
-
-        System.out.println(ans);
+        for (int an : ans) {
+            System.out.println(an);
+        }
     }
 
-    private void dfs(int startNode, int curNode, int distance, int count) {
-        if (count == totalNodeNum - 1) {
-            int comebackDistance = map.get(curNode).get(startNode);
-            if (comebackDistance == 0) return;
+    private boolean isExist(int[] arrInt, int tc) {
+        int start = 0;
+        int end = arrInt.length - 1;
 
-            ans = Math.min(ans, distance + comebackDistance);
-            return;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (arrInt[mid] == tc) {
+                return true;
+            } else if (arrInt[mid] < tc) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
+            }
         }
 
-        for (int nextIdx = 1; nextIdx < totalNodeNum; nextIdx++) {
-            int nextDistance = map.get(curNode).get(nextIdx);
-
-            if (nextDistance == 0 || visited[nextIdx]) continue;
-
-            visited[nextIdx] = true;
-            dfs(startNode, nextIdx, distance + nextDistance, count + 1);
-            visited[nextIdx] = false;
-        }
+        return false;
     }
 }
 
