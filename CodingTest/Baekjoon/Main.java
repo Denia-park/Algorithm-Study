@@ -41,9 +41,11 @@ class BjSolution {
             ans[idx++] = val;
         }
 
+        StringBuilder sb = new StringBuilder();
         for (int an : ans) {
-            System.out.println(an);
+            sb.append(an).append("\n");
         }
+        System.out.println(sb);
     }
 
     private boolean isExist(int[] arrInt, int tc) {
