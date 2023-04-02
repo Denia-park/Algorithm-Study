@@ -9,6 +9,9 @@ import java.util.List;
 //23년 4월 2일 오후 7시 35분
 //47분 걸림
 
+//정답 참고
+//https://velog.io/@yanghl98/%EB%B0%B1%EC%A4%80-10971-%EC%99%B8%ED%8C%90%EC%9B%90-%EC%88%9C%ED%9A%8C-2-JAVA
+
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
@@ -28,11 +31,16 @@ public class Main {
 
 class BjSolution {
     private int ans;
+    private int totalNodeNum;
+    private boolean[] visited;
+    private List<List<Integer>> map;
 
     public void solution(String[] iArr) {
         ans = Integer.MAX_VALUE;
+        totalNodeNum = iArr.length;
+        visited = new boolean[iArr.length];
 
-        List<List<Integer>> map = new ArrayList<>();
+        map = new ArrayList<>();
 
         for (String str : iArr) {
             String[] s = str.split(" ");
@@ -43,52 +51,29 @@ class BjSolution {
             map.add(l);
         }
 
-        for (int i = 0; i < iArr.length; i++) {
-            search(map, i);
-        }
+        // 외판원 순회 문제는 어디서 시작을 해도 답은 동일하므로
+        // 나는 0번 노드에서 무조건 시작하는걸로 한다.
+        visited[0] = true;
+        dfs(0, 0, 0, 0);
 
         System.out.println(ans);
     }
 
-    private void search(List<List<Integer>> map, int startIdx) {
-        boolean[] visited = new boolean[map.size()];
-        int tempAns = 0;
-
-        List<Integer> list = map.get(startIdx);
-        visited[startIdx] = true;
-        int nextIdx = startIdx;
-        int loopCount = 0;
-
-        for (int count = 0; count < map.size() - 1; count++) {
-            int minDistance = Integer.MAX_VALUE;
-
-            for (int i = 0; i < list.size(); i++) {
-                int value = list.get(i);
-                if (value == 0 || visited[i]) continue;
-
-                if (list.get(i) < minDistance) {
-                    minDistance = list.get(i);
-                    nextIdx = i;
-                }
-            }
-
-            if (minDistance == Integer.MAX_VALUE) {
-                continue;
-            }
-
-            tempAns += minDistance;
-            list = map.get(nextIdx);
-            visited[nextIdx] = true;
-            loopCount++;
-        }
-
-        if (loopCount != 3) {
+    private void dfs(int startNode, int curNode, int distance, int count) {
+        if (count == totalNodeNum - 1) {
+            distance += map.get(curNode).get(startNode);
+            ans = Math.min(ans, distance);
             return;
         }
 
-        tempAns += map.get(nextIdx).get(startIdx);
+        for (int nextIdx = 1; nextIdx < totalNodeNum; nextIdx++) {
+            if (visited[nextIdx]) continue;
 
-        ans = Math.min(ans, tempAns);
+            visited[nextIdx] = true;
+            int nextDistance = map.get(curNode).get(nextIdx);
+            dfs(startNode, nextIdx, distance + nextDistance, count + 1);
+            visited[nextIdx] = false;
+        }
     }
 }
 
