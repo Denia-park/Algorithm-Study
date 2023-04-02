@@ -6,7 +6,7 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new String[]{"may", "kein", "kain", "radi"}, new int[]{5, 10, 1, 3}, new String[][]{{"may", "kein", "kain", "radi"}, {"may", "kein", "brin", "deny"}, {"kon", "kain", "may", "coni"}})));
+        System.out.println(Arrays.toString(ts.solution(5, new int[][]{{0, 0}, {0, -1}, {2, -3}, {3, -3}})));
     }
 }
 
