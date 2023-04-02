@@ -3,11 +3,11 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.List;
 
-//23년 4월 2일 오후 4시 8분
-//27분 걸림
+//23년 4월 2일 오후 7시 35분
+//47분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -16,12 +16,10 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String l1 = br.readLine();
-        int tc = Integer.parseInt(l1);
-        String l2 = br.readLine();
-        int[] iArr = new int[tc];
-        int idx = 0;
-        for (String str : l2.split(" ")) {
-            iArr[idx++] = Integer.parseInt(str);
+        int caseNum = Integer.parseInt(l1);
+        String[] iArr = new String[caseNum];
+        for (int i = 0; i < caseNum; i++) {
+            iArr[i] = br.readLine();
         }
 
         sol.solution(iArr);
@@ -29,54 +27,58 @@ public class Main {
 }
 
 class BjSolution {
-    private int[] gArr;
-    private boolean[] visited;
     private int ans;
 
-    public void solution(int[] iArr) {
-        ans = Integer.MIN_VALUE;
-        visited = new boolean[iArr.length];
-        gArr = iArr;
+    public void solution(String[] iArr) {
+        ans = Integer.MAX_VALUE;
 
-        Deque<Integer> deque = new ArrayDeque<>();
+        List<List<Integer>> map = new ArrayList<>();
 
-        dfs(deque);
+        for (String str : iArr) {
+            String[] s = str.split(" ");
+            List<Integer> l = new ArrayList<>();
+            for (String s1 : s) {
+                l.add(Integer.parseInt(s1));
+            }
+            map.add(l);
+        }
+
+        for (int i = 0; i < iArr.length; i++) {
+            search(map, i);
+        }
 
         System.out.println(ans);
     }
 
-    private void dfs(Deque<Integer> deque) {
-        if (deque.size() == gArr.length) {
-            ans = Math.max(ans, calculate(deque));
-            return;
+    private void search(List<List<Integer>> map, int startIdx) {
+        boolean[] visited = new boolean[map.size()];
+        int tempAns = 0;
+
+        List<Integer> list = map.get(startIdx);
+        visited[startIdx] = true;
+        int nextIdx = startIdx;
+
+        for (int count = 0; count < map.size() - 1; count++) {
+            int minDistance = Integer.MAX_VALUE;
+
+            for (int i = 0; i < list.size(); i++) {
+                int value = list.get(i);
+                if (value == 0 || visited[i]) continue;
+
+                if (list.get(i) < minDistance) {
+                    minDistance = list.get(i);
+                    nextIdx = i;
+                }
+            }
+
+            tempAns += minDistance;
+            list = map.get(nextIdx);
+            visited[nextIdx] = true;
         }
 
-        for (int i = 0; i < gArr.length; i++) {
-            if (visited[i]) continue;
+        tempAns += map.get(nextIdx).get(startIdx);
 
-            visited[i] = true;
-            deque.addLast(gArr[i]);
-            dfs(deque);
-            visited[i] = false;
-            deque.removeLast();
-        }
-    }
-
-    private int calculate(Deque<Integer> deque) {
-        int[] arr = new int[deque.size()];
-
-        int idx = 0;
-        for (Integer integer : deque) {
-            arr[idx++] = integer;
-        }
-
-        int result = 0;
-
-        for (int i = 0; i < arr.length - 1; i++) {
-            result += Math.abs(arr[i] - arr[i + 1]);
-        }
-
-        return result;
+        ans = Math.min(ans, tempAns);
     }
 }
 
