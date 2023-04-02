@@ -67,10 +67,11 @@ class BjSolution {
         }
 
         for (int nextIdx = 1; nextIdx < totalNodeNum; nextIdx++) {
-            if (visited[nextIdx]) continue;
+            int nextDistance = map.get(curNode).get(nextIdx);
+
+            if (nextDistance == 0 || visited[nextIdx]) continue;
 
             visited[nextIdx] = true;
-            int nextDistance = map.get(curNode).get(nextIdx);
             dfs(startNode, nextIdx, distance + nextDistance, count + 1);
             visited[nextIdx] = false;
         }
