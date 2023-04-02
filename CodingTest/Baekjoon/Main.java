@@ -3,11 +3,11 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-//23년 4월 2일 오전 1시 2분
-//16분 걸림
+//23년 4월 2일 오후 4시 8분
+//27분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -16,58 +16,67 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String l1 = br.readLine();
+        int tc = Integer.parseInt(l1);
         String l2 = br.readLine();
-        int tc = Integer.parseInt(l2);
-        String[] iArr = new String[tc];
-        for (int i = 0; i < tc; i++) {
-            iArr[i] = br.readLine();
+        int[] iArr = new int[tc];
+        int idx = 0;
+        for (String str : l2.split(" ")) {
+            iArr[idx++] = Integer.parseInt(str);
         }
 
-        sol.solution(l1, iArr);
+        sol.solution(iArr);
     }
 }
 
 class BjSolution {
-    public void solution(String l1, String[] iArr) {
-        String[] split = l1.split(" ");
-        int width = Integer.parseInt(split[0]);
-        int height = Integer.parseInt(split[1]);
+    private int[] gArr;
+    private boolean[] visited;
+    private int ans;
 
-        List<Integer> cutWidth = new ArrayList<>();
-        List<Integer> cutHeight = new ArrayList<>();
+    public void solution(int[] iArr) {
+        ans = Integer.MIN_VALUE;
+        visited = new boolean[iArr.length];
+        gArr = iArr;
 
-        cutWidth.add(0);
-        cutWidth.add(height);
+        Deque<Integer> deque = new ArrayDeque<>();
 
-        cutHeight.add(0);
-        cutHeight.add(width);
+        dfs(deque);
 
-        for (String str : iArr) {
-            String[] tempArr = str.split(" ");
-            if (tempArr[0].equals("0")) {
-                cutWidth.add(Integer.valueOf(tempArr[1]));
-            } else {
-                cutHeight.add(Integer.valueOf(tempArr[1]));
-            }
+        System.out.println(ans);
+    }
+
+    private void dfs(Deque<Integer> deque) {
+        if (deque.size() == gArr.length) {
+            ans = Math.max(ans, calculate(deque));
+            return;
         }
 
-        cutWidth.sort(null);
-        cutHeight.sort(null);
+        for (int i = 0; i < gArr.length; i++) {
+            if (visited[i]) continue;
 
-        List<Integer> restWidth = new ArrayList<>();
-        List<Integer> restHeight = new ArrayList<>();
-
-        for (int i = 0; i < cutHeight.size() - 1; i++) {
-            restWidth.add(cutHeight.get(i + 1) - cutHeight.get(i));
+            visited[i] = true;
+            deque.addLast(gArr[i]);
+            dfs(deque);
+            visited[i] = false;
+            deque.removeLast();
         }
-        for (int i = 0; i < cutWidth.size() - 1; i++) {
-            restHeight.add(cutWidth.get(i + 1) - cutWidth.get(i));
+    }
+
+    private int calculate(Deque<Integer> deque) {
+        int[] arr = new int[deque.size()];
+
+        int idx = 0;
+        for (Integer integer : deque) {
+            arr[idx++] = integer;
         }
 
-        restWidth.sort(null);
-        restHeight.sort(null);
+        int result = 0;
 
-        System.out.println(restWidth.get(restWidth.size() - 1) * restHeight.get(restHeight.size() - 1));
+        for (int i = 0; i < arr.length - 1; i++) {
+            result += Math.abs(arr[i] - arr[i + 1]);
+        }
+
+        return result;
     }
 }
 
