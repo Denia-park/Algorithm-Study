@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // 23-04-02 16시 37분
-//
+// 47분 걸림
 class Solution {
     public double[] solution(int k, int[][] ranges) {
         List<int[]> collatz = getCollatz(k);
@@ -27,7 +27,7 @@ class Solution {
                     sum += v;
                 }
             } else {
-                if (start >= lastCount || start > (lastCount + end)) {
+                if (start > (lastCount + end)) {
                     sum = -1.0;
                 } else {
                     for (int i = start; i < (lastCount + end); i++) {
