@@ -57,6 +57,7 @@ class BjSolution {
         List<Integer> list = map.get(startIdx);
         visited[startIdx] = true;
         int nextIdx = startIdx;
+        int loopCount = 0;
 
         for (int count = 0; count < map.size() - 1; count++) {
             int minDistance = Integer.MAX_VALUE;
@@ -71,9 +72,18 @@ class BjSolution {
                 }
             }
 
+            if (minDistance == Integer.MAX_VALUE) {
+                continue;
+            }
+
             tempAns += minDistance;
             list = map.get(nextIdx);
             visited[nextIdx] = true;
+            loopCount++;
+        }
+
+        if (loopCount != 3) {
+            return;
         }
 
         tempAns += map.get(nextIdx).get(startIdx);
