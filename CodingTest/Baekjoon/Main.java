@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
-//23년 4월 2일 오후 11시 55분
-//12분 걸림
+//23년 4월 3일 오전 12시 10분
+//30분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -14,57 +14,73 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String ignore = br.readLine();
-        String arrays = br.readLine();
-        ignore = br.readLine();
-        String testCases = br.readLine();
+        int tcn = Integer.parseInt(br.readLine());
+        String[] strArr = new String[tcn];
+        for (int i = 0; i < tcn; i++) {
+            strArr[i] = br.readLine();
+        }
 
-        sol.solution(arrays, testCases);
+        sol.solution(strArr);
     }
 }
 
 class BjSolution {
+    final int BC = 1;
+    final int WC = 0;
+    private int size;
+    private int blue, white;
+    private int[][] map;
 
-    public void solution(String arr, String testcase) {
-        int[] arrInt = Arrays.stream(arr.split(" ")).mapToInt(Integer::parseInt).toArray();
-        int[] testCaseInt = Arrays.stream(testcase.split(" ")).mapToInt(Integer::parseInt).toArray();
+    public void solution(String[] strArr) {
+        size = strArr.length;
+        blue = white = 0;
 
-        Arrays.sort(arrInt);
-
-        int[] ans = new int[testCaseInt.length];
+        map = new int[size][size];
         int idx = 0;
-        for (int tc : testCaseInt) {
-            int val = 0;
-            if (isExist(arrInt, tc)) {
-                val = 1;
-            }
-            ans[idx++] = val;
+        for (String s : strArr) {
+            int[] arrInt = Arrays.stream(s.split(" ")).mapToInt(Integer::parseInt).toArray();
+            map[idx++] = arrInt;
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (int an : ans) {
-            sb.append(an).append("\n");
-        }
-        System.out.println(sb);
+        check(map, 0, 0, size);
+
+        System.out.println(white);
+        System.out.println(blue);
+
     }
 
-    private boolean isExist(int[] arrInt, int tc) {
-        int start = 0;
-        int end = arrInt.length - 1;
+    private void check(int[][] map, int rowStart, int colStart, int size) {
+        int firstColor = map[rowStart][colStart];
+        boolean flag = true;
 
-        while (start <= end) {
-            int mid = (start + end) / 2;
-
-            if (arrInt[mid] == tc) {
-                return true;
-            } else if (arrInt[mid] < tc) {
-                start = mid + 1;
-            } else {
-                end = mid - 1;
+        for (int row = rowStart; row < rowStart + size; row++) {
+            for (int col = colStart; col < colStart + size; col++) {
+                if (map[row][col] != firstColor) {
+                    flag = false;
+                    break;
+                }
             }
+
+            if (!flag) break;
         }
 
-        return false;
+        if (flag) {
+            if (firstColor == WC) {
+                white += 1;
+            } else {
+                blue += 1;
+            }
+        } else {
+            int changeSize = size / 2;
+            //11시
+            check(map, rowStart, colStart, changeSize);
+            //1시
+            check(map, rowStart, colStart + changeSize, changeSize);
+            //5시
+            check(map, rowStart + changeSize, colStart + changeSize, changeSize);
+            //7시
+            check(map, rowStart + changeSize, colStart, changeSize);
+        }
     }
 }
 
