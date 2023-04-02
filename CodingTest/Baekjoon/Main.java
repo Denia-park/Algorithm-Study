@@ -61,8 +61,10 @@ class BjSolution {
 
     private void dfs(int startNode, int curNode, int distance, int count) {
         if (count == totalNodeNum - 1) {
-            distance += map.get(curNode).get(startNode);
-            ans = Math.min(ans, distance);
+            int comebackDistance = map.get(curNode).get(startNode);
+            if (comebackDistance == 0) return;
+
+            ans = Math.min(ans, distance + comebackDistance);
             return;
         }
 
