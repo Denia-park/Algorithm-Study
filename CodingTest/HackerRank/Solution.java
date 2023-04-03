@@ -8,6 +8,6 @@ public class Solution {
     public static void main(String[] args) {
         List<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 10, 11));
 
-        Result.simpleArraySum(list);
+        Result.countingSort(list);
     }
 }
