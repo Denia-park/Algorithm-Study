@@ -3,10 +3,10 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.Stack;
 
-//23년 4월 3일 오전 12시 10분
-//30분 걸림
+//23년 4월 3일 오후 1시 25분
+//10분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -25,62 +25,38 @@ public class Main {
 }
 
 class BjSolution {
-    final int BC = 1;
-    final int WC = 0;
-    private int size;
-    private int blue, white;
-    private int[][] map;
-
     public void solution(String[] strArr) {
-        size = strArr.length;
-        blue = white = 0;
-
-        map = new int[size][size];
-        int idx = 0;
-        for (String s : strArr) {
-            int[] arrInt = Arrays.stream(s.split(" ")).mapToInt(Integer::parseInt).toArray();
-            map[idx++] = arrInt;
+        for (String str : strArr) {
+            if (isVPS(str)) {
+                System.out.println("YES");
+            } else {
+                System.out.println("NO");
+            }
         }
-
-        check(map, 0, 0, size);
-
-        System.out.println(white);
-        System.out.println(blue);
-
     }
 
-    private void check(int[][] map, int rowStart, int colStart, int size) {
-        int firstColor = map[rowStart][colStart];
-        boolean flag = true;
+    private boolean isVPS(String str) {
+        Stack<Character> stack = new Stack<>();
 
-        for (int row = rowStart; row < rowStart + size; row++) {
-            for (int col = colStart; col < colStart + size; col++) {
-                if (map[row][col] != firstColor) {
-                    flag = false;
-                    break;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (stack.isEmpty()) {
+                stack.push(c);
+            } else {
+                char top = stack.peek();
+
+                if (top == ')') {
+                    return false;
+                }
+
+                if (c == ')') {
+                    stack.pop();
+                } else {
+                    stack.push(c);
                 }
             }
-
-            if (!flag) break;
         }
-
-        if (flag) {
-            if (firstColor == WC) {
-                white += 1;
-            } else {
-                blue += 1;
-            }
-        } else {
-            int changeSize = size / 2;
-            //11시
-            check(map, rowStart, colStart, changeSize);
-            //1시
-            check(map, rowStart, colStart + changeSize, changeSize);
-            //5시
-            check(map, rowStart + changeSize, colStart + changeSize, changeSize);
-            //7시
-            check(map, rowStart + changeSize, colStart, changeSize);
-        }
+        return stack.isEmpty();
     }
 }
 
