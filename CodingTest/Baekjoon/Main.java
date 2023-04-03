@@ -3,10 +3,13 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
-//23년 4월 3일 오후 1시 25분
-//10분 걸림
+//23년 4월 3일 오후 1시 37분
+//6분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -26,37 +29,24 @@ public class Main {
 
 class BjSolution {
     public void solution(String[] strArr) {
-        for (String str : strArr) {
-            if (isVPS(str)) {
-                System.out.println("YES");
-            } else {
-                System.out.println("NO");
+        List<Integer> arr = Arrays.stream(strArr).map(Integer::parseInt).collect(Collectors.toList());
+
+        Stack<Integer> stack = new Stack<>();
+        stack.addAll(arr);
+
+        int ans = 1;
+        int top = stack.pop();
+        while (!stack.isEmpty()) {
+            int curTop = stack.pop();
+            if (curTop <= top) {
+                continue;
             }
+
+            top = curTop;
+            ans++;
         }
-    }
 
-    private boolean isVPS(String str) {
-        Stack<Character> stack = new Stack<>();
-
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (stack.isEmpty()) {
-                stack.push(c);
-            } else {
-                char top = stack.peek();
-
-                if (top == ')') {
-                    return false;
-                }
-
-                if (c == ')') {
-                    stack.pop();
-                } else {
-                    stack.push(c);
-                }
-            }
-        }
-        return stack.isEmpty();
+        System.out.println(ans);
     }
 }
 
