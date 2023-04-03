@@ -1,25 +1,30 @@
 package CodingTest.HackerRank;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class Result {
     /*
-     * Complete the 'countingSort' function below.
+     * Complete the 'lonelyinteger' function below.
      *
-     * The function is expected to return an INTEGER_ARRAY.
-     * The function accepts INTEGER_ARRAY arr as parameter.
+     * The function is expected to return an INTEGER.
+     * The function accepts INTEGER_ARRAY a as parameter.
      */
 
-    public static List<Integer> countingSort(List<Integer> arr) {
+    public static int lonelyinteger(List<Integer> a) {
         // Write your code here
-        int[] array = new int[100];
+        Set<Integer> set = new HashSet<>();
 
-        for (int i : arr) {
-            array[i]++;
+        for (Integer i : a) {
+            if (!set.add(i)) {
+                set.remove(i);
+            }
         }
 
-        return Arrays.stream(array).boxed().collect(Collectors.toList());
+        Iterator<Integer> iterator = set.iterator();
+
+        return iterator.hasNext() ? iterator.next() : 0;
     }
 }
