@@ -1,25 +1,31 @@
 package CodingTest.HackerRank;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Result {
 
     /*
-     * Complete the 'countingSort' function below.
+     * Complete the 'flippingMatrix' function below.
      *
-     * The function is expected to return an INTEGER_ARRAY.
-     * The function accepts INTEGER_ARRAY arr as parameter.
+     * The function is expected to return an INTEGER.
+     * The function accepts 2D_INTEGER_ARRAY matrix as parameter.
      */
 
-    public static List<Integer> countingSort(List<Integer> arr) {
+    public static int flippingMatrix(List<List<Integer>> matrix) {
         // Write your code here
-        int[] myArray = new int[100];
-        for (Integer integer : arr) {
-            myArray[integer] += 1;
-        }
+        int size = matrix.size();
 
-        return Arrays.stream(myArray).boxed().collect(Collectors.toList());
+        int sum = 0;
+
+        for (int r = 0; r < size / 2; r++) {
+            for (int c = 0; c < size / 2; c++) {
+                int maxVal1 = Math.max(matrix.get(r).get(c), matrix.get(r).get(size - 1 - c));
+                int maxVal2 = Math.max(matrix.get(size - 1 - r).get(c), matrix.get(size - 1 - r).get(size - 1 - c));
+
+                sum += Math.max(maxVal1, maxVal2);
+            }
+        }
+        
+        return sum;
     }
 }
