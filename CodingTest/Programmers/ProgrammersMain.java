@@ -1,12 +1,10 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(5, new int[][]{{0, 0}, {0, -1}, {2, -3}, {3, -3}})));
+        System.out.println(ts.solution(5));
     }
 }
 
