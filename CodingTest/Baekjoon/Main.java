@@ -3,60 +3,46 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
-//23년 4월 5일 오전 12시 00분
-//29분 걸림
+//23년 4월 5일 오전 12시 30분
+//1시간 걸림
+//정답 참고 -> 자꾸 시간초과 남
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] input = br.readLine().split(" ");
-        int houseNum = Integer.parseInt(input[0]);
-        int wifiNum = Integer.parseInt(input[1]);
+        String[] inputs = br.readLine().split(" ");
 
-        int[] inputs = new int[houseNum];
-        for (int i = 0; i < houseNum; i++) {
-            inputs[i] = Integer.parseInt(br.readLine());
-        }
-
-        sol.solution(wifiNum, inputs);
+        sol.solution(inputs);
     }
 }
 
 class BjSolution {
-    public void solution(int wifiNum, int[] houses) {
-        Arrays.sort(houses);
+    private long base;
+    private long mod;
 
-        int answer = 0;
+    public void solution(String[] inputs) {
+        base = Long.parseLong(inputs[0]);
+        long count = Long.parseLong(inputs[1]);
+        mod = Long.parseLong(inputs[2]);
 
-        int distance = houses[houses.length - 1] - houses[0];
+        System.out.println(multiply(count));
+    }
 
-        int left = 0;
-        int right = distance;
-        while (left <= right) {
-            int mid = (right + left) / 2;
-
-            int wifiCount = 1;
-            int prevWifiDistance = houses[0];
-            for (int i = 1; i < houses.length; i++) {
-                if (houses[i] - prevWifiDistance >= mid) {
-                    wifiCount++;
-                    prevWifiDistance = houses[i];
-                }
-            }
-
-            if (wifiCount >= wifiNum) {
-                answer = Math.max(answer, mid);
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
+    private long multiply(long count) {
+        if (count == 1) {
+            return (base % mod);
         }
 
-        System.out.println(answer);
+        long divideVal = multiply(count / 2) % mod;
+
+        if (count % 2 == 0) {
+            return (divideVal * divideVal) % mod;
+        } else {
+            return (divideVal * divideVal * (base % mod)) % mod;
+        }
     }
 }
 
