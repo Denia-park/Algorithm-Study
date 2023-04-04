@@ -41,7 +41,7 @@ class BjSolution {
         if (count % 2 == 0) {
             return (divideVal * divideVal) % mod;
         } else {
-            return (divideVal * divideVal * (base % mod)) % mod;
+            return ((divideVal * divideVal) % mod * (base % mod)) % mod;
         }
     }
 }
