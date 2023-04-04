@@ -3,44 +3,60 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.PriorityQueue;
+import java.util.Arrays;
 
-//23년 4월 3일 오후 1시 58분
-//5분 걸림
+//23년 4월 5일 오전 12시 00분
+//29분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int tc = Integer.parseInt(br.readLine());
-        int[] inputs = new int[tc];
-        for (int i = 0; i < tc; i++) {
+        String[] input = br.readLine().split(" ");
+        int houseNum = Integer.parseInt(input[0]);
+        int wifiNum = Integer.parseInt(input[1]);
+
+        int[] inputs = new int[houseNum];
+        for (int i = 0; i < houseNum; i++) {
             inputs[i] = Integer.parseInt(br.readLine());
         }
 
-        sol.solution(inputs);
+        sol.solution(wifiNum, inputs);
     }
 }
 
 class BjSolution {
-    public void solution(int[] inputs) {
-        PriorityQueue<Integer> pq = new PriorityQueue<Integer>(Collections.reverseOrder());
+    public void solution(int wifiNum, int[] houses) {
+        Arrays.sort(houses);
 
-        for (int input : inputs) {
-            if (input == 0) {
-                int val = 0;
+        int answer = 0;
 
-                if (!pq.isEmpty()) {
-                    val = pq.poll();
+        int distance = houses[houses.length - 1] - houses[0];
+
+        int left = 0;
+        int right = distance;
+        while (left <= right) {
+            int mid = (right + left) / 2;
+
+            int wifiCount = 1;
+            int prevWifiDistance = houses[0];
+            for (int i = 1; i < houses.length; i++) {
+                if (houses[i] - prevWifiDistance >= mid) {
+                    wifiCount++;
+                    prevWifiDistance = houses[i];
                 }
+            }
 
-                System.out.println(val);
+            if (wifiCount >= wifiNum) {
+                answer = Math.max(answer, mid);
+                left = mid + 1;
             } else {
-                pq.offer(input);
+                right = mid - 1;
             }
         }
+
+        System.out.println(answer);
     }
 }
 
