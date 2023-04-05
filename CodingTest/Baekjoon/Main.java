@@ -34,7 +34,7 @@ class BjSolution {
 
         int saveLVal = 0;
         int saveRVal = 0;
-        while (l <= r) {
+        while (l < r) {
             int lVal = inputs[l];
             int rVal = inputs[r];
 
