@@ -7,15 +7,14 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 
-//23년 4월 5일 오후 1시 15분
-// 31분 걸림
+// 23년 4월 5일 오후 2시 57분
+// 8분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        br.readLine();
         String[] inputs = br.readLine().split(" ");
 
         sol.solution(inputs);
@@ -24,41 +23,33 @@ public class Main {
 
 class BjSolution {
     public void solution(String[] inputs) {
-        int[] answer = new int[inputs.length];
-
-        Deque<int[]> deque = new ArrayDeque<>();
-
         int[] intInputs = Arrays.stream(inputs).mapToInt(Integer::parseInt).toArray();
+        int num = intInputs[0];
+        int count = intInputs[1];
 
-        for (int arrIdx = 0; arrIdx < intInputs.length; arrIdx++) {
-            int myTowerIdx = arrIdx + 1;
-            int curHeight = intInputs[arrIdx];
+        Deque<Integer> deque = new ArrayDeque<>();
 
-            if (deque.isEmpty()) {
-                deque.push(new int[]{myTowerIdx, curHeight});
-                continue;
-            }
-
-            while (!deque.isEmpty()) {
-                int[] top = deque.peek();
-                int topTowerIdx = top[0];
-                int topHeight = top[1];
-
-                if (topHeight >= curHeight) {
-                    answer[arrIdx] = topTowerIdx;
-                    break;
-                } else {
-                    deque.pop();
-                }
-            }
-
-            deque.push(new int[]{myTowerIdx, curHeight});
+        for (int i = 1; i <= num; i++) {
+            deque.addLast(i);
         }
 
         StringBuilder sb = new StringBuilder();
-        for (int i : answer) {
-            sb.append(i).append(" ");
+        sb.append("<");
+
+        int deleteCount = 0;
+        while (deque.size() != 1) {
+            int val = deque.removeFirst();
+            deleteCount++;
+            if (deleteCount == count) {
+                sb.append(val).append(", ");
+                deleteCount = 0;
+            } else {
+                deque.addLast(val);
+            }
         }
+
+        sb.append(deque.removeFirst()).append(">");
+
         System.out.println(sb);
     }
 }
