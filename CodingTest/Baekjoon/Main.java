@@ -41,13 +41,13 @@ class BjSolution {
                 rVal = inputs[tempIdx];
             }
 
-            if (idx + 1 <= tempIdx - 1 && Math.abs(inputs[idx] + inputs[tempIdx - 1]) < min) {
+            if (idx != tempIdx - 1 && Math.abs(inputs[idx] + inputs[tempIdx - 1]) < min) {
                 min = Math.abs(inputs[idx] + inputs[tempIdx - 1]);
                 lVal = inputs[idx];
                 rVal = inputs[tempIdx - 1];
             }
 
-            if (tempIdx < inputs.length - 1 && Math.abs(inputs[idx] + inputs[tempIdx + 1]) < min) {
+            if (idx != tempIdx + 1 && tempIdx < inputs.length - 1 && Math.abs(inputs[idx] + inputs[tempIdx + 1]) < min) {
                 min = Math.abs(inputs[idx] + inputs[tempIdx + 1]);
                 lVal = inputs[idx];
                 rVal = inputs[tempIdx + 1];
