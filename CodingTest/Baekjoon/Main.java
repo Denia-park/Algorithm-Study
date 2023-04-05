@@ -28,35 +28,52 @@ class BjSolution {
     public void solution(int[] inputs) {
         Arrays.sort(inputs);
 
-        int l = 0;
-        int r = inputs.length - 1;
         int min = Integer.MAX_VALUE;
 
-        int saveLVal = 0;
-        int saveRVal = 0;
-        while (l < r) {
-            int lVal = inputs[l];
-            int rVal = inputs[r];
+        int lVal = 0;
+        int rVal = 0;
+        for (int idx = 0; idx < inputs.length; idx++) {
+            int tempIdx = binarySearch(idx + 1, -1 * inputs[idx], inputs);
 
-            int sum = (lVal + rVal);
-            int absSum = Math.abs(sum);
-
-            if (min > absSum) {
-                saveLVal = lVal;
-                saveRVal = rVal;
-                min = absSum;
+            if (idx != tempIdx && Math.abs(inputs[idx] + inputs[tempIdx]) < min) {
+                min = Math.abs(inputs[idx] + inputs[tempIdx]);
+                lVal = inputs[idx];
+                rVal = inputs[tempIdx];
             }
 
-            if (sum == 0) {
-                break;
-            } else if (sum < 0) {
-                l += 1;
-            } else {
-                r -= 1;
+            if (idx + 1 <= tempIdx - 1 && Math.abs(inputs[idx] + inputs[tempIdx - 1]) < min) {
+                min = Math.abs(inputs[idx] + inputs[tempIdx - 1]);
+                lVal = inputs[idx];
+                rVal = inputs[tempIdx - 1];
+            }
+
+            if (tempIdx < inputs.length - 1 && Math.abs(inputs[idx] + inputs[tempIdx + 1]) < min) {
+                min = Math.abs(inputs[idx] + inputs[tempIdx + 1]);
+                lVal = inputs[idx];
+                rVal = inputs[tempIdx + 1];
             }
         }
 
-        System.out.println(saveLVal + " " + saveRVal);
+        System.out.println(lVal + " " + rVal);
+    }
+
+    private int binarySearch(int startIdx, int targetVal, int[] inputs) {
+        int rtVal = inputs.length - 1;
+
+        int start = startIdx;
+        int end = inputs.length - 1;
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (inputs[mid] >= targetVal) {
+                rtVal = mid;
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+
+        return rtVal;
     }
 }
 
