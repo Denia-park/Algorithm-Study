@@ -3,52 +3,65 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
+import java.util.Collections;
+import java.util.PriorityQueue;
 
-// 23년 4월 5일 오후 2시 57분
-// 8분 걸림
+// 23년 4월 5일 오후 3시 6분
+// 32분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] inputs = br.readLine().split(" ");
+        int tc = Integer.parseInt(br.readLine());
+        int[] inputs = new int[tc];
+        for (int i = 0; i < tc; i++) {
+            inputs[i] = Integer.parseInt(br.readLine());
+        }
 
         sol.solution(inputs);
     }
 }
 
 class BjSolution {
-    public void solution(String[] inputs) {
-        int[] intInputs = Arrays.stream(inputs).mapToInt(Integer::parseInt).toArray();
-        int num = intInputs[0];
-        int count = intInputs[1];
-
-        Deque<Integer> deque = new ArrayDeque<>();
-
-        for (int i = 1; i <= num; i++) {
-            deque.addLast(i);
-        }
+    public void solution(int[] inputs) {
+        PriorityQueue<Integer> leftMaxPq = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> rightMinPq = new PriorityQueue<>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("<");
+        leftMaxPq.add(inputs[0]);
+        sb.append(inputs[0]).append("\n");
 
-        int deleteCount = 0;
-        while (deque.size() != 1) {
-            int val = deque.removeFirst();
-            deleteCount++;
-            if (deleteCount == count) {
-                sb.append(val).append(", ");
-                deleteCount = 0;
-            } else {
-                deque.addLast(val);
+        for (int idx = 1; idx < inputs.length; idx++) {
+            int curr = inputs[idx];
+            int count = idx + 1;
+
+            //짝수
+            if (count % 2 == 0) {
+                int addVal = curr;
+
+                if (leftMaxPq.peek() > curr) {
+                    addVal = leftMaxPq.remove();
+                    leftMaxPq.add(curr);
+                }
+
+                rightMinPq.add(addVal);
             }
-        }
+            //홀수
+            else {
+                int addVal = curr;
 
-        sb.append(deque.removeFirst()).append(">");
+                if (rightMinPq.peek() < curr) {
+                    addVal = rightMinPq.remove();
+                    rightMinPq.add(curr);
+                }
+
+                leftMaxPq.add(addVal);
+            }
+
+            sb.append(leftMaxPq.peek()).append("\n");
+        }
 
         System.out.println(sb);
     }
