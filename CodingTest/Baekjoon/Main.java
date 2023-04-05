@@ -3,16 +3,18 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Stack;
 
-//23년 4월 5일 오전 12시 30분
-//1시간 걸림
-//정답 참고 -> 자꾸 시간초과 남
+//23년 4월 5일 오후 1시 15분
+// 31분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br.readLine();
         String[] inputs = br.readLine().split(" ");
 
         sol.solution(inputs);
@@ -20,29 +22,53 @@ public class Main {
 }
 
 class BjSolution {
-    private long base;
-    private long mod;
-
     public void solution(String[] inputs) {
-        base = Long.parseLong(inputs[0]);
-        long count = Long.parseLong(inputs[1]);
-        mod = Long.parseLong(inputs[2]);
+        int[] answer = new int[inputs.length];
 
-        System.out.println(multiply(count));
-    }
+        Stack<int[]> stack = new Stack<int[]>();
 
-    private long multiply(long count) {
-        if (count == 1) {
-            return (base % mod);
+        int[] intInputs = Arrays.stream(inputs).mapToInt(Integer::parseInt).toArray();
+
+        for (int arrIdx = 0; arrIdx < intInputs.length; arrIdx++) {
+            int myTowerIdx = arrIdx + 1;
+            int curHeight = intInputs[arrIdx];
+
+            if (stack.isEmpty()) {
+                stack.push(new int[]{myTowerIdx, curHeight});
+                continue;
+            }
+
+            int[] top = stack.peek();
+            int topTowerIdx = top[0];
+            int topHeight = top[1];
+
+            if (topHeight >= curHeight) {
+                answer[arrIdx] = topTowerIdx;
+            } else {
+                stack.pop();
+
+                while (!stack.isEmpty()) {
+                    int[] tempTop = stack.peek();
+                    int tempTopTowerIdx = tempTop[0];
+                    int tempTopHeight = tempTop[1];
+
+                    if (tempTopHeight >= curHeight) {
+                        answer[arrIdx] = tempTopTowerIdx;
+                        break;
+                    } else {
+                        stack.pop();
+                    }
+                }
+            }
+
+            stack.push(new int[]{myTowerIdx, curHeight});
         }
 
-        long divideVal = multiply(count / 2) % mod;
-
-        if (count % 2 == 0) {
-            return (divideVal * divideVal) % mod;
-        } else {
-            return ((divideVal * divideVal) % mod * (base % mod)) % mod;
+        StringBuilder sb = new StringBuilder();
+        for (int i : answer) {
+            sb.append(i).append(" ");
         }
+        System.out.println(sb);
     }
 }
 
