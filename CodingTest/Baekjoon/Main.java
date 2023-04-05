@@ -3,21 +3,21 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.PriorityQueue;
+import java.util.Arrays;
 
-// 23년 4월 5일 오후 3시 6분
-// 32분 걸림
+// 23년 4월 6일 오전 12시 05분
+// 15분 걸림
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int tc = Integer.parseInt(br.readLine());
-        int[] inputs = new int[tc];
-        for (int i = 0; i < tc; i++) {
-            inputs[i] = Integer.parseInt(br.readLine());
+        br.readLine();
+        String[] strs = br.readLine().split(" ");
+        int[] inputs = new int[strs.length];
+        for (int i = 0; i < strs.length; i++) {
+            inputs[i] = Integer.parseInt(strs[i]);
         }
 
         sol.solution(inputs);
@@ -26,44 +26,37 @@ public class Main {
 
 class BjSolution {
     public void solution(int[] inputs) {
-        PriorityQueue<Integer> leftMaxPq = new PriorityQueue<>(Collections.reverseOrder());
-        PriorityQueue<Integer> rightMinPq = new PriorityQueue<>();
+        Arrays.sort(inputs);
 
-        StringBuilder sb = new StringBuilder();
-        leftMaxPq.add(inputs[0]);
-        sb.append(inputs[0]).append("\n");
+        int l = 0;
+        int r = inputs.length - 1;
+        int min = Integer.MAX_VALUE;
 
-        for (int idx = 1; idx < inputs.length; idx++) {
-            int curr = inputs[idx];
-            int count = idx + 1;
+        int saveLVal = 0;
+        int saveRVal = 0;
+        while (l <= r) {
+            int lVal = inputs[l];
+            int rVal = inputs[r];
 
-            //짝수
-            if (count % 2 == 0) {
-                int addVal = curr;
+            int sum = (lVal + rVal);
+            int absSum = Math.abs(sum);
 
-                if (leftMaxPq.peek() > curr) {
-                    addVal = leftMaxPq.remove();
-                    leftMaxPq.add(curr);
-                }
-
-                rightMinPq.add(addVal);
-            }
-            //홀수
-            else {
-                int addVal = curr;
-
-                if (rightMinPq.peek() < curr) {
-                    addVal = rightMinPq.remove();
-                    rightMinPq.add(curr);
-                }
-
-                leftMaxPq.add(addVal);
+            if (min > absSum) {
+                saveLVal = lVal;
+                saveRVal = rVal;
+                min = absSum;
             }
 
-            sb.append(leftMaxPq.peek()).append("\n");
+            if (sum == 0) {
+                break;
+            } else if (sum < 0) {
+                l += 1;
+            } else {
+                r -= 1;
+            }
         }
 
-        System.out.println(sb);
+        System.out.println(saveLVal + " " + saveRVal);
     }
 }
 
