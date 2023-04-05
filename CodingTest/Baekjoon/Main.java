@@ -3,8 +3,9 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Stack;
+import java.util.Deque;
 
 //23년 4월 5일 오후 1시 15분
 // 31분 걸림
@@ -25,7 +26,7 @@ class BjSolution {
     public void solution(String[] inputs) {
         int[] answer = new int[inputs.length];
 
-        Stack<int[]> stack = new Stack<int[]>();
+        Deque<int[]> deque = new ArrayDeque<>();
 
         int[] intInputs = Arrays.stream(inputs).mapToInt(Integer::parseInt).toArray();
 
@@ -33,35 +34,25 @@ class BjSolution {
             int myTowerIdx = arrIdx + 1;
             int curHeight = intInputs[arrIdx];
 
-            if (stack.isEmpty()) {
-                stack.push(new int[]{myTowerIdx, curHeight});
+            if (deque.isEmpty()) {
+                deque.push(new int[]{myTowerIdx, curHeight});
                 continue;
             }
 
-            int[] top = stack.peek();
-            int topTowerIdx = top[0];
-            int topHeight = top[1];
+            while (!deque.isEmpty()) {
+                int[] top = deque.peek();
+                int topTowerIdx = top[0];
+                int topHeight = top[1];
 
-            if (topHeight >= curHeight) {
-                answer[arrIdx] = topTowerIdx;
-            } else {
-                stack.pop();
-
-                while (!stack.isEmpty()) {
-                    int[] tempTop = stack.peek();
-                    int tempTopTowerIdx = tempTop[0];
-                    int tempTopHeight = tempTop[1];
-
-                    if (tempTopHeight >= curHeight) {
-                        answer[arrIdx] = tempTopTowerIdx;
-                        break;
-                    } else {
-                        stack.pop();
-                    }
+                if (topHeight >= curHeight) {
+                    answer[arrIdx] = topTowerIdx;
+                    break;
+                } else {
+                    deque.pop();
                 }
             }
 
-            stack.push(new int[]{myTowerIdx, curHeight});
+            deque.push(new int[]{myTowerIdx, curHeight});
         }
 
         StringBuilder sb = new StringBuilder();
