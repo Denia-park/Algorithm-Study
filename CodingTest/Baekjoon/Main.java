@@ -3,21 +3,20 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.PriorityQueue;
 
-// 23년 4월 6일 오전 12시 05분
-// 15분 걸림
+// 23년 4월 6일 오전 12시 03분
+// 5분 걸림 -- 이전에 몇번 풀어본 문제
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        br.readLine();
-        String[] strs = br.readLine().split(" ");
-        int[] inputs = new int[strs.length];
-        for (int i = 0; i < strs.length; i++) {
-            inputs[i] = Integer.parseInt(strs[i]);
+        int tc = Integer.parseInt(br.readLine());
+        int[] inputs = new int[tc];
+        for (int i = 0; i < tc; i++) {
+            inputs[i] = Integer.parseInt(br.readLine());
         }
 
         sol.solution(inputs);
@@ -26,54 +25,25 @@ public class Main {
 
 class BjSolution {
     public void solution(int[] inputs) {
-        Arrays.sort(inputs);
+        PriorityQueue<Integer> queue = new PriorityQueue<>();
 
-        int min = Integer.MAX_VALUE;
-
-        int lVal = 0;
-        int rVal = 0;
-        for (int idx = 0; idx < inputs.length; idx++) {
-            int tempIdx = binarySearch(idx + 1, -1 * inputs[idx], inputs);
-
-            if (idx != tempIdx && Math.abs(inputs[idx] + inputs[tempIdx]) < min) {
-                min = Math.abs(inputs[idx] + inputs[tempIdx]);
-                lVal = inputs[idx];
-                rVal = inputs[tempIdx];
-            }
-
-            if (idx != tempIdx - 1 && Math.abs(inputs[idx] + inputs[tempIdx - 1]) < min) {
-                min = Math.abs(inputs[idx] + inputs[tempIdx - 1]);
-                lVal = inputs[idx];
-                rVal = inputs[tempIdx - 1];
-            }
-
-            if (idx != tempIdx + 1 && tempIdx < inputs.length - 1 && Math.abs(inputs[idx] + inputs[tempIdx + 1]) < min) {
-                min = Math.abs(inputs[idx] + inputs[tempIdx + 1]);
-                lVal = inputs[idx];
-                rVal = inputs[tempIdx + 1];
-            }
+        for (int i : inputs) {
+            queue.add(i);
         }
 
-        System.out.println(lVal + " " + rVal);
-    }
+        int answer = 0;
 
-    private int binarySearch(int startIdx, int targetVal, int[] inputs) {
-        int rtVal = inputs.length - 1;
+        while (queue.size() != 1) {
+            int first = queue.poll();
+            int second = queue.poll();
 
-        int start = startIdx;
-        int end = inputs.length - 1;
-        while (start <= end) {
-            int mid = (start + end) / 2;
+            int tempSum = (first + second);
+            answer += tempSum;
 
-            if (inputs[mid] >= targetVal) {
-                rtVal = mid;
-                end = mid - 1;
-            } else {
-                start = mid + 1;
-            }
+            queue.add(tempSum);
         }
 
-        return rtVal;
+        System.out.println(answer);
     }
 }
 
