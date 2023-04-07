@@ -3,47 +3,54 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
-
-// 23년 4월 6일 오전 12시 03분
-// 5분 걸림 -- 이전에 몇번 풀어본 문제
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int tc = Integer.parseInt(br.readLine());
-        int[] inputs = new int[tc];
-        for (int i = 0; i < tc; i++) {
-            inputs[i] = Integer.parseInt(br.readLine());
+        List<Integer> list = new ArrayList<>();
+        while (true) {
+            String val = (br.readLine());
+            if (val == null || val.equals("")) break;
+
+            list.add(Integer.parseInt(val));
         }
 
-        sol.solution(inputs);
+        sol.solution(list);
     }
 }
 
 class BjSolution {
-    public void solution(int[] inputs) {
-        PriorityQueue<Integer> queue = new PriorityQueue<>();
+    List<Integer> list;
 
-        for (int i : inputs) {
-            queue.add(i);
+    public void solution(List<Integer> inputs) {
+        list = inputs;
+        int len = inputs.size();
+
+        postOrder(0, len - 1);
+    }
+
+    private void postOrder(int startIdx, int endIdx) {
+        if (startIdx > endIdx) {
+            return;
         }
 
-        int answer = 0;
+        int root = list.get(startIdx);
+        //midIdx는 startIdx 다음부터 시작
+        int midIdx = startIdx + 1;
 
-        while (queue.size() != 1) {
-            int first = queue.poll();
-            int second = queue.poll();
-
-            int tempSum = (first + second);
-            answer += tempSum;
-
-            queue.add(tempSum);
+        // 어디까지가 root의 left인지 확인하기 위함 =>
+        // midIdx를 하나씩 올리면서 확인한다.
+        while (midIdx <= endIdx && root > list.get(midIdx)) {
+            midIdx++;
         }
 
-        System.out.println(answer);
+        postOrder(startIdx + 1, midIdx - 1);
+        postOrder(midIdx, endIdx);
+        System.out.println(root);
     }
 }
 
