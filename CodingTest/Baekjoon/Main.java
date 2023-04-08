@@ -3,85 +3,88 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int size = Integer.parseInt(br.readLine());
 
-        int[][] arr = new int[size][size];
-        int max = Integer.MIN_VALUE;
-        for (int i = 0; i < size; i++) {
-            String[] line = br.readLine().split(" ");
-            for (int j = 0; j < size; j++) {
-                int tempVal = Integer.parseInt(line[j]);
-                arr[i][j] = tempVal;
-                max = Math.max(max, tempVal);
-            }
+        String firstLine = br.readLine();
+        String[] strings = firstLine.split(" ");
+        int shootPlaceNum = Integer.parseInt(strings[0]);
+        int animalNum = Integer.parseInt(strings[1]);
+        int shootRange = Integer.parseInt(strings[2]);
+
+        String[] shootPlaces = br.readLine().split(" ");
+        String[] animals = new String[animalNum];
+
+        for (int i = 0; i < animalNum; i++) {
+            animals[i] = br.readLine();
         }
 
-        sol.solution(arr, max);
+        sol.solution(shootPlaces, animals, shootRange);
     }
 }
 
 class BjSolution {
-    private int answer, safeZoneCount;
-    private int[][] map;
-    private int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    private boolean[][] isVisited;
+    int answer;
 
-    public void solution(int[][] inputs, int max) {
+    public void solution(String[] shootPlaces, String[] animals, int shootRange) {
         answer = 0;
-        map = inputs;
+        int[] intShootPlaces = new int[shootPlaces.length];
+        int idx = 0;
+        for (String val : shootPlaces) {
+            intShootPlaces[idx++] = Integer.parseInt(val);
+        }
 
-        for (int dangerLine = 0; dangerLine < max; dangerLine++) {
-            isVisited = new boolean[map.length][map[0].length];
-            safeZoneCount = 0;
+        Arrays.sort(intShootPlaces);
 
-            for (int r = 0; r < inputs.length; r++) {
-                for (int c = 0; c < inputs[0].length; c++) {
-                    if (map[r][c] <= dangerLine || isVisited[r][c]) continue;
+        for (String val : animals) {
+            String[] arr = val.split(" ");
+            int animalX = Integer.parseInt(arr[0]);
+            int animalY = Integer.parseInt(arr[1]);
 
-                    isVisited[r][c] = true;
-                    safeZoneCount++;
-                    bfs(r, c, dangerLine);
-                }
+            if (animalY > shootRange) continue;
+
+            int range = shootRange - animalY;
+            int availableShootRangePlus = animalX + range;
+            int availableShootRangeMinus = animalX - range;
+
+            int count = countByRange(intShootPlaces, availableShootRangeMinus, availableShootRangePlus);
+            if (count > 0) {
+                answer++;
             }
-
-            answer = Math.max(answer, safeZoneCount);
         }
 
         System.out.println(answer);
     }
 
-    private void bfs(int r, int c, int dangerLine) {
-        Deque<int[]> deque = new ArrayDeque<>();
-        deque.offerLast(new int[]{r, c});
-
-        while (!deque.isEmpty()) {
-            int[] cur = deque.pollFirst();
-
-            for (int[] dir : directions) {
-                int nextR = cur[0] + dir[0];
-                int nextC = cur[1] + dir[1];
-                if (isOutOfMap(nextR, nextC) || isVisited[nextR][nextC]) {
-                    continue;
-                }
-
-                if (map[nextR][nextC] > dangerLine) {
-                    isVisited[nextR][nextC] = true;
-                    deque.offerLast(new int[]{nextR, nextC});
-                }
-            }
-        }
+    // 값이 [left_value, right_value]인 데이터의 개수를 반환하는 함수
+    private int countByRange(int[] arr, int leftValue, int rightValue) {
+        // **유의: lowerBound와 upperBound는 end 변수의 값을 배열의 길이로 설정**
+        int rightIndex = upperBound(arr, rightValue, 0, arr.length);
+        int leftIndex = lowerBound(arr, leftValue, 0, arr.length);
+        return rightIndex - leftIndex;
     }
 
-    private boolean isOutOfMap(int r, int c) {
-        return r < 0 || r >= map.length || c < 0 || c >= map[0].length;
+    private int lowerBound(int[] arr, int target, int start, int end) {
+        while (start < end) {
+            int mid = (start + end) / 2;
+            if (arr[mid] >= target) end = mid;
+            else start = mid + 1;
+        }
+        return end;
+    }
+
+    private int upperBound(int[] arr, int target, int start, int end) {
+        while (start < end) {
+            int mid = (start + end) / 2;
+            if (arr[mid] > target) end = mid;
+            else start = mid + 1;
+        }
+        return end;
     }
 }
 
