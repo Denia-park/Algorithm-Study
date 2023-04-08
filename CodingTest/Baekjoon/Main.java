@@ -3,8 +3,9 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
+
+//정답 참고
+//https://velog.io/@jxlhe46/%EB%B0%B1%EC%A4%80-2293%EB%B2%88.-%EB%8F%99%EC%A0%84-1-bfi120m5
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -12,80 +13,36 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String firstLine = br.readLine();
+        int testCaseNum = Integer.parseInt(br.readLine());
+        for (int i = 0; i < testCaseNum; i++) {
+            br.readLine();
+            String[] coins = br.readLine().split(" ");
+            String target = br.readLine();
 
-        sol.solution(firstLine);
+            sol.solution(coins, target);
+        }
     }
 }
 
 class BjSolution {
-    int answer;
+    public void solution(String[] coins, String target) {
+        int intTarget = Integer.parseInt(target);
+        int[] dp = new int[intTarget + 1];
 
-    public void solution(String firstLine) {
-        char[] arr = firstLine.toCharArray();
+        dp[0] = 1;
 
-        if (!isRightValue(arr)) {
-            System.out.println(0);
-            return;
-        }
+        for (String coin : coins) {
+            int intCoin = Integer.parseInt(coin);
 
-        int result = 0;
-        int tempValue = 1;
-        char lastChar = ' ';
-        for (char c : arr) {
-            if (c == '(') {
-                tempValue *= 2;
-            } else if (c == '[') {
-                tempValue *= 3;
-            } else if (c == ')') {
-                if (lastChar == '(') {
-                    result += tempValue;
-                }
-                tempValue /= 2;
-            } else if (c == ']') {
-                if (lastChar == '[') {
-                    result += tempValue;
-                }
-                tempValue /= 3;
-            }
-
-            lastChar = c;
-        }
-
-        System.out.println(result);
-    }
-
-    private boolean isRightValue(char[] arr) {
-        Deque<Character> deque = new ArrayDeque<>();
-
-        for (int i = 0; i < arr.length; i++) {
-            char c = arr[i];
-
-            if (deque.isEmpty()) {
-                deque.push(c);
-                continue;
-            }
-
-            if (c == '(' || c == '[') {
-                deque.push(c);
-            } else if (c == ')') {
-                if (deque.peekFirst() == '(') {
-                    deque.pop();
-                } else {
-                    return false;
-                }
-            } else if (c == ']') {
-                if (deque.peekFirst() == '[') {
-                    deque.pop();
-                } else {
-                    return false;
-                }
+            for (int val = intCoin; val <= intTarget; val++) {
+                dp[val] += dp[val - intCoin];
             }
         }
 
-        return deque.isEmpty();
+        System.out.println(dp[intTarget]);
     }
 }
+
 //        *StringTokenizer*
 //        StringTokenizer st;
 //        st = new StringTokenizer(br.readLine());
