@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+//정답 참고
+//https://sanghyu.tistory.com/36
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -35,32 +39,20 @@ class BjSolution {
             mans.add(new Man(Integer.parseInt(temp[0]), Integer.parseInt(temp[1])));
         }
 
-        mans.sort((o1, o2) -> {
-            int o1Sum = o1.first + o1.second;
-            int o2Sum = o2.first + o2.second;
-
-            if (o1Sum == o2Sum) {
-                if (o1.first < o2.first) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            } else {
-                return Integer.compare(o1Sum, o2Sum);
-            }
-        });
+        mans.sort(Comparator.comparingInt(o -> o.first));
 
         Man bestMan = mans.get(0);
+        int maxSecond = bestMan.second;
 
         int count = 0;
         for (Man man : mans) {
-            if (man.first > bestMan.first && man.second > bestMan.second) {
+            if (maxSecond >= man.second) {
                 count++;
+                maxSecond = man.second;
             }
         }
 
-
-        System.out.println(inputs.length - count);
+        System.out.println(count);
     }
 
     class Man {
