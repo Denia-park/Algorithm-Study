@@ -3,54 +3,85 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        List<Integer> list = new ArrayList<>();
-        while (true) {
-            String val = (br.readLine());
-            if (val == null || val.equals("")) break;
+        int size = Integer.parseInt(br.readLine());
 
-            list.add(Integer.parseInt(val));
+        int[][] arr = new int[size][size];
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < size; i++) {
+            String[] line = br.readLine().split(" ");
+            for (int j = 0; j < size; j++) {
+                int tempVal = Integer.parseInt(line[j]);
+                arr[i][j] = tempVal;
+                max = Math.max(max, tempVal);
+            }
         }
 
-        sol.solution(list);
+        sol.solution(arr, max);
     }
 }
 
 class BjSolution {
-    List<Integer> list;
+    private int answer, safeZoneCount;
+    private int[][] map;
+    private int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    private boolean[][] isVisited;
 
-    public void solution(List<Integer> inputs) {
-        list = inputs;
-        int len = inputs.size();
+    public void solution(int[][] inputs, int max) {
+        answer = 0;
+        map = inputs;
 
-        postOrder(0, len - 1);
+        for (int dangerLine = 0; dangerLine < max; dangerLine++) {
+            isVisited = new boolean[map.length][map[0].length];
+            safeZoneCount = 0;
+
+            for (int r = 0; r < inputs.length; r++) {
+                for (int c = 0; c < inputs[0].length; c++) {
+                    if (map[r][c] <= dangerLine || isVisited[r][c]) continue;
+
+                    isVisited[r][c] = true;
+                    safeZoneCount++;
+                    bfs(r, c, dangerLine);
+                }
+            }
+
+            answer = Math.max(answer, safeZoneCount);
+        }
+
+        System.out.println(answer);
     }
 
-    private void postOrder(int startIdx, int endIdx) {
-        if (startIdx > endIdx) {
-            return;
+    private void bfs(int r, int c, int dangerLine) {
+        Deque<int[]> deque = new ArrayDeque<>();
+        deque.offerLast(new int[]{r, c});
+
+        while (!deque.isEmpty()) {
+            int[] cur = deque.pollFirst();
+
+            for (int[] dir : directions) {
+                int nextR = cur[0] + dir[0];
+                int nextC = cur[1] + dir[1];
+                if (isOutOfMap(nextR, nextC) || isVisited[nextR][nextC]) {
+                    continue;
+                }
+
+                if (map[nextR][nextC] > dangerLine) {
+                    isVisited[nextR][nextC] = true;
+                    deque.offerLast(new int[]{nextR, nextC});
+                }
+            }
         }
+    }
 
-        int root = list.get(startIdx);
-        //midIdx는 startIdx 다음부터 시작
-        int midIdx = startIdx + 1;
-
-        // 어디까지가 root의 left인지 확인하기 위함 =>
-        // midIdx를 하나씩 올리면서 확인한다.
-        while (midIdx <= endIdx && root > list.get(midIdx)) {
-            midIdx++;
-        }
-
-        postOrder(startIdx + 1, midIdx - 1);
-        postOrder(midIdx, endIdx);
-        System.out.println(root);
+    private boolean isOutOfMap(int r, int c) {
+        return r < 0 || r >= map.length || c < 0 || c >= map[0].length;
     }
 }
 
