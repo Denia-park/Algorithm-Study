@@ -3,6 +3,8 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -10,35 +12,65 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] inputs = br.readLine().split(" ");
-        int coninNum = Integer.parseInt(inputs[0]);
-        int target = Integer.parseInt(inputs[1]);
+        int testCaseNum = Integer.parseInt(br.readLine());
+        for (int i = 0; i < testCaseNum; i++) {
+            int peopleNum = Integer.parseInt(br.readLine());
+            String[] inputs = new String[peopleNum];
+            for (int j = 0; j < peopleNum; j++) {
+                inputs[j] = br.readLine();
+            }
 
-        int[] coins = new int[coninNum];
-        for (int i = 0; i < coninNum; i++) {
-            coins[i] = Integer.parseInt(br.readLine());
+            sol.solution(inputs);
         }
-
-        sol.solution(coins, target);
     }
 }
 
 class BjSolution {
 
-    public void solution(int[] coins, int target) {
-        int answer = 0;
-        for (int i = coins.length - 1; i >= 0; i--) {
-            int coin = coins[i];
+    public void solution(String[] inputs) {
+        List<Man> mans = new ArrayList<>();
 
-            if (coin > target) continue;
-
-            int count = target / coin;
-            target -= count * coin;
-
-            answer += count;
+        for (String input : inputs) {
+            String[] temp = input.split(" ");
+            mans.add(new Man(Integer.parseInt(temp[0]), Integer.parseInt(temp[1])));
         }
 
-        System.out.println(answer);
+        mans.sort((o1, o2) -> {
+            int o1Sum = o1.first + o1.second;
+            int o2Sum = o2.first + o2.second;
+
+            if (o1Sum == o2Sum) {
+                if (o1.first < o2.first) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            } else {
+                return Integer.compare(o1Sum, o2Sum);
+            }
+        });
+
+        Man bestMan = mans.get(0);
+
+        int count = 0;
+        for (Man man : mans) {
+            if (man.first > bestMan.first && man.second > bestMan.second) {
+                count++;
+            }
+        }
+
+
+        System.out.println(inputs.length - count);
+    }
+
+    class Man {
+        int first;
+        int second;
+
+        public Man(int first, int second) {
+            this.first = first;
+            this.second = second;
+        }
     }
 }
 
