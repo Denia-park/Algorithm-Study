@@ -3,7 +3,8 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -12,82 +13,79 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String firstLine = br.readLine();
-        String[] strings = firstLine.split(" ");
-        int shootPlaceNum = Integer.parseInt(strings[0]);
-        int animalNum = Integer.parseInt(strings[1]);
-        int shootRange = Integer.parseInt(strings[2]);
 
-        String[] shootPlaces = br.readLine().split(" ");
-        String[] animals = new String[animalNum];
-
-        for (int i = 0; i < animalNum; i++) {
-            animals[i] = br.readLine();
-        }
-
-        sol.solution(shootPlaces, animals, shootRange);
+        sol.solution(firstLine);
     }
 }
 
 class BjSolution {
     int answer;
 
-    public void solution(String[] shootPlaces, String[] animals, int shootRange) {
-        answer = 0;
-        int[] intShootPlaces = new int[shootPlaces.length];
-        int idx = 0;
-        for (String val : shootPlaces) {
-            intShootPlaces[idx++] = Integer.parseInt(val);
+    public void solution(String firstLine) {
+        char[] arr = firstLine.toCharArray();
+
+        if (!isRightValue(arr)) {
+            System.out.println(0);
+            return;
         }
 
-        Arrays.sort(intShootPlaces);
+        int result = 0;
+        int tempValue = 1;
+        char lastChar = ' ';
+        for (char c : arr) {
+            if (c == '(') {
+                tempValue *= 2;
+            } else if (c == '[') {
+                tempValue *= 3;
+            } else if (c == ')') {
+                if (lastChar == '(') {
+                    result += tempValue;
+                }
+                tempValue /= 2;
+            } else if (c == ']') {
+                if (lastChar == '[') {
+                    result += tempValue;
+                }
+                tempValue /= 3;
+            }
 
-        for (String val : animals) {
-            String[] arr = val.split(" ");
-            int animalX = Integer.parseInt(arr[0]);
-            int animalY = Integer.parseInt(arr[1]);
+            lastChar = c;
+        }
 
-            if (animalY > shootRange) continue;
+        System.out.println(result);
+    }
 
-            int range = shootRange - animalY;
-            int availableShootRangePlus = animalX + range;
-            int availableShootRangeMinus = animalX - range;
+    private boolean isRightValue(char[] arr) {
+        Deque<Character> deque = new ArrayDeque<>();
 
-            int count = countByRange(intShootPlaces, availableShootRangeMinus, availableShootRangePlus);
-            if (count > 0) {
-                answer++;
+        for (int i = 0; i < arr.length; i++) {
+            char c = arr[i];
+
+            if (deque.isEmpty()) {
+                deque.push(c);
+                continue;
+            }
+
+            if (c == '(' || c == '[') {
+                deque.push(c);
+            } else if (c == ')') {
+                if (deque.peekFirst() == '(') {
+                    deque.pop();
+                } else {
+                    return false;
+                }
+            } else if (c == ']') {
+                if (deque.peekFirst() == '[') {
+                    deque.pop();
+                } else {
+                    return false;
+                }
             }
         }
 
-        System.out.println(answer);
-    }
-
-    // 값이 [left_value, right_value]인 데이터의 개수를 반환하는 함수
-    private int countByRange(int[] arr, int leftValue, int rightValue) {
-        // **유의: lowerBound와 upperBound는 end 변수의 값을 배열의 길이로 설정**
-        int rightIndex = upperBound(arr, rightValue, 0, arr.length);
-        int leftIndex = lowerBound(arr, leftValue, 0, arr.length);
-        return rightIndex - leftIndex;
-    }
-
-    private int lowerBound(int[] arr, int target, int start, int end) {
-        while (start < end) {
-            int mid = (start + end) / 2;
-            if (arr[mid] >= target) end = mid;
-            else start = mid + 1;
-        }
-        return end;
-    }
-
-    private int upperBound(int[] arr, int target, int start, int end) {
-        while (start < end) {
-            int mid = (start + end) / 2;
-            if (arr[mid] > target) end = mid;
-            else start = mid + 1;
-        }
-        return end;
+        return deque.isEmpty();
     }
 }
-
 //        *StringTokenizer*
 //        StringTokenizer st;
 //        st = new StringTokenizer(br.readLine());
