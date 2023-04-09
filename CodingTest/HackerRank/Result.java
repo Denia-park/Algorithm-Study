@@ -1,31 +1,41 @@
 package CodingTest.HackerRank;
 
-import java.util.List;
-
 public class Result {
-
     /*
-     * Complete the 'flippingMatrix' function below.
+     * Complete the 'caesarCipher' function below.
      *
-     * The function is expected to return an INTEGER.
-     * The function accepts 2D_INTEGER_ARRAY matrix as parameter.
+     * The function is expected to return a STRING.
+     * The function accepts following parameters:
+     *  1. STRING s
+     *  2. INTEGER k
      */
 
-    public static int flippingMatrix(List<List<Integer>> matrix) {
+    public static String caesarCipher(String s, int k) {
         // Write your code here
-        int size = matrix.size();
+        int rotateCount = k % 26;
+        StringBuilder alphabet = new StringBuilder();
+        for (int i = 'a'; i < 'z' + 1; i++) {
+            alphabet.append((char) (i));
+        }
+        alphabet.append(alphabet);
 
-        int sum = 0;
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            boolean upperFlag = Character.isUpperCase(c);
 
-        for (int r = 0; r < size / 2; r++) {
-            for (int c = 0; c < size / 2; c++) {
-                int maxVal1 = Math.max(matrix.get(r).get(c), matrix.get(r).get(size - 1 - c));
-                int maxVal2 = Math.max(matrix.get(size - 1 - r).get(c), matrix.get(size - 1 - r).get(size - 1 - c));
+            char c2 = Character.toLowerCase(c);
 
-                sum += Math.max(maxVal1, maxVal2);
+            int index = alphabet.indexOf(String.valueOf(c2));
+
+            if (index == -1) {
+                result.append(s.charAt(i));
+            } else {
+                char val = alphabet.charAt(index + rotateCount);
+                result.append(upperFlag ? Character.toUpperCase(val) : val);
             }
         }
-        
-        return sum;
+
+        return result.toString();
     }
 }
