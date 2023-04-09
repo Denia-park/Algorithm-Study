@@ -1,10 +1,12 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(new int[]{1, 2, -3, 4, -5}));
+        System.out.println(Arrays.toString(ts.solution(new String[]{"mumu", "soe", "poe", "kai", "mine"}, new String[]{"kai", "kai", "mine", "mine"})));
     }
 }
 
