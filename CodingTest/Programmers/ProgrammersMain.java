@@ -4,9 +4,7 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(
-                new int[]{1, 3, 2},
-                new String[]{"diamond", "diamond", "diamond", "iron", "iron", "diamond", "iron", "stone"})));
+        System.out.println((ts.solution(new int[]{7, 9, 1, 1, 4})));
     }
 }
 
