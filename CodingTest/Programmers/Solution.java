@@ -1,29 +1,22 @@
 package CodingTest.Programmers;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 class Solution {
-    public int solution(int[][] data, int input_col, int input_row_begin, int input_row_end) {
-        int col = input_col - 1;
-        int row_begin = input_row_begin - 1;
-        int row_end = input_row_end - 1;
-
-        List<int[]> list = new ArrayList<>();
-        Collections.addAll(list, data);
-
-        list.sort((a, b) -> {
-            if (a[col] != b[col]) {
-                return Integer.compare(a[col], b[col]);
+    public int solution(int[][] data, int col, int rowBegin, int rowEnd) {
+        Arrays.sort(data, (a, b) -> {
+            if (a[col - 1] != b[col - 1]) {
+                return Integer.compare(a[col - 1], b[col - 1]);
             } else {
                 return -1 * Integer.compare(a[0], b[0]);
             }
         });
 
         List<Integer> xorList = new ArrayList<>();
-        for (int i = row_begin; i <= row_end; i++) {
-            int[] tempArr = list.get(i);
+        for (int i = rowBegin - 1; i <= rowEnd - 1; i++) {
+            int[] tempArr = data[i];
             int sum = 0;
             int originIdx = i + 1;
 
