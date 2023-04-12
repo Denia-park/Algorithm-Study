@@ -4,9 +4,10 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(new int[]{7, 9, 1, 1, 4})));
+        System.out.println((ts.solution(new int[][]{{2, 2, 6}, {1, 5, 10}, {4, 2, 9}, {3, 8, 3}}, 2, 2, 3)));
     }
 }
+
 
 // 12345
 

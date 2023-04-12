@@ -1,22 +1,39 @@
 package CodingTest.Programmers;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class Solution {
-    public int solution(int[] elements) {
-        Set<Integer> set = new HashSet<>();
+    public int solution(int[][] data, int input_col, int input_row_begin, int input_row_end) {
+        int col = input_col - 1;
+        int row_begin = input_row_begin - 1;
+        int row_end = input_row_end - 1;
 
-        for (int length = 1; length <= elements.length; length++) {
-            for (int idx = 0; idx < elements.length; idx++) {
-                int tempVal = 0;
-                for (int count = 0; count < length; count++) {
-                    tempVal += elements[(idx + count) % elements.length];
-                }
-                set.add(tempVal);
+        List<int[]> list = new ArrayList<>();
+        Collections.addAll(list, data);
+
+        list.sort((a, b) -> {
+            if (a[col] != b[col]) {
+                return Integer.compare(a[col], b[col]);
+            } else {
+                return -1 * Integer.compare(a[0], b[0]);
             }
+        });
+
+        List<Integer> xorList = new ArrayList<>();
+        for (int i = row_begin; i <= row_end; i++) {
+            int[] tempArr = list.get(i);
+            int sum = 0;
+            int originIdx = i + 1;
+
+            for (int k : tempArr) {
+                sum += (k % originIdx);
+            }
+
+            xorList.add(sum);
         }
 
-        return set.size();
+        return xorList.stream().reduce((a, b) -> a ^ b).orElse(0);
     }
 }
