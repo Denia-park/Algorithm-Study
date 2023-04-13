@@ -1,12 +1,11 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((Arrays.toString(ts.solution(3, new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12}))));
+        System.out.println(ts.solution(4, 5, new int[]{1, 0, 3, 1, 2}, new int[]{0, 3, 0, 4, 0}));
+        System.out.println(ts.solution(2, 7, new int[]{1, 0, 2, 0, 1, 0, 2}, new int[]{0, 2, 0, 1, 0, 2, 0}));
     }
 }
 
