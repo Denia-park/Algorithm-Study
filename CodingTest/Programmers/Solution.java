@@ -18,12 +18,10 @@ class Solution {
             if (deliSave < 0) {
                 //해당 택배를 다 전달하기 전까지는 계속 해당 집을 가야함
                 while (deliSave < 0) {
-                    answer += ((idx + 1) * 2); // 거리는 idx + 1, 왕복 거리 이므로 * 2 (배달 및 수거를 같이 하므로)
+                    answer += ((idx + 1) * 2L); // 거리는 idx + 1, 왕복 거리 이므로 * 2 (배달 및 수거를 같이 하므로)
                     deliSave += cap;
                     pickUpSave += cap;
                 }
-            } else {
-                deliveries[idx] = 0;
             }
 
             pickUpSave = pickUpSave - pickups[idx];
@@ -31,12 +29,10 @@ class Solution {
             if (pickUpSave < 0) {
                 //해당 박스를 다 수거하기 전까지는 계속 해당 집을 가야함
                 while (pickUpSave < 0) {
-                    answer += ((idx + 1) * 2); // 거리는 idx + 1, 왕복 거리 이므로 * 2 (배달 및 수거를 같이 하므로)
+                    answer += ((idx + 1) * 2L); // 거리는 idx + 1, 왕복 거리 이므로 * 2 (배달 및 수거를 같이 하므로)
                     deliSave += cap;
                     pickUpSave += cap;
                 }
-            } else {
-                pickups[idx] = 0;
             }
         }
 
