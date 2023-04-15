@@ -3,12 +3,7 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-//정답 참고
-//https://sanghyu.tistory.com/36
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -16,53 +11,57 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int testCaseNum = Integer.parseInt(br.readLine());
-        for (int i = 0; i < testCaseNum; i++) {
-            int peopleNum = Integer.parseInt(br.readLine());
-            String[] inputs = new String[peopleNum];
-            for (int j = 0; j < peopleNum; j++) {
-                inputs[j] = br.readLine();
-            }
-
-            sol.solution(inputs);
+        br.readLine();
+        String nums = br.readLine();
+        int quizCount = Integer.parseInt(br.readLine());
+        String[] quizs = new String[quizCount];
+        for (int i = 0; i < quizCount; i++) {
+            quizs[i] = br.readLine();
         }
+
+        sol.solution(nums, quizs);
     }
 }
 
 class BjSolution {
 
-    public void solution(String[] inputs) {
-        List<Man> mans = new ArrayList<>();
+    private int[] arr;
 
-        for (String input : inputs) {
-            String[] temp = input.split(" ");
-            mans.add(new Man(Integer.parseInt(temp[0]), Integer.parseInt(temp[1])));
+    public void solution(String nums, String[] quizs) {
+        arr = Arrays.stream(nums.split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String quiz : quizs) {
+            sb.append(isPalindrome(quiz)).append("\n");
         }
 
-        mans.sort(Comparator.comparingInt(o -> o.first));
+        System.out.println(sb);
+    }
 
-        Man bestMan = mans.get(0);
-        int maxSecond = bestMan.second;
+    private int isPalindrome(String quiz) {
+        String[] quizConditions = quiz.split(" ");
+        int start = Integer.parseInt(quizConditions[0]) - 1;
+        int end = Integer.parseInt(quizConditions[1]) - 1;
 
-        int count = 0;
-        for (Man man : mans) {
-            if (maxSecond >= man.second) {
-                count++;
-                maxSecond = man.second;
+        int count = end - start + 1;
+        int limit;
+
+        //odd
+        if (count % 2 == 1) {
+            limit = count / 2;
+        }
+        //even
+        else {
+            limit = count / 2 + 1;
+        }
+        for (int i = 0; i < limit; i++) {
+            if (arr[start + i] != arr[end - i]) {
+                return 0;
             }
         }
 
-        System.out.println(count);
-    }
-
-    class Man {
-        int first;
-        int second;
-
-        public Man(int first, int second) {
-            this.first = first;
-            this.second = second;
-        }
+        return 1;
     }
 }
 
