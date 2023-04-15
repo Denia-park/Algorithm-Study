@@ -3,7 +3,6 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -28,7 +27,14 @@ class BjSolution {
     private int[] arr;
 
     public void solution(String nums, String[] quizs) {
-        arr = Arrays.stream(nums.split(" ")).mapToInt(Integer::parseInt).toArray();
+        String[] tempNumsArr = nums.split(" ");
+        int[] numsArr = new int[tempNumsArr.length];
+
+        int idx = 0;
+        for (String s : tempNumsArr) {
+            numsArr[idx++] = Integer.parseInt(s);
+        }
+        arr = numsArr;
 
         StringBuilder sb = new StringBuilder();
 
