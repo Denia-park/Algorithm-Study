@@ -36,13 +36,9 @@ class BjSolution {
         }
         arr = numsArr;
 
-        StringBuilder sb = new StringBuilder();
-
         for (String quiz : quizs) {
-            sb.append(isPalindrome(quiz)).append("\n");
+            System.out.println(isPalindrome(quiz));
         }
-
-        System.out.println(sb);
     }
 
     private int isPalindrome(String quiz) {
