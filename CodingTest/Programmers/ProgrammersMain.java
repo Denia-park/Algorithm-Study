@@ -4,8 +4,7 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution("abcdcba"));
-        System.out.println(ts.solution("abacde"));
+        System.out.println(ts.solution(new int[][]{{4, 5}, {4, 8}, {10, 14}, {11, 13}, {5, 12}, {3, 7}, {1, 4}}));
     }
 }
 

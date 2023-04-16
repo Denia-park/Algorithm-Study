@@ -1,35 +1,48 @@
 package CodingTest.Programmers;
 
-//정답 참고
-//https://velog.io/@sa833591/%EA%B0%80%EC%9E%A5-%EA%B8%B4-%ED%8C%B0%EB%A6%B0%EB%93%9C%EB%A1%AC-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EC%8A%A4-Lv.3
+//요격 시스템
 
-//완전탐색 2중 for문으로는 풀었지만 도저히 시간을 줄이지 못해서 정답을 참고함
-//정답을 보니 좀 신기하면서 대단하다.
+//최소한의 요격 미사일로 A나라의 미사일을 다 막야함
+//시작 좌표와 끝 좌표에서 쏘는 미사일로는 막을수가 없음
 
+//targets를 정렬 (시작 좌표가 짧은 것 + 끝 좌표가 짧은 순으로)
+
+import java.util.Arrays;
+
+//시작좌표 짧은 애를 기준으로 끝 좌표를 보면서 한번에 요격되는 애들은 하나의 미사일로 처리
+//도저히 처리할 수 없으면 다음 미사일로 처리
 class Solution {
-    public int solution(String s) {
+    final int START = 0;
+    final int END = 1;
+
+
+    public int solution(int[][] targets) {
+        Arrays.sort(targets, (t1, t2) -> {
+            if (t1[START] == t2[START]) {
+                return t1[END] - t2[END];
+            } else {
+                return t1[START] - t2[START];
+            }
+        });
+
+        //맨 처음에는 기준이 없으므로
+        //첫번째 미사일을 기준으로 삼는다.
+        int missleStart = targets[0][START];
+        int missleEnd = targets[0][END];
         int answer = 1;
 
-        int len = s.length();
+        for (int idx = 1; idx < targets.length; idx++) {
+            int[] newMissle = targets[idx];
 
-        for (int i = 0; i < len; i++) {
-            //odd
-            answer = Math.max(answer, isPalindrome(s, i, i));
-            //even
-            answer = Math.max(answer, isPalindrome(s, i, i + 1));
+            //새로운 미사일이 기존 미사일의 끝 이전에 있으므로 해당 미사일은 같이 터트릴수 있다.
+            if (newMissle[START] < missleEnd) {
+                continue;
+            }
+
+            missleEnd = newMissle[END];
+            answer++;
         }
 
         return answer;
-    }
-
-    private int isPalindrome(String str, int left, int right) {
-        int len = str.length();
-
-        while (0 <= left && right < len && str.charAt(left) == str.charAt(right)) {
-            left--;
-            right++;
-        }
-
-        return right - left - 1;
     }
 }
