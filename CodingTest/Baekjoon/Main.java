@@ -40,25 +40,19 @@ class BjSolution {
 
     public void solution(int[][] bagages, int maxWeight) {
         int bagageNum = bagages.length;
-        int[][] dp = new int[bagageNum + 1][maxWeight + 1];
+        int[] dp = new int[maxWeight + 1];
 
         for (int bagIdx = 1; bagIdx <= bagageNum; bagIdx++) {
-            for (int bagLimit = 1; bagLimit <= maxWeight; bagLimit++) {
-                int tempWeight = bagages[bagIdx - 1][WEIGHT];
-                int tempValue = bagages[bagIdx - 1][VALUE];
+            int tempWeight = bagages[bagIdx - 1][WEIGHT];
+            int tempValue = bagages[bagIdx - 1][VALUE];
 
-                //bagIdx번째 무게를 더 담을 수 없는 경우
-                if (tempWeight > bagLimit) {
-                    dp[bagIdx][bagLimit] = dp[bagIdx - 1][bagLimit];
-                }
-                //bagIdx번째 무게를 더 담을 수 있는 경우
-                else {
-                    dp[bagIdx][bagLimit] = Math.max(dp[bagIdx - 1][bagLimit], dp[bagIdx - 1][bagLimit - tempWeight] + tempValue);
-                }
+            // K부터 탐색하여 담을 수 있는 무게 한계치가 넘지 않을 때까지 반복
+            for (int bagLimit = maxWeight; bagLimit - tempWeight >= 0; bagLimit--) {
+                dp[bagLimit] = Math.max(dp[bagLimit], dp[bagLimit - tempWeight] + tempValue);
             }
         }
 
-        System.out.println(dp[bagageNum][maxWeight]);
+        System.out.println(dp[maxWeight]);
     }
 }
 
