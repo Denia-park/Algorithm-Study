@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 //정답 참고
 //https://st-lab.tistory.com/141
 
-//Top - Down
+//Bottom-Up
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -37,36 +37,28 @@ public class Main {
 class BjSolution {
     final int WEIGHT = 0;
     final int VALUE = 1;
-    Integer[][] dp;
-    int[][] gBagages;
 
     public void solution(int[][] bagages, int maxWeight) {
-        gBagages = bagages;
         int bagageNum = bagages.length;
-        dp = new Integer[bagageNum][maxWeight + 1];
-        System.out.println(knapsack(bagageNum - 1, maxWeight));
-    }
+        int[][] dp = new int[bagageNum + 1][maxWeight + 1];
 
-    private int knapsack(int bagageIdx, int maxWeight) {
-        //bagageIdx가 0미만, 즉 범위 밖이면
-        if (bagageIdx < 0) {
-            return 0;
-        }
+        for (int bagIdx = 1; bagIdx <= bagageNum; bagIdx++) {
+            for (int bagLimit = 1; bagLimit <= maxWeight; bagLimit++) {
+                int tempWeight = bagages[bagIdx - 1][WEIGHT];
+                int tempValue = bagages[bagIdx - 1][VALUE];
 
-        //탐색하지 않은 위치면?
-        if (dp[bagageIdx][maxWeight] == null) {
-            //현재 물건(bagageIdx)를 추가로 못 담는 경우 (이전 bagageIdx값 탐색)
-            if (gBagages[bagageIdx][WEIGHT] > maxWeight) {
-                dp[bagageIdx][maxWeight] = knapsack(bagageIdx - 1, maxWeight);
-            }
-            //현재 물건(bagageIdx)를 담을 수 있는 경우
-            else {
-                // 이전 bagageIdx값과 이전 bagageIdx값에 대한 k-W[bagageIdx]의 값 + 현재 가치(V[bagageIdx])중 큰 값을 저장
-                dp[bagageIdx][maxWeight] = Math.max(knapsack(bagageIdx - 1, maxWeight), knapsack(bagageIdx - 1, maxWeight - gBagages[bagageIdx][WEIGHT]) + gBagages[bagageIdx][VALUE]);
+                //bagIdx번째 무게를 더 담을 수 없는 경우
+                if (tempWeight > bagLimit) {
+                    dp[bagIdx][bagLimit] = dp[bagIdx - 1][bagLimit];
+                }
+                //bagIdx번째 무게를 더 담을 수 있는 경우
+                else {
+                    dp[bagIdx][bagLimit] = Math.max(dp[bagIdx - 1][bagLimit], dp[bagIdx - 1][bagLimit - tempWeight] + tempValue);
+                }
             }
         }
 
-        return dp[bagageIdx][maxWeight];
+        System.out.println(dp[bagageNum][maxWeight]);
     }
 }
 
