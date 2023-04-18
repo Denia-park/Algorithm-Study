@@ -4,12 +4,7 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(new int[][]{{4, 5}}));
-        System.out.println(ts.solution(new int[][]{{0, 5}, {5, 6}}));
-        System.out.println(ts.solution(new int[][]{{4, 6}, {8, 10}}));
-        System.out.println(ts.solution(new int[][]{{4, 5}, {5, 6}, {6, 7}, {6, 8}}));
-        System.out.println(ts.solution(new int[][]{{4, 5}, {4, 5}, {4, 5}}));
-        System.out.println(ts.solution(new int[][]{{4, 5}, {4, 8}, {10, 14}, {11, 13}, {5, 12}, {3, 7}, {1, 4}}));
+        System.out.println(ts.solution(2, 4, 17));
     }
 }
 

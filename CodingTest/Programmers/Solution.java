@@ -1,41 +1,36 @@
 package CodingTest.Programmers;
 
-//요격 시스템
+//유사 칸토어 비트열
+//정답 참고
+//https://americanoisice.tistory.com/202
 
-//최소한의 요격 미사일로 A나라의 미사일을 다 막야함
-//시작 좌표와 끝 좌표에서 쏘는 미사일로는 막을수가 없음
-
-//targets를 정렬 (끝 좌표가 짧은 순으로) -> 시작 좌표는 무조건 끝 좌표보다 이전이므로 볼 필요가 없다.
-
-import java.util.Arrays;
-
-//끝 좌표를 기준으로 한번에 요격되는 애들은 하나의 미사일로 처리
-//도저히 처리할 수 없으면 다음 미사일로 처리
 class Solution {
-    final int START = 0;
-    final int END = 1;
+    public int solution(int n, long left, long right) {
+        int answer = 0;
 
-
-    public int solution(int[][] targets) {
-        Arrays.sort(targets, (t1, t2) -> t1[END] - t2[END]);
-
-        //맨 처음에는 기준이 없으므로
-        //첫번째 미사일을 기준으로 삼는다.
-        int missleEnd = targets[0][END];
-        int answer = 1;
-
-        for (int idx = 1; idx < targets.length; idx++) {
-            int[] newMissle = targets[idx];
-
-            //새로운 미사일이 기존 미사일의 끝 이전에 있으므로 해당 미사일은 같이 터트릴수 있다.
-            if (newMissle[START] < missleEnd) {
-                continue;
-            }
-
-            missleEnd = newMissle[END];
-            answer++;
-        }
+        //f(n) = f(n-1)f(n-1)000..f(n-1)f(n-1)
+        answer = (int) (countOne(n, right) - countOne(n, left - 1));
 
         return answer;
+    }
+
+    private long countOne(int n, long pos) {
+        if (n == 1) {
+            int[] countArr = new int[]{0, 1, 2, 2, 3, 4};
+            return countArr[(int) pos];
+        }
+
+        long div = (long) (pos / Math.pow(5, n - 1));
+        long mod = (long) (pos % Math.pow(5, n - 1));
+
+        long oneCountNum = (long) Math.pow(4, n - 1);
+
+        if (div <= 1) {
+            return (oneCountNum * div) + countOne(n - 1, mod);
+        } else if (div == 2) {
+            return oneCountNum * 2;
+        } else {
+            return (oneCountNum * (div - 1)) + countOne(n - 1, mod);
+        }
     }
 }
