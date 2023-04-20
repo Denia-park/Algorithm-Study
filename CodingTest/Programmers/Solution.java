@@ -2,7 +2,7 @@ package CodingTest.Programmers;
 
 //과제 진행하기
 
-//23년 4월 21일 오전 12시 30분 시작
+//23년 4월 21일 오전 12시 30분 시작 -> 오전 2시 13분 끝
 
 import java.util.*;
 
@@ -65,7 +65,7 @@ class Solution {
                     //대기 Plan이 먼저 끝남
                     else {
                         answers.add(waitPlan);
-                        curTime = waitPlan.endMinute;
+                        curTime = curTime + remainMinute;
                     }
                 }
             }
@@ -75,7 +75,7 @@ class Solution {
             Plan waitPlan = waitQueue.pollLast();
             answers.add(waitPlan);
         }
-        
+
         return answers.stream().map(p -> p.subject).toArray(String[]::new);
     }
 
