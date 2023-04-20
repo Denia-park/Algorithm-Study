@@ -4,7 +4,7 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(ts.solution(2, 4, 17));
+        System.out.println(ts.solution(98, 2));
     }
 }
 
