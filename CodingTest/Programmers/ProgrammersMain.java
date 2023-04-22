@@ -4,8 +4,8 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(10)));
-        System.out.println((ts.solution(15)));
+        System.out.println((ts.solution(new int[]{2, 4})));
+        System.out.println((ts.solution(new int[]{-7, 9})));
     }
 }
 
