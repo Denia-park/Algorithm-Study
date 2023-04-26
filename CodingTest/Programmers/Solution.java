@@ -1,31 +1,45 @@
 package CodingTest.Programmers;
 
-//N개의 최소공배수
+//행렬의 곱셈
+// 1 4     3 3     15 15
+// 3 2     3 3     15 15
+// 4 1             15 15
 
-// 맨 처음 2개의 수에서 최소공배수를 구한다.
-// 여기서 구한 최소공배수를 기반으로 다음 배열의 원소와 또 최소공배수를 구한다.
-// 해당 계산을 배열이 끝날때까지 반복하면 된다.
+// 3X2     2X2     3X2
 class Solution {
-    public int solution(int[] arr) {
-        //첫번째요소 할당
-        long answer = arr[0];
+    public int[][] solution(int[][] arr1, int[][] arr2) {
+        int answerRow = arr1.length;
+        int answerCol = arr2[0].length;
 
-        for (int i = 1; i < arr.length; i++) {
-            long tempVal = arr[i];
+        int[][] answer = new int[answerRow][answerCol];
 
-            long gcd = getGCD(tempVal, answer);
-
-            answer = gcd * (answer / gcd * tempVal / gcd);
+        for (int row = 0; row < answerRow; row++) {
+            for (int col = 0; col < answerCol; col++) {
+                answer[row][col] = multiply(arr1, arr2, row, col);
+            }
         }
 
-        return (int) answer;
+        return answer;
     }
 
-    private long getGCD(long a, long b) {
-        if (b == 0) {
-            return a;
-        } else {
-            return getGCD(b, a % b);
+    private int multiply(int[][] arr1, int[][] arr2, int row, int col) {
+        int startRow = 0;
+        int startCol = 0;
+
+        int limit = arr1[0].length;
+
+        int answer = 0;
+        while (startRow < limit) {
+            //arr1은 row 고정, col 증가
+            int arr1Val = arr1[row][startCol];
+            //arr2은 row 변경, col 고정
+            int arr2Val = arr2[startRow][col];
+
+            answer += arr1Val * arr2Val;
+            startRow++;
+            startCol++;
         }
+
+        return answer;
     }
 }

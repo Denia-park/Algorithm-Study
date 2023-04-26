@@ -1,11 +1,12 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((ts.solution(new int[]{2, 6, 8, 14})));
-        System.out.println((ts.solution(new int[]{1, 2, 3})));
+        System.out.println((Arrays.deepToString(ts.solution(new int[][]{{1, 4}, {3, 2}, {4, 1}}, new int[][]{{3, 3}, {3, 3}}))));
     }
 }
 
