@@ -1,21 +1,19 @@
 package CodingTest.Baekjoon;
 
-//단지 번호 붙이기 - 2667
+//N과 M- 15649
 
 //계획
-//2중 for문으로 "1인 곳, 아직 방문하지 않은" 집만 확인 후 DFS를 돈다.
-//      - DFS를 돌면서 단지의 사이즈를 확인하고 max값을 출력한다.
-//      - max 단지 값을 List에 저장 후 sort하고 출력한다.
+//백트래킹
+//순열 문제 - DFS
 
 //출력
-//단지 출력
-//단지에 속하는 집을 오름차순으로 "정렬" 후 출력
+//사전 순으로 출력
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -23,67 +21,50 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int mapSize = Integer.parseInt(br.readLine());
-        int[][] map = new int[mapSize][mapSize];
+        String[] inputs = br.readLine().split(" ");
+        int n = Integer.parseInt(inputs[0]);
+        int m = Integer.parseInt(inputs[1]);
 
-        for (int i = 0; i < mapSize; i++) {
-            String input = br.readLine();
-            int tempIdx = 0;
-            for (char ch : input.toCharArray()) {
-                map[i][tempIdx++] = ch - '0';
-            }
-        }
-
-        sol.solution(map);
+        sol.solution(n, m);
     }
 }
 
 class BjSolution {
-    int gMapSize;
-    int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    boolean[][] visited;
-    List<Integer> answers;
-    int visitCount;
+    StringBuilder sb;
+    int maxValue;
+    int countLimit;
+    boolean[] isVisited;
 
-    public void solution(int[][] map) {
-        gMapSize = map.length;
-        visited = new boolean[gMapSize][gMapSize];
-        answers = new ArrayList<>();
+    public void solution(int n, int m) {
+        sb = new StringBuilder();
+        maxValue = n;
+        countLimit = m;
+        isVisited = new boolean[n + 1];
 
 
-        for (int row = 0; row < gMapSize; row++) {
-            for (int col = 0; col < gMapSize; col++) {
-                if (map[row][col] == 0 || visited[row][col]) continue;
+        dfs(0, new ArrayDeque<>());
 
-                visitCount = 1;
-                visited[row][col] = true;
-                dfs(map, row, col);
-                answers.add(visitCount);
+        System.out.println(sb);
+    }
+
+    private void dfs(int curCount, Deque<Integer> dq) {
+        if (curCount == countLimit) {
+            for (Integer val : dq) {
+                sb.append(val).append(" ");
             }
+            sb.append("\n");
+            return;
         }
 
-        System.out.println(answers.size());
-        answers.sort(null);
-        for (Integer val : answers) {
-            System.out.println(val);
+        for (int idx = 1; idx <= maxValue; idx++) {
+            if (isVisited[idx]) continue;
+
+            isVisited[idx] = true;
+            dq.addLast(idx);
+            dfs(curCount + 1, dq);
+            isVisited[idx] = false;
+            dq.removeLast();
         }
-    }
-
-    private void dfs(int[][] map, int row, int col) {
-        for (int[] direction : directions) {
-            int nextRow = row + direction[0];
-            int nextCol = col + direction[1];
-
-            if (isOutOfMap(nextRow, nextCol) || map[nextRow][nextCol] == 0 || visited[nextRow][nextCol]) continue;
-
-            visited[nextRow][nextCol] = true;
-            visitCount++;
-            dfs(map, nextRow, nextCol);
-        }
-    }
-
-    private boolean isOutOfMap(int row, int col) {
-        return row < 0 || row >= gMapSize || col < 0 || col >= gMapSize;
     }
 }
 
