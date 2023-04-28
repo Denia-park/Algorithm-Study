@@ -6,7 +6,7 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println((Arrays.deepToString(ts.solution(new int[][]{{1, 4}, {3, 2}, {4, 1}}, new int[][]{{3, 3}, {3, 3}}))));
+        System.out.println(Arrays.toString(ts.solution(new int[]{0, 1, 1, 1, 0})));
     }
 }
 
