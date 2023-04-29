@@ -6,7 +6,7 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new int[]{0, 1, 1, 1, 0})));
+        System.out.println(Arrays.toString(ts.solution(new String[]{"3 - 4 = -3", "5 + 6 = 11"})));
     }
 }
 
