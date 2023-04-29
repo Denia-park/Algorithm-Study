@@ -76,8 +76,12 @@ class Solution {
                 if (emoticonPercent >= userStanPercent) {
                     userPriceSum += emoticonPrice * (1 - (emoticonPercent / 100));
                 }
+
+                if (userPriceSum >= userStanPrice) {
+                    break;
+                }
             }
-            
+
             if (userPriceSum >= userStanPrice) {
                 totalMembershipCount++;
             } else {
