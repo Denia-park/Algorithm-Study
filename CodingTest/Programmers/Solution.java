@@ -13,7 +13,8 @@ package CodingTest.Programmers;
 //우선순위큐
 //완탐 돌리기 - 백트래킹 [dfs 사용 - 재귀]
 
-import java.util.PriorityQueue;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
     final int MEMBERSHIP = 0;
@@ -22,16 +23,11 @@ class Solution {
     int[][] gUsers;
     int[] gEmoticons;
     int[] gEmoticonsPercent;
-    PriorityQueue<int[]> pq;
+    List<int[]> list;
     int[] percents = new int[]{40, 30, 20, 10};
 
     public int[] solution(int[][] users, int[] emoticons) {
-        pq = new PriorityQueue<>((arr1, arr2) -> {
-            if (arr1[MEMBERSHIP] == arr2[MEMBERSHIP]) {
-                return -1 * Integer.compare(arr1[PRICE], arr2[PRICE]);
-            }
-            return -1 * Integer.compare(arr1[MEMBERSHIP], arr2[MEMBERSHIP]);
-        });
+        list = new ArrayList<>();
         gUsers = users;
         gEmoticons = emoticons;
         gEmoticonsPercent = new int[gEmoticons.length];
@@ -39,13 +35,20 @@ class Solution {
         //백트래킹 - 모든 경우의 수 조사 - 재귀
         dfs(0);
 
-        return pq.poll();
+        list.sort((arr1, arr2) -> {
+            if (arr1[MEMBERSHIP] == arr2[MEMBERSHIP]) {
+                return -1 * Integer.compare(arr1[PRICE], arr2[PRICE]);
+            }
+            return -1 * Integer.compare(arr1[MEMBERSHIP], arr2[MEMBERSHIP]);
+        });
+
+        return list.get(0);
     }
 
     public void dfs(int curDepth) {
         if (curDepth == gEmoticons.length) {
             //해당 하는 상황일때 가격 및 가입자 수 저장하기.
-            pq.add(calculate());
+            list.add(calculate());
             return;
         }
 
