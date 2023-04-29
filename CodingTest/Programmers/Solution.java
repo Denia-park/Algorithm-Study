@@ -7,7 +7,7 @@ package CodingTest.Programmers;
 
 //시간복잡도
 //이모티콘 별로 할인율을 모두 적용 후 유저별로 계산
-//4^이모티콘의 수 (7) * user의 수 (100)
+//4^이모티콘의 수 (7) * user의 수 (100) * 7
 
 //자료구조
 //우선순위큐
@@ -38,7 +38,7 @@ class Solution {
     public void dfs(int curDepth) {
         if (curDepth == gEmoticons.length) {
             int[] result = calculate();
-            
+
             //해당 하는 상황일때 가격 및 가입자 수 저장하기.
             if (answer[MEMBERSHIP] < result[MEMBERSHIP] ||
                     answer[MEMBERSHIP] == result[MEMBERSHIP] && (answer[PRICE] < result[PRICE])) {
@@ -48,11 +48,9 @@ class Solution {
             return;
         }
 
-        for (int idx = curDepth; idx < gEmoticons.length; idx++) {
-            for (int percent : percents) {
-                gEmoticonsPercent[idx] = percent;
-                dfs(curDepth + 1);
-            }
+        for (int percent : percents) {
+            gEmoticonsPercent[curDepth] = percent;
+            dfs(curDepth + 1);
         }
     }
 
