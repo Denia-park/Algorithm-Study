@@ -1,19 +1,17 @@
 package CodingTest.Baekjoon;
 
-//N과 M- 15649
+//수열 - 2559
 
 //계획
-//백트래킹
-//순열 문제 - DFS
+//투포인터 - 연속적인 일자의 합
 
 //출력
-//사전 순으로 출력
+//가장 큰 값 출력
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -22,49 +20,37 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         String[] inputs = br.readLine().split(" ");
-        int n = Integer.parseInt(inputs[0]);
-        int m = Integer.parseInt(inputs[1]);
+        int totalNum = Integer.parseInt(inputs[0]);
+        int count = Integer.parseInt(inputs[1]);
+        int[] nums = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-        sol.solution(n, m);
+        sol.solution(nums, count);
     }
 }
 
 class BjSolution {
-    StringBuilder sb;
-    int maxValue;
-    int countLimit;
-    boolean[] isVisited;
+    public void solution(int[] nums, int count) {
+        //투포인터 -> O(n)
+        int start = 0;
+        int end = start + count - 1;
+        long sum = 0;
 
-    public void solution(int n, int m) {
-        sb = new StringBuilder();
-        maxValue = n;
-        countLimit = m;
-        isVisited = new boolean[n + 1];
+        for (int i = start; i <= end; i++) {
+            sum += nums[i];
+        }
+        
+        long maxValue = sum;
 
+        for (int i = 1; i <= nums.length - count; i++) {
+            start++;
+            end++;
+            sum += nums[end];
+            sum -= nums[start - 1];
 
-        dfs(0, new ArrayDeque<>());
-
-        System.out.println(sb);
-    }
-
-    private void dfs(int curCount, Deque<Integer> dq) {
-        if (curCount == countLimit) {
-            for (Integer val : dq) {
-                sb.append(val).append(" ");
-            }
-            sb.append("\n");
-            return;
+            maxValue = Math.max(maxValue, sum);
         }
 
-        for (int idx = 1; idx <= maxValue; idx++) {
-            if (isVisited[idx]) continue;
-
-            isVisited[idx] = true;
-            dq.addLast(idx);
-            dfs(curCount + 1, dq);
-            isVisited[idx] = false;
-            dq.removeLast();
-        }
+        System.out.println(maxValue);
     }
 }
 
