@@ -1,12 +1,15 @@
 package CodingTest.Baekjoon;
 
-//수열 - 2559
+//수 찾기 - 1920
 
-//계획
-//투포인터 - 연속적인 일자의 합
+//아이디어
+//이분탐색
 
-//출력
-//가장 큰 값 출력
+//시간복잡도
+//O(Log N)
+
+//자료구조
+//int[]
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,38 +22,46 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] inputs = br.readLine().split(" ");
-        int totalNum = Integer.parseInt(inputs[0]);
-        int count = Integer.parseInt(inputs[1]);
+        String input = br.readLine();
         int[] nums = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-
-        sol.solution(nums, count);
+        br.readLine();
+        int[] quizs = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        sol.solution(nums, quizs);
     }
 }
 
 class BjSolution {
-    public void solution(int[] nums, int count) {
-        //투포인터 -> O(n)
-        int start = 0;
-        int end = start + count - 1;
-        long sum = 0;
+    public void solution(int[] nums, int[] quizs) {
+        Arrays.sort(nums);
 
-        for (int i = start; i <= end; i++) {
-            sum += nums[i];
+        StringBuilder sb = new StringBuilder();
+
+        for (int val : quizs) {
+            sb.append(binarySearch(nums, val)).append("\n");
+        }
+
+        System.out.println(sb);
+    }
+
+    private int binarySearch(int[] nums, int val) {
+        int result = 0;
+
+        int start = 0;
+        int end = nums.length - 1;
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] == val) {
+                result = 1;
+                break;
+            } else if (nums[mid] > val) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
         }
         
-        long maxValue = sum;
-
-        for (int i = 1; i <= nums.length - count; i++) {
-            start++;
-            end++;
-            sum += nums[end];
-            sum -= nums[start - 1];
-
-            maxValue = Math.max(maxValue, sum);
-        }
-
-        System.out.println(maxValue);
+        return result;
     }
 }
 
