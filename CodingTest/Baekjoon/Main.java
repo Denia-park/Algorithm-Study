@@ -1,20 +1,13 @@
 package CodingTest.Baekjoon;
 
-//수 찾기 - 1920
+//동전 0 - 11047
 
 //아이디어
-//이분탐색
-
-//시간복잡도
-//O(Log N)
-
-//자료구조
-//int[]
+//그리디
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -22,46 +15,32 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String input = br.readLine();
-        int[] nums = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        br.readLine();
-        int[] quizs = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        sol.solution(nums, quizs);
+        String[] inputs = br.readLine().split(" ");
+        int count = Integer.parseInt(inputs[0]);
+        int target = Integer.parseInt(inputs[1]);
+        int[] nums = new int[count];
+        for (int i = 0; i < count; i++) {
+            nums[i] = Integer.parseInt(br.readLine());
+        }
+        sol.solution(nums, target);
     }
 }
 
 class BjSolution {
-    public void solution(int[] nums, int[] quizs) {
-        Arrays.sort(nums);
+    public void solution(int[] nums, int target) {
+        int answer = 0;
 
-        StringBuilder sb = new StringBuilder();
+        for (int i = nums.length - 1; i >= 0; i--) {
+            int num = nums[i];
 
-        for (int val : quizs) {
-            sb.append(binarySearch(nums, val)).append("\n");
-        }
-
-        System.out.println(sb);
-    }
-
-    private int binarySearch(int[] nums, int val) {
-        int result = 0;
-
-        int start = 0;
-        int end = nums.length - 1;
-
-        while (start <= end) {
-            int mid = (start + end) / 2;
-            if (nums[mid] == val) {
-                result = 1;
+            answer += target / num;
+            target %= num;
+            if (target == 0) {
                 break;
-            } else if (nums[mid] > val) {
-                end = mid - 1;
-            } else {
-                start = mid + 1;
             }
         }
-        
-        return result;
+
+        System.out.println(answer);
     }
 }
 
