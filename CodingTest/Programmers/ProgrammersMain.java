@@ -6,7 +6,9 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new int[][]{{40, 10000}, {25, 10000}}, new int[]{7000, 9000})));
+        System.out.println(Arrays.toString(ts.solution(new int[]{1, 2, 3, 4, 5}, 7)));
+        System.out.println(Arrays.toString(ts.solution(new int[]{1, 1, 1, 2, 3, 4, 5}, 5)));
+        System.out.println(Arrays.toString(ts.solution(new int[]{2, 2, 2, 2, 2}, 6)));
     }
 }
 

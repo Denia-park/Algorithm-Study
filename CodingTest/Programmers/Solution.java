@@ -1,94 +1,67 @@
 package CodingTest.Programmers;
 
-//이모티콘 할인행사
+//연속된 부분 수열의 합 -> 연속된 ? 투포인터 써도 되나.
 
-//아이디어
-//완탐 돌리기
+//input은 오름차순
 
-//시간복잡도
-//이모티콘 별로 할인율을 모두 적용 후 유저별로 계산
-//4^이모티콘의 수 (7) * user의 수 (100) * 7
-
-//자료구조
-//우선순위큐
-//완탐 돌리기 - 백트래킹 [dfs 사용 - 재귀]
+import java.util.PriorityQueue;
 
 class Solution {
-    final int MEMBERSHIP = 0;
-    final int PRICE = 1;
+    public int[] solution(int[] sequence, int k) {
+        PriorityQueue<SubArray> pq = new PriorityQueue<>();
+        int start = 0;
+        int end = 0;
+        int sum = 0;
+        sum = sequence[0];
 
-    int[][] gUsers;
-    int[] gEmoticons;
-    int[] gEmoticonsPercent;
-    int[] answer;
-    int[] percents = new int[]{40, 30, 20, 10};
-
-    public int[] solution(int[][] users, int[] emoticons) {
-        answer = new int[]{0, 0};
-        gUsers = users;
-        gEmoticons = emoticons;
-        gEmoticonsPercent = new int[gEmoticons.length];
-
-        //백트래킹 - 모든 경우의 수 조사 - 재귀
-        dfs(0);
-
-        return answer;
-    }
-
-    public void dfs(int curDepth) {
-        if (curDepth == gEmoticons.length) {
-            int[] result = calculate();
-
-            //해당 하는 상황일때 가격 및 가입자 수 저장하기.
-            if (answer[MEMBERSHIP] < result[MEMBERSHIP] ||
-                    answer[MEMBERSHIP] == result[MEMBERSHIP] && (answer[PRICE] < result[PRICE])) {
-                answer = result;
-            }
-
-            return;
-        }
-
-        for (int percent : percents) {
-            gEmoticonsPercent[curDepth] = percent;
-            dfs(curDepth + 1);
-        }
-    }
-
-    private int[] calculate() {
-        int[] result = new int[2];
-
-        int totalUserPriceSum = 0;
-        int totalMembershipCount = 0;
-
-        for (int[] tempUser : gUsers) {
-            int userStanPercent = tempUser[0];
-            int userStanPrice = tempUser[1];
-
-            double userPriceSum = 0;
-
-            for (int i = 0; i < gEmoticons.length; i++) {
-                double emoticonPercent = gEmoticonsPercent[i];
-                int emoticonPrice = gEmoticons[i];
-
-                if (emoticonPercent >= userStanPercent) {
-                    userPriceSum += emoticonPrice * (1 - (emoticonPercent / 100));
-                }
-
-                if (userPriceSum >= userStanPrice) {
+        while (start <= end) {
+            if (sum == k) {
+                pq.add(new SubArray(start, end));
+                if (end >= (sequence.length - 1)) {
                     break;
                 }
-            }
-
-            if (userPriceSum >= userStanPrice) {
-                totalMembershipCount++;
+                end++;
+                sum += sequence[end];
+                start++;
+                sum -= sequence[start - 1];
+            } else if (sum < k) {
+                if (end >= (sequence.length - 1)) {
+                    break;
+                }
+                end++;
+                sum += sequence[end];
             } else {
-                totalUserPriceSum += userPriceSum;
+                start++;
+                sum -= sequence[start - 1];
             }
         }
 
-        result[MEMBERSHIP] = totalMembershipCount;
-        result[PRICE] = totalUserPriceSum;
+        return pq.peek().toArray();
+    }
 
-        return result;
+    class SubArray implements Comparable<SubArray> {
+        int startIdx;
+        int endIdx;
+
+        public SubArray(int startIdx, int endIdx) {
+            this.startIdx = startIdx;
+            this.endIdx = endIdx;
+        }
+
+        @Override
+        public int compareTo(SubArray o) {
+            //짧은 수열 우선
+            int originDiff = (this.endIdx - this.startIdx);
+            int otherDiff = (o.endIdx - o.startIdx);
+            if (originDiff == otherDiff) {
+                //앞쪽 인덱스가 작은 수열 우선
+                return this.startIdx - o.startIdx;
+            }
+            return originDiff - otherDiff;
+        }
+
+        public int[] toArray() {
+            return new int[]{this.startIdx, this.endIdx};
+        }
     }
 }
