@@ -15,22 +15,16 @@ class Solution {
         sum = sequence[0];
 
         while (start <= end) {
-            if (sum == k) {
-                pq.add(new SubArray(start, end));
-                if (end >= (sequence.length - 1)) {
-                    break;
-                }
-                end++;
-                sum += sequence[end];
-                start++;
-                sum -= sequence[start - 1];
-            } else if (sum < k) {
+            if (sum < k) {
                 if (end >= (sequence.length - 1)) {
                     break;
                 }
                 end++;
                 sum += sequence[end];
             } else {
+                if (sum == k) {
+                    pq.add(new SubArray(start, end));
+                }
                 start++;
                 sum -= sequence[start - 1];
             }
