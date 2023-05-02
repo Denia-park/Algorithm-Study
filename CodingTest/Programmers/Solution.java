@@ -45,10 +45,12 @@ class Solution {
             //어피치랑 라이언 점수 비교 함수
             int tempScoreDiff = calculateScoreDiff();
 
+            //라이언이 지거나, 더 많은 격차를 내지 못하면 업데이트를 하지 않는다.
             if (tempScoreDiff == 0 || tempScoreDiff < maxScoreDiff) {
                 return;
             }
 
+            //새로운 점수 격차를 내면 업데이트
             if (tempScoreDiff > maxScoreDiff) {
                 maxScoreDiff = tempScoreDiff;
                 answer = Arrays.copyOf(rionScores, rionScores.length);
@@ -57,14 +59,11 @@ class Solution {
 
             //기존 점수랑 똑같을 경우 뭐가 더 우선인지 비교할 함수
             calculatePriority();
-
-//            System.out.println("--------------------------------------");
-//            System.out.println(maxScoreDiff);
-//            System.out.println(Arrays.toString(answer));
-//            System.out.println(Arrays.toString(rionScores));
+            
             return;
         }
 
+        //마지막에는 무조건 화살을 다 털어야 하므로 여기서 나머지를 다 쏜다.
         if (curDepth == apeachScores.length - 1) {
             rionScores[curDepth] = arrowNum;
             fullScan(curDepth + 1, 0);
@@ -72,14 +71,15 @@ class Solution {
             return;
         }
 
+        //모든 경우의 수를 돈다. 어피치보다 1발 더 쏴야 이기는 경우가 있으니 그 경우까지 고려해서 for문을 돈다.
         for (int count = 0; count < apeachScores[curDepth] + 2; count++) {
-            if (count > arrowNum) {
-                continue;
-            }
+            //남은 화살보다 많이 쏠수는 없다
+            if (count > arrowNum) continue;
 
+            //백트래킹을 할 때 다음 경우의 수를 고려해야 하므로 사용했던 값은 원래대로 돌려놔야한다.
             rionScores[curDepth] = count;
             fullScan(curDepth + 1, arrowNum - count);
-            rionScores[curDepth] = 0;
+            rionScores[curDepth] = 0; // 값을 원래대로 돌려놓기
         }
     }
 
@@ -88,10 +88,12 @@ class Solution {
         int apeachSum = 0;
         int rionSum = 0;
 
+        //0번째 Idx가 10점이므로, 실수 하기 좋다. 조심
         for (int scoreIdx = 0; scoreIdx < rionScores.length; scoreIdx++) {
             int rionNum = rionScores[scoreIdx];
             int apeachNum = apeachScores[scoreIdx];
 
+            //둘 다 0발이면 둘 다 점수를 먹지 못함
             if (rionNum == 0 && apeachNum == 0) {
                 continue;
             }
@@ -105,26 +107,27 @@ class Solution {
             }
         }
 
+        //0점과 비교를 하게되면 음수가 나오거나 0점이 나오면 0이 return 되고 나머지는 점수 차이가 return 된다.
         return Math.max(rionSum - apeachSum, 0);
     }
 
+    //우선 순위를 비교한다.
     private void calculatePriority() {
-        boolean flag = true;
-
+        //낮은 점수에서 맞춘 화살 수 부터 비교를 한다.
         for (int idx = rionScores.length - 1; idx >= 0; idx--) {
             int answerNum = answer[idx];
             int rionNum = rionScores[idx];
 
+            //기존 정답의 화살이 더 많은 경우, 그냥 종료
+            //새로운 정답의 화살이 더 많은 경우, 새로운 정답으로 업데이트 후 종료
+            //동일한 경우는 그냥 지나간다.
             if (answerNum > rionNum) {
-                flag = false;
-                break;
+                return;
             } else if (answerNum < rionNum) {
-                break;
+                answer = Arrays.copyOf(rionScores, rionScores.length);
+                return;
             }
         }
 
-        if (flag) {
-            answer = Arrays.copyOf(rionScores, rionScores.length);
-        }
     }
 }
