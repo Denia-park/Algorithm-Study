@@ -1,9 +1,9 @@
 package CodingTest.Baekjoon;
 
-//동전 0 - 11047
+//2xn 타일링 - 11726
 
 //아이디어
-//그리디
+//DP
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,32 +15,20 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String[] inputs = br.readLine().split(" ");
-        int count = Integer.parseInt(inputs[0]);
-        int target = Integer.parseInt(inputs[1]);
-        int[] nums = new int[count];
-        for (int i = 0; i < count; i++) {
-            nums[i] = Integer.parseInt(br.readLine());
-        }
-        sol.solution(nums, target);
+        int input = Integer.parseInt(br.readLine());
+        sol.solution(input);
     }
 }
 
 class BjSolution {
-    public void solution(int[] nums, int target) {
-        int answer = 0;
-
-        for (int i = nums.length - 1; i >= 0; i--) {
-            int num = nums[i];
-
-            answer += target / num;
-            target %= num;
-            if (target == 0) {
-                break;
-            }
+    public void solution(int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= target; i++) {
+            dp[i] = (dp[i - 1] % 10007 + dp[i - 2] % 10007) % 10007;
         }
-
-        System.out.println(answer);
+        System.out.println(dp[target]);
     }
 }
 
