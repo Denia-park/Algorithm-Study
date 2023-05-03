@@ -57,6 +57,7 @@ class BjSolution {
             int weight = cur[WEIGHT];
 
             if (visited[curNode]) continue;
+
             weightSum += weight;
 
             visited[curNode] = true;
@@ -64,7 +65,9 @@ class BjSolution {
             for (int[] nodeInfo : graph.get(curNode)) {
                 int nextNode = nodeInfo[NODE];
                 int nextWeight = nodeInfo[WEIGHT];
-                
+
+                if (visited[nextNode]) continue;
+
                 pq.add(new int[]{nextNode, nextWeight});
             }
         }
