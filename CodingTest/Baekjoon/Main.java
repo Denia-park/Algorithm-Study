@@ -5,8 +5,6 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class Main {
@@ -31,48 +29,79 @@ class BjSolution {
     final int WEIGHT = 1;
 
     public void solution(int vertexNum, int edgeNum, String[] edges) {
-        List<List<int[]>> graph = new ArrayList<>();
-        for (int i = 0; i < vertexNum + 1; i++) {
-            graph.add(new ArrayList<>());
-        }
+        PriorityQueue<Edge> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.weight, o2.weight));
 
         for (String edge : edges) {
             String[] arr = edge.split(" ");
             int from = Integer.parseInt(arr[0]);
             int to = Integer.parseInt(arr[1]);
             int weight = Integer.parseInt(arr[2]);
-            graph.get(from).add(new int[]{to, weight});
-            graph.get(to).add(new int[]{from, weight});
+
+            pq.add(new Edge(from, to, weight));
         }
 
-        boolean[] visited = new boolean[vertexNum + 1];
-        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[WEIGHT], o2[WEIGHT]));
-
-        pq.add(new int[]{1, 0});
+        int[] parents = new int[vertexNum + 1];
+        for (int i = 0; i < parents.length; i++) {
+            parents[i] = i;
+        }
 
         int weightSum = 0;
-        while (!pq.isEmpty()) {
-            int[] cur = pq.poll();
-            int curNode = cur[NODE];
-            int weight = cur[WEIGHT];
 
-            if (visited[curNode]) continue;
+        while (!pq.isEmpty()) {
+            Edge cur = pq.poll();
+            int from = cur.from;
+            int to = cur.to;
+            int weight = cur.weight;
+
+            if (findParent(parents, from, to)) {
+                continue;
+            }
 
             weightSum += weight;
-
-            visited[curNode] = true;
-
-            for (int[] nodeInfo : graph.get(curNode)) {
-                int nextNode = nodeInfo[NODE];
-                int nextWeight = nodeInfo[WEIGHT];
-
-                if (visited[nextNode]) continue;
-
-                pq.add(new int[]{nextNode, nextWeight});
-            }
+            unionParent(parents, from, to);
         }
 
         System.out.println(weightSum);
+    }
+
+    private boolean findParent(int[] parents, int from, int to) {
+        return getParent(parents, from) == getParent(parents, to);
+    }
+
+    private int getParent(int[] parents, int node) {
+        int myParent = parents[node];
+
+        if (node == myParent) return node;
+
+        int myParentParent = getParent(parents, myParent);
+        parents[node] = myParentParent;
+        return myParentParent;
+
+    }
+
+    private void unionParent(int[] parents, int from, int to) {
+        int fromParent = getParent(parents, from);
+        int toParent = getParent(parents, to);
+
+        if (fromParent == toParent) return;
+
+        if (fromParent < toParent) {
+            parents[toParent] = fromParent;
+        } else {
+            parents[fromParent] = toParent;
+        }
+    }
+
+    class Edge {
+        int from;
+        int to;
+        int weight;
+
+        public Edge(int from, int to, int weight) {
+            this.from = from;
+            this.to = to;
+            this.weight = weight;
+        }
     }
 }
 
