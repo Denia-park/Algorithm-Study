@@ -1,34 +1,75 @@
 package CodingTest.Baekjoon;
 
-//2xn 타일링 - 11726
-
-//아이디어
-//DP
+//최소 스패닝 트리 - 1197
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] inputs = br.readLine().split(" ");
+        int vertexNum = Integer.parseInt(inputs[0]);
+        int edgeNum = Integer.parseInt(inputs[1]);
+        String[] edges = new String[edgeNum];
+        for (int i = 0; i < edgeNum; i++) {
+            edges[i] = br.readLine();
+        }
 
-        int input = Integer.parseInt(br.readLine());
-        sol.solution(input);
+        sol.solution(vertexNum, edgeNum, edges);
     }
 }
 
 class BjSolution {
-    public void solution(int target) {
-        int[] dp = new int[target + 1];
-        dp[0] = 1;
-        dp[1] = 1;
-        for (int i = 2; i <= target; i++) {
-            dp[i] = (dp[i - 1] % 10007 + dp[i - 2] % 10007) % 10007;
+    final int NODE = 0;
+    final int WEIGHT = 1;
+
+    public void solution(int vertexNum, int edgeNum, String[] edges) {
+        List<List<int[]>> graph = new ArrayList<>();
+        for (int i = 0; i < vertexNum + 1; i++) {
+            graph.add(new ArrayList<>());
         }
-        System.out.println(dp[target]);
+
+        for (String edge : edges) {
+            String[] arr = edge.split(" ");
+            int from = Integer.parseInt(arr[0]);
+            int to = Integer.parseInt(arr[1]);
+            int weight = Integer.parseInt(arr[2]);
+            graph.get(from).add(new int[]{to, weight});
+            graph.get(to).add(new int[]{from, weight});
+        }
+
+        boolean[] visited = new boolean[vertexNum + 1];
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[WEIGHT], o2[WEIGHT]));
+
+        pq.add(new int[]{1, 0});
+
+        int weightSum = 0;
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int curNode = cur[NODE];
+            int weight = cur[WEIGHT];
+
+            if (visited[curNode]) continue;
+            weightSum += weight;
+
+            visited[curNode] = true;
+
+            for (int[] nodeInfo : graph.get(curNode)) {
+                int nextNode = nodeInfo[NODE];
+                int nextWeight = nodeInfo[WEIGHT];
+                
+                pq.add(new int[]{nextNode, nextWeight});
+            }
+        }
+
+        System.out.println(weightSum);
     }
 }
 
