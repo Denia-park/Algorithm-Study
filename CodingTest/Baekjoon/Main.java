@@ -1,10 +1,13 @@
 package CodingTest.Baekjoon;
 
-//최소 스패닝 트리 - 1197
+//최단경로 - 1753
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.PriorityQueue;
 
 public class Main {
@@ -15,92 +18,94 @@ public class Main {
         String[] inputs = br.readLine().split(" ");
         int vertexNum = Integer.parseInt(inputs[0]);
         int edgeNum = Integer.parseInt(inputs[1]);
+        int startVertex = Integer.parseInt(br.readLine());
         String[] edges = new String[edgeNum];
         for (int i = 0; i < edgeNum; i++) {
             edges[i] = br.readLine();
         }
 
-        sol.solution(vertexNum, edgeNum, edges);
+        sol.solution(vertexNum, startVertex, edges);
     }
 }
 
 class BjSolution {
-    final int NODE = 0;
-    final int WEIGHT = 1;
+    int[] weightArray;
+    List<List<ConnectVertex>> graph;
 
-    public void solution(int vertexNum, int edgeNum, String[] edges) {
-        PriorityQueue<Edge> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.weight, o2.weight));
+    public void solution(int vertexNum, int startVertex, String[] edges) {
+        weightArray = new int[vertexNum + 1];
+        Arrays.fill(weightArray, Integer.MAX_VALUE);
+
+        graph = new ArrayList<>();
+        for (int i = 0; i < vertexNum + 1; i++) {
+            graph.add(new ArrayList<>());
+        }
 
         for (String edge : edges) {
-            String[] arr = edge.split(" ");
-            int from = Integer.parseInt(arr[0]);
-            int to = Integer.parseInt(arr[1]);
-            int weight = Integer.parseInt(arr[2]);
+            String[] edgeArr = edge.split(" ");
 
-            pq.add(new Edge(from, to, weight));
+            int from = Integer.parseInt(edgeArr[0]);
+            int to = Integer.parseInt(edgeArr[1]);
+            int weight = Integer.parseInt(edgeArr[2]);
+
+            graph.get(from).add(new ConnectVertex(to, weight));
         }
 
-        int[] parents = new int[vertexNum + 1];
-        for (int i = 0; i < parents.length; i++) {
-            parents[i] = i;
-        }
+        dijkstra(startVertex);
 
-        int weightSum = 0;
+        StringBuilder sb = new StringBuilder();
+
+        //weightArray는 계산을 위해서 인덱스에 + 1을 처리했다.
+        for (int i = 1; i < weightArray.length; i++) {
+            int tempWeight = weightArray[i];
+
+            if (tempWeight == Integer.MAX_VALUE) {
+                sb.append("INF");
+            } else {
+                sb.append(tempWeight);
+            }
+            sb.append("\n");
+        }
+        System.out.println(sb);
+    }
+
+    private void dijkstra(int startVertex) {
+        PriorityQueue<ConnectVertex> pq = new PriorityQueue<>();
+
+        pq.add(new ConnectVertex(startVertex, 0));
+        weightArray[startVertex] = 0;
 
         while (!pq.isEmpty()) {
-            Edge cur = pq.poll();
-            int from = cur.from;
-            int to = cur.to;
-            int weight = cur.weight;
+            ConnectVertex cur = pq.poll();
+            int curVertex = cur.connectVertex;
+            int curWeight = cur.weight;
 
-            if (findParent(parents, from, to)) {
-                continue;
+            if (curWeight > weightArray[curVertex]) continue;
+
+            for (ConnectVertex vertex : graph.get(curVertex)) {
+                int nextVertex = vertex.connectVertex;
+                int nextWeight = vertex.weight;
+
+                if (nextWeight + curWeight < weightArray[nextVertex]) {
+                    weightArray[nextVertex] = nextWeight + curWeight;
+                    pq.add(new ConnectVertex(nextVertex, nextWeight + curWeight));
+                }
             }
-
-            weightSum += weight;
-            unionParent(parents, from, to);
-        }
-
-        System.out.println(weightSum);
-    }
-
-    private boolean findParent(int[] parents, int from, int to) {
-        return getParent(parents, from) == getParent(parents, to);
-    }
-
-    private int getParent(int[] parents, int node) {
-        int myParent = parents[node];
-
-        if (node == myParent) return node;
-
-        int myParentParent = getParent(parents, myParent);
-        parents[node] = myParentParent;
-        return myParentParent;
-
-    }
-
-    private void unionParent(int[] parents, int from, int to) {
-        int fromParent = getParent(parents, from);
-        int toParent = getParent(parents, to);
-
-        if (fromParent == toParent) return;
-
-        if (fromParent < toParent) {
-            parents[toParent] = fromParent;
-        } else {
-            parents[fromParent] = toParent;
         }
     }
 
-    class Edge {
-        int from;
-        int to;
+    class ConnectVertex implements Comparable<ConnectVertex> {
+        int connectVertex;
         int weight;
 
-        public Edge(int from, int to, int weight) {
-            this.from = from;
-            this.to = to;
+        public ConnectVertex(int connectVertex, int weight) {
+            this.connectVertex = connectVertex;
             this.weight = weight;
+        }
+
+        @Override
+        public int compareTo(ConnectVertex o) {
+            return Integer.compare(this.weight, o.weight);
         }
     }
 }
