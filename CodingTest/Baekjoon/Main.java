@@ -5,7 +5,6 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -46,13 +45,12 @@ class BjSolution {
         //weights 선언
         weights = new int[nodeNum + 1][nodeNum + 1];
 
-        //weights 를 INF로 초기화
-        for (int[] weight : weights) {
-            Arrays.fill(weight, INF);
-        }
         //자기 자신한테 가는 버스는 비용이 0
         for (int i = 0; i < weights.length; i++) {
-            weights[i][i] = 0;
+            for (int j = 0; j < weights.length; j++) {
+                if (i == j) weights[i][j] = 0;
+                else weights[i][j] = INF;
+            }
         }
 
         //edges를 읽으면서 비용 업데이트
@@ -68,14 +66,17 @@ class BjSolution {
         //3중 for문 돌면서 거리 업데이트
         floydWarshall();
 
-
         //출력
         //시작 노드 인덱스는 1번부터 시작하자
         StringBuilder sb = new StringBuilder();
         for (int start = 1; start < weights.length; start++) {
             for (int end = 1; end < weights.length; end++) {
-                int weight = weights[start][end];
-                sb.append(String.format("%d ", weight == INF ? 0 : weight));
+                if (weights[start][end] == INF) {
+                    sb.append(0);
+                } else {
+                    sb.append(weights[start][end]);
+                }
+                sb.append(" ");
             }
             sb.append("\n");
         }
