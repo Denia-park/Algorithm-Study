@@ -1,111 +1,92 @@
 package CodingTest.Baekjoon;
 
-//최단경로 - 1753
+//플로이드 - 11404
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.PriorityQueue;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] inputs = br.readLine().split(" ");
-        int vertexNum = Integer.parseInt(inputs[0]);
-        int edgeNum = Integer.parseInt(inputs[1]);
-        int startVertex = Integer.parseInt(br.readLine());
+        int nodeNum = Integer.parseInt(br.readLine());
+        int edgeNum = Integer.parseInt(br.readLine());
         String[] edges = new String[edgeNum];
         for (int i = 0; i < edgeNum; i++) {
             edges[i] = br.readLine();
         }
 
-        sol.solution(vertexNum, startVertex, edges);
+        sol.solution(nodeNum, edges);
     }
 }
 
+/*
+1. 아이디어
+플로이드-워셜
+
+2. 시간 복잡도
+시작 - 중간 - 끝 => 모든 노드를 대상으로 해서 모든 경우의 수를 구한다. [ V ^ 3 ]
+
+3. 자료 구조
+모든 경로를 저장할 2차원 배열 int[][]
+
+4. 주의할점
+시작 도시와 도착 도시를 연결하는 노선은 하나가 아닐 수 있다.
+같은 노선인데 비용이 여러개가 있다. 그러므로 더 싼 노선으로만 업데이트를 해야한다.
+*/
+
 class BjSolution {
-    int[] weightArray;
-    List<List<ConnectVertex>> graph;
+    int[][] weights;
+    int INF = (int) Math.pow(10, 9);
 
-    public void solution(int vertexNum, int startVertex, String[] edges) {
-        weightArray = new int[vertexNum + 1];
-        Arrays.fill(weightArray, Integer.MAX_VALUE);
+    public void solution(int nodeNum, String[] edges) {
+        //weights 선언
+        weights = new int[nodeNum + 1][nodeNum + 1];
 
-        graph = new ArrayList<>();
-        for (int i = 0; i < vertexNum + 1; i++) {
-            graph.add(new ArrayList<>());
+        //weights 를 INF로 초기화
+        for (int[] weight : weights) {
+            Arrays.fill(weight, INF);
+        }
+        //자기 자신한테 가는 버스는 비용이 0
+        for (int i = 0; i < weights.length; i++) {
+            weights[i][i] = 0;
         }
 
+        //edges를 읽으면서 비용 업데이트
         for (String edge : edges) {
-            String[] edgeArr = edge.split(" ");
+            String[] inputs = edge.split(" ");
+            int from = Integer.parseInt(inputs[0]);
+            int to = Integer.parseInt(inputs[1]);
+            int weight = Integer.parseInt(inputs[2]);
 
-            int from = Integer.parseInt(edgeArr[0]);
-            int to = Integer.parseInt(edgeArr[1]);
-            int weight = Integer.parseInt(edgeArr[2]);
-
-            graph.get(from).add(new ConnectVertex(to, weight));
+            weights[from][to] = Math.min(weights[from][to], weight);
         }
 
-        dijkstra(startVertex);
+        //3중 for문 돌면서 거리 업데이트
+        floydWarshall();
 
-        StringBuilder sb = new StringBuilder();
 
-        //weightArray는 계산을 위해서 인덱스에 + 1을 처리했다.
-        for (int i = 1; i < weightArray.length; i++) {
-            int tempWeight = weightArray[i];
-
-            if (tempWeight == Integer.MAX_VALUE) {
-                sb.append("INF");
-            } else {
-                sb.append(tempWeight);
+        //출력
+        //시작 노드 인덱스는 1번부터 시작하자
+        for (int start = 1; start < weights.length; start++) {
+            for (int end = 1; end < weights.length; end++) {
+                int weight = weights[start][end];
+                System.out.printf("%d ", weight == INF ? 0 : weight);
             }
-            sb.append("\n");
+            System.out.println();
         }
-        System.out.println(sb);
     }
 
-    private void dijkstra(int startVertex) {
-        PriorityQueue<ConnectVertex> pq = new PriorityQueue<>();
-
-        pq.add(new ConnectVertex(startVertex, 0));
-        weightArray[startVertex] = 0;
-
-        while (!pq.isEmpty()) {
-            ConnectVertex cur = pq.poll();
-            int curVertex = cur.connectVertex;
-            int curWeight = cur.weight;
-
-            if (curWeight > weightArray[curVertex]) continue;
-
-            for (ConnectVertex vertex : graph.get(curVertex)) {
-                int nextVertex = vertex.connectVertex;
-                int nextWeight = vertex.weight;
-
-                if (nextWeight + curWeight < weightArray[nextVertex]) {
-                    weightArray[nextVertex] = nextWeight + curWeight;
-                    pq.add(new ConnectVertex(nextVertex, nextWeight + curWeight));
+    private void floydWarshall() {
+        for (int wayPoint = 1; wayPoint < weights.length; wayPoint++) {
+            for (int start = 1; start < weights.length; start++) {
+                for (int end = 1; end < weights.length; end++) {
+                    weights[start][end] = Math.min(weights[start][end], weights[start][wayPoint] + weights[wayPoint][end]);
                 }
             }
-        }
-    }
-
-    class ConnectVertex implements Comparable<ConnectVertex> {
-        int connectVertex;
-        int weight;
-
-        public ConnectVertex(int connectVertex, int weight) {
-            this.connectVertex = connectVertex;
-            this.weight = weight;
-        }
-
-        @Override
-        public int compareTo(ConnectVertex o) {
-            return Integer.compare(this.weight, o.weight);
         }
     }
 }
