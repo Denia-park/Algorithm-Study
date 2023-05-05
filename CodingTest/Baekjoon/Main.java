@@ -71,13 +71,15 @@ class BjSolution {
 
         //출력
         //시작 노드 인덱스는 1번부터 시작하자
+        StringBuilder sb = new StringBuilder();
         for (int start = 1; start < weights.length; start++) {
             for (int end = 1; end < weights.length; end++) {
                 int weight = weights[start][end];
-                System.out.printf("%d ", weight == INF ? 0 : weight);
+                sb.append(String.format("%d ", weight == INF ? 0 : weight));
             }
-            System.out.println();
+            sb.append("\n");
         }
+        System.out.println(sb);
     }
 
     private void floydWarshall() {
