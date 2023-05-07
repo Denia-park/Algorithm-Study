@@ -6,7 +6,9 @@ public class ProgrammersMain {
 
         System.out.println(ts.solution(1, 3));
         System.out.println(ts.solution(2, 3));
-        System.out.println(ts.solution(2, 4));
+        System.out.println(ts.solution(2, 4)); //40
+        System.out.println(ts.solution(9, 20)); //1008
+        System.out.println(ts.solution(10, 20)); //952
     }
 }
 
