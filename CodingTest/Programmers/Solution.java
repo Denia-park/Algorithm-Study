@@ -1,11 +1,33 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
+//두 원 사이의 정수 쌍
 
+/*
+1. 아이디어
+두 원사이의 간격을 구하고 그 간격만큼의 점을 answer에 더하기.
+2. 시간복잡도
+3. 자료구조
+*/
 class Solution {
-    public String[] solution(String my_string) {
-        String[] split = my_string.split(" ");
+    public long solution(int r1, int r2) {
+        long answer = 0;
 
-        return Arrays.stream(split).filter(str -> !str.isEmpty()).toArray(String[]::new);
+        for (int x = -r2 + 1; x < r2; x++) {
+            if (x <= -r1 || r1 <= x) {
+                answer += ((r2 * 2L) - 1);
+                continue;
+            }
+
+            //r1 경계 값 : 올림
+            double r1Y = Math.ceil(Math.sqrt((r1 * r1) - (x * x)));
+            //r2 경계 값 : 내림
+            double r2Y = Math.floor(Math.sqrt((r2 * r2) - (x * x)));
+            //두개의 차 * 2 해서 더하기
+            answer += (2 * (r2Y - r1Y + 1));
+        }
+
+        answer += 2;
+
+        return answer;
     }
 }

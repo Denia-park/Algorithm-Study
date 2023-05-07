@@ -1,12 +1,12 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(" i    love  you")));
+        System.out.println(ts.solution(1, 3));
+        System.out.println(ts.solution(2, 3));
+        System.out.println(ts.solution(2, 4));
     }
 }
 
