@@ -28,7 +28,7 @@ class Solution {
         int[][] graph = new int[nodeNum + 1][nodeNum + 1];
         //모든 거리는 무제한으로 넣어주기.
         for (int[] ints : graph) {
-            Arrays.fill(ints, Integer.MAX_VALUE);
+            Arrays.fill(ints, (int) Math.pow(10, 8));
         }
         //자기 자신은 거리가 0
         for (int i = 0; i <= nodeNum; i++) {
@@ -45,7 +45,7 @@ class Solution {
         }
 
         //floyd-warshall
-        floayWarhall(nodeNum, graph);
+        floydWarshall(nodeNum, graph);
 
         //합승할 Node를 한번씩 돌면서 거기서 각 집으로 가는 거리 구해서 최소값 구하기.
         int minCost = Integer.MAX_VALUE;
@@ -63,14 +63,11 @@ class Solution {
         return minCost;
     }
 
-    private void floayWarhall(int nodeNum, int[][] graph) {
+    private void floydWarshall(int nodeNum, int[][] graph) {
         for (int mid = 1; mid <= nodeNum; mid++) {
             for (int start = 1; start <= nodeNum; start++) {
                 for (int end = 1; end <= nodeNum; end++) {
                     int originCost = graph[start][end];
-
-                    if (graph[start][mid] == Integer.MAX_VALUE || graph[mid][end] == Integer.MAX_VALUE) continue;
-
                     int newCost = graph[start][mid] + graph[mid][end];
 
                     if (originCost <= newCost) continue;
