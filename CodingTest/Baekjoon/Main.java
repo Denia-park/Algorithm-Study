@@ -1,13 +1,11 @@
 package CodingTest.Baekjoon;
 
-//플로이드 - 11404
+//텀 프로젝트 - 9466
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -36,67 +34,58 @@ dp를 써서 중간에 캐싱을 해야 함
 */
 
 class BjSolution {
-    final int UNCHECKED = 0;
-    final int SUCCESS = 1;
-    final int FAIL = 2;
+    //방문 확인
+    boolean[] visited;
+    //사이클 계산을 한적이 있는지 확인
+    boolean[] done;
+    //전역변수
+    int[] gPeople;
+    private int answer;
 
     public void solution(int peopleNum, int[] people) {
-        int answer = 0;
+        answer = 0;
 
-        int[] success = new int[peopleNum + 1];
+        gPeople = people;
+        visited = new boolean[peopleNum + 1];
+        done = new boolean[peopleNum + 1];
 
-        for (int idx = 0; idx < peopleNum; idx++) {
-            int myNum = idx + 1;
-            if (success[myNum] == SUCCESS) {
-                answer++;
-                continue;
-            }
+        //people 만큼 돌면서 확인
+        for (int i = 0; i < people.length; i++) {
+            int idx = i + 1;
 
-            int wantIdx = people[myNum - 1];
-            if (success[wantIdx] != UNCHECKED) {
-                success[myNum] = FAIL;
-                continue;
-            }
-            List<Integer> list = new ArrayList<>();
+            //이미 방문한적이 있으면 어떻게든 계산이 되었으므로 확인 X
+            if (visited[idx]) continue;
 
-            list.add(wantIdx);
-
-            while (true) {
-                int nextWantIdx = people[wantIdx - 1];
-
-                if (success[nextWantIdx] != UNCHECKED) {
-                    for (Integer intVal : list) {
-                        success[intVal] = FAIL;
-                    }
-                    success[myNum] = FAIL;
-                    break;
-                }
-
-                if (nextWantIdx == myNum) {
-                    for (Integer intVal : list) {
-                        success[intVal] = SUCCESS;
-                    }
-
-                    answer++;
-                    success[myNum] = SUCCESS;
-                    break;
-                } else if (nextWantIdx == wantIdx) {
-                    for (Integer intVal : list) {
-                        success[intVal] = FAIL;
-                    }
-                    success[list.get(list.size() - 1)] = SUCCESS;
-                    success[myNum] = FAIL;
-                    break;
-                }
-
-                list.add(nextWantIdx);
-                wantIdx = nextWantIdx;
-            }
+            //방문한적이 없는 경우에만 dfs로 돈다.
+            dfs(people[idx - 1]);
         }
 
-//        System.out.println(Arrays.toString(success));
-
+        //조를 이루지 못한 사람만 출력
         System.out.println(peopleNum - answer);
+    }
+
+    private void dfs(int curIdx) {
+        //방문 처리
+        visited[curIdx] = true;
+        //다음 방문할 idx 확인
+        int nextIdx = gPeople[curIdx - 1];
+
+        //방문한적이 없으면 계속해서 dfs
+        if (!visited[nextIdx]) {
+            dfs(nextIdx);
+        }
+        //방문한적이 있는데 계산한적이 없으면 사이클만큼 answer를 올린다.
+        else if (!done[nextIdx]) {
+            int cycleIdx = nextIdx;
+            while (cycleIdx != curIdx) {
+                answer++;
+                cycleIdx = gPeople[cycleIdx - 1];
+            }
+            //curIdx를 count
+            answer++;
+        }
+
+        done[curIdx] = true;
     }
 }
 
