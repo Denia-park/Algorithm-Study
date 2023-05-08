@@ -5,92 +5,98 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int nodeNum = Integer.parseInt(br.readLine());
-        int edgeNum = Integer.parseInt(br.readLine());
-        String[] edges = new String[edgeNum];
-        for (int i = 0; i < edgeNum; i++) {
-            edges[i] = br.readLine();
+        int testCaseNum = Integer.parseInt(br.readLine());
+        for (int i = 0; i < testCaseNum; i++) {
+            int peopleNum = Integer.parseInt(br.readLine());
+            int[] people = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            sol.solution(peopleNum, people);
         }
-
-        sol.solution(nodeNum, edges);
     }
 }
 
 /*
 1. 아이디어
-플로이드-워셜
+싸이클을 이루는지 확인 - 계속 돌면서 자기 자신한테로 돌아오는지 확인한다.
 
 2. 시간 복잡도
-시작 - 중간 - 끝 => 모든 노드를 대상으로 해서 모든 경우의 수를 구한다. [ V ^ 3 ]
+O(N^2) 10^10 10억
+dp를 써서 중간에 캐싱을 해야 함
 
 3. 자료 구조
-모든 경로를 저장할 2차원 배열 int[][]
-
-4. 주의할점
-시작 도시와 도착 도시를 연결하는 노선은 하나가 아닐 수 있다.
-같은 노선인데 비용이 여러개가 있다. 그러므로 더 싼 노선으로만 업데이트를 해야한다.
+값을 저장할 dp int[]
 */
 
 class BjSolution {
-    int[][] weights;
-    int INF = (int) Math.pow(10, 9);
+    final int UNCHECKED = 0;
+    final int SUCCESS = 1;
+    final int FAIL = 2;
 
-    public void solution(int nodeNum, String[] edges) {
-        //weights 선언
-        weights = new int[nodeNum + 1][nodeNum + 1];
+    public void solution(int peopleNum, int[] people) {
+        int answer = 0;
 
-        //자기 자신한테 가는 버스는 비용이 0
-        for (int i = 0; i < weights.length; i++) {
-            for (int j = 0; j < weights.length; j++) {
-                if (i == j) weights[i][j] = 0;
-                else weights[i][j] = INF;
+        int[] success = new int[peopleNum + 1];
+
+        for (int idx = 0; idx < peopleNum; idx++) {
+            int myNum = idx + 1;
+            if (success[myNum] == SUCCESS) {
+                answer++;
+                continue;
             }
-        }
 
-        //edges를 읽으면서 비용 업데이트
-        for (String edge : edges) {
-            String[] inputs = edge.split(" ");
-            int from = Integer.parseInt(inputs[0]);
-            int to = Integer.parseInt(inputs[1]);
-            int weight = Integer.parseInt(inputs[2]);
+            int wantIdx = people[myNum - 1];
+            if (success[wantIdx] != UNCHECKED) {
+                success[myNum] = FAIL;
+                continue;
+            }
+            List<Integer> list = new ArrayList<>();
 
-            weights[from][to] = Math.min(weights[from][to], weight);
-        }
+            list.add(wantIdx);
 
-        //3중 for문 돌면서 거리 업데이트
-        floydWarshall();
+            while (true) {
+                int nextWantIdx = people[wantIdx - 1];
 
-        //출력
-        //시작 노드 인덱스는 1번부터 시작하자
-        StringBuilder sb = new StringBuilder();
-        for (int start = 1; start < weights.length; start++) {
-            for (int end = 1; end < weights.length; end++) {
-                if (weights[start][end] == INF) {
-                    sb.append(0);
-                } else {
-                    sb.append(weights[start][end]);
+                if (success[nextWantIdx] != UNCHECKED) {
+                    for (Integer intVal : list) {
+                        success[intVal] = FAIL;
+                    }
+                    success[myNum] = FAIL;
+                    break;
                 }
-                sb.append(" ");
-            }
-            sb.append("\n");
-        }
-        System.out.println(sb);
-    }
 
-    private void floydWarshall() {
-        for (int wayPoint = 1; wayPoint < weights.length; wayPoint++) {
-            for (int start = 1; start < weights.length; start++) {
-                for (int end = 1; end < weights.length; end++) {
-                    weights[start][end] = Math.min(weights[start][end], weights[start][wayPoint] + weights[wayPoint][end]);
+                if (nextWantIdx == myNum) {
+                    for (Integer intVal : list) {
+                        success[intVal] = SUCCESS;
+                    }
+
+                    answer++;
+                    success[myNum] = SUCCESS;
+                    break;
+                } else if (nextWantIdx == wantIdx) {
+                    for (Integer intVal : list) {
+                        success[intVal] = FAIL;
+                    }
+                    success[list.get(list.size() - 1)] = SUCCESS;
+                    success[myNum] = FAIL;
+                    break;
                 }
+
+                list.add(nextWantIdx);
+                wantIdx = nextWantIdx;
             }
         }
+
+//        System.out.println(Arrays.toString(success));
+
+        System.out.println(peopleNum - answer);
     }
 }
 
