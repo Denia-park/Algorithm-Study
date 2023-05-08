@@ -1,40 +1,83 @@
 package CodingTest.Programmers;
 
-//두 원 사이의 정수 쌍
+//2021 KAKAO BLIND RECRUITMENT
+//합승 택시 요금 [LV.3]
 
 /*
 1. 아이디어
-두 원사이의 간격을 구하고 그 간격만큼의 점을 answer에 더하기.
+- 플루이드 워셜로 전체 거리를 구한다.
+- 합승을 어디까지 할지 모든 노드를 기준으로 한번 돌고 합승한 거리에서부터 나머지 A,B까지의 값을 구한다.
+- 최소값을 return
 
 2. 시간복잡도
-for문을 한번만 돌면 되므로 O(n) > 100만
+플루이드 워셜 : O(V^3) -> 200 ^ 3 -> 800만
+플루이드 사용후 모든 노드 다시 탐색 : O(V)
+
+충분하다.
 
 3. 자료구조
-r1 과 r2는 백만까지 가능한데 백만의 제곱이 쓰이므로 제곱을 할 경우 오버플로우 고려해서 자료형을 크게 해줘야한다.
-그리고 for문 돌리는 x도 최대 백만까지 가능하므로 제곱을 할 경우 오버플로우 고려해서 자료형을 크게 써야함
+- 2차원 int 배열로 모든 거리를 저장.
+- 요금 f는 10만 이하 자연수 -> 200번 더해도 2억이므로 int 써도 된다.
 */
+
+import java.util.Arrays;
+
 class Solution {
-    public long solution(int r1, int r2) {
-        long answer = 0;
+    public int solution(int nodeNum, int startNode, int aHome, int bHome, int[][] fares) {
+        //graph 만들기 - 0번 Idx 사용 안함
+        int[][] graph = new int[nodeNum + 1][nodeNum + 1];
+        //모든 거리는 무제한으로 넣어주기.
+        for (int[] ints : graph) {
+            Arrays.fill(ints, Integer.MAX_VALUE);
+        }
+        //자기 자신은 거리가 0
+        for (int i = 0; i <= nodeNum; i++) {
+            graph[i][i] = 0;
+        }
+        //fares 기반으로 거리 내용 업데이트
+        for (int[] fare : fares) {
+            int node1 = fare[0];
+            int node2 = fare[1];
+            int cost = fare[2];
 
-        for (double x = -r2 + 1.0; x < r2; x++) {
-            //r2 경계 값 : 내림
-            double r2Y = Math.floor(Math.sqrt(((long) r2 * r2) - (x * x)));
-
-            if (x <= -r1 || r1 <= x) {
-                //내림 값 기준으로 *2 하고 1 더해주면 사이 값 나온다.
-                answer += (2 * r2Y + 1);
-            } else {
-                //r1 경계 값 : 올림
-                double r1Y = Math.ceil(Math.sqrt(((long) r1 * r1) - (x * x)));
-                //두개의 차 * 2 해서 더하기
-                answer += (2 * (r2Y - r1Y + 1));
-            }
+            graph[node1][node2] = cost;
+            graph[node2][node1] = cost;
         }
 
-        //시작점과 끝점은 계산을 안해줬기 때문에 마지막에 +2를 진행함.
-        answer += 2;
+        //floyd-warshall
+        floayWarhall(nodeNum, graph);
 
-        return answer;
+        //합승할 Node를 한번씩 돌면서 거기서 각 집으로 가는 거리 구해서 최소값 구하기.
+        int minCost = Integer.MAX_VALUE;
+
+        for (int shareNode = 1; shareNode <= nodeNum; shareNode++) {
+            int shareCost = graph[startNode][shareNode];
+            int aCost = graph[shareNode][aHome];
+            int bCost = graph[shareNode][bHome];
+
+            int totalCost = shareCost + aCost + bCost;
+
+            minCost = Math.min(minCost, totalCost);
+        }
+
+        return minCost;
+    }
+
+    private void floayWarhall(int nodeNum, int[][] graph) {
+        for (int mid = 1; mid <= nodeNum; mid++) {
+            for (int start = 1; start <= nodeNum; start++) {
+                for (int end = 1; end <= nodeNum; end++) {
+                    int originCost = graph[start][end];
+
+                    if (graph[start][mid] == Integer.MAX_VALUE || graph[mid][end] == Integer.MAX_VALUE) continue;
+
+                    int newCost = graph[start][mid] + graph[mid][end];
+
+                    if (originCost <= newCost) continue;
+
+                    graph[start][end] = newCost;
+                }
+            }
+        }
     }
 }
