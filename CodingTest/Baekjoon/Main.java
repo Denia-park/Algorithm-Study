@@ -75,12 +75,9 @@ class BjSolution {
 
         if (!visited[nextIdx]) {
             dfs(people, nextIdx);
-            done[curIdx] = true;
-            return;
         }
-
         //방문을 한번 한적이 있는데, 아직 계산을 안했으면 지금 딱 싸이클에 도달했다는 의미.
-        if (visited[nextIdx] && !done[nextIdx]) {
+        else if (!done[nextIdx]) {
             //싸이클 인원 수 만큼 계산을 해야함.
             int tempNextIdx = nextIdx;
 
