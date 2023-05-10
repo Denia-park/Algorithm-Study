@@ -1,80 +1,120 @@
 package CodingTest.Programmers;
 
-//2021 KAKAO BLIND RECRUITMENT
-//합승 택시 요금 [LV.3]
-
 /*
-1. 아이디어
-- 플루이드 워셜로 전체 거리를 구한다.
-- 합승을 어디까지 할지 모든 노드를 기준으로 한번 돌고 합승한 거리에서부터 나머지 A,B까지의 값을 구한다.
-- 최소값을 return
+Idea
+-90 180 270 도 돌리고
+-상, 하, 좌, 우 최대 20칸씩 다 옮겨봐서 값을 구해보자.
+-key는 무조건 lock보다 작다.
 
-2. 시간복잡도
-플루이드 워셜 : O(V^3) -> 200 ^ 3 -> 800만
-플루이드 사용후 모든 노드 다시 탐색 : O(V)
+time coplexity
+-시뮬레이션 문제라서 구현만 하면 가능할듯
 
-충분하다.
+data structure
+-int[][]
+ */
 
-3. 자료구조
-- 2차원 int 배열로 모든 거리를 저장.
-- 요금 f는 10만 이하 자연수 -> 200번 더해도 2억이므로 int 써도 된다.
-*/
-
-import java.util.Arrays;
 
 class Solution {
-    public int solution(int nodeNum, int startNode, int aHome, int bHome, int[][] fares) {
-        //graph 만들기 - 0번 Idx 사용 안함
-        int[][] graph = new int[nodeNum + 1][nodeNum + 1];
-        //모든 거리는 무제한으로 넣어주기.
-        for (int[] ints : graph) {
-            Arrays.fill(ints, (int) Math.pow(10, 8));
-        }
-        //자기 자신은 거리가 0
-        for (int i = 0; i <= nodeNum; i++) {
-            graph[i][i] = 0;
-        }
-        //fares 기반으로 거리 내용 업데이트
-        for (int[] fare : fares) {
-            int node1 = fare[0];
-            int node2 = fare[1];
-            int cost = fare[2];
+    int[][] directions = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-            graph[node1][node2] = cost;
-            graph[node2][node1] = cost;
+    public boolean solution(int[][] key, int[][] lock) {
+        //키를 그대로 두고 확인 ~ key 270도 돌려서 확인
+        for (int rotateCount = 0; rotateCount < 4; rotateCount++) {
+            //처음에는 안돌리고 확인
+            if (rotateCount != 0) {
+                //한번당 90도 돌리기.
+                key = rotateTable90Degree(key);
+            }
+
+            if (verifyKey(key, lock)) {
+                return true;
+            }
         }
 
-        //floyd-warshall
-        floydWarshall(nodeNum, graph);
-
-        //합승할 Node를 한번씩 돌면서 거기서 각 집으로 가는 거리 구해서 최소값 구하기.
-        int minCost = Integer.MAX_VALUE;
-
-        for (int shareNode = 1; shareNode <= nodeNum; shareNode++) {
-            int shareCost = graph[startNode][shareNode];
-            int aCost = graph[shareNode][aHome];
-            int bCost = graph[shareNode][bHome];
-
-            int totalCost = shareCost + aCost + bCost;
-
-            minCost = Math.min(minCost, totalCost);
-        }
-
-        return minCost;
+        return false;
     }
 
-    private void floydWarshall(int nodeNum, int[][] graph) {
-        for (int mid = 1; mid <= nodeNum; mid++) {
-            for (int start = 1; start <= nodeNum; start++) {
-                for (int end = 1; end <= nodeNum; end++) {
-                    int originCost = graph[start][end];
-                    int newCost = graph[start][mid] + graph[mid][end];
+    //90도 돌리게 되면
+    //(r,c) -> (c, arrSize - 1 - r )
+    private int[][] rotateTable90Degree(int[][] key) {
+        int size = key.length;
+        int[][] newKey = new int[size][size];
 
-                    if (originCost <= newCost) continue;
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                newKey[r][c] = key[c][size - 1 - r];
+            }
+        }
 
-                    graph[start][end] = newCost;
+        return newKey;
+    }
+
+    private boolean verifyKey(int[][] key, int[][] lock) {
+        //첨부터 끝까지 도는데
+        //lock이 1인데 key가 1이면 안됨
+        //lock이 0인데 key도 0이면 안됨
+        //lock이 0이고 key가 1이면 OK
+        //lock이 1이고 key가 0이면 OK
+
+        //즉 두개가 서로 다르기만 하면 된다.
+
+        int lockSize = lock.length;
+        int keySize = key.length;
+
+        int bigSize = lockSize + (keySize - 1);
+
+        //key 기반으로 lock을 만든다.
+        for (int sR = 0; sR < bigSize; sR++) {
+            for (int sC = 0; sC < bigSize; sC++) {
+                int[][] newLock = moveKey(key, sR, sC, lockSize);
+
+                if (verify(lockSize, lock, newLock)) {
+                    return true;
                 }
             }
         }
+
+        return false;
+    }
+
+    private boolean verify(int lockSize, int[][] lock, int[][] newLock) {
+        //만들어진 lock 과 기존 lock을 비교한다.
+        for (int r = 0; r < lockSize; r++) {
+            for (int c = 0; c < lockSize; c++) {
+                if (lock[r][c] == newLock[r][c]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private int[][] moveKey(int[][] key, int sR, int sC, int lockSize) {
+        int keySize = key.length;
+        int bigSize = lockSize + (keySize - 1) * 2;
+        int[][] bigLock = new int[bigSize][bigSize];
+        int[][] rtLock = new int[lockSize][lockSize];
+
+        //값 대입
+        //Map을 벗어나면 추가하지 않는다.
+        for (int r = sR, kR = 0; r < sR + keySize; r++, kR = 0) {
+            for (int c = sC, kC = 0; c < sC + keySize; c++, kC = 0) {
+                bigLock[r][c] = key[kR][kC];
+            }
+        }
+
+        //값 추출
+        for (int nR = keySize - 1, oR = 0; nR < (keySize - 1 + lockSize); nR++, oR++) {
+            for (int nC = keySize - 1, oC = 0; nC < keySize - 1 + lockSize; nC++, oC++) {
+                rtLock[oR][oC] = bigLock[nR][nC];
+            }
+        }
+
+        return rtLock;
+    }
+
+    private boolean isOutOfMap(int r, int c, int size) {
+        return r < 0 || r >= size || c < 0 || c >= size;
     }
 }
