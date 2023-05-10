@@ -3,7 +3,7 @@ package CodingTest.Programmers;
 /*
 Idea
 -90 180 270 도 돌리고
--상, 하, 좌, 우 최대 20칸씩 다 옮겨봐서 값을 구해보자.
+-key를 옮길수있는 만큼 옮기면서 값을 다 확인해보자.
 -key는 무조건 lock보다 작다.
 
 time coplexity
@@ -13,17 +13,14 @@ data structure
 -int[][]
  */
 
-
 class Solution {
-    int[][] directions = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-
     public boolean solution(int[][] key, int[][] lock) {
         //키를 그대로 두고 확인 ~ key 270도 돌려서 확인
         for (int rotateCount = 0; rotateCount < 4; rotateCount++) {
             //처음에는 안돌리고 확인
             if (rotateCount != 0) {
                 //한번당 90도 돌리기.
-                key = rotateTable90Degree(key);
+                key = rotateTable90DegreeClockwise(key);
             }
 
             if (verifyKey(key, lock)) {
@@ -36,13 +33,13 @@ class Solution {
 
     //90도 돌리게 되면
     //(r,c) -> (c, arrSize - 1 - r )
-    private int[][] rotateTable90Degree(int[][] key) {
+    private int[][] rotateTable90DegreeClockwise(int[][] key) {
         int size = key.length;
         int[][] newKey = new int[size][size];
 
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
-                newKey[r][c] = key[c][size - 1 - r];
+                newKey[r][c] = key[size - 1 - c][r];
             }
         }
 
@@ -50,20 +47,12 @@ class Solution {
     }
 
     private boolean verifyKey(int[][] key, int[][] lock) {
-        //첨부터 끝까지 도는데
-        //lock이 1인데 key가 1이면 안됨
-        //lock이 0인데 key도 0이면 안됨
-        //lock이 0이고 key가 1이면 OK
-        //lock이 1이고 key가 0이면 OK
-
-        //즉 두개가 서로 다르기만 하면 된다.
-
         int lockSize = lock.length;
         int keySize = key.length;
 
         int bigSize = lockSize + (keySize - 1);
 
-        //key 기반으로 lock을 만든다.
+        //2개의 lock을 비교하기 위해 key 기반으로 newLock을 만든다.
         for (int sR = 0; sR < bigSize; sR++) {
             for (int sC = 0; sC < bigSize; sC++) {
                 int[][] newLock = moveKey(key, sR, sC, lockSize);
@@ -77,29 +66,17 @@ class Solution {
         return false;
     }
 
-    private boolean verify(int lockSize, int[][] lock, int[][] newLock) {
-        //만들어진 lock 과 기존 lock을 비교한다.
-        for (int r = 0; r < lockSize; r++) {
-            for (int c = 0; c < lockSize; c++) {
-                if (lock[r][c] == newLock[r][c]) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
+    //key를 옮긴 경우를 생각하기 위해서
+    //큰 배열을 만들고 key 값을 대입 후 필요한 부분만 추출해서 쓴다.
     private int[][] moveKey(int[][] key, int sR, int sC, int lockSize) {
         int keySize = key.length;
         int bigSize = lockSize + (keySize - 1) * 2;
         int[][] bigLock = new int[bigSize][bigSize];
         int[][] rtLock = new int[lockSize][lockSize];
 
-        //값 대입
-        //Map을 벗어나면 추가하지 않는다.
-        for (int r = sR, kR = 0; r < sR + keySize; r++, kR = 0) {
-            for (int c = sC, kC = 0; c < sC + keySize; c++, kC = 0) {
+        //bigLock에 값 대입
+        for (int r = sR, kR = 0; r < sR + keySize; r++, kR++) {
+            for (int c = sC, kC = 0; c < sC + keySize; c++, kC++) {
                 bigLock[r][c] = key[kR][kC];
             }
         }
@@ -114,7 +91,24 @@ class Solution {
         return rtLock;
     }
 
-    private boolean isOutOfMap(int r, int c, int size) {
-        return r < 0 || r >= size || c < 0 || c >= size;
+    private boolean verify(int lockSize, int[][] lock, int[][] newLock) {
+        //첨부터 끝까지 도는데
+        //lock이 1인데 key가 1이면 안됨
+        //lock이 0인데 key도 0이면 안됨
+        //lock이 0이고 key가 1이면 OK
+        //lock이 1이고 key가 0이면 OK
+
+        //즉 두개가 서로 다르기만 하면 된다.
+
+        //만들어진 lock 과 기존 lock을 비교한다.
+        for (int r = 0; r < lockSize; r++) {
+            for (int c = 0; c < lockSize; c++) {
+                if (lock[r][c] == newLock[r][c]) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
