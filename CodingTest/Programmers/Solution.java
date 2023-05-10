@@ -55,9 +55,7 @@ class Solution {
         //2개의 lock을 비교하기 위해 key 기반으로 newLock을 만든다.
         for (int sR = 0; sR < bigSize; sR++) {
             for (int sC = 0; sC < bigSize; sC++) {
-                int[][] newLock = moveKey(key, sR, sC, lockSize);
-
-                if (verify(lockSize, lock, newLock)) {
+                if (verify(key, sR, sC, lock)) {
                     return true;
                 }
             }
@@ -68,11 +66,11 @@ class Solution {
 
     //key를 옮긴 경우를 생각하기 위해서
     //큰 배열을 만들고 key 값을 대입 후 필요한 부분만 추출해서 쓴다.
-    private int[][] moveKey(int[][] key, int sR, int sC, int lockSize) {
+    private boolean verify(int[][] key, int sR, int sC, int[][] lock) {
+        int lockSize = lock.length;
         int keySize = key.length;
         int bigSize = lockSize + (keySize - 1) * 2;
         int[][] bigLock = new int[bigSize][bigSize];
-        int[][] rtLock = new int[lockSize][lockSize];
 
         //bigLock에 값 대입
         for (int r = sR, kR = 0; r < sR + keySize; r++, kR++) {
@@ -84,26 +82,7 @@ class Solution {
         //값 추출
         for (int nR = keySize - 1, oR = 0; nR < (keySize - 1 + lockSize); nR++, oR++) {
             for (int nC = keySize - 1, oC = 0; nC < keySize - 1 + lockSize; nC++, oC++) {
-                rtLock[oR][oC] = bigLock[nR][nC];
-            }
-        }
-
-        return rtLock;
-    }
-
-    private boolean verify(int lockSize, int[][] lock, int[][] newLock) {
-        //첨부터 끝까지 도는데
-        //lock이 1인데 key가 1이면 안됨
-        //lock이 0인데 key도 0이면 안됨
-        //lock이 0이고 key가 1이면 OK
-        //lock이 1이고 key가 0이면 OK
-
-        //즉 두개가 서로 다르기만 하면 된다.
-
-        //만들어진 lock 과 기존 lock을 비교한다.
-        for (int r = 0; r < lockSize; r++) {
-            for (int c = 0; c < lockSize; c++) {
-                if (lock[r][c] == newLock[r][c]) {
+                if (lock[oR][oC] == bigLock[nR][nC]) {
                     return false;
                 }
             }
@@ -111,4 +90,5 @@ class Solution {
 
         return true;
     }
+
 }
