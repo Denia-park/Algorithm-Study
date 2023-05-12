@@ -4,13 +4,10 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        int[][] key1 = Util.convertStringToJavaIntTwoDimensionalArray(
-                "[[0, 0, 0], [1, 0, 0], [0, 1, 1]]"
+        int[][] routes = Util.convertStringToJavaIntTwoDimensionalArray(
+                "[[-20,-15],[-14,-5],[-18,-13],[-5,-3]]"
         );
-        int[][] lock1 = Util.convertStringToJavaIntTwoDimensionalArray(
-                "[[1, 1, 1], [1, 1, 0], [1, 0, 1]]"
-        );
-        System.out.println(ts.solution(key1, lock1));
+        System.out.println(ts.solution(routes));
     }
 }
 

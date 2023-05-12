@@ -1,94 +1,58 @@
 package CodingTest.Programmers;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 /*
-Idea
--90 180 270 도 돌리고
--key를 옮길수있는 만큼 옮기면서 값을 다 확인해보자.
--key는 무조건 lock보다 작다.
+탐욕법(Greedy) - 단속카메라
 
-time coplexity
--시뮬레이션 문제라서 구현만 하면 가능할듯
+아이디어
+-그리디
+-routes의 각각의 데이터를 모두 오름차순으로 정렬 (0번째 원소, 1번째 원소의 크기를 보장 못하므로)
+-routes를 끝 값 기준으로 오름차순으로 정렬
+-list를 돌면서 현재 끝 값기준으로 시작지점이 끝 값보다 이전이면 끝값에 카메라를 둘 경우 해당 차량들이 지나간다고 보장이 가능하다.
 
-data structure
--int[][]
- */
+시간복잡도
+O(NLgN) + O(N)
 
+자료형
+int[] 사용 - 0:시작 1:끝 인데 보장을 못하니까 정렬이 필요함
+*/
 class Solution {
-    public boolean solution(int[][] key, int[][] lock) {
-        //키를 그대로 두고 확인 ~ key 270도 돌려서 확인
-        for (int rotateCount = 0; rotateCount < 4; rotateCount++) {
-            //처음에는 안돌리고 확인
-            if (rotateCount != 0) {
-                //한번당 90도 돌리기.
-                key = rotateTable90DegreeClockwise(key);
-            }
+    public int solution(int[][] routes) {
+        int answer = 0;
 
-            if (verifyKey(key, lock)) {
-                return true;
-            }
+        List<Route> routeList = new ArrayList<>();
+        for (int[] route : routes) {
+            int end = Math.max(route[0], route[1]);
+            int start = Math.min(route[0], route[1]);
+
+            routeList.add(new Route(start, end));
+        }
+        routeList.sort(Comparator.comparingInt(o -> o.end));
+
+        answer = 1;
+        Route standard = routeList.get(0);
+        for (int idx = 1; idx < routes.length; idx++) {
+            Route newRoute = routeList.get(idx);
+
+            if (standard.end >= newRoute.start) continue;
+
+            standard = newRoute;
+            answer++;
         }
 
-        return false;
+        return answer;
     }
+}
 
-    //90도 돌리게 되면
-    //(r,c) -> (c, arrSize - 1 - r )
-    private int[][] rotateTable90DegreeClockwise(int[][] key) {
-        int size = key.length;
-        int[][] newKey = new int[size][size];
+class Route {
+    int start;
+    int end;
 
-        for (int r = 0; r < size; r++) {
-            for (int c = 0; c < size; c++) {
-                newKey[r][c] = key[size - 1 - c][r];
-            }
-        }
-
-        return newKey;
+    public Route(int start, int end) {
+        this.start = start;
+        this.end = end;
     }
-
-    private boolean verifyKey(int[][] key, int[][] lock) {
-        int lockSize = lock.length;
-        int keySize = key.length;
-
-        int bigSize = lockSize + (keySize - 1);
-
-        //2개의 lock을 비교하기 위해 key 기반으로 newLock을 만든다.
-        for (int sR = 0; sR < bigSize; sR++) {
-            for (int sC = 0; sC < bigSize; sC++) {
-                if (verify(key, sR, sC, lock)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    //key를 옮긴 경우를 생각하기 위해서
-    //큰 배열을 만들고 key 값을 대입 후 필요한 부분만 추출해서 쓴다.
-    private boolean verify(int[][] key, int sR, int sC, int[][] lock) {
-        int lockSize = lock.length;
-        int keySize = key.length;
-        int bigSize = lockSize + (keySize - 1) * 2;
-        int[][] bigLock = new int[bigSize][bigSize];
-
-        //bigLock에 값 대입
-        for (int r = sR, kR = 0; r < sR + keySize; r++, kR++) {
-            for (int c = sC, kC = 0; c < sC + keySize; c++, kC++) {
-                bigLock[r][c] = key[kR][kC];
-            }
-        }
-
-        //값 추출
-        for (int nR = keySize - 1, oR = 0; nR < (keySize - 1 + lockSize); nR++, oR++) {
-            for (int nC = keySize - 1, oC = 0; nC < keySize - 1 + lockSize; nC++, oC++) {
-                if (lock[oR][oC] == bigLock[nR][nC]) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
 }
