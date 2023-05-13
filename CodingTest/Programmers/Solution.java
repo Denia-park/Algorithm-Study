@@ -7,6 +7,8 @@ import java.util.Set;
 
 /*
 동적계획법(Dynamic Programming) - N으로 표현
+※비슷한 아이디어까지 갔는데 직접적 구현을 못해서 답 참고
+//주소:https://gurumee92.tistory.com/164
 
 아이디어
 - DP 동적 계획법 + 완탐
@@ -38,18 +40,15 @@ class Solution {
                 Set<Integer> lSet = sets.get(leftCnt);
                 Set<Integer> rSet = sets.get(totalCnt - leftCnt);
 
-                try {
-                    lSet.forEach(l -> rSet.forEach(r -> {
-                        curSet.add(l + r);
-                        curSet.add(l - r);
-                        curSet.add(l * r);
+                lSet.forEach(l -> rSet.forEach(r -> {
+                    curSet.add(l + r);
+                    curSet.add(l - r);
+                    curSet.add(l * r);
+                    if (r != 0)
                         curSet.add(l / r);
-                    }));
-                } catch (RuntimeException e) {
-//                    System.out.println("Error");
-                }
-            }
+                }));
 
+            }
 
             if (curSet.contains(number)) {
                 return totalCnt;
