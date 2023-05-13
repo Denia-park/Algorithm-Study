@@ -1,58 +1,61 @@
 package CodingTest.Programmers;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /*
-탐욕법(Greedy) - 단속카메라
+동적계획법(Dynamic Programming) - N으로 표현
 
 아이디어
--그리디
--routes의 각각의 데이터를 모두 오름차순으로 정렬 (0번째 원소, 1번째 원소의 크기를 보장 못하므로)
--routes를 끝 값 기준으로 오름차순으로 정렬
--list를 돌면서 현재 끝 값기준으로 시작지점이 끝 값보다 이전이면 끝값에 카메라를 둘 경우 해당 차량들이 지나간다고 보장이 가능하다.
+- DP 동적 계획법 + 완탐
+- 미리 값을 저장해두긴 해야함.
+- 모든 값을 이용해서 계산을 한다.
+- 최솟값이 8보다 크면 -1을 return
 
 시간복잡도
-O(NLgN) + O(N)
+O(N^4)
 
 자료형
-int[] 사용 - 0:시작 1:끝 인데 보장을 못하니까 정렬이 필요함
+Set의 List 사용
+
 */
 class Solution {
-    public int solution(int[][] routes) {
-        int answer = 0;
+    final int COUNT_LIMIT = 8;
 
-        List<Route> routeList = new ArrayList<>();
-        for (int[] route : routes) {
-            int end = Math.max(route[0], route[1]);
-            int start = Math.min(route[0], route[1]);
-
-            routeList.add(new Route(start, end));
-        }
-        routeList.sort(Comparator.comparingInt(o -> o.end));
-
-        answer = 1;
-        Route standard = routeList.get(0);
-        for (int idx = 1; idx < routes.length; idx++) {
-            Route newRoute = routeList.get(idx);
-
-            if (standard.end >= newRoute.start) continue;
-
-            standard = newRoute;
-            answer++;
+    public int solution(int N, int number) {
+        List<Set<Integer>> sets = new ArrayList<>();
+        for (int i = 0; i < COUNT_LIMIT + 1; i++) {
+            sets.add(new HashSet<>());
         }
 
-        return answer;
-    }
-}
+        for (int totalCnt = 1; totalCnt <= COUNT_LIMIT; totalCnt++) {
+            Set<Integer> curSet = sets.get(totalCnt);
+            curSet.add(Integer.parseInt(String.valueOf(N).repeat(totalCnt)));
 
-class Route {
-    int start;
-    int end;
+            for (int leftCnt = 1; leftCnt < totalCnt; leftCnt++) {
+                Set<Integer> lSet = sets.get(leftCnt);
+                Set<Integer> rSet = sets.get(totalCnt - leftCnt);
 
-    public Route(int start, int end) {
-        this.start = start;
-        this.end = end;
+                try {
+                    lSet.forEach(l -> rSet.forEach(r -> {
+                        curSet.add(l + r);
+                        curSet.add(l - r);
+                        curSet.add(l * r);
+                        curSet.add(l / r);
+                    }));
+                } catch (RuntimeException e) {
+//                    System.out.println("Error");
+                }
+            }
+
+
+            if (curSet.contains(number)) {
+                return totalCnt;
+            }
+        }
+
+        return -1;
     }
 }
