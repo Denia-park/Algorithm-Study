@@ -4,13 +4,11 @@ public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
 
-        int[][] routes = Util.convertStringToJavaIntTwoDimensionalArray(
-                "[[-20,-15],[-14,-5],[-18,-13],[-5,-3]]"
-        );
-//        System.out.println(ts.solution(5, 12));
-//        System.out.println(ts.solution(2, 11));
-//        System.out.println(ts.solution(2, 4));
-        System.out.println(ts.solution(5, 26));
+//        int[][] routes = Util.convertStringToJavaIntTwoDimensionalArray(
+//                "[[-20,-15],[-14,-5],[-18,-13],[-5,-3]]"
+//        );
+
+        System.out.println(ts.solution(6, new int[]{7, 10}));
     }
 }
 
