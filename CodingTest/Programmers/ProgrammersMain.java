@@ -8,7 +8,8 @@ public class ProgrammersMain {
 //                "[[-20,-15],[-14,-5],[-18,-13],[-5,-3]]"
 //        );
 
-        System.out.println(ts.solution(6, new int[]{7, 10}));
+        System.out.println(ts.solution(8, 2, new String[]{"D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z"}));
+        System.out.println(ts.solution(8, 2, new String[]{"D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z", "U 1", "C"}));
     }
 }
 

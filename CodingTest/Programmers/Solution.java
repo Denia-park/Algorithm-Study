@@ -1,65 +1,107 @@
 package CodingTest.Programmers;
 
 /*
-이분탐색 - 입국 심사
-
-//정답 참고
-//주소:https://suhyeokeee.tistory.com/183
+2021 카카오 채용연계형 인턴십 - 표 편집
 
 아이디어
-- 이분 탐색
-- 어디를 이분 탐색해야하는지 전혀 감을 못잡았다가 정답을 보고 생각을 하게 되었다.
+- 구현 , 배열 사용하고 배열은 고정, value만 값을 바꿔가면서 사용
+- Z는 스택을 사용하자.
 
-시간복잡도
-O(nLgN) -> n이 10만이라 충분함.
+시간 복잡도
+- 단순 구현말고는 일단은 더 나은 방법을 모르겠음 ..
 
-자료형
-시간이 10억까지 가능하기 때문에 Long을 써야 오버플로우가 나지 않음
+자료 구조
+- boolen[] , Stack<Integer> 로 처리
 
-*/
+ */
 
 import java.util.Arrays;
+import java.util.Stack;
 
 class Solution {
-    public long solution(int n, int[] times) {
-        //심사관들이 처리하는 시간 중에 가장 작은 값과 가장 큰 값을 쓸 예정이기 때문에 sort를 한다.
-        Arrays.sort(times);
+    public String solution(int totalNum, int curSel, String[] cmd) {
+        boolean[] checked = new boolean[totalNum];
+        Arrays.fill(checked, true);
+        Stack<Integer> stack = new Stack<>();
 
-        //최소 시간
-        //1분 부터 해도 되지만,입국 심사 대기 인원은 최소 1명, 심사관도 최소 1명 이기 때문에
-        //최소 시간으로 처리하는 심사관의 시간을 최소값으로 설정한다.
-        long minTime = times[0];
+        for (String comm : cmd) {
+            String[] splits = comm.split(" ");
 
-        //최대 시간
-        //만약 모든 사람이 가장 느린 심사관한테 가서 입국 심사를 받게 되면 걸리는 값
-        long maxTime = (long) times[times.length - 1] * n;
-        long answer = maxTime;
+            String alpha = splits[0];
 
-        //시간을 기준으로 이분탐색을 돌린다
-        //만약 30분의 시간이 걸린다면, 30분 동안 처리할 수 있는 인원수는
-        //다음과 같이 계산이 된다. 예제를 사용하면
-        //30분 동안 0번째 심사관 -> 30분 / 7분 => 4.XX명이 나오는데 => 나머지는 버려야 하므로 4명 (나머지 값은 쓸수가 없다.)
-        //30분 동안 1번째 심사관 -> 30분 / 10분 => 3명이 나오는데 => 3명
-        //이렇게 시간을 기준으로 인원을 계산하고 계산한 인원이 n명 이상이면 해당 값을 저장
-        //최소값이 될 때까지 계속해서 이분 탐색을 돌린다.
+            int count = 0;
+//            System.out.print("checked = " + Arrays.toString(checked));
+//            System.out.println("curSel = " + curSel);
 
-        while (minTime <= maxTime) {
-            long midTime = (minTime + maxTime) / 2;
+            if (alpha.equals("U")) {
+                int moveCount = Integer.parseInt(splits[1]);
+                while (moveCount != count) {
+                    curSel--;
 
-            long manCount = 0;
-            for (int time : times) {
-                manCount += (midTime / time);
+                    if (checked[curSel]) {
+                        count++;
+                    }
+                }
+            } else if (alpha.equals("D")) {
+                int moveCount = Integer.parseInt(splits[1]);
+                while (moveCount != count) {
+                    curSel++;
+
+                    if (checked[curSel]) {
+                        count++;
+                    }
+                }
+            } else if (alpha.equals("C")) {
+                int nextSel = curSel + 1;
+                boolean flag = false;
+                //아래 행 선택
+                while (true) {
+                    if (nextSel == totalNum) {
+                        break;
+                    }
+
+                    if (checked[nextSel]) {
+                        flag = true;
+                        break;
+                    }
+                    nextSel++;
+                }
+
+                if (!flag) {
+                    //끝에 도달했으므로 윗 행 찾기
+                    int tempUpSel = curSel - 1;
+                    while (true) {
+                        if (tempUpSel == -1) {
+                            break;
+                        }
+
+                        if (checked[tempUpSel]) {
+                            nextSel = tempUpSel;
+                            break;
+                        }
+                        tempUpSel--;
+                    }
+                }
+
+                //현재값 삭제
+                checked[curSel] = false;
+                stack.push(curSel);
+                //다음 행 선택
+                curSel = nextSel;
+            } else if (alpha.equals("Z")) {
+                int curDelIdx = stack.pop();
+                checked[curDelIdx] = true;
             }
-
-            if (manCount >= n) {
-                answer = Math.min(answer, midTime);
-
-                maxTime = midTime - 1;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < totalNum; i++) {
+            if (checked[i]) {
+                sb.append("O");
             } else {
-                minTime = midTime + 1;
+                sb.append("X");
             }
         }
 
-        return answer;
+        return sb.toString();
     }
 }
