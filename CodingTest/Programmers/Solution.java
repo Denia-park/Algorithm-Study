@@ -22,8 +22,8 @@ class Solution {
         Stack<Node> stack = new Stack<>();
 
         Node curNode = null;
-        Node headNode = null;
-        Node lastNode = null;
+        Node headNode = new Node(-1);
+        Node lastNode = headNode;
 
         for (int i = 0; i < totalNum; i++) {
             Node newNode = new Node(i);
@@ -32,13 +32,12 @@ class Solution {
                 curNode = newNode;
             }
 
-            if (headNode == null) {
-                headNode = newNode;
-            } else {
-                lastNode.add(newNode);
-            }
+            lastNode.add(newNode);
             lastNode = newNode;
         }
+        lastNode.add(new Node(-2));
+        lastNode = lastNode.next;
+
 
         for (String comm : cmd) {
             String[] splits = comm.split(" ");
@@ -65,14 +64,11 @@ class Solution {
                 }
             } else if (alpha.equals("C")) {
                 Node nextNode = curNode.next;
-                if (nextNode == null) {
+                if (nextNode == lastNode) {
                     nextNode = curNode.prev;
                 }
 
                 stack.push(curNode.remove());
-                if (curNode == headNode) {
-                    headNode = nextNode;
-                }
                 curNode = nextNode;
             } else if (alpha.equals("Z")) {
                 Node restoreNode = stack.pop();
@@ -82,10 +78,11 @@ class Solution {
 
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        while (headNode != null) {
-            if (count == headNode.idx) {
+        Node countNode = headNode.next;
+        while (countNode != lastNode) {
+            if (count == countNode.idx) {
                 count++;
-                headNode = headNode.next;
+                countNode = countNode.next;
                 sb.append("O");
             } else {
                 count++;
@@ -106,7 +103,7 @@ class Solution {
         }
 
         public void add(Node node) {
-            next = node;
+            this.next = node;
             node.prev = this;
         }
 
@@ -120,12 +117,14 @@ class Solution {
             return this;
         }
 
-        public void restore() {
+        public Node restore() {
             Node prevNode = this.prev;
             Node nextNode = this.next;
 
             prevNode.next = this;
             nextNode.prev = this;
+
+            return this;
         }
     }
 }
