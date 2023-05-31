@@ -18,12 +18,16 @@ package CodingTest.Programmers;
 import java.util.Stack;
 
 class Solution {
+
+    private Node headNode;
+    private Node lastNode;
+
     public String solution(int totalNum, int curSel, String[] cmd) {
         Stack<Node> stack = new Stack<>();
 
         Node curNode = null;
-        Node headNode = new Node(-1);
-        Node lastNode = headNode;
+        headNode = new Node(-1);
+        lastNode = headNode;
 
         for (int i = 0; i < totalNum; i++) {
             Node newNode = new Node(i);
@@ -38,7 +42,6 @@ class Solution {
         lastNode.add(new Node(-2));
         lastNode = lastNode.next;
 
-
         for (String comm : cmd) {
             String[] splits = comm.split(" ");
 
@@ -51,16 +54,14 @@ class Solution {
                 while (moveCount != count) {
                     count++;
 
-                    if (curNode != null && curNode.prev != null)
-                        curNode = curNode.prev;
+                    curNode = curNode.prev;
                 }
             } else if (alpha.equals("D")) {
                 int moveCount = Integer.parseInt(splits[1]);
                 while (moveCount != count) {
                     count++;
 
-                    if (curNode != null && curNode.next != null)
-                        curNode = curNode.next;
+                    curNode = curNode.next;
                 }
             } else if (alpha.equals("C")) {
                 Node nextNode = curNode.next;
