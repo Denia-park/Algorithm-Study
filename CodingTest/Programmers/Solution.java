@@ -15,6 +15,8 @@ package CodingTest.Programmers;
 
  */
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 class Solution {
@@ -77,17 +79,18 @@ class Solution {
             }
         }
 
+        Set<Integer> set = new HashSet<>();
+        for (Node node : stack) {
+            set.add(node.idx);
+        }
+
         StringBuilder sb = new StringBuilder();
         int count = 0;
-        Node countNode = headNode.next;
-        while (countNode != lastNode) {
-            if (count == countNode.idx) {
-                count++;
-                countNode = countNode.next;
-                sb.append("O");
-            } else {
-                count++;
+        for (int i = 0; i < totalNum; i++) {
+            if (set.contains(i)) {
                 sb.append("X");
+            } else {
+                sb.append("O");
             }
         }
 
