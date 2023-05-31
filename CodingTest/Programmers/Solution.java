@@ -15,14 +15,30 @@ package CodingTest.Programmers;
 
  */
 
-import java.util.Arrays;
 import java.util.Stack;
 
 class Solution {
     public String solution(int totalNum, int curSel, String[] cmd) {
-        boolean[] checked = new boolean[totalNum];
-        Arrays.fill(checked, true);
-        Stack<Integer> stack = new Stack<>();
+        Stack<Node> stack = new Stack<>();
+
+        Node curNode = null;
+        Node headNode = null;
+        Node lastNode = null;
+
+        for (int i = 0; i < totalNum; i++) {
+            Node newNode = new Node(i);
+
+            if (i == curSel) {
+                curNode = newNode;
+            }
+
+            if (headNode == null) {
+                headNode = newNode;
+            } else {
+                lastNode.add(newNode);
+            }
+            lastNode = newNode;
+        }
 
         for (String comm : cmd) {
             String[] splits = comm.split(" ");
@@ -30,78 +46,86 @@ class Solution {
             String alpha = splits[0];
 
             int count = 0;
-//            System.out.print("checked = " + Arrays.toString(checked));
-//            System.out.println("curSel = " + curSel);
 
             if (alpha.equals("U")) {
                 int moveCount = Integer.parseInt(splits[1]);
                 while (moveCount != count) {
-                    curSel--;
+                    count++;
 
-                    if (checked[curSel]) {
-                        count++;
-                    }
+                    if (curNode != null && curNode.prev != null)
+                        curNode = curNode.prev;
                 }
             } else if (alpha.equals("D")) {
                 int moveCount = Integer.parseInt(splits[1]);
                 while (moveCount != count) {
-                    curSel++;
+                    count++;
 
-                    if (checked[curSel]) {
-                        count++;
-                    }
+                    if (curNode != null && curNode.next != null)
+                        curNode = curNode.next;
                 }
             } else if (alpha.equals("C")) {
-                int nextSel = curSel + 1;
-                boolean flag = false;
-                //아래 행 선택
-                while (true) {
-                    if (nextSel == totalNum) {
-                        break;
-                    }
-
-                    if (checked[nextSel]) {
-                        flag = true;
-                        break;
-                    }
-                    nextSel++;
+                Node nextNode = curNode.next;
+                if (nextNode == null) {
+                    nextNode = curNode.prev;
                 }
 
-                if (!flag) {
-                    //끝에 도달했으므로 윗 행 찾기
-                    int tempUpSel = curSel - 1;
-                    while (true) {
-                        if (tempUpSel == -1) {
-                            break;
-                        }
-
-                        if (checked[tempUpSel]) {
-                            nextSel = tempUpSel;
-                            break;
-                        }
-                        tempUpSel--;
-                    }
+                stack.push(curNode.remove());
+                if (curNode == headNode) {
+                    headNode = nextNode;
                 }
-
-                //현재값 삭제
-                checked[curSel] = false;
-                stack.push(curSel);
-                //다음 행 선택
-                curSel = nextSel;
+                curNode = nextNode;
             } else if (alpha.equals("Z")) {
-                int curDelIdx = stack.pop();
-                checked[curDelIdx] = true;
+                Node restoreNode = stack.pop();
+                restoreNode.restore();
             }
         }
+
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < totalNum; i++) {
-            if (checked[i]) {
+        int count = 0;
+        while (headNode != null) {
+            if (count == headNode.idx) {
+                count++;
+                headNode = headNode.next;
                 sb.append("O");
             } else {
+                count++;
                 sb.append("X");
             }
         }
 
         return sb.toString();
+    }
+
+    class Node {
+        int idx;
+        Node next;
+        Node prev;
+
+        public Node(int idx) {
+            this.idx = idx;
+        }
+
+        public void add(Node node) {
+            next = node;
+            node.prev = this;
+        }
+
+        public Node remove() {
+            Node prevNode = this.prev;
+            Node nextNode = this.next;
+
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+
+            return this;
+        }
+
+        public void restore() {
+            Node prevNode = this.prev;
+            Node nextNode = this.next;
+
+            prevNode.next = this;
+            nextNode.prev = this;
+        }
     }
 }
