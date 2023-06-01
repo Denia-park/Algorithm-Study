@@ -1,97 +1,100 @@
 package CodingTest.Baekjoon;
 
-//텀 프로젝트 - 9466
+//그림 1926
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int testCaseNum = Integer.parseInt(br.readLine());
-        for (int i = 0; i < testCaseNum; i++) {
-            int peopleNum = Integer.parseInt(br.readLine());
-            int[] people = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-            sol.solution(peopleNum, people);
+        String[] splits = br.readLine().split(" ");
+        int row = Integer.parseInt(splits[0]);
+        int col = Integer.parseInt(splits[1]);
+
+        String[][] graph = new String[row][col];
+        for (int i = 0; i < row; i++) {
+            graph[i] = br.readLine().split(" ");
         }
+
+        sol.solution(graph, row, col);
     }
 }
 
 /*
-1. 아이디어
-- 연결을 따라가다 보면 무조건 싸이클을 만나게 되어있다. (싸이클을 만나야 끝이 난다)
-- 싸이클을 확인해야 함
-- 싸이클을 만나면 해당 싸이클만큼 계산을 해야함
-- 참여하지 못한 학생들의 수를 표시해야 하므로 전체 인원수에서 사이클 인원수를 빼야 한다.
+아이디어
+- DFS , BFS
 
-2. 시간 복잡도
-- 그냥 완탐 돌리면 O(N^2)으로 시간 초과가 난다. 10억 나옴
-- O(N)으로 탐색을 해야함
+시간복잡도
+- O(V + E)
 
-3. 자료 구조
-- 계속해서 들어가면서 값을 확인해야 하므로, 재귀 혹은 while을 쓴다. (dfs)
-- 방문했는지 확인할 boolean[] visited
-- 해당 싸이클이 이미 내가 검증한 싸이클인지 확인할 boolean[] done
-*/
+자료구조
+- BFS - Queue를 사용
+ */
 
 class BjSolution {
-    //싸이클 판별을 위해 방문을 했는지 체크
-    boolean[] visited;
-    //이미 계산이 끝난 사람인지 확인을 위해 체크
-    boolean[] done;
-    int answer;
+    private boolean[][] visited;
+    private int[][] directions = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-    public void solution(int peopleNum, int[] people) {
-        answer = 0;
-        //계산을 편리하게 하려고 1 큰 값을 사용
-        visited = new boolean[peopleNum + 1];
-        done = new boolean[peopleNum + 1];
+    public void solution(String[][] graph, int row, int col) {
+        int drawCount = 0;
+        int maxDrawSize = 0;
+        visited = new boolean[row][col];
 
-        for (int i = 0; i < people.length; i++) {
-            int curIdx = i + 1;
+        for (int r = 0; r < row; r++) {
+            for (int c = 0; c < col; c++) {
+                String ch = graph[r][c];
 
-            //이미 계산이 끝난 사람이면 더 이상 확인할 필요가 없다.
-            if (done[curIdx]) continue;
+                if (ch.equals("0")) continue;
+                if (visited[r][c]) continue;
 
-            dfs(people, curIdx);
+                drawCount++;
+                maxDrawSize = Math.max(maxDrawSize, bfs(graph, r, c));
+            }
         }
 
-        System.out.println(peopleNum - answer);
+        System.out.println(drawCount);
+        System.out.println(maxDrawSize);
     }
 
-    //1 -> 3 -> 3 -> ...
-    //1번에서 시작했지만 끝은 싸이클에서 끝나는 것을 알 수 있다.
+    private int bfs(String[][] graph, int r, int c) {
+        int maxSize = 1;
 
-    //4 -> 7 -> 6 -> 4 -> ...
-    //현재 6번 상황이면 방문한 곳을 또 방문했는데, 아직 done이 안되어있으므로 싸이클을 계산한다.
-    private void dfs(int[] people, int curIdx) {
-        visited[curIdx] = true;
+        Deque<int[]> dq = new ArrayDeque<>();
+        dq.add(new int[]{r, c});
+        visited[r][c] = true;
 
-        int nextIdx = people[curIdx - 1];
+        while (!dq.isEmpty()) {
+            int[] cur = dq.poll();
+            int tempR = cur[0];
+            int tempC = cur[1];
 
-        if (!visited[nextIdx]) {
-            dfs(people, nextIdx);
-        }
-        //방문을 한번 한적이 있는데, 아직 계산을 안했으면 지금 딱 싸이클에 도달했다는 의미.
-        else if (!done[nextIdx]) {
-            //싸이클 인원 수 만큼 계산을 해야함.
-            int tempNextIdx = nextIdx;
+            for (int[] direction : directions) {
+                int nextR = tempR + direction[0];
+                int nextC = tempC + direction[1];
 
-            while (tempNextIdx != curIdx) {
-                answer++;
-                tempNextIdx = people[tempNextIdx - 1];
+                if (isOutOfGraph(graph, nextR, nextC) || graph[nextR][nextC].equals("0") || visited[nextR][nextC])
+                    continue;
+
+                visited[nextR][nextC] = true;
+                maxSize++;
+                dq.add(new int[]{nextR, nextC});
             }
-
-            //나도 카운팅 해야함
-            answer++;
         }
 
-        //계산 완료
-        done[curIdx] = true;
+        return maxSize;
+    }
+
+    private boolean isOutOfGraph(String[][] graph, int nextR, int nextC) {
+        int row = graph.length;
+        int col = graph[0].length;
+
+        return nextR < 0 || nextR >= row || nextC < 0 || nextC >= col;
     }
 }
 
