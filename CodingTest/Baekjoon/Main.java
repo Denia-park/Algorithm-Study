@@ -1,105 +1,80 @@
 package CodingTest.Baekjoon;
 
-//단지 번호 붙이기 2667
+//N과 M (1) 15649
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int size = Integer.parseInt(br.readLine());
+        String[] splits = br.readLine().split(" ");
+        int maxNum = Integer.parseInt(splits[0]);
+        int numMaxSize = Integer.parseInt(splits[1]);
 
-        String[] map = new String[size];
-        for (int i = 0; i < size; i++) {
-            map[i] = br.readLine();
-        }
-
-        sol.solution(map, size);
+        sol.solution(maxNum, numMaxSize);
     }
 }
 
 /*
 아이디어
-- DFS , BFS
-- map 전체를 돌면서 확인
-    - 0이면 무시, 방문 했으면 무시
-    - 1이면 진입 후 DFS
-        - 단지 사이즈 List에 넣기
-- dfs 돌때
-    - 0이면 무시, 방문했으면 무시, 맵 밖이면 무시
-    - 방문 처리, 사이즈 1 올리기, 진행
+- 모두 돌아야함 -> 완탐 -> 백트래킹 (N이 작다)
+- 방문 체크 & 숫자 넣기
+- 백트래킹이니까 벗어나면 방문 체크 풀기 & 숫자 빼기
 
 - 출력
-    - List 크기
-    - Sort 후 출력
+순서에 맞게 쭉 출력하기.
 
 시간복잡도
-- O(V + E)
+- O(N^사이즈)
 
 자료구조
-- BFS - Queue를 사용
-- DFS - 재귀함수 사용
+- 완탐
  */
 
 class BjSolution {
-    boolean[][] visited;
-    List<Integer> answers;
-    int tempSize;
-    int mapSize;
+    StringBuilder sb;
+    Deque<Integer> dq;
+    boolean[] visited;
 
-    int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    public void solution(int maxNum, int numMaxSize) {
+        visited = new boolean[maxNum + 1];
+        dq = new ArrayDeque<>();
+        sb = new StringBuilder();
 
-    public void solution(String[] map, int size) {
-        visited = new boolean[size][size];
-        answers = new ArrayList<>();
-        mapSize = size;
-
-        for (int r = 0; r < size; r++) {
-            for (int c = 0; c < size; c++) {
-                char ch = map[r].charAt(c);
-
-                if (ch == '0') continue;
-                if (visited[r][c]) continue;
-
-                tempSize = 0;
-                visited[r][c] = true;
-                dfs(map, r, c);
-                answers.add(tempSize);
-            }
-        }
-
-        answers.sort(null);
-        StringBuilder sb = new StringBuilder();
-        sb.append(answers.size()).append("\n");
-        for (Integer answer : answers) {
-            sb.append(answer).append("\n");
-        }
+        backTracking(maxNum, numMaxSize);
 
         System.out.println(sb);
     }
 
-    private void dfs(String[] map, int r, int c) {
-        tempSize++;
+    private void backTracking(int maxNum, int numMaxSize) {
+        if (dq.size() == numMaxSize) {
+            print(dq);
+            return;
+        }
 
-        for (int[] direction : directions) {
-            int nextR = r + direction[0];
-            int nextC = c + direction[1];
-
-            if (isOutOfMap(nextR, nextC) || map[nextR].charAt(nextC) == '0' || visited[nextR][nextC]) continue;
-
-            visited[nextR][nextC] = true;
-            dfs(map, nextR, nextC);
+        for (int i = 1; i <= maxNum; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                dq.addLast(i);
+                backTracking(maxNum, numMaxSize);
+                dq.removeLast();
+                visited[i] = false;
+            }
         }
     }
 
-    private boolean isOutOfMap(int nextR, int nextC) {
-        return nextR < 0 || nextR >= mapSize || nextC < 0 || nextC >= mapSize;
+    private void print(Deque<Integer> dq) {
+        for (Integer val : dq) {
+            sb.append(val);
+            sb.append(" ");
+        }
+        sb.append("\n");
     }
 }
 
