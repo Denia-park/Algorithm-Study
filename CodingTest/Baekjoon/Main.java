@@ -1,7 +1,9 @@
 package CodingTest.Baekjoon;
 
 //로봇 청소기 14503
-//오후 4시 21분
+//오후 4시 21분 - 시작
+//오후 5시 6분 - 완료
+//45분
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,11 +51,11 @@ class BjSolution {
         int machinCol = Integer.parseInt(splits2[1]);
         int direction = Integer.parseInt(splits2[2]);
 
-        System.out.println(new Machin(machinRow, machinCol, direction, map).run());
+        System.out.println(new Machine(machinRow, machinCol, direction, map).run());
     }
 }
 
-class Machin {
+class Machine {
     final int PLACE = 0;
     final int WALL = 1;
     final int CLEAN = 2;
@@ -66,7 +68,7 @@ class Machin {
     int[][] directions = new int[][]{{-1, 0}, {0, 1}, {1, 0}, {0, -1}}; //북,동,남,서
     int[][] goBackDirection = new int[][]{{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
 
-    public Machin(int r, int c, int d, int[][] map) {
+    public Machine(int r, int c, int d, int[][] map) {
         this.r = r;
         this.c = c;
         this.d = d;
@@ -80,7 +82,7 @@ class Machin {
         while (true) {
             clean();
 
-            if (isAllCleanedAroundMachin()) {
+            if (areAllSurroundingsClean()) {
                 //후진할수없으면 작동을 멈춘다.
                 if (!isAvailableGoBack()) {
                     break;
@@ -90,13 +92,13 @@ class Machin {
                 goBack();
                 //1번으로 돌아간다.
                 continue;
-            } else {
-                while (true) {
-                    turnLeft();
-                    if (isDirtyPlaceFrontMachin()) {
-                        go();
-                        break;
-                    }
+            }
+
+            while (true) {
+                turnLeft();
+                if (isPlaceInFrontOfMachineDirty()) {
+                    go();
+                    break;
                 }
             }
         }
@@ -105,16 +107,13 @@ class Machin {
     }
 
     private void go() {
-        int nR = this.r + directions[d][0];
-        int nC = this.c + directions[d][1];
-
-        this.r = nR;
-        this.c = nC;
+        this.r = getGoPosition()[0];
+        this.c = getGoPosition()[1];
     }
 
-    private boolean isDirtyPlaceFrontMachin() {
-        int nR = this.r + directions[d][0];
-        int nC = this.c + directions[d][1];
+    private boolean isPlaceInFrontOfMachineDirty() {
+        int nR = getGoPosition()[0];
+        int nC = getGoPosition()[1];
 
         return !isOutOfMap(nR, nC) && !isWall(nR, nC) && !isCleaned(nR, nC);
     }
@@ -133,7 +132,7 @@ class Machin {
         return map[r][c] == CLEAN;
     }
 
-    private boolean isAllCleanedAroundMachin() {
+    private boolean areAllSurroundingsClean() {
         //북동남서 확인
         //청소되지 않은 빈칸인지만 확인
         for (int[] direction : directions) {
@@ -157,19 +156,30 @@ class Machin {
         return r < 0 || r >= mapRow || c < 0 || c >= mapCol;
     }
 
-    private boolean isAvailableGoBack() {
+    private int[] getGoPosition() {
+        int nR = this.r + directions[d][0];
+        int nC = this.c + directions[d][1];
+
+        return new int[]{nR, nC};
+    }
+
+    private int[] getGoBackPosition() {
         int nR = this.r + goBackDirection[d][0];
         int nC = this.c + goBackDirection[d][1];
+
+        return new int[]{nR, nC};
+    }
+
+    private boolean isAvailableGoBack() {
+        int nR = getGoBackPosition()[0];
+        int nC = getGoBackPosition()[1];
 
         return !isOutOfMap(nR, nC) && !isWall(nR, nC);
     }
 
     private void goBack() {
-        int nR = this.r + goBackDirection[d][0];
-        int nC = this.c + goBackDirection[d][1];
-
-        this.r = nR;
-        this.c = nC;
+        this.r = getGoBackPosition()[0];
+        this.c = getGoBackPosition()[1];
     }
 }
 
