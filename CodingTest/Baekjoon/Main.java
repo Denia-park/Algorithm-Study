@@ -1,71 +1,80 @@
 package CodingTest.Baekjoon;
 
-//수열 2559
-//오후 10시 28분 - 시작
-//오후 10시 42분 - 완료
-//생각을 잘못해서 3~4분 더 걸림
+//수 찾기 2559
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int totalNum = Integer.parseInt(br.readLine());
         String[] splits1 = br.readLine().split(" ");
-        int totalNum = Integer.parseInt(splits1[0]);
-        int needNum = Integer.parseInt(splits1[1]);
-
+        int[] nums = new int[totalNum];
+        for (int i = 0; i < totalNum; i++) {
+            nums[i] = Integer.parseInt(splits1[i]);
+        }
+        int findTotalNum = Integer.parseInt(br.readLine());
         String[] splits2 = br.readLine().split(" ");
-        int[] values = new int[totalNum];
-
-        for (int i = 0; i < splits2.length; i++) {
-            values[i] = Integer.parseInt(splits2[i]);
+        int[] findNums = new int[findTotalNum];
+        for (int i = 0; i < findTotalNum; i++) {
+            findNums[i] = Integer.parseInt(splits2[i]);
         }
 
-        sol.solution(values, needNum);
+        sol.solution(nums, findNums);
     }
 }
 
 /*
 아이디어
-투포인터
+최대 10만개의 수를 10만번 검색해야 함 -> 이진 탐색
 
 - 출력
-최대 합
+존재하면 1, 없으면 0
 
 시간복잡도
-투포인터 -> O(N)
+이진탐색 -> O(N*lnN)
 
 자료구조
-결과값 - 100 * 100000 -> 10억 -> int
-10만칸 -> int[]
+모든 정수의 범위는 int -> int[]
  */
 
 class BjSolution {
+    public void solution(int[] nums, int[] findNums) {
+        Arrays.sort(nums);
 
-    public void solution(int[] values, int needNum) {
-        int maxVal = Integer.MIN_VALUE;
-        int start = 0;
-        int end = needNum - 1;
-
-        int sum = 0;
-        for (int i = start; i <= end; i++) {
-            sum += values[i];
+        StringBuilder sb = new StringBuilder();
+        for (int findNum : findNums) {
+            int val = binarySearch(nums, findNum);
+            sb.append(val).append("\n");
         }
 
-        maxVal = Math.max(maxVal, sum);
+        System.out.println(sb);
+    }
 
-        for (int i = end + 1; i <= (values.length - 1); i++) {
-            sum -= values[i - 1 - end];
-            sum += values[i];
+    private int binarySearch(int[] nums, int findNum) {
+        int st = 0;
+        int end = nums.length - 1;
 
-            maxVal = Math.max(maxVal, sum);
+        while (st <= end) {
+            int mid = (st + end) / 2;
+
+            int tempVal = nums[mid];
+
+            if (tempVal == findNum) {
+                return 1;
+            } else if (tempVal < findNum) {
+                st = mid + 1;
+            } else {
+                end = mid - 1;
+            }
         }
 
-        System.out.println(maxVal);
+        return 0;
     }
 }
 
