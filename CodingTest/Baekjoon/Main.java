@@ -1,80 +1,103 @@
 package CodingTest.Baekjoon;
 
-//수 찾기 2559
+//최소 스패닝 트리 1197
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int totalNum = Integer.parseInt(br.readLine());
-        String[] splits1 = br.readLine().split(" ");
-        int[] nums = new int[totalNum];
-        for (int i = 0; i < totalNum; i++) {
-            nums[i] = Integer.parseInt(splits1[i]);
-        }
-        int findTotalNum = Integer.parseInt(br.readLine());
-        String[] splits2 = br.readLine().split(" ");
-        int[] findNums = new int[findTotalNum];
-        for (int i = 0; i < findTotalNum; i++) {
-            findNums[i] = Integer.parseInt(splits2[i]);
+        String[] split = br.readLine().split(" ");
+        int vNum = Integer.parseInt(split[0]);
+        int eNum = Integer.parseInt(split[1]);
+
+        String[] edges = new String[eNum];
+
+        for (int i = 0; i < eNum; i++) {
+            edges[i] = br.readLine();
         }
 
-        sol.solution(nums, findNums);
+        sol.solution(vNum, edges);
     }
 }
 
 /*
 아이디어
-최대 10만개의 수를 10만번 검색해야 함 -> 이진 탐색
+최소 스패닝 트리
+- 크루스칼
+- 프림
+    - 한 노드 선택
+    - 노드의 모든 Edge Heap 넣기
+    - 연결된 노드가 방문한적 있는지 체크
+    - 없으면 가중치 추가, 방문 체크
+    - 해당 노드에서 다시 1번부터 수행 -> 방문한 노드는 제외하자.
 
 - 출력
-존재하면 1, 없으면 0
+최소 가중치
 
 시간복잡도
-이진탐색 -> O(N*lnN)
+O(ELogE)
 
 자료구조
-모든 정수의 범위는 int -> int[]
+출력값은 제한조건에 의해 int
+방문 처리 필요 int[]
  */
 
 class BjSolution {
-    public void solution(int[] nums, int[] findNums) {
-        Arrays.sort(nums);
+    public void solution(int vNum, String[] edges) {
+        int ans = 0;
+        boolean[] visited = new boolean[vNum + 1];
 
-        StringBuilder sb = new StringBuilder();
-        for (int findNum : findNums) {
-            int val = binarySearch(nums, findNum);
-            sb.append(val).append("\n");
+        //인접 리스트 만들기
+        List<List<int[]>> map = new ArrayList<>();
+
+        //계산을 편리하기 위해 0번째도 같이 넣기
+        for (int i = 0; i < vNum + 1; i++) {
+            map.add(new ArrayList<>());
         }
 
-        System.out.println(sb);
-    }
+        for (String edge : edges) {
+            String[] tempSplit = edge.split(" ");
+            int v1 = Integer.parseInt(tempSplit[0]);
+            int v2 = Integer.parseInt(tempSplit[1]);
+            int weight = Integer.parseInt(tempSplit[2]);
 
-    private int binarySearch(int[] nums, int findNum) {
-        int st = 0;
-        int end = nums.length - 1;
+            map.get(v1).add(new int[]{v2, weight});
+            map.get(v2).add(new int[]{v1, weight});
+        }
 
-        while (st <= end) {
-            int mid = (st + end) / 2;
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o[1]));
+        //시작 노드, 노드 Num, 노드 Weight
+        pq.add(new int[]{1, 0});
 
-            int tempVal = nums[mid];
+        while (!pq.isEmpty()) {
+            int[] curNode = pq.poll();
 
-            if (tempVal == findNum) {
-                return 1;
-            } else if (tempVal < findNum) {
-                st = mid + 1;
-            } else {
-                end = mid - 1;
+            int curNodeNum = curNode[0];
+            int curWeight = curNode[1];
+
+            if (visited[curNodeNum]) continue;
+            visited[curNodeNum] = true;
+            ans += curWeight;
+
+            for (int[] node : map.get(curNodeNum)) {
+                int nextNodeNum = node[0];
+                int nextNodeWeight = node[1];
+                if (visited[nextNodeNum]) continue;
+
+                pq.add(new int[]{nextNodeNum, nextNodeWeight});
             }
         }
 
-        return 0;
+        System.out.println(ans);
     }
 }
 
