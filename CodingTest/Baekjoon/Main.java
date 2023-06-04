@@ -5,8 +5,6 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -50,21 +48,6 @@ class BjSolution {
     final int INF = (int) Math.pow(10, 9);
 
     public void solution(int cityNum, int busNum, String[] edges) {
-        //방향 리스트 정의
-        List<List<Edge>> map = new ArrayList<>();
-        for (int i = 0; i < cityNum + 1; i++) {
-            map.add(new ArrayList<>());
-        }
-
-        for (String edge : edges) {
-            String[] split = edge.split(" ");
-            int from = Integer.parseInt(split[0]);
-            int to = Integer.parseInt(split[1]);
-            int weight = Integer.parseInt(split[2]);
-
-            map.get(from).add(new Edge(to, weight));
-        }
-
         int[][] arr = new int[cityNum + 1][cityNum + 1];
 
         //2차원 배열 초기화
@@ -78,15 +61,13 @@ class BjSolution {
             }
         }
 
-        //List 통해서 추가적으로 초기화
-        for (int from = 1; from < cityNum + 1; from++) {
-            List<Edge> list = map.get(from);
-            for (Edge edge : list) {
-                int to = edge.to;
-                int cost = edge.cost;
+        for (String edge : edges) {
+            String[] split = edge.split(" ");
+            int from = Integer.parseInt(split[0]);
+            int to = Integer.parseInt(split[1]);
+            int cost = Integer.parseInt(split[2]);
 
-                arr[from][to] = Math.min(arr[from][to], cost);
-            }
+            arr[from][to] = Math.min(arr[from][to], cost);
         }
 
         //floydWarshall
