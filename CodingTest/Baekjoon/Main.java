@@ -5,106 +5,98 @@ package CodingTest.Baekjoon;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BjSolution sol = new BjSolution();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int cityNum = Integer.parseInt(br.readLine());
-        int busNum = Integer.parseInt(br.readLine());
 
-        String[] edges = new String[busNum];
+        int[] inputs = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int row = inputs[0];
+        int col = inputs[1];
 
-        for (int i = 0; i < busNum; i++) {
-            edges[i] = br.readLine();
+        int[][] matrix = new int[row][col];
+
+        for (int r = 0; r < row; r++) {
+            int[] rows = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            System.arraycopy(rows, 0, matrix[r], 0, col);
         }
 
-        sol.solution(cityNum, busNum, edges);
+        sol.solve(row, col, matrix);
     }
 }
 
-/*
-아이디어
-플로이드
-- 방향 리스트 정의
-- 가중치 값 2차원 배열 초기화
-    - 자기 자신은 0, 나머지는 INF, INF는 오버플로우 조심
-    - 3차 for문 실행 -> 중간 지점부터 시작할 것 !! 주의
+//아이디어
 
-- 출력
-배열을 모두 출력
-- 자기자신 0 , 못 가면 0
+//시간복잡도
 
-시간복잡도
-O(V^3)
-
-자료구조
-비용이 10만이하 이므로 모든 도시를 돌아서 int보다 작다.
-노선은 하나가 아닐수도 있다. -> 주의
- */
+//자료구조
 
 class BjSolution {
-    final int INF = (int) Math.pow(10, 9);
+    int[] dR = {0, 1, 0, -1};
+    int[] dC = {1, 0, -1, 0};
+    boolean[][] visited;
 
-    public void solution(int cityNum, int busNum, String[] edges) {
-        int[][] arr = new int[cityNum + 1][cityNum + 1];
+    public void solve(int row, int col, int[][] matrix) {
+        int count = 0;
+        int maxSize = 0;
+        visited = new boolean[row][col];
 
-        //2차원 배열 초기화
-        for (int from = 1; from < cityNum + 1; from++) {
-            for (int to = 1; to < cityNum + 1; to++) {
-                if (from == to) {
-                    arr[from][to] = 0;
-                    continue;
-                }
-                arr[from][to] = INF;
+        for (int r = 0; r < row; r++) {
+            for (int c = 0; c < col; c++) {
+                //1이 아니면 탐색X
+                if (matrix[r][c] == 0) continue;
+                //이미 방문햇으면 탐색X
+                if (visited[r][c]) continue;
+
+                count++;
+                maxSize = Math.max(bfs(r, c, matrix), maxSize);
             }
         }
 
-        for (String edge : edges) {
-            String[] split = edge.split(" ");
-            int from = Integer.parseInt(split[0]);
-            int to = Integer.parseInt(split[1]);
-            int cost = Integer.parseInt(split[2]);
-
-            arr[from][to] = Math.min(arr[from][to], cost);
-        }
-
-        //floydWarshall
-        for (int mid = 1; mid < cityNum + 1; mid++) {
-            for (int from = 1; from < cityNum + 1; from++) {
-                for (int to = 1; to < cityNum + 1; to++) {
-                    if (arr[from][to] > arr[from][mid] + arr[mid][to]) {
-                        arr[from][to] = arr[from][mid] + arr[mid][to];
-                    }
-                }
-            }
-        }
-
-        //1부터 찍는다
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 1; i < cityNum + 1; i++) {
-            for (int j = 1; j < cityNum + 1; j++) {
-                int val = arr[i][j];
-                if (val == INF) val = 0;
-
-                sb.append(val).append(" ");
-            }
-            sb.append("\n");
-        }
-
-        System.out.println(sb);
+        System.out.println(count);
+        System.out.println(maxSize);
     }
-}
 
-class Edge {
-    int to;
-    int cost;
+    private int bfs(int r, int c, int[][] matrix) {
+        Deque<int[]> dq = new ArrayDeque<>();
+        dq.addLast(new int[]{r, c});
+        visited[r][c] = true;
+        int maxSize = 1;
 
-    public Edge(int to, int cost) {
-        this.to = to;
-        this.cost = cost;
+        while (!dq.isEmpty()) {
+            int[] cur = dq.pollFirst();
+            int cR = cur[0];
+            int cC = cur[1];
+
+            for (int i = 0; i < 4; i++) {
+                int newR = cR + dR[i];
+                int newC = cC + dC[i];
+
+                //map 벗어나면 탐색 X
+                if (newR < 0 || newR >= matrix.length || newC < 0 || newC >= matrix[0].length)
+                    continue;
+
+                //0이면 탐색 X
+                if (matrix[newR][newC] == 0)
+                    continue;
+
+                //이미 방문했으면 탐색 X
+                if (visited[newR][newC])
+                    continue;
+
+                //방문처리 + 사이즈 1 추가
+                dq.addLast(new int[]{newR, newC});
+                maxSize++;
+                visited[newR][newC] = true;
+            }
+        }
+
+        return maxSize;
     }
 }
 
