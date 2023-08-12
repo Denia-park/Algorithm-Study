@@ -1,5 +1,7 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
@@ -8,8 +10,17 @@ public class ProgrammersMain {
 //                "[[-20,-15],[-14,-5],[-18,-13],[-5,-3]]"
 //        );
 
-        System.out.println(ts.solution(8, 2, new String[]{"D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z"}));
-        System.out.println(ts.solution(8, 2, new String[]{"D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z", "U 1", "C"}));
+        System.out.println(
+                Arrays.equals(
+                        ts.solution(new String[][]{{"ICN", "JFK"}, {"HND", "IAD"}, {"JFK", "HND"}}),
+                        new String[]{"ICN", "JFK", "HND", "IAD"})
+        );
+        
+        System.out.println(
+                Arrays.equals(
+                        ts.solution(new String[][]{{"ICN", "SFO"}, {"ICN", "ATL"}, {"SFO", "ATL"}, {"ATL", "ICN"}, {"ATL", "SFO"}}),
+                        new String[]{"ICN", "ATL", "ICN", "SFO", "ATL", "SFO"})
+        );
     }
 }
 

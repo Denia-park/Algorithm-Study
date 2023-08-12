@@ -1,136 +1,72 @@
 package CodingTest.Programmers;
 
 /*
-2021 카카오 채용연계형 인턴십 - 표 편집
-
 아이디어
-- 구현 , 배열 사용하고 배열은 고정, value만 값을 바꿔가면서 사용
-- Z는 스택을 사용하자.
+1. Map에 List를 넣어서 해당 경로에서 도착할 수 있는 모든 경로 정리
+2. ICN 부터 시작해서 모든 경로를 탐색
+3. 도착할때마다 List에 저장 후 마지막에 변환
 
-시간 복잡도
-- 단순 구현말고는 일단은 더 나은 방법을 모르겠음 ..
+시간복잡도
+N번 돌면 끝나지 않나 ?
 
-자료 구조
-- boolen[] , Stack<Integer> 로 처리
+자료구조
 
  */
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
+    private String START_DEPARTURE = "ICN";
+    private List<String> answer = new ArrayList<>();
+    private Map<String, List<String>> map = new HashMap<>();
+    private Map<String, Integer> haveToVisitMap = new HashMap<>();
 
-    private Node headNode;
-    private Node lastNode;
+    public String[] solution(String[][] tickets) {
+        answer = new ArrayList<>();
+        map = new HashMap<>();
+        haveToVisitMap = new HashMap<>();
 
-    public String solution(int totalNum, int curSel, String[] cmd) {
-        Stack<Node> stack = new Stack<>();
+        for (String[] ticket : tickets) {
+            final String departure = ticket[0];
+            final String arrival = ticket[1];
 
-        Node curNode = null;
-        headNode = new Node(-1);
-        lastNode = headNode;
-
-        for (int i = 0; i < totalNum; i++) {
-            Node newNode = new Node(i);
-
-            if (i == curSel) {
-                curNode = newNode;
-            }
-
-            lastNode.add(newNode);
-            lastNode = newNode;
-        }
-        lastNode.add(new Node(-2));
-        lastNode = lastNode.next;
-
-        for (String comm : cmd) {
-            String[] splits = comm.split(" ");
-
-            String alpha = splits[0];
-
-            int count = 0;
-
-            if (alpha.equals("U")) {
-                int moveCount = Integer.parseInt(splits[1]);
-                while (moveCount != count) {
-                    count++;
-
-                    curNode = curNode.prev;
-                }
-            } else if (alpha.equals("D")) {
-                int moveCount = Integer.parseInt(splits[1]);
-                while (moveCount != count) {
-                    count++;
-
-                    curNode = curNode.next;
-                }
-            } else if (alpha.equals("C")) {
-                Node nextNode = curNode.next;
-                if (nextNode == lastNode) {
-                    nextNode = curNode.prev;
-                }
-
-                stack.push(curNode.remove());
-                curNode = nextNode;
-            } else if (alpha.equals("Z")) {
-                Node restoreNode = stack.pop();
-                restoreNode.restore();
-            }
+            //검색해서 List가 존재하면 거기에 추가, 없으면 새로 생성
+            final List<String> arrivalList = map.getOrDefault(departure, new ArrayList<>());
+            arrivalList.add(arrival);
+            map.put(departure, arrivalList);
         }
 
-        StringBuilder sb = new StringBuilder();
-        int count = 0;
-        Node countNode = headNode.next;
-        while (countNode != lastNode) {
-            if (count == countNode.idx) {
-                count++;
-                countNode = countNode.next;
-                sb.append("O");
-            } else {
-                count++;
-                sb.append("X");
-            }
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            haveToVisitMap.put(entry.getKey(), 0);
+            entry.getValue().sort(null);
         }
 
-        while (count != totalNum) {
-            sb.append("X");
-            count++;
-        }
+        dfs(START_DEPARTURE);
 
-        return sb.toString();
+        final String[] array = answer.toArray(new String[answer.size()]);
+        return array;
     }
 
-    class Node {
-        int idx;
-        Node next;
-        Node prev;
+    private void dfs(String departure) {
+        answer.add(departure);
+        final List<String> arrivals = map.get(departure);
 
-        public Node(int idx) {
-            this.idx = idx;
+        if (arrivals == null) {
+            return;
         }
 
-        public void add(Node node) {
-            this.next = node;
-            node.prev = this;
-        }
+        for (int idx = 0; idx < arrivals.size(); idx++) {
+            final int checkIdx = haveToVisitMap.get(departure);
+            if (idx < checkIdx) {
+                continue;
+            }
 
-        public Node remove() {
-            Node prevNode = this.prev;
-            Node nextNode = this.next;
+            haveToVisitMap.put(departure, checkIdx + 1);
 
-            prevNode.next = nextNode;
-            nextNode.prev = prevNode;
-
-            return this;
-        }
-
-        public Node restore() {
-            Node prevNode = this.prev;
-            Node nextNode = this.next;
-
-            prevNode.next = this;
-            nextNode.prev = this;
-
-            return this;
+            dfs(arrivals.get(idx));
         }
     }
 }
