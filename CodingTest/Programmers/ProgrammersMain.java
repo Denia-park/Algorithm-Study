@@ -15,11 +15,23 @@ public class ProgrammersMain {
                         ts.solution(new String[][]{{"ICN", "JFK"}, {"HND", "IAD"}, {"JFK", "HND"}}),
                         new String[]{"ICN", "JFK", "HND", "IAD"})
         );
-        
+
         System.out.println(
                 Arrays.equals(
                         ts.solution(new String[][]{{"ICN", "SFO"}, {"ICN", "ATL"}, {"SFO", "ATL"}, {"ATL", "ICN"}, {"ATL", "SFO"}}),
                         new String[]{"ICN", "ATL", "ICN", "SFO", "ATL", "SFO"})
+        );
+
+        System.out.println(
+                Arrays.equals(
+                        ts.solution(new String[][]{{"ICN", "BOO"}, {"ICN", "COO"}, {"COO", "DOO"}, {"DOO", "COO"}, {"BOO", "DOO"}, {"DOO", "BOO"}, {"BOO", "ICN"}, {"COO", "BOO"}}),
+                        new String[]{"ICN", "BOO", "DOO", "BOO", "ICN", "COO", "DOO", "COO", "BOO"})
+        );
+
+        System.out.println(
+                Arrays.equals(
+                        ts.solution(new String[][]{{"ICN", "AAA"}, {"ICN", "AAA"}, {"ICN", "AAA"}, {"AAA", "ICN"}, {"AAA", "ICN"}}),
+                        new String[]{"ICN", "AAA", "ICN", "AAA", "ICN", "AAA"})
         );
     }
 }

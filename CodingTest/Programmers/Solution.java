@@ -1,13 +1,15 @@
 package CodingTest.Programmers;
 
 /*
+
 아이디어
-2. ICN 부터 시작
-1. 모든 경우의 수를 돌면서 경로 탐색
+1. 모든 경우의 수를 돌면서 경로 탐색 -> 완전 탐색 [dfs 이용]
 
 시간복잡도
+목적지 수 가진 만큼의 거듭 제곱
 
 자료구조
+dfs -> deque
 
  */
 
@@ -55,13 +57,12 @@ class Solution {
     }
 
     private void dfs(String departure, Deque<String> ticketDeque) {
-        final List<Ticket> arrivals = map.get(departure);
-
         if (ticketDeque.size() == ticketCount + 1) {
             answer.add(new ArrayList<>(ticketDeque));
             return;
         }
 
+        final List<Ticket> arrivals = map.get(departure);
         if (arrivals == null) {
             return;
         }
