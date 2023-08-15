@@ -13,6 +13,8 @@ package CodingTest.Programmers;
 
  */
 
+import java.util.Arrays;
+
 class Solution {
     public int solution(int[] nums) {
         //3개보다 작으면 무조건 가능함
@@ -26,18 +28,23 @@ class Solution {
         //맨 왼쪽과 , 오른쪽은 무조건 가능하다.
         for (int i = 1; i < nums.length - 1; i++) {
             int smallNumCount = 0;
+            int standardNum = nums[i];
 
+            final int[] left = Arrays.copyOfRange(nums, 0, i);
+            Arrays.sort(left);
             //왼쪽 체크
-            for (int j = 0; j < i; j++) {
-                if (nums[j] < nums[i]) {
+            for (final int k : left) {
+                if (k < standardNum) {
                     smallNumCount++;
                     break;
                 }
             }
 
+            final int[] right = Arrays.copyOfRange(nums, i + 1, nums.length);
+            Arrays.sort(right);
             //오른쪽 체크
-            for (int j = i + 1; j < nums.length; j++) {
-                if (nums[j] < nums[i]) {
+            for (final int k : right) {
+                if (k < standardNum) {
                     smallNumCount++;
                     break;
                 }
