@@ -20,7 +20,7 @@ package CodingTest.Programmers;
         (오른쪽 최소값을 알고 있으니 현재 비교하는 수가 최소값보다 크다면 개는 양쪽에 자기보다 작은 값 (왼쪽 : 배열 최소값, 오른쪽 : 오른편의 최소값)을 가지게 되므로 무조건 터짐)
 
 시간복잡도
-- n번
+- O(n)
 
 자료구조
 
@@ -48,37 +48,30 @@ class Solution {
         }
 
 
-        //왼쪽 끝에서부터 탐색
+        //왼쪽 끝에서부터 탐색, 오른쪽 끝에서부터 탐색
         int leftIdx = 0;
         int leftMinVal = a[leftIdx];
+        int rightIdx = a.length - 1;
+        int rightMinVal = a[rightIdx];
 
-        while (leftIdx < minIdx) {
+        while (leftIdx < minIdx || rightIdx > minIdx) {
             int leftVal = a[leftIdx];
+            int rightVal = a[rightIdx];
 
-            if (leftVal <= leftMinVal) {
+            if (leftVal <= leftMinVal && leftIdx < minIdx) {
                 answer++;
                 leftMinVal = leftVal;
             }
 
-            leftIdx++;
-        }
 
-
-        //오른쪽 끝에서부터 탐색
-        int rightIdx = a.length - 1;
-        int rightMinVal = a[rightIdx];
-
-        while (rightIdx > minIdx) {
-            int rightVal = a[rightIdx];
-
-            if (rightVal <= rightMinVal) {
+            if (rightVal <= rightMinVal && rightIdx > minIdx) {
                 answer++;
                 rightMinVal = rightVal;
             }
 
+            leftIdx++;
             rightIdx--;
         }
-
 
         return answer;
     }
