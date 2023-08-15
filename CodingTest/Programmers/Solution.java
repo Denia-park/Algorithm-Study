@@ -33,20 +33,34 @@ class Solution {
             final int[] left = Arrays.copyOfRange(nums, 0, i);
             Arrays.sort(left);
             //왼쪽 체크
-            for (final int k : left) {
-                if (k < standardNum) {
+            int start = 0;
+            int end = left.length - 1;
+
+            while (start <= end) {
+                int mid = (start + end) / 2;
+
+                if (left[mid] < standardNum) {
                     smallNumCount++;
                     break;
+                } else {
+                    end = mid - 1;
                 }
             }
 
             final int[] right = Arrays.copyOfRange(nums, i + 1, nums.length);
             Arrays.sort(right);
             //오른쪽 체크
-            for (final int k : right) {
-                if (k < standardNum) {
+            start = 0;
+            end = right.length - 1;
+
+            while (start <= end) {
+                int mid = (start + end) / 2;
+
+                if (right[mid] < standardNum) {
                     smallNumCount++;
                     break;
+                } else {
+                    end = mid - 1;
                 }
             }
 
