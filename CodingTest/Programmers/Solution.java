@@ -2,72 +2,83 @@ package CodingTest.Programmers;
 
 /*
 
-아이디어
-- 내 왼쪽, 오른쪽 모두에 나보다 작은 숫자가 있으면 개는 불가능
+처음 아이디어
+- 내 왼쪽, 오른쪽 모두에 나보다 작은 숫자가 1개 이상 있으면 개는 지울 수 없는 숫자다
+
+핵심 아이디어
+-> 배열 최소값을 찾는다.
+-> 배열 최소값을 기준으로 왼쪽 끝, 오른쪽 끝에서부터 값 비교를 시작한다.
+-> 배열 최소값은 무조건 제일 작은 값이므로, 나보다 작은 값을 지우는 기회는 무조건 배열 최소값 지우는데에다가 써야한다.
+
+-> 그렇다는건 배열 최소값 기준으로 비교를 하면 편한게 값을 구할 수 있다.
+예시 1) 배열 최소값 기준 왼쪽 끝에서부터 비교를 시작하면, 비교하는 수는 오른쪽엔 무조건 배열 최소값이 존재하므로 내 왼쪽에 있는 숫자들만 신경 쓰면 된다.
+        - 왼쪽에 있는 숫자를 편하게 비교하기 위해서는 왼쪽 끝부터 지금까지의 최소값을 갱신하면서 오른쪽으로 이동을 하면 편하게 계산이 가능하다.
+        (왼쪽편의 최소값을 알고 있으니 현재 비교하는 수가 왼쪽편의 최소값보다 크다면 개는 양쪽에 자기보다 작은 값 (왼쪽 : 왼쪽편의 최소값, 오른쪽 : 배열 최소값)을 가지게 되므로 무조건 터짐)
+
+예시 2) 최소값 기준 오른쪽 끝에서부터 비교를 시작하면, 비교하는 수는 왼쪽엔 무조건 최소값이 존재하므로 내 오른쪽에 있는 숫자들만 신경 쓰면 된다.
+        - 오른쪽에 있는 숫자를 편하게 비교하기 위해서는 오른쪽 끝부터 최소값을 갱신하면서 왼쪽으로 이동을 하면 편하게 계산이 가능하다.
+        (오른쪽 최소값을 알고 있으니 현재 비교하는 수가 최소값보다 크다면 개는 양쪽에 자기보다 작은 값 (왼쪽 : 배열 최소값, 오른쪽 : 오른편의 최소값)을 가지게 되므로 무조건 터짐)
 
 시간복잡도
-- n번 돌면서
-- 왼쪽 정렬, 오른쪽 정렬 후 나보다 작은 애가 있는지 탐색
+- n번
 
 자료구조
 
  */
 
-import java.util.Arrays;
-
 class Solution {
-    public int solution(int[] nums) {
-        //3개보다 작으면 무조건 가능함
-        if (nums.length < 3) {
-            return nums.length;
+    public int solution(int[] a) {
+        if (a.length < 3) {
+            return a.length;
         }
 
-        //3개 이상이면 비교를 해줘야함
-        int answer = 2;
+        int answer = 1; //배열 최소값 -> 무조건 살아남음
 
-        //맨 왼쪽과 , 오른쪽은 무조건 가능하다.
-        for (int i = 1; i < nums.length - 1; i++) {
-            int smallNumCount = 0;
-            int standardNum = nums[i];
+        int minIdx = 0;
+        int minVal = Integer.MAX_VALUE;
 
-            final int[] left = Arrays.copyOfRange(nums, 0, i);
-            Arrays.sort(left);
-            //왼쪽 체크
-            int start = 0;
-            int end = left.length - 1;
+        //배열 최소값의 idx 찾기
+        for (int idx = 0; idx < a.length; idx++) {
+            int curVal = a[idx];
 
-            while (start <= end) {
-                int mid = (start + end) / 2;
-
-                if (left[mid] < standardNum) {
-                    smallNumCount++;
-                    break;
-                } else {
-                    end = mid - 1;
-                }
+            if (curVal < minVal) {
+                minIdx = idx;
+                minVal = curVal;
             }
+        }
 
-            final int[] right = Arrays.copyOfRange(nums, i + 1, nums.length);
-            Arrays.sort(right);
-            //오른쪽 체크
-            start = 0;
-            end = right.length - 1;
 
-            while (start <= end) {
-                int mid = (start + end) / 2;
+        //왼쪽 끝에서부터 탐색
+        int leftIdx = 0;
+        int leftMinVal = a[leftIdx];
 
-                if (right[mid] < standardNum) {
-                    smallNumCount++;
-                    break;
-                } else {
-                    end = mid - 1;
-                }
-            }
+        while (leftIdx < minIdx) {
+            int leftVal = a[leftIdx];
 
-            if (smallNumCount < 2) {
+            if (leftVal <= leftMinVal) {
                 answer++;
+                leftMinVal = leftVal;
             }
+
+            leftIdx++;
         }
+
+
+        //오른쪽 끝에서부터 탐색
+        int rightIdx = a.length - 1;
+        int rightMinVal = a[rightIdx];
+
+        while (rightIdx > minIdx) {
+            int rightVal = a[rightIdx];
+
+            if (rightVal <= rightMinVal) {
+                answer++;
+                rightMinVal = rightVal;
+            }
+
+            rightIdx--;
+        }
+
 
         return answer;
     }
