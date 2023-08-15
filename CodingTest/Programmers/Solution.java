@@ -3,92 +3,51 @@ package CodingTest.Programmers;
 /*
 
 아이디어
-1. 모든 경우의 수를 돌면서 경로 탐색 -> 완전 탐색 [dfs 이용]
+- 내 왼쪽, 오른쪽 모두에 나보다 작은 숫자가 있으면 개는 불가능
 
 시간복잡도
-목적지 수 가진 만큼의 거듭 제곱
+- n번 돌면서
+- 왼쪽 정렬, 오른쪽 정렬 후 나보다 작은 애가 있는지 탐색
 
 자료구조
-dfs -> deque
 
  */
 
-import java.util.*;
-
 class Solution {
-    Deque<String> ticketDeque;
-    private String START_DEPARTURE = "ICN";
-    private List<List<String>> answer = new ArrayList<>();
-    private Map<String, List<Ticket>> map = new HashMap<>();
-    private int ticketCount = 0;
-
-    public String[] solution(String[][] tickets) {
-        answer = new ArrayList<>();
-        map = new HashMap<>();
-        ticketCount = tickets.length;
-        ticketDeque = new ArrayDeque<>();
-        ticketDeque.add(START_DEPARTURE);
-
-        for (String[] ticket : tickets) {
-            final String departure = ticket[0];
-            final String arrival = ticket[1];
-
-            //검색해서 List가 존재하면 거기에 추가, 없으면 새로 생성
-            final List<Ticket> arrivalList = map.getOrDefault(departure, new ArrayList<>());
-            arrivalList.add(new Ticket(arrival));
-            map.put(departure, arrivalList);
+    public int solution(int[] nums) {
+        //3개보다 작으면 무조건 가능함
+        if (nums.length < 3) {
+            return nums.length;
         }
 
-        dfs(START_DEPARTURE, ticketDeque);
+        //3개 이상이면 비교를 해줘야함
+        int answer = 2;
 
-        answer.sort((o1, o2) -> {
-            for (int idx = 0; idx < o1.size(); idx++) {
-                final String s1 = o1.get(idx);
-                final String s2 = o2.get(idx);
+        //맨 왼쪽과 , 오른쪽은 무조건 가능하다.
+        for (int i = 1; i < nums.length - 1; i++) {
+            int smallNumCount = 0;
 
-                if (s1.compareTo(s2) != 0) {
-                    return s1.compareTo(s2);
+            //왼쪽 체크
+            for (int j = 0; j < i; j++) {
+                if (nums[j] < nums[i]) {
+                    smallNumCount++;
+                    break;
                 }
             }
-            return 0;
-        });
 
-        return answer.get(0).toArray(new String[]{});
-    }
-
-    private void dfs(String departure, Deque<String> ticketDeque) {
-        if (ticketDeque.size() == ticketCount + 1) {
-            answer.add(new ArrayList<>(ticketDeque));
-            return;
-        }
-
-        final List<Ticket> arrivals = map.get(departure);
-        if (arrivals == null) {
-            return;
-        }
-
-        for (final Ticket ticket : arrivals) {
-            final String arrival = ticket.arrival;
-            final boolean visited = ticket.visited;
-
-            if (visited) {
-                continue;
+            //오른쪽 체크
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[j] < nums[i]) {
+                    smallNumCount++;
+                    break;
+                }
             }
 
-            ticket.visited = true;
-            ticketDeque.addLast(arrival);
-            dfs(arrival, ticketDeque);
-            ticket.visited = false;
-            ticketDeque.removeLast();
+            if (smallNumCount < 2) {
+                answer++;
+            }
         }
-    }
 
-    class Ticket {
-        String arrival;
-        boolean visited;
-
-        public Ticket(final String arrival) {
-            this.arrival = arrival;
-        }
+        return answer;
     }
 }

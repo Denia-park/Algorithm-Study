@@ -1,7 +1,5 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(String[] args) {
         Solution ts = new Solution();
@@ -11,27 +9,10 @@ public class ProgrammersMain {
 //        );
 
         System.out.println(
-                Arrays.equals(
-                        ts.solution(new String[][]{{"ICN", "JFK"}, {"HND", "IAD"}, {"JFK", "HND"}}),
-                        new String[]{"ICN", "JFK", "HND", "IAD"})
+                ts.solution(new int[]{9, -1, -5}) == 3
         );
-
         System.out.println(
-                Arrays.equals(
-                        ts.solution(new String[][]{{"ICN", "SFO"}, {"ICN", "ATL"}, {"SFO", "ATL"}, {"ATL", "ICN"}, {"ATL", "SFO"}}),
-                        new String[]{"ICN", "ATL", "ICN", "SFO", "ATL", "SFO"})
-        );
-
-        System.out.println(
-                Arrays.equals(
-                        ts.solution(new String[][]{{"ICN", "BOO"}, {"ICN", "COO"}, {"COO", "DOO"}, {"DOO", "COO"}, {"BOO", "DOO"}, {"DOO", "BOO"}, {"BOO", "ICN"}, {"COO", "BOO"}}),
-                        new String[]{"ICN", "BOO", "DOO", "BOO", "ICN", "COO", "DOO", "COO", "BOO"})
-        );
-
-        System.out.println(
-                Arrays.equals(
-                        ts.solution(new String[][]{{"ICN", "AAA"}, {"ICN", "AAA"}, {"ICN", "AAA"}, {"AAA", "ICN"}, {"AAA", "ICN"}}),
-                        new String[]{"ICN", "AAA", "ICN", "AAA", "ICN", "AAA"})
+                ts.solution(new int[]{-16, 27, 65, -2, 58, -92, -71, -68, -61, -33}) == 6
         );
     }
 }
