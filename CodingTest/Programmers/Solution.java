@@ -34,11 +34,11 @@ class Solution {
                 bIdx++;
 
                 answer++;
-            } else if (aVal > bVal) {
-                bIdx++;
-            } else {
-                bIdx++;
+
+                continue;
             }
+
+            bIdx++;
         }
 
         return answer;
