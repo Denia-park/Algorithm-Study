@@ -8,12 +8,14 @@ public class ProgrammersMain {
 //                "[[-20,-15],[-14,-5],[-18,-13],[-5,-3]]"
 //        );
 
-        System.out.println(
-                ts.solution(new int[]{9, -1, -5}) == 3
-        );
-        System.out.println(
-                ts.solution(new int[]{-16, 27, 65, -2, 58, -92, -71, -68, -61, -33}) == 6
-        );
+        System.out.println(ts.solution(new int[]{2}, new int[]{1}) == 0);
+        System.out.println(ts.solution(new int[]{1}, new int[]{1}) == 0);
+        System.out.println(ts.solution(new int[]{1}, new int[]{2}) == 1);
+        System.out.println(ts.solution(new int[]{5, 1, 3, 7}, new int[]{2, 2, 6, 8}) == 3);
+        System.out.println(ts.solution(new int[]{2, 2, 2, 2}, new int[]{1, 1, 1, 1}) == 0);
+        System.out.println(ts.solution(new int[]{2, 2, 2, 2}, new int[]{2, 2, 2, 2}) == 0);
+        System.out.println(ts.solution(new int[]{2, 2, 2, 2}, new int[]{3, 3, 2, 2}) == 2);
+        System.out.println(ts.solution(new int[]{1, 2, 2, 2}, new int[]{3, 3, 2, 1}) == 3);
     }
 }
 
