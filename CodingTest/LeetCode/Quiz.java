@@ -29,8 +29,8 @@ public class Quiz {
 
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode answer = new ListNode(-1);
-        ListNode answerStart = answer;
+        ListNode dummyHead = new ListNode(-1);
+        ListNode tail = dummyHead;
 
         int nextDigitNum = 0;
 
@@ -54,16 +54,11 @@ class Solution {
             nextDigitNum = curDigitNum / 10;
             curDigitNum = curDigitNum % 10;
 
-            if (answer.val == -1) {
-                answer.val = curDigitNum;
-                continue;
-            }
-
-            answer.next = new ListNode(curDigitNum);
-            answer = answer.next;
+            tail.next = new ListNode(curDigitNum);
+            tail = tail.next;
         }
 
-        return answerStart;
+        return dummyHead.next;
     }
 }
 
