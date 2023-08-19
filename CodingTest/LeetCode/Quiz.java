@@ -23,67 +23,47 @@ public class Quiz {
             listNode = listNode.next;
         }
 
-        System.out.println(answer);
         System.out.println(answer.equals("708"));
     }
 }
 
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- * int val;
- * ListNode next;
- * ListNode() {}
- * ListNode(int val) { this.val = val; }
- * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
- * }
- */
-
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        String l1Val = convertListNodeToReversedString(l1);
-        String l2Val = convertListNodeToReversedString(l2);
+        ListNode answer = new ListNode(-1);
+        ListNode answerStart = answer;
 
-        System.out.println("l1Val = " + l1Val);
-        System.out.println("l2Val = " + l2Val);
+        int nextDigitNum = 0;
 
-        Long sum = Long.parseLong(l1Val) + Long.parseLong(l2Val);
+        while (l1 != null || l2 != null || nextDigitNum != 0) {
+            int curDigitNum = 0;
+            int l1Val = 0;
+            int l2Val = 0;
 
-        return convertStringToReversedListNode(sum);
-    }
+            if (l1 != null) {
+                l1Val = l1.val;
+                l1 = l1.next;
+            }
 
-    private ListNode convertStringToReversedListNode(final Long sum) {
-        System.out.println("sum = " + sum);
+            if (l2 != null) {
+                l2Val = l2.val;
+                l2 = l2.next;
+            }
 
-        String sumStr = String.valueOf(sum);
-        final int length = sumStr.length();
+            curDigitNum += (l1Val + l2Val + nextDigitNum);
 
-        ListNode listNode = null;
-        ListNode rtVal = null;
+            nextDigitNum = curDigitNum / 10;
+            curDigitNum = curDigitNum % 10;
 
-        for (int i = length - 1; i >= 0; i--) {
-            if (rtVal == null) {
-                listNode = new ListNode(sumStr.charAt(i) - '0');
-                rtVal = listNode;
+            if (answer.val == -1) {
+                answer.val = curDigitNum;
                 continue;
             }
 
-            listNode.next = new ListNode(sumStr.charAt(i) - '0');
-            listNode = listNode.next;
+            answer.next = new ListNode(curDigitNum);
+            answer = answer.next;
         }
 
-        return rtVal;
-    }
-
-    private String convertListNodeToReversedString(ListNode listNode) {
-        StringBuilder sb = new StringBuilder();
-
-        while (listNode != null) {
-            sb.append(listNode.val);
-            listNode = listNode.next;
-        }
-
-        return sb.reverse().toString();
+        return answerStart;
     }
 }
 
