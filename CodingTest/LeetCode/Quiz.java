@@ -3,78 +3,48 @@ package CodingTest.LeetCode;
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
-
-        //342
-        ListNode l1 = new ListNode(2);
-        l1.next = new ListNode(4);
-        l1.next.next = new ListNode(3);
-
-        //465
-        ListNode l2 = new ListNode(5);
-        l2.next = new ListNode(6);
-        l2.next.next = new ListNode(4);
-
-        ListNode listNode = solution.addTwoNumbers(l1, l2);
-
-        String answer = "";
-
-        while (listNode != null) {
-            answer += listNode.val;
-            listNode = listNode.next;
-        }
-
-        System.out.println(answer.equals("708"));
+        System.out.println(solution.bestClosingTime("YYNY") == 2);
+        System.out.println(solution.bestClosingTime("NNNNN") == 0);
+        System.out.println(solution.bestClosingTime("YYYY") == 4);
     }
 }
 
 class Solution {
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode dummyHead = new ListNode(-1);
-        ListNode tail = dummyHead;
-
-        int nextDigitNum = 0;
-
-        while (l1 != null || l2 != null || nextDigitNum != 0) {
-            int curDigitNum = 0;
-            int l1Val = 0;
-            int l2Val = 0;
-
-            if (l1 != null) {
-                l1Val = l1.val;
-                l1 = l1.next;
+    //닫는 시간에 따라 계산 값이 다르다.
+    //닫기 전에는 Y 로,닫는 순간부터는 쭉 N 으로 친다.
+    //O(N) 방법으로 탐색하는 방법이 있을 것 같다.
+    public int bestClosingTime(String customers) {
+        //처음에 한바퀴 돌면서 총 Y가 몇개인지 세어본다
+        int count = 0;
+        for (int i = 0; i < customers.length(); i++) {
+            if (customers.charAt(i) == 'Y') {
+                count++;
             }
-
-            if (l2 != null) {
-                l2Val = l2.val;
-                l2 = l2.next;
-            }
-
-            curDigitNum += (l1Val + l2Val + nextDigitNum);
-
-            nextDigitNum = curDigitNum / 10;
-            curDigitNum = curDigitNum % 10;
-
-            tail.next = new ListNode(curDigitNum);
-            tail = tail.next;
         }
 
-        return dummyHead.next;
-    }
-}
+        //0번째시간에 문을 닫는다면, 총 Y의 개수가 전체 패널티이다.
+        //0번째 인덱스를 생각하기 보다는, 0번째 인덱스 앞이 0번째때 문 닫는 시간이라고 생각하면 편하다. (아래와 같이)
+        // 0 1 2 3 4
+        //  Y Y N Y
+        int closingTime = 0;
+        int minPenalty = count;
+        int penalty = count;
 
-class ListNode {
-    int val;
-    ListNode next;
+        //처음부터 닫는 시간을 한시간씩 미루면서 최소 값을 찾는다.
+        for (int timeIdx = 1; timeIdx <= customers.length(); timeIdx++) {
+            if (customers.charAt(timeIdx - 1) == 'Y') {
+                penalty--;
+            } else {
+                penalty++;
+            }
 
-    ListNode() {
-    }
+            if (minPenalty > penalty) {
+                minPenalty = penalty;
+                closingTime = timeIdx;
+            }
+        }
 
-    ListNode(int val) {
-        this.val = val;
-    }
+        return closingTime;
 
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
     }
 }
