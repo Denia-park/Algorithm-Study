@@ -1,17 +1,16 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 class Solution {
     int totalNode;
     int gDestination;
+    Map<Integer, Integer> saveMap;
 
     public int[] solution(int n, int[][] roads, int[] sources, int destination) {
         totalNode = n;
         gDestination = destination;
+        saveMap = new HashMap<>();
         List<List<Integer>> graph = new ArrayList<>();
 
         //n개 만큼 List 생성
@@ -48,6 +47,11 @@ class Solution {
             }
 
             for (int next : graph.get(info.value)) {
+                if (saveMap.containsKey(next)) {
+                    minValue = Math.min(minValue, info.count + 1 + saveMap.get(next));
+                    continue;
+                }
+                
                 if (!visited[next]) {
                     visited[next] = true;
                     deque.add(new Info(info.count + 1, next));
@@ -55,7 +59,10 @@ class Solution {
             }
         }
 
-        return minValue == Integer.MAX_VALUE ? -1 : minValue;
+        int returnValue = minValue == Integer.MAX_VALUE ? -1 : minValue;
+        saveMap.put(source, returnValue);
+
+        return returnValue;
     }
 
     class Info {
