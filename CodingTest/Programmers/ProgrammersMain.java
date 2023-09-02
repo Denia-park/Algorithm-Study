@@ -7,13 +7,18 @@ public class ProgrammersMain {
         Solution ts = new Solution();
 
 //        int[][] routes = Util.convertStringToJavaIntTwoDimensionalArray(
-//                "[[-20,-15],[-14,-5],[-18,-13],[-5,-3]]"
+//                "[[1, 2], [2, 3]]"
 //        );
 
-        System.out.println(Arrays.equals(ts.solution(5, new int[]{2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}), new int[]{0, 2, 2, 0, 1, 0, 0, 0, 0, 0, 0}));
-//        System.out.println(Arrays.equals(ts.solution(1, new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}), new int[]{-1}));
-//        System.out.println(Arrays.equals(ts.solution(9, new int[]{0, 0, 1, 2, 0, 1, 1, 1, 1, 1, 1}), new int[]{1, 1, 2, 0, 1, 2, 2, 0, 0, 0, 0}));
-//        System.out.println(Arrays.equals(ts.solution(10, new int[]{0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 3}), new int[]{1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2}));
+        int[][] routes = new int[][]{{1, 2}, {2, 3}};
+
+        System.out.println(Arrays.toString(ts.solution(5, routes, new int[]{2, 3}, 1)));
+
+//        int[][] routes2 = Util.convertStringToJavaIntTwoDimensionalArray(
+//                "[[1, 2], [1, 4], [2, 4], [2, 5], [4, 5]]"
+//        );
+        int[][] routes2 = new int[][]{{1, 2}, {1, 4}, {2, 4}, {2, 5}, {4, 5}};
+        System.out.println(Arrays.toString(ts.solution(5, routes2, new int[]{1, 3, 5}, 5)));
     }
 }
 
