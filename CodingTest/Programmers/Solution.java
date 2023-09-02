@@ -6,6 +6,7 @@ class Solution {
     int totalNode;
     int gDestination;
     Map<Integer, Integer> saveMap;
+    int[] distances;
 
     public int[] solution(int n, int[][] roads, int[] sources, int destination) {
         totalNode = n;
@@ -22,56 +23,49 @@ class Solution {
             graph.get(road[0]).add(road[1]);
             graph.get(road[1]).add(road[0]);
         }
+        distances = new int[n + 1];
+        Arrays.fill(distances, Integer.MAX_VALUE);
+
+        dijkstra(sources, graph);
 
         List<Integer> answer = new ArrayList<>();
         for (int source : sources) {
-            final int val = bfs(source, graph);
-            answer.add(val);
+            answer.add(distances[source] == Integer.MAX_VALUE ? -1 : distances[source]);
         }
 
         return answer.stream().mapToInt(i -> i).toArray();
     }
 
-    private int bfs(final int source, final List<List<Integer>> graph) {
-        int minValue = Integer.MAX_VALUE;
+    private void dijkstra(final int[] sources, final List<List<Integer>> graph) {
         Deque<Info> deque = new ArrayDeque<>();
-
-        boolean[] visited = new boolean[totalNode + 1];
-        deque.add(new Info(0, source));
-        visited[source] = true;
+        deque.addLast(new Info(gDestination, 0));
+        distances[gDestination] = 0;
 
         while (!deque.isEmpty()) {
-            Info info = deque.poll();
-            if (info.value == gDestination) {
-                minValue = Math.min(minValue, info.count);
+            final Info info = deque.pollFirst();
+            int curValue = info.value;
+            int curDistance = info.distance;
+
+            if (distances[curValue] != curDistance) {
+                continue;
             }
 
-            for (int next : graph.get(info.value)) {
-                if (saveMap.containsKey(next)) {
-                    minValue = Math.min(minValue, info.count + 1 + saveMap.get(next));
-                    continue;
-                }
-                
-                if (!visited[next]) {
-                    visited[next] = true;
-                    deque.add(new Info(info.count + 1, next));
+            for (int next : graph.get(curValue)) {
+                if (distances[next] > curDistance + 1) {
+                    distances[next] = curDistance + 1;
+                    deque.addLast(new Info(next, curDistance + 1));
                 }
             }
         }
-
-        int returnValue = minValue == Integer.MAX_VALUE ? -1 : minValue;
-        saveMap.put(source, returnValue);
-
-        return returnValue;
     }
 
     class Info {
-        int count;
         int value;
+        int distance;
 
-        Info(int count, int value) {
-            this.count = count;
+        Info(int value, int distance) {
             this.value = value;
+            this.distance = distance;
         }
     }
 }
