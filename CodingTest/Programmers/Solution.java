@@ -26,7 +26,7 @@ class Solution {
         distances = new int[n + 1];
         Arrays.fill(distances, Integer.MAX_VALUE);
 
-        dijkstra(sources, graph);
+        dijkstra(graph);
 
         List<Integer> answer = new ArrayList<>();
         for (int source : sources) {
@@ -36,13 +36,18 @@ class Solution {
         return answer.stream().mapToInt(i -> i).toArray();
     }
 
-    private void dijkstra(final int[] sources, final List<List<Integer>> graph) {
-        Deque<Info> deque = new ArrayDeque<>();
-        deque.addLast(new Info(gDestination, 0));
+    private void dijkstra(final List<List<Integer>> graph) {
+        Queue<Info> deque = new PriorityQueue<>(new Comparator<Info>() {
+            @Override
+            public int compare(final Info o1, final Info o2) {
+                return Integer.compare(o1.distance, o2.distance);
+            }
+        });
+        deque.add(new Info(gDestination, 0));
         distances[gDestination] = 0;
 
         while (!deque.isEmpty()) {
-            final Info info = deque.pollFirst();
+            final Info info = deque.poll();
             int curValue = info.value;
             int curDistance = info.distance;
 
@@ -53,7 +58,7 @@ class Solution {
             for (int next : graph.get(curValue)) {
                 if (distances[next] > curDistance + 1) {
                     distances[next] = curDistance + 1;
-                    deque.addLast(new Info(next, curDistance + 1));
+                    deque.add(new Info(next, curDistance + 1));
                 }
             }
         }
