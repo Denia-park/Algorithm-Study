@@ -3,36 +3,37 @@ package CodingTest.LeetCode;
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
-//        System.out.println(solution.bestClosingTime("YYNY") == 2);
-        System.out.println(solution.bestClosingTime("YYNY"));
-//        System.out.println(solution.bestClosingTime("NNNNN") == 0);
-        System.out.println(solution.bestClosingTime("NNNNN"));
-//        System.out.println(solution.bestClosingTime("YYYY") == 4);
-        System.out.println(solution.bestClosingTime("YYYY"));
+
+        System.out.println(solution.removeElement(new int[]{3, 2, 2, 3}, 3));
+        System.out.println(solution.removeElement(new int[]{1, 2, 3, 4, 5}, 3));
+        System.out.println(solution.removeElement(new int[]{2}, 3));
     }
 }
 
 class Solution {
-    public int bestClosingTime(String customers) {
-        int closingTime = 0;
-        int maxScore = 0;
-        int curScore = 0;
+    public int removeElement(int[] nums, int val) {
+        //퀵소트 처럼 왼쪽 오른쪽 비교하면서 바꿔주면 되지 않을까?
+        int start = 0;
+        int end = nums.length - 1;
 
-        //처음부터 닫는 시간을 한시간씩 미루면서 최대 값을 찾는다.
-        for (int timeIdx = 1; timeIdx <= customers.length(); timeIdx++) {
-            if (customers.charAt(timeIdx - 1) == 'Y') {
-                curScore++;
-            } else {
-                curScore--;
+        while (start <= end) {
+            while (end > -1 && nums[end] == val) {
+                end--;
             }
 
-            if (maxScore < curScore) {
-                maxScore = curScore;
-                closingTime = timeIdx;
+            while (start < nums.length && nums[start] != val) {
+                start++;
             }
+
+            if (start >= end) {
+                break;
+            }
+
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
         }
 
-        return closingTime;
-
+        return start;
     }
 }
