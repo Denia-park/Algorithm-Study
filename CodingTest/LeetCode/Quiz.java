@@ -1,39 +1,43 @@
 package CodingTest.LeetCode;
 
+import java.util.Stack;
+
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.removeElement(new int[]{3, 2, 2, 3}, 3));
-        System.out.println(solution.removeElement(new int[]{1, 2, 3, 4, 5}, 3));
-        System.out.println(solution.removeElement(new int[]{2}, 3));
+        System.out.println(solution.isValid("()"));
+        System.out.println(solution.isValid("()[]{}"));
+        System.out.println(solution.isValid("(]"));
     }
 }
 
 class Solution {
-    public int removeElement(int[] nums, int val) {
-        //퀵소트 처럼 왼쪽 오른쪽 비교하면서 바꿔주면 되지 않을까?
-        int start = 0;
-        int end = nums.length - 1;
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        final int length = s.length();
 
-        while (start <= end) {
-            while (end > -1 && nums[end] == val) {
-                end--;
+        for (int i = 0; i < length; i++) {
+            final char input = s.charAt(i);
+
+            if (stack.isEmpty()) {
+                stack.push(input);
+                continue;
             }
 
-            while (start < nums.length && nums[start] != val) {
-                start++;
-            }
+            final char top = stack.peek();
 
-            if (start >= end) {
-                break;
+            if (top == '(' && input == ')') {
+                stack.pop();
+            } else if (top == '{' && input == '}') {
+                stack.pop();
+            } else if (top == '[' && input == ']') {
+                stack.pop();
+            } else {
+                stack.push(input);
             }
-
-            int temp = nums[start];
-            nums[start] = nums[end];
-            nums[end] = temp;
         }
 
-        return start;
+        return stack.isEmpty();
     }
 }
