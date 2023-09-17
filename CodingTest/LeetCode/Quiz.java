@@ -1,43 +1,34 @@
 package CodingTest.LeetCode;
 
-import java.util.Stack;
-
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.isValid("()"));
-        System.out.println(solution.isValid("()[]{}"));
-        System.out.println(solution.isValid("(]"));
+        System.out.println(solution.removeDuplicates(new int[]{1}));
+        System.out.println(solution.removeDuplicates(new int[]{1, 1, 2}));
+        System.out.println(solution.removeDuplicates(new int[]{1, 2, 3}));
+        System.out.println(solution.removeDuplicates(new int[]{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}));
     }
 }
 
 class Solution {
-    public boolean isValid(String s) {
-        Stack<Character> stack = new Stack<>();
-        final int length = s.length();
+    //0번째 1, 1번째 1 이면 -> insertIndex 유지, diffValue 변경
+    //0번째 1, 1번째 2 이면 -> insertIndex ++, diffValue 변경
+    public int removeDuplicates(int[] nums) {
+        int insertIndex = 1; //처음에 0번째는 고정이므로, 첫번째부터 시작
 
-        for (int i = 0; i < length; i++) {
-            final char input = s.charAt(i);
+        int diffValue = nums[0];
 
-            if (stack.isEmpty()) {
-                stack.push(input);
-                continue;
-            }
+        for (int i = 0; i < nums.length; i++) {
+            final int curValue = nums[i];
 
-            final char top = stack.peek();
-
-            if (top == '(' && input == ')') {
-                stack.pop();
-            } else if (top == '{' && input == '}') {
-                stack.pop();
-            } else if (top == '[' && input == ']') {
-                stack.pop();
-            } else {
-                stack.push(input);
+            if (curValue != diffValue) {
+                nums[insertIndex] = curValue;
+                diffValue = curValue;
+                insertIndex++;
             }
         }
 
-        return stack.isEmpty();
+        return insertIndex;
     }
 }
