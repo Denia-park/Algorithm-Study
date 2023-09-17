@@ -17,14 +17,10 @@ class Solution {
     public int removeDuplicates(int[] nums) {
         int insertIndex = 1; //처음에 0번째는 고정이므로, 첫번째부터 시작
 
-        int diffValue = nums[0];
+        for (int i = 1; i < nums.length; i++) {
 
-        for (int i = 0; i < nums.length; i++) {
-            final int curValue = nums[i];
-
-            if (curValue != diffValue) {
-                nums[insertIndex] = curValue;
-                diffValue = curValue;
+            if (nums[i] != nums[i - 1]) {
+                nums[insertIndex] = nums[i];
                 insertIndex++;
             }
         }
