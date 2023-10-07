@@ -1,76 +1,51 @@
 package CodingTest.Programmers;
 
-import java.util.*;
-
 class Solution {
-    int totalNode;
-    int gDestination;
-    Map<Integer, Integer> saveMap;
-    int[] distances;
+    public int solution(final int col, final int row, final int[][] puddles) {
+        final int[][] answers = new int[row + 1][col + 1];
+        insertPuddle(puddles, answers);
 
-    public int[] solution(int n, int[][] roads, int[] sources, int destination) {
-        totalNode = n;
-        gDestination = destination;
-        saveMap = new HashMap<>();
-        List<List<Integer>> graph = new ArrayList<>();
-
-        //n개 만큼 List 생성
-        for (int i = 0; i <= n; i++) {
-            graph.add(new ArrayList<>());
-        }
-
-        for (int[] road : roads) {
-            graph.get(road[0]).add(road[1]);
-            graph.get(road[1]).add(road[0]);
-        }
-        distances = new int[n + 1];
-        Arrays.fill(distances, Integer.MAX_VALUE);
-
-        dijkstra(graph);
-
-        List<Integer> answer = new ArrayList<>();
-        for (int source : sources) {
-            answer.add(distances[source] == Integer.MAX_VALUE ? -1 : distances[source]);
-        }
-
-        return answer.stream().mapToInt(i -> i).toArray();
-    }
-
-    private void dijkstra(final List<List<Integer>> graph) {
-        Queue<Info> deque = new PriorityQueue<>(new Comparator<Info>() {
-            @Override
-            public int compare(final Info o1, final Info o2) {
-                return Integer.compare(o1.distance, o2.distance);
-            }
-        });
-        deque.add(new Info(gDestination, 0));
-        distances[gDestination] = 0;
-
-        while (!deque.isEmpty()) {
-            final Info info = deque.poll();
-            int curValue = info.value;
-            int curDistance = info.distance;
-
-            if (distances[curValue] != curDistance) {
-                continue;
-            }
-
-            for (int next : graph.get(curValue)) {
-                if (distances[next] > curDistance + 1) {
-                    distances[next] = curDistance + 1;
-                    deque.add(new Info(next, curDistance + 1));
+        for (int r = 1; r <= row; r++) {
+            for (int c = 1; c <= col; c++) {
+                //집은 출발점이니 세지 않는다.
+                if (r == 1 && c == 1) {
+                    answers[r][c] = 1;
+                    continue;
                 }
+
+                //웅덩이를 만나면 가는 길이 아니다.
+                if (answers[r][c] == -1) {
+                    continue;
+                }
+
+                //오른쪽과 아래로만 갈 수 있으므로, 왼쪽이랑 위쪽의 값을 더하면 해당하는 길로 가는 개수.
+                //왼쪽
+                int leftVal = answers[r][c - 1];
+                //위쪽
+                int upVal = answers[r - 1][c];
+
+                //웅덩이의 값은 더하면 안된다.
+                if (leftVal == -1 || upVal == -1) {
+                    answers[r][c] = Math.max(leftVal, upVal);
+                    continue;
+                }
+
+                //위의 경우에 해당하지 않는다면 가는 길을 2개 더하면 된다.
+                answers[r][c] = leftVal + upVal;
             }
         }
+
+//        System.out.println(Arrays.deepToString(answers));
+
+        return answers[row][col];
     }
 
-    class Info {
-        int value;
-        int distance;
+    private void insertPuddle(final int[][] puddles, final int[][] answers) {
+        for (final int[] puddle : puddles) {
+            final int c = puddle[0];
+            final int r = puddle[1];
 
-        Info(int value, int distance) {
-            this.value = value;
-            this.distance = distance;
+            answers[r][c] = -1;
         }
     }
 }
