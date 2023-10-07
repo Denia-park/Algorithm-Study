@@ -19,7 +19,8 @@ public class Util {
 
             int idx = 0;
             for (String str : tempStringArray) {
-                tempIntArray[idx] = Integer.parseInt(str);
+                final String trimStr = str.trim();
+                tempIntArray[idx] = Integer.parseInt(trimStr);
                 idx++;
             }
 
