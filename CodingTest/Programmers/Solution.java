@@ -1,6 +1,8 @@
 package CodingTest.Programmers;
 
 class Solution {
+    int modVal = 1_000_000_007;
+
     public int solution(final int col, final int row, final int[][] puddles) {
         final int[][] answers = new int[row + 1][col + 1];
         insertPuddle(puddles, answers);
@@ -31,7 +33,7 @@ class Solution {
                 }
 
                 //위의 경우에 해당하지 않는다면 가는 길을 2개 더하면 된다.
-                answers[r][c] = leftVal + upVal;
+                answers[r][c] = (leftVal % modVal + upVal % modVal) % modVal;
             }
         }
 
