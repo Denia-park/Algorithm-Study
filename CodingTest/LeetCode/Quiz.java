@@ -1,8 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -14,29 +11,25 @@ public class Quiz {
 }
 
 class Solution {
-    public int rearrangeCharacters(String s, String target) {
+    public int rearrangeCharacters(final String s, final String t) {
         int answer = Integer.MAX_VALUE;
 
-        Map<Character, Integer> sMap = new HashMap<>();
+        final int[] sArr = new int[26];
+        final int[] tArr = new int[26];
+
         for (int i = 0; i < s.length(); i++) {
-            sMap.put(s.charAt(i), sMap.getOrDefault(s.charAt(i), 0) + 1);
+            sArr[s.charAt(i) - 'a'] += 1;
+        }
+        for (int i = 0; i < t.length(); i++) {
+            tArr[t.charAt(i) - 'a'] += 1;
         }
 
-        Map<Character, Integer> targetMap = new HashMap<>();
-        for (int i = 0; i < target.length(); i++) {
-            targetMap.put(target.charAt(i), targetMap.getOrDefault(target.charAt(i), 0) + 1);
-        }
-
-        for (Map.Entry<Character, Integer> entry : targetMap.entrySet()) {
-            final Character targetKey = entry.getKey();
-            final Integer targetVal = entry.getValue();
-
-            final Integer sVal = sMap.getOrDefault(targetKey, 0);
-
-            if (sVal == 0) {
+        for (final char c : t.toCharArray()) {
+            final int key = c - 'a';
+            if (sArr[key] == 0) {
                 return 0;
             } else {
-                answer = Math.min(answer, sVal / targetVal);
+                answer = Math.min(answer, sArr[key] / tArr[key]);
             }
         }
 
