@@ -15,38 +15,31 @@ public class Quiz {
 
 class Solution {
     public int rearrangeCharacters(String s, String target) {
-        int answer = 0;
+        int answer = Integer.MAX_VALUE;
 
         Map<Character, Integer> sMap = new HashMap<>();
         for (int i = 0; i < s.length(); i++) {
             sMap.put(s.charAt(i), sMap.getOrDefault(s.charAt(i), 0) + 1);
         }
 
-        Map<Character, Integer> tMap = new HashMap<>();
+        Map<Character, Integer> targetMap = new HashMap<>();
         for (int i = 0; i < target.length(); i++) {
-            tMap.put(target.charAt(i), tMap.getOrDefault(target.charAt(i), 0) + 1);
+            targetMap.put(target.charAt(i), targetMap.getOrDefault(target.charAt(i), 0) + 1);
         }
 
-        while (true) {
-            for (Map.Entry<Character, Integer> entry : tMap.entrySet()) {
-                //tMap의 값이 다 있어야 개수를 셀수있다.
-                final Character key = entry.getKey();
-                final Integer tValue = entry.getValue();
+        for (Map.Entry<Character, Integer> entry : targetMap.entrySet()) {
+            final Character targetKey = entry.getKey();
+            final Integer targetVal = entry.getValue();
 
-                if (sMap.containsKey(key)) {
-                    final Integer sValue = sMap.get(key);
+            final Integer sVal = sMap.getOrDefault(targetKey, 0);
 
-                    if (sValue >= tValue) {
-                        sMap.put(key, sValue - tValue);
-                    } else {
-                        return answer;
-                    }
-                } else {
-                    return answer;
-                }
+            if (sVal == 0) {
+                return 0;
+            } else {
+                answer = Math.min(answer, sVal / targetVal);
             }
-
-            answer++;
         }
+
+        return answer;
     }
 }
