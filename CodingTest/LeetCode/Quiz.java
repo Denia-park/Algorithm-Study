@@ -4,35 +4,32 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.rearrangeCharacters("ilovecodingonleetcode", "code") == 2);
-        System.out.println(solution.rearrangeCharacters("abcba", "abc") == 1);
-        System.out.println(solution.rearrangeCharacters("abbaccaddaeea", "aaaaa") == 1);
+        System.out.println(solution.searchInsert(new int[]{1, 3, 5, 6}, 5) == 2);
+        System.out.println(solution.searchInsert(new int[]{1, 3, 5, 6}, 2) == 1);
+        System.out.println(solution.searchInsert(new int[]{1, 3, 5, 6}, 7) == 4);
+        System.out.println(solution.searchInsert(new int[]{1}, 0) == 0);
+        System.out.println(solution.searchInsert(new int[]{1}, 2) == 1);
+        System.out.println(solution.searchInsert(new int[]{1, 3}, 2) == 1);
     }
 }
 
 class Solution {
-    public int rearrangeCharacters(final String s, final String t) {
-        int answer = Integer.MAX_VALUE;
+    public int searchInsert(int[] nums, int target) {
+        //이분탐색
+        int st = 0;
+        int ed = nums.length;
 
-        final int[] sArr = new int[26];
-        final int[] tArr = new int[26];
-
-        for (int i = 0; i < s.length(); i++) {
-            sArr[s.charAt(i) - 'a'] += 1;
-        }
-        for (int i = 0; i < t.length(); i++) {
-            tArr[t.charAt(i) - 'a'] += 1;
-        }
-
-        for (final char c : t.toCharArray()) {
-            final int key = c - 'a';
-            if (sArr[key] == 0) {
-                return 0;
+        while (st < ed) {
+            int mid = (st + ed) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                st = mid + 1;
             } else {
-                answer = Math.min(answer, sArr[key] / tArr[key]);
+                ed = mid;
             }
         }
 
-        return answer;
+        return st;
     }
 }
