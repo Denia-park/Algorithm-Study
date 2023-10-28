@@ -1,53 +1,76 @@
 package CodingTest.Programmers;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
 class Solution {
-    int modVal = 1_000_000_007;
+    int answer;
+    private List<Computer> computerList;
 
-    public int solution(final int col, final int row, final int[][] puddles) {
-        final int[][] answers = new int[row + 1][col + 1];
-        insertPuddle(puddles, answers);
+    public int solution(int n, int[][] computers) {
+        answer = 0;
+        computerList = new ArrayList<>();
 
-        for (int r = 1; r <= row; r++) {
-            for (int c = 1; c <= col; c++) {
-                //집은 출발점이니 세지 않는다.
-                if (r == 1 && c == 1) {
-                    answers[r][c] = 1;
-                    continue;
+        for (int i = 0; i < computers.length; i++) {
+            final int[] network = computers[i];
+
+            List<Integer> tempNetwork = new ArrayList<>();
+
+            for (int j = 0; j < network.length; j++) {
+                if (i == j) continue;
+
+                if (network[j] == 1) {
+                    tempNetwork.add(j);
                 }
-
-                //웅덩이를 만나면 가는 길이 아니다.
-                if (answers[r][c] == -1) {
-                    continue;
-                }
-
-                //오른쪽과 아래로만 갈 수 있으므로, 왼쪽이랑 위쪽의 값을 더하면 해당하는 길로 가는 개수.
-                //왼쪽
-                int leftVal = answers[r][c - 1];
-                //위쪽
-                int upVal = answers[r - 1][c];
-
-                //웅덩이의 값은 더하면 안된다.
-                if (leftVal == -1 || upVal == -1) {
-                    answers[r][c] = Math.max(leftVal, upVal);
-                    continue;
-                }
-
-                //위의 경우에 해당하지 않는다면 가는 길을 2개 더하면 된다.
-                answers[r][c] = (leftVal % modVal + upVal % modVal) % modVal;
             }
+
+            computerList.add(new Computer(i, tempNetwork));
         }
 
-//        System.out.println(Arrays.deepToString(answers));
+        for (Computer computer : computerList) {
+            if (computer.isVisited) continue;
 
-        return answers[row][col];
+            answer++;
+
+            bfs(computer);
+        }
+
+        return answer;
     }
 
-    private void insertPuddle(final int[][] puddles, final int[][] answers) {
-        for (final int[] puddle : puddles) {
-            final int c = puddle[0];
-            final int r = puddle[1];
+    private void bfs(final Computer computer) {
+        Deque<Computer> dq = new ArrayDeque<>();
 
-            answers[r][c] = -1;
+        computer.isVisited = true;
+        dq.add(computer);
+
+        while (!dq.isEmpty()) {
+            Computer currentComputer = dq.poll();
+            final List<Integer> networkComputerNums = currentComputer.networkComputerNums;
+
+            for (int i = 0; i < networkComputerNums.size(); i++) {
+                int nextIdx = networkComputerNums.get(i);
+                Computer nextComputer = computerList.get(nextIdx);
+
+                if (nextComputer.isVisited) continue;
+
+                nextComputer.isVisited = true;
+                dq.add(nextComputer);
+            }
+        }
+    }
+
+    class Computer {
+        int idx;
+        List<Integer> networkComputerNums;
+        boolean isVisited;
+
+        Computer(int idx, List<Integer> networkComputerNums) {
+            this.idx = idx;
+            this.networkComputerNums = networkComputerNums;
+            this.isVisited = false;
         }
     }
 }

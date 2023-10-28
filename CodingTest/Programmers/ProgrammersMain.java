@@ -5,10 +5,10 @@ public class ProgrammersMain {
         Solution ts = new Solution();
 
         int[][] routes = Util.convertStringToJavaIntTwoDimensionalArray(
-                "[[2, 2]]"
+                "[[1, 1, 0], [1, 1, 0], [0, 0, 1]]"
         );
 
-        System.out.println(ts.solution(4, 3, routes));
+        System.out.println(ts.solution(3, routes));
     }
 }
 
