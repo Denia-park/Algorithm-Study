@@ -7,7 +7,7 @@ public class Util {
     public static int[][] convertStringToJavaIntTwoDimensionalArray(String source) {
         String newString = source.substring(1, source.length() - 1);
 
-        String[] intArrays = newString.replace("],[", "]&[").split("&");
+        String[] intArrays = newString.replace("], [", "]&[").replace("],[", "]&[").split("&");
 
         List<int[]> list = new ArrayList<>();
 
