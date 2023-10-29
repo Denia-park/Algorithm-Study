@@ -1,23 +1,43 @@
 package CodingTest.LeetCode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.lengthOfLastWord("Hello World") == 5);
-        System.out.println(solution.lengthOfLastWord("   fly me   to   the moon  ") == 4);
-        System.out.println(solution.lengthOfLastWord("luffy is still joyboy") == 6);
+        System.out.println(solution.lengthOfLongestSubstring("abcabcbb") == 3);
+        System.out.println(solution.lengthOfLongestSubstring("bbbbb") == 1);
+        System.out.println(solution.lengthOfLongestSubstring("pwwkew") == 3);
     }
 }
 
 class Solution {
-    public int lengthOfLastWord(String s) {
-        final String trimmed = s.trim();
+    public int lengthOfLongestSubstring(String s) {
+        final char[] charArray = s.toCharArray();
 
-        final int firstCharIndex = trimmed.lastIndexOf(" ") + 1;
+        int maxSize = 0;
+        int curSize = 0;
+        Map<Character, Integer> map = new HashMap<>();
 
-        final int trimLength = trimmed.length();
+        for (int i = 0; i < charArray.length; i++) {
+            char ch = charArray[i];
 
-        return trimLength - firstCharIndex;
+            //map에 있는지 확인
+            if (map.containsKey(ch)) {
+                map.clear();
+                curSize = 0;
+                continue;
+            }
+
+            //없으면 길이 추가
+            map.put(ch, 1);
+            curSize++;
+            maxSize = Math.max(maxSize, curSize);
+        }
+
+
+        return maxSize;
     }
 }
