@@ -10,6 +10,7 @@ public class Quiz {
         System.out.println(solution.lengthOfLongestSubstring("abcabcbb") == 3);
         System.out.println(solution.lengthOfLongestSubstring("bbbbb") == 1);
         System.out.println(solution.lengthOfLongestSubstring("pwwkew") == 3);
+        System.out.println(solution.lengthOfLongestSubstring("aab") == 2);
     }
 }
 
@@ -27,13 +28,13 @@ class Solution {
             //map에 있는지 확인
             if (map.containsKey(ch)) {
                 map.clear();
-                curSize = 0;
-                continue;
+                curSize = 1;
+            } else {
+                curSize++;
             }
 
             //없으면 길이 추가
             map.put(ch, 1);
-            curSize++;
             maxSize = Math.max(maxSize, curSize);
         }
 
