@@ -1,7 +1,6 @@
 package CodingTest.LeetCode;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
 public class Quiz {
     public static void main(String[] args) {
@@ -16,30 +15,20 @@ public class Quiz {
 
 class Solution {
     public int lengthOfLongestSubstring(String s) {
-        Set<Character> set = new HashSet<>();
-        final char[] charArray = s.toCharArray();
+        int n = s.length();
+        int maxLength = 0;
+        int[] charIndex = new int[128];
+        Arrays.fill(charIndex, -1);
         int left = 0;
-        int maxSize = 0;
 
-        for (int right = 0; right < charArray.length; right++) {
-            char ch = charArray[right];
-
-            //set에 있는지 확인
-            if (set.contains(ch)) {
-                //set에 존재하면, 없어질때까지 left를 땡긴다.
-                while (set.contains(ch)) {
-                    set.remove(charArray[left]);
-                    left++;
-                }
+        for (int right = 0; right < n; right++) {
+            if (charIndex[s.charAt(right)] >= left) {
+                left = charIndex[s.charAt(right)] + 1;
             }
-
-            //  set에 추가한다.
-            set.add(ch);
-
-            //  Max값을 갱신한다.
-            maxSize = Math.max(maxSize, right - left + 1);
+            charIndex[s.charAt(right)] = right;
+            maxLength = Math.max(maxLength, right - left + 1);
         }
 
-        return maxSize;
+        return maxLength;
     }
 }
