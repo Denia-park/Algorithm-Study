@@ -4,44 +4,82 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.characterReplacement("ABAB", 2) == 4);
-        System.out.println(solution.characterReplacement("AABABBA", 1) == 4);
+        System.out.println(solution.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 0) == 4);
+        System.out.println(solution.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 3) == -1);
+        System.out.println(solution.search(new int[]{7, 0, 1, 2, 4, 5, 6}, 3) == -1);
+        System.out.println(solution.search(new int[]{1}, 0) == -1);
     }
 }
 
 class Solution {
-    public int characterReplacement(String s, int k) {
-        if (s.length() <= k || s.length() == k - 1) {
-            return s.length();
+    public int search(int[] nums, int target) {
+        //rotate 된 부분을 찾는다
+        final int rotateIndex = getRotateIndex(nums);
+
+        final int[] newNums = new int[nums.length];
+        System.arraycopy(nums, 0, newNums, 0, nums.length);
+
+        //rotate된 부분을 떼어내서 정상적인 arr를 만든다
+        if (rotateIndex != -1) {
+            System.arraycopy(nums, rotateIndex + 1, newNums, 0, nums.length - (rotateIndex + 1));
+            System.arraycopy(nums, 0, newNums, nums.length - (rotateIndex + 1), rotateIndex + 1);
         }
 
-        char[] chars = s.toCharArray();
+        //이진 검색을 통해 target을 찾는다.
+        return getTarget(newNums, target);
+    }
 
-        char[] charArray = new char[26];
+    private int getTarget(final int[] newNums, final int target) {
 
-        int left = 0;
-        int maxCharCount = 0;
-        for (int right = 0; right < chars.length; right++) {
-            final int ch = chars[right] - 'A';
+        int start = 0;
+        int end = newNums.length - 1;
 
-            charArray[ch]++;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
 
-            int curCharCount = charArray[ch];
+            final int midVal = newNums[mid];
 
-            maxCharCount = Math.max(maxCharCount, curCharCount);
-
-            int curStrLen = right - left + 1;
-
-            //현재 길이에서 가장 많은 ch의 수를 빼면, 교체해야 할 나머지 ch의 수
-            //이게 k보다 크면 안되므로, left를 옮긴다.
-            if (curStrLen - maxCharCount > k) {
-                charArray[chars[left] - 'A']--;
-                left++;
+            if (midVal == target) {
+                return mid;
+            } else if (midVal < target) {
+                start = mid + 1;
+            } else {
+                end = mid - 1;
             }
         }
 
-        //right == chars.length
-        //sliding window의 너비를 구한다. => chars.length - left;
-        return chars.length - left;
+        return -1;
+    }
+
+    private int getRotateIndex(final int[] nums) {
+        int start = 0;
+        int end = nums.length - 1;
+
+        int startVal = nums[0];
+
+        boolean rightDirection = false;
+
+        int mid = start + (end - start) / 2;
+        if (startVal < nums[mid]) {
+            rightDirection = true;
+        }
+
+        while (start <= end) {
+            mid = start + (end - start) / 2;
+
+            //rotate 못 찾음
+            if (mid != nums.length - 1 && nums[mid] > nums[mid + 1]) {
+                return mid;
+            } else {
+                if (rightDirection) {
+                    start = mid + 1;
+                } else {
+                    end = mid - 1;
+                }
+            }
+        }
+
+        return -1;
     }
 }
+
