@@ -13,65 +13,34 @@ public class Quiz {
 
 class Solution {
     public int search(int[] nums, int target) {
-        //rotate 된 부분을 찾는다
-        final int rotateIndex = getRotateIndex(nums);
+        //오름차순을 Rotate했기 때문에 내가 현재 Rotate 기준 왼쪽에 있는지 오른쪽에 있는지 판단해야함
+        // -> 범위내에 꺾인 부분이 존재하는 한 내가 어느쪽에 존재하는 지 판단 해야함
 
-        final int[] newNums = new int[nums.length];
-        System.arraycopy(nums, 0, newNums, 0, nums.length);
-
-        //rotate된 부분을 떼어내서 정상적인 arr를 만든다
-        if (rotateIndex != -1) {
-            System.arraycopy(nums, rotateIndex + 1, newNums, 0, nums.length - (rotateIndex + 1));
-            System.arraycopy(nums, 0, newNums, nums.length - (rotateIndex + 1), rotateIndex + 1);
-        }
-
-        //이진 검색을 통해 target을 찾는다.
-        return getTarget(newNums, target);
-    }
-
-    private int getTarget(final int[] newNums, final int target) {
-
-        int start = 0;
-        int end = newNums.length - 1;
-
-        while (start <= end) {
-            int mid = start + (end - start) / 2;
-
-            final int midVal = newNums[mid];
-
-            if (midVal == target) {
-                return mid;
-            } else if (midVal < target) {
-                start = mid + 1;
-            } else {
-                end = mid - 1;
-            }
-        }
-
-        return -1;
-    }
-
-    private int getRotateIndex(final int[] nums) {
         int start = 0;
         int end = nums.length - 1;
 
-        int startVal = nums[0];
-
-        boolean rightDirection = false;
-
-        int mid = start + (end - start) / 2;
-        if (startVal < nums[mid]) {
-            rightDirection = true;
-        }
-
         while (start <= end) {
-            mid = start + (end - start) / 2;
+            int mid = start + ((end - start) / 2); //이렇게 코드를 짜면 오버플로우가 발생하지 않음
+            int midVal = nums[mid];
 
-            //rotate 못 찾음
-            if (mid != nums.length - 1 && nums[mid] > nums[mid + 1]) {
+            //값을 찾았다.
+            if (midVal == target) {
                 return mid;
+            }
+
+            //왼쪽, 오른쪽 판단 => start, end를 옮기면서 꺾이지 않은 선으로 진입하면 계산은 간단해짐 -> 이진 탐색
+
+            int startVal = nums[start];
+            int endVal = nums[end];
+
+            if (isLeftLine(startVal, midVal)) {
+                if (startVal <= target && target < midVal) {
+                    end = mid - 1;
+                } else {
+                    start = mid + 1;
+                }
             } else {
-                if (rightDirection) {
+                if (midVal < target && target <= endVal) {
                     start = mid + 1;
                 } else {
                     end = mid - 1;
@@ -80,6 +49,10 @@ class Solution {
         }
 
         return -1;
+    }
+
+    private boolean isLeftLine(final int startVal, final int midVal) {
+        return startVal < midVal;
     }
 }
 
