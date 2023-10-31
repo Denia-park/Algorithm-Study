@@ -8,6 +8,7 @@ public class Quiz {
         System.out.println(solution.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 3) == -1);
         System.out.println(solution.search(new int[]{7, 0, 1, 2, 4, 5, 6}, 3) == -1);
         System.out.println(solution.search(new int[]{1}, 0) == -1);
+        System.out.println(solution.search(new int[]{3, 1}, 1) == 1); // 기존 코드의 반례
     }
 }
 
@@ -52,7 +53,7 @@ class Solution {
     }
 
     private boolean isLeftLine(final int startVal, final int midVal) {
-        return startVal < midVal;
+        return startVal <= midVal;
     }
 }
 
