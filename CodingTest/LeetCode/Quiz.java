@@ -4,56 +4,67 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 0) == 4);
-        System.out.println(solution.search(new int[]{4, 5, 6, 7, 0, 1, 2}, 3) == -1);
-        System.out.println(solution.search(new int[]{7, 0, 1, 2, 4, 5, 6}, 3) == -1);
-        System.out.println(solution.search(new int[]{1}, 0) == -1);
-        System.out.println(solution.search(new int[]{3, 1}, 1) == 1); // 기존 코드의 반례
+        System.out.println(solution.convert("PAYPALISHIRING", 3).equals("PAHNAPLSIIGYIR"));
+        System.out.println(solution.convert("PAYPALISHIRING", 4).equals("PINALSIGYAHRPI"));
+        System.out.println(solution.convert("A", 1).equals("A"));
+        System.out.println(solution.convert("ABC", 1));
     }
 }
 
 class Solution {
-    public int search(int[] nums, int target) {
-        //오름차순을 Rotate했기 때문에 내가 현재 Rotate 기준 왼쪽에 있는지 오른쪽에 있는지 판단해야함
-        // -> 범위내에 꺾인 부분이 존재하는 한 내가 어느쪽에 존재하는 지 판단 해야함
+    public String convert(String s, int numRows) {
+        //배열을 만든다.
+        final int maxCol = s.length();
+        char[][] arr = new char[numRows][maxCol];
 
-        int start = 0;
-        int end = nums.length - 1;
+        //순서대로 집어 넣는다.
+        final char[] charArray = s.toCharArray();
+        boolean isDown = true; // 0이면 true, numRows - 1 이면 false
+        //true이면, 한줄로 내려간다.
+        //flase이면, col을 계속 한칸씩 옮긴다.
 
-        while (start <= end) {
-            int mid = start + ((end - start) / 2); //이렇게 코드를 짜면 오버플로우가 발생하지 않음
-            int midVal = nums[mid];
+        int curRowIdx = 0;
+        int curColIdx = 0;
 
-            //값을 찾았다.
-            if (midVal == target) {
-                return mid;
-            }
+        for (char ch : charArray) {
+            arr[curRowIdx][curColIdx] = ch;
 
-            //왼쪽, 오른쪽 판단 => start, end를 옮기면서 꺾이지 않은 선으로 진입하면 계산은 간단해짐 -> 이진 탐색
+            if (!isDown) {
+                //col을 옮긴다.
+                curColIdx++;
+                //row를 감소
+                curRowIdx--;
 
-            int startVal = nums[start];
-            int endVal = nums[end];
-
-            if (isLeftLine(startVal, midVal)) {
-                if (startVal <= target && target < midVal) {
-                    end = mid - 1;
-                } else {
-                    start = mid + 1;
+                if (curRowIdx == -1) {
+                    isDown = true;
+                    curRowIdx += 2;
+                    curColIdx--;
                 }
             } else {
-                if (midVal < target && target <= endVal) {
-                    start = mid + 1;
-                } else {
-                    end = mid - 1;
+                //row를 증가
+                curRowIdx++;
+
+                if (curRowIdx == numRows) {
+                    isDown = false;
+                    curRowIdx -= 2;
+                    curColIdx++;
                 }
             }
         }
 
-        return -1;
-    }
+        StringBuilder sb = new StringBuilder();
 
-    private boolean isLeftLine(final int startVal, final int midVal) {
-        return startVal <= midVal;
+        //쭉 표시한다.
+        for (int row = 0; row < arr.length; row++) {
+            for (int col = 0; col < arr[0].length; col++) {
+                char ch = arr[row][col];
+                if (ch != '\0') {
+                    sb.append(ch);
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }
 
