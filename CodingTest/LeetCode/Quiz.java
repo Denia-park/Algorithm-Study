@@ -13,6 +13,10 @@ public class Quiz {
 
 class Solution {
     public String convert(String s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+
         //배열을 만든다.
         final int maxCol = s.length();
         char[][] arr = new char[numRows][maxCol];
