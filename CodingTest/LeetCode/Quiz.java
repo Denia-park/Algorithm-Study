@@ -18,11 +18,11 @@ class Solution {
 
         while (start < end) {
             //물을 담을 수 있는 최대 높이 계산 (두개의 벽중에 높이가 낮은 벽 선택)
-            int curHeight = Math.min(height[start], height[end]);
+            int curHeight = height[start] < height[end] ? height[start] : height[end];
             //두개의 인덱스 차이가 너비
             int curWidth = end - start;
-            
-            max = Math.max(max, curHeight * curWidth);
+
+            max = max > curHeight * curWidth ? max : curHeight * curWidth;
 
             if (height[start] < height[end]) {
                 start++;
