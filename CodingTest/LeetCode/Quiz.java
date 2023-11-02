@@ -4,71 +4,33 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.convert("PAYPALISHIRING", 3).equals("PAHNAPLSIIGYIR"));
-        System.out.println(solution.convert("PAYPALISHIRING", 4).equals("PINALSIGYAHRPI"));
-        System.out.println(solution.convert("A", 1).equals("A"));
-        System.out.println(solution.convert("ABC", 1));
+        System.out.println(solution.maxArea(new int[]{1, 8, 6, 2, 5, 4, 8, 3, 7}));
     }
 }
 
 class Solution {
-    public String convert(String s, int numRows) {
-        if (numRows == 1) {
-            return s;
-        }
+    public int maxArea(int[] height) {
+        int max = 0;
 
-        //배열을 만든다.
-        final int maxCol = s.length();
-        char[][] arr = new char[numRows][maxCol];
+        //좌우에 포인터를 두고 줄여가면서 값을 계산한다.
+        int start = 0;
+        int end = height.length - 1;
 
-        //순서대로 집어 넣는다.
-        final char[] charArray = s.toCharArray();
-        boolean isDown = true; // 0이면 true, numRows - 1 이면 false
-        //true이면, 한줄로 내려간다.
-        //flase이면, col을 계속 한칸씩 옮긴다.
+        while (start < end) {
+            //물을 담을 수 있는 최대 높이 계산 (두개의 벽중에 높이가 낮은 벽 선택)
+            int curHeight = Math.min(height[start], height[end]);
+            //두개의 인덱스 차이가 너비
+            int curWidth = end - start;
+            
+            max = Math.max(max, curHeight * curWidth);
 
-        int curRowIdx = 0;
-        int curColIdx = 0;
-
-        for (char ch : charArray) {
-            arr[curRowIdx][curColIdx] = ch;
-
-            if (!isDown) {
-                //col을 옮긴다.
-                curColIdx++;
-                //row를 감소
-                curRowIdx--;
-
-                if (curRowIdx == -1) {
-                    isDown = true;
-                    curRowIdx += 2;
-                    curColIdx--;
-                }
+            if (height[start] < height[end]) {
+                start++;
             } else {
-                //row를 증가
-                curRowIdx++;
-
-                if (curRowIdx == numRows) {
-                    isDown = false;
-                    curRowIdx -= 2;
-                    curColIdx++;
-                }
+                end--;
             }
         }
 
-        StringBuilder sb = new StringBuilder();
-
-        //쭉 표시한다.
-        for (int row = 0; row < arr.length; row++) {
-            for (int col = 0; col < arr[0].length; col++) {
-                char ch = arr[row][col];
-                if (ch != '\0') {
-                    sb.append(ch);
-                }
-            }
-        }
-
-        return sb.toString();
+        return max;
     }
 }
-
