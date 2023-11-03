@@ -1,9 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.TreeMap;
-
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -16,40 +12,24 @@ public class Quiz {
 
 class Solution {
     public String intToRoman(int num) {
-        StringBuilder sb = new StringBuilder();
+        if (num < 1 || num > 3999) return "";
 
-        Map<Integer, String> map = new TreeMap<>(Comparator.reverseOrder());
-        addRomanData(map);
+        StringBuilder result = new StringBuilder();
 
-        for (final Map.Entry<Integer, String> entry : map.entrySet()) {
-            final Integer numToMinus = entry.getKey();
-            final String roman = entry.getValue();
-            while (num >= numToMinus) {
-                sb.append(roman);
-                num -= numToMinus;
+        String[] roman = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+
+        int i = 0;
+
+        //iterate until the number becomes zero, NO NEED to go until the last element in roman array
+        while (num > 0) {
+            while (num >= values[i]) {
+                num -= values[i];
+                result.append(roman[i]);
             }
+            i++;
         }
-
-        //해당 하는 값을 붙인다
-        return sb.toString();
-    }
-
-    private void addRomanData(final Map<Integer, String> map) {
-        map.put(1, "I");
-        map.put(4, "IV");
-        map.put(5, "V");
-        map.put(9, "IX");
-
-        map.put(10, "X");
-        map.put(40, "XL");
-        map.put(50, "L");
-        map.put(90, "XC");
-
-        map.put(100, "C");
-        map.put(400, "CD");
-        map.put(500, "D");
-        map.put(900, "CM");
-
-        map.put(1000, "M");
+        
+        return result.toString();
     }
 }
