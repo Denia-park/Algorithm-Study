@@ -8,10 +8,8 @@ public class Quiz {
         Solution solution = new Solution();
 
         System.out.println(solution.intToRoman(3).equals("III"));
-//        System.out.println(solution.intToRoman(58).equals("LVIII"));
-        System.out.println(solution.intToRoman(58));
-//        System.out.println(solution.intToRoman(1994).equals("MCMXCIV"));
-        System.out.println(solution.intToRoman(1994));
+        System.out.println(solution.intToRoman(58).equals("LVIII"));
+        System.out.println(solution.intToRoman(1994).equals("MCMXCIV"));
     }
 }
 
@@ -34,14 +32,12 @@ class Solution {
 
             if (numValue != 0) {
                 if (1 < numValue && numValue < 4) { //2, 3
-                    for (int i = 0; i < numValue; i++) {
-                        tempBuilder.insert(0, map.get(1 * digit));
-                    }
+                    final String tempStr = map.get(1 * digit);
+                    tempBuilder.insert(0, tempStr.repeat(numValue));
                 } else if (5 < numValue && numValue < 9) { //6, 7, 8
                     int numMinus5 = numValue - 5;
-                    for (int i = 0; i < numMinus5; i++) {
-                        tempBuilder.insert(0, map.get(1 * digit));
-                    }
+                    final String tempStr = map.get(1 * digit);
+                    tempBuilder.insert(0, tempStr.repeat(numMinus5));
                     tempBuilder.insert(0, map.get(5 * digit));
                 } else {
                     tempBuilder.insert(0, map.get(numValue * digit));
