@@ -1,7 +1,8 @@
 package CodingTest.LeetCode;
 
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Quiz {
     public static void main(String[] args) {
@@ -17,36 +18,16 @@ class Solution {
     public String intToRoman(int num) {
         StringBuilder sb = new StringBuilder();
 
-        Map<Integer, String> map = new HashMap<>();
+        Map<Integer, String> map = new TreeMap<>(Comparator.reverseOrder());
         addRomanData(map);
 
-        //숫자 하나씩 가져오고, num의 자리수를 파악
-        String numStr = String.valueOf(num);
-        int digit = 1;
-        for (int idx = numStr.length() - 1; idx >= 0; idx--) {
-            char ch = numStr.charAt(idx);
-
-            int numValue = ch - '0';
-
-            StringBuilder tempBuilder = new StringBuilder();
-
-            if (numValue != 0) {
-                if (1 < numValue && numValue < 4) { //2, 3
-                    final String tempStr = map.get(1 * digit);
-                    tempBuilder.insert(0, tempStr.repeat(numValue));
-                } else if (5 < numValue && numValue < 9) { //6, 7, 8
-                    int numMinus5 = numValue - 5;
-                    final String tempStr = map.get(1 * digit);
-                    tempBuilder.insert(0, tempStr.repeat(numMinus5));
-                    tempBuilder.insert(0, map.get(5 * digit));
-                } else {
-                    tempBuilder.insert(0, map.get(numValue * digit));
-                }
-
-                sb.insert(0, tempBuilder);
+        for (final Map.Entry<Integer, String> entry : map.entrySet()) {
+            final Integer numToMinus = entry.getKey();
+            final String roman = entry.getValue();
+            while (num >= numToMinus) {
+                sb.append(roman);
+                num -= numToMinus;
             }
-
-            digit *= 10;
         }
 
         //해당 하는 값을 붙인다
