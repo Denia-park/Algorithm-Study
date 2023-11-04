@@ -1,5 +1,7 @@
 package CodingTest.LeetCode;
 
+import java.util.Arrays;
+
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
@@ -10,33 +12,32 @@ public class Quiz {
 }
 
 class Solution {
-    private int[] nums;
-    private int target;
-    private int answer;
-
     public int threeSumClosest(int[] nums, int target) {
-        this.nums = nums;
-        this.target = target;
-        answer = (int) Math.pow(10, 7);
+        int answer = 10_000_000;
 
-        //dfs를 통해 모든 조합을 구해야 할 것 같다.
-        int startIdx = 0;
-        int sumCount = 0;
-        dfs(startIdx, sumCount, 0);
+        Arrays.sort(nums);
+
+        for (int origin = 0; origin < nums.length - 2; origin++) {
+            int start = origin + 1;
+            int end = nums.length - 1;
+
+            while (start < end) {
+                int sum = nums[origin] + nums[start] + nums[end];
+
+                //값 비교 - 더 작은 걸 사용해야 함
+                answer = Math.abs(sum - target) < Math.abs(answer - target) ? sum : answer;
+
+                //남은 투포인터를 옮기면서 값 비교 (start, end)
+                if (sum > target) {
+                    end--;
+                } else if (sum < target) {
+                    start++;
+                } else {
+                    return sum;
+                }
+            }
+        }
 
         return answer;
-    }
-
-    private void dfs(final int startIdx, final int sumCount, final int sum) {
-        if (sumCount >= 3) {
-            answer = Math.abs(sum - target) < Math.abs(answer - target) ? sum : answer;
-            return;
-        }
-
-        for (int curIdx = startIdx; curIdx < nums.length; curIdx++) {
-            int curValue = nums[curIdx];
-
-            dfs(curIdx + 1, sumCount + 1, sum + curValue);
-        }
     }
 }
