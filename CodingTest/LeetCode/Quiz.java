@@ -4,32 +4,39 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.intToRoman(3).equals("III"));
-        System.out.println(solution.intToRoman(58).equals("LVIII"));
-        System.out.println(solution.intToRoman(1994).equals("MCMXCIV"));
+        System.out.println(solution.threeSumClosest(new int[]{-1, 2, 1, -4}, 1) == 2);
+        System.out.println(solution.threeSumClosest(new int[]{0, 0, 0}, 1) == 0);
     }
 }
 
 class Solution {
-    public String intToRoman(int num) {
-        if (num < 1 || num > 3999) return "";
+    private int[] nums;
+    private int target;
+    private int answer;
 
-        StringBuilder result = new StringBuilder();
+    public int threeSumClosest(int[] nums, int target) {
+        this.nums = nums;
+        this.target = target;
+        answer = (int) Math.pow(10, 7);
 
-        String[] roman = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
-        int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        //dfs를 통해 모든 조합을 구해야 할 것 같다.
+        int startIdx = 0;
+        int sumCount = 0;
+        dfs(startIdx, sumCount, 0);
 
-        int i = 0;
+        return answer;
+    }
 
-        //iterate until the number becomes zero, NO NEED to go until the last element in roman array
-        while (num > 0) {
-            while (num >= values[i]) {
-                num -= values[i];
-                result.append(roman[i]);
-            }
-            i++;
+    private void dfs(final int startIdx, final int sumCount, final int sum) {
+        if (sumCount >= 3) {
+            answer = Math.abs(sum - target) < Math.abs(answer - target) ? sum : answer;
+            return;
         }
-        
-        return result.toString();
+
+        for (int curIdx = startIdx; curIdx < nums.length; curIdx++) {
+            int curValue = nums[curIdx];
+
+            dfs(curIdx + 1, sumCount + 1, sum + curValue);
+        }
     }
 }
