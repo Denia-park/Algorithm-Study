@@ -1,43 +1,53 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.threeSumClosest(new int[]{-1, 2, 1, -4}, 1) == 2);
-        System.out.println(solution.threeSumClosest(new int[]{0, 0, 0}, 1) == 0);
+        System.out.println(solution.generateParenthesis(1));
+        System.out.println(solution.generateParenthesis(2));
+        System.out.println(solution.generateParenthesis(3));
     }
 }
 
 class Solution {
-    public int threeSumClosest(int[] nums, int target) {
-        int answer = 10_000_000;
-
-        Arrays.sort(nums);
-
-        for (int origin = 0; origin < nums.length - 2; origin++) {
-            int start = origin + 1;
-            int end = nums.length - 1;
-
-            while (start < end) {
-                int sum = nums[origin] + nums[start] + nums[end];
-
-                //값 비교 - 더 작은 걸 사용해야 함
-                answer = Math.abs(sum - target) < Math.abs(answer - target) ? sum : answer;
-
-                //남은 투포인터를 옮기면서 값 비교 (start, end)
-                if (sum > target) {
-                    end--;
-                } else if (sum < target) {
-                    start++;
-                } else {
-                    return sum;
-                }
-            }
+    public List<String> generateParenthesis(int n) {
+        if (n == 1) {
+            return List.of("()");
         }
 
-        return answer;
+        Set<String> set = new HashSet<>();
+
+        List<String> list = List.of("()");
+
+        for (int i = 2; i < n + 1; i++) {
+            for (String str : list) {
+                //str에서 ()를 찾고 교환하자.
+                int index = str.indexOf("()");
+
+                while (index != -1) {
+                    StringBuilder sb = new StringBuilder(str);
+                    sb.replace(index, index + 2, "(())");
+                    set.add(sb.toString());
+
+                    StringBuilder sb2 = new StringBuilder(str);
+                    sb2.replace(index, index + 2, "()()");
+                    set.add(sb2.toString());
+
+                    index = str.indexOf("()", index + 1);
+                }
+            }
+
+            list = new ArrayList<>(set);
+            set.clear();
+        }
+
+        //set to list
+        return list;
     }
 }
