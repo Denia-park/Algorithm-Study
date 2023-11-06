@@ -1,43 +1,51 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.generateParenthesis(1));
-        System.out.println(solution.generateParenthesis(2));
-        System.out.println(solution.generateParenthesis(3));
+        System.out.println(solution.combinationSum(new int[]{2, 3, 6, 7}, 7));
+        System.out.println(solution.combinationSum(new int[]{2, 3, 5}, 8));
+        System.out.println(solution.combinationSum(new int[]{2}, 1));
     }
 }
 
 class Solution {
-    private List<String> result;
-    private int maxBracketsNum;
+    private int[] candidates;
+    private int target;
+    private List<List<Integer>> answer;
 
-    public List<String> generateParenthesis(int n) {
-        result = new ArrayList<>();
-        this.maxBracketsNum = n;
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        answer = new ArrayList<>();
+        this.candidates = candidates;
+        this.target = target;
 
-        addParenthesis("", 0, 0);
+        //조합을 써서 모든 경우의 수를 구하면 될까 ?
+        int curIndex = 0;
+        int sum = 0;
+        Deque<Integer> dq = new ArrayDeque<>();
+        dfs(curIndex, sum, dq);
 
-        return result;
+        return answer;
     }
 
-    private void addParenthesis(final String curStr, final int openBrackets, final int closeBrackets) {
-        //괄호는 () 이렇게 생김 -> 문자열이 2배. 즉 maxBracketsNum 2개면 괄호 쌍이 2개 이므로 문자열 길이가 2*2 = 4 이다.
-        if (curStr.length() == maxBracketsNum * 2) {
-            result.add(curStr);
+    private void dfs(final int curIndex, final int sum, final Deque<Integer> dq) {
+        if (sum == target) {
+            answer.add(new ArrayList<>(dq));
+            return;
+        } else if (sum > target) {
             return;
         }
 
-        if (openBrackets < maxBracketsNum) {
-            addParenthesis(curStr + "(", openBrackets + 1, closeBrackets);
-        }
-        if (closeBrackets < openBrackets) {
-            addParenthesis(curStr + ")", openBrackets, closeBrackets + 1);
+        for (int i = curIndex; i < candidates.length; i++) {
+            dq.add(candidates[i]);
+            dfs(i, sum + candidates[i], dq);
+            dq.removeLast();
         }
     }
 }
