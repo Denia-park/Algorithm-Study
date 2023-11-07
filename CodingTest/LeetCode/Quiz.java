@@ -6,9 +6,9 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-//        System.out.println(solution.checkInclusion("ab", "eidbaooo"));
-//        System.out.println(solution.checkInclusion("ab", "eidboaoo"));
-//        System.out.println(solution.checkInclusion("ab", "a"));
+        System.out.println(solution.checkInclusion("ab", "eidbaooo"));
+        System.out.println(solution.checkInclusion("ab", "eidboaoo"));
+        System.out.println(solution.checkInclusion("ab", "a"));
         System.out.println(solution.checkInclusion("ky", "ainwkckifykxlribaypk"));
     }
 }
@@ -19,7 +19,6 @@ class Solution {
             return false;
         }
 
-        boolean answer = false;
         int s1Len = s1.length();
         int[] s1Arr = new int[26];
 
@@ -43,7 +42,9 @@ class Solution {
                 int[] s2Arr = new int[26];
                 countChar(tempStr, s2Arr);
 
-                return Arrays.equals(s1Arr, s2Arr);
+                if (Arrays.equals(s1Arr, s2Arr)) {
+                    return true;
+                }
             }
 
             //아래쪽으로 찾기
@@ -54,13 +55,15 @@ class Solution {
                 int[] s2Arr = new int[26];
                 countChar(tempStr, s2Arr);
 
-                return Arrays.equals(s1Arr, s2Arr);
+                if (Arrays.equals(s1Arr, s2Arr)) {
+                    return true;
+                }
             }
 
             searchIdx++;
         }
 
-        return answer;
+        return false;
     }
 
     private void countChar(final String str, final int[] arr) {
