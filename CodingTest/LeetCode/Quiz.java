@@ -1,51 +1,63 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.Arrays;
 
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.combinationSum(new int[]{2, 3, 6, 7}, 7));
-        System.out.println(solution.combinationSum(new int[]{2, 3, 5}, 8));
-        System.out.println(solution.combinationSum(new int[]{2}, 1));
+        System.out.println(solution.checkInclusion("ab", "eidbaooo"));
+        System.out.println(solution.checkInclusion("ab", "eidboaoo"));
     }
 }
 
 class Solution {
-    private int[] candidates;
-    private int target;
-    private List<List<Integer>> answer;
+    public boolean checkInclusion(String s1, String s2) {
+        boolean answer = false;
+        int s1Len = s1.length();
+        int[] s1Arr = new int[26];
 
-    public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        answer = new ArrayList<>();
-        this.candidates = candidates;
-        this.target = target;
+        //기존 단어를 세어둔다.
+        countChar(s1, s1Arr);
+        
+        //s2에서 s1의 첫글자를 찾고, s1에 해당하는 길이만큼 떼어내서 비교한다.
+        int searchIdx = -1;
+        String firstChar = s1.charAt(0) + "";
+        while (true) {
+            searchIdx = s2.indexOf(firstChar, searchIdx + 1);
+            if (searchIdx != -1) {
+                break;
+            }
 
-        //조합을 써서 모든 경우의 수를 구하면 될까 ?
-        int curIndex = 0;
-        int sum = 0;
-        Deque<Integer> dq = new ArrayDeque<>();
-        dfs(curIndex, sum, dq);
+            //위쪽으로 찾기
+            final int upStartIdx = searchIdx - (s1Len - 1);
+            if (-1 < upStartIdx) {
+                String tempStr = s2.substring(upStartIdx, searchIdx + 1);
+
+                int[] s2Arr = new int[26];
+                countChar(tempStr, s2Arr);
+
+                return Arrays.equals(s1Arr, s2Arr);
+            }
+
+            //아래쪽으로 찾기
+            final int downEndIdx = searchIdx + (s1Len - 1);
+            if (downEndIdx < s1Len) {
+                String tempStr = s2.substring(searchIdx, downEndIdx + 1);
+
+                int[] s2Arr = new int[26];
+                countChar(tempStr, s2Arr);
+
+                return Arrays.equals(s1Arr, s2Arr);
+            }
+        }
 
         return answer;
     }
 
-    private void dfs(final int curIndex, final int sum, final Deque<Integer> dq) {
-        if (sum == target) {
-            answer.add(new ArrayList<>(dq));
-            return;
-        } else if (sum > target) {
-            return;
-        }
-
-        for (int i = curIndex; i < candidates.length; i++) {
-            dq.add(candidates[i]);
-            dfs(i, sum + candidates[i], dq);
-            dq.removeLast();
+    private void countChar(final String str, final int[] arr) {
+        for (int i = 0; i < str.length(); i++) {
+            arr[str.charAt(i) - 'a']++;
         }
     }
 }
