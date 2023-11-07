@@ -6,14 +6,19 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.checkInclusion("ab", "eidbaooo"));
-        System.out.println(solution.checkInclusion("ab", "eidboaoo"));
-        System.out.println(solution.checkInclusion("ab", "a"));
+//        System.out.println(solution.checkInclusion("ab", "eidbaooo"));
+//        System.out.println(solution.checkInclusion("ab", "eidboaoo"));
+//        System.out.println(solution.checkInclusion("ab", "a"));
+        System.out.println(solution.checkInclusion("ky", "ainwkckifykxlribaypk"));
     }
 }
 
 class Solution {
     public boolean checkInclusion(String s1, String s2) {
+        if (s1.length() > s2.length()) {
+            return false;
+        }
+
         boolean answer = false;
         int s1Len = s1.length();
         int[] s1Arr = new int[26];
