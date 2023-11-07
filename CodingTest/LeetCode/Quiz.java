@@ -8,6 +8,7 @@ public class Quiz {
 
         System.out.println(solution.checkInclusion("ab", "eidbaooo"));
         System.out.println(solution.checkInclusion("ab", "eidboaoo"));
+        System.out.println(solution.checkInclusion("ab", "a"));
     }
 }
 
@@ -19,13 +20,13 @@ class Solution {
 
         //기존 단어를 세어둔다.
         countChar(s1, s1Arr);
-        
+
         //s2에서 s1의 첫글자를 찾고, s1에 해당하는 길이만큼 떼어내서 비교한다.
         int searchIdx = -1;
         String firstChar = s1.charAt(0) + "";
         while (true) {
             searchIdx = s2.indexOf(firstChar, searchIdx + 1);
-            if (searchIdx != -1) {
+            if (searchIdx == -1) {
                 break;
             }
 
@@ -50,6 +51,8 @@ class Solution {
 
                 return Arrays.equals(s1Arr, s2Arr);
             }
+
+            searchIdx++;
         }
 
         return answer;
