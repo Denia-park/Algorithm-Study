@@ -1,68 +1,49 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println(solution.permute(new int[]{1, 2, 3}));
-        System.out.println(solution.permute(new int[]{0, 1}));
-        System.out.println(solution.permute(new int[]{1}));
+        System.out.println(solution.countHomogenous("abbcccaa") == 13);
+        System.out.println(solution.countHomogenous("xy") == 2);
+        System.out.println(solution.countHomogenous("zzzzz") == 15);
     }
 }
 
 class Solution {
-    private List<List<Integer>> answer;
-    private List<Wrapper> nums;
+    public int countHomogenous(String quizStr) {
+        Map<String, Integer> map = new HashMap<>();
 
-    public List<List<Integer>> permute(int[] params) {
-        answer = new ArrayList<>();
-        nums = new ArrayList<>();
+        String saveStr = "";
+        char saveChar = quizStr.charAt(0);
+        for (int i = 0; i < quizStr.length(); i++) {
+            final char curChar = quizStr.charAt(i);
 
-        for (int param : params) {
-            nums.add(new Wrapper(param, false));
-        }
+            if (saveStr.isEmpty()) {
+                saveStr = String.valueOf(saveChar);
+            } else if (saveChar != curChar) {
+                final int saveStrLen = saveStr.length();
+                for (int count = 0; count < saveStrLen; count++) {
+                    final String tempStr = String.valueOf(saveChar).repeat(count + 1);
+                    map.put(tempStr, map.getOrDefault(saveStr, 0) + saveStrLen - count);
+                }
 
-        final Deque<Wrapper> dq = new ArrayDeque<>();
-        dfs(dq);
-
-        return answer;
-    }
-
-    private void dfs(final Deque<Wrapper> dq) {
-        if (dq.size() == nums.size()) {
-            List<Integer> list = new ArrayList<>();
-            for (Wrapper wrapper : dq) {
-                list.add(wrapper.value);
+                saveChar = curChar;
+                saveStr = String.valueOf(saveChar);
+            } else {
+                saveStr += curChar;
             }
-            answer.add(list);
-            return;
         }
 
-        for (Wrapper wrapper : nums) {
-            if (wrapper.visited) {
-                continue;
-            }
-
-            wrapper.visited = true;
-            dq.offer(wrapper);
-            dfs(dq);
-            dq.pollLast();
-            wrapper.visited = false;
+        final int saveStrLen = saveStr.length();
+        for (int count = 0; count < saveStrLen; count++) {
+            final String tempStr = String.valueOf(saveChar).repeat(count + 1);
+            map.put(tempStr, map.getOrDefault(tempStr, 0) + saveStrLen - count);
         }
-    }
-}
 
-class Wrapper {
-    int value;
-    boolean visited;
-
-    public Wrapper(final int value, final boolean visited) {
-        this.value = value;
-        this.visited = visited;
+        return map.values().stream().mapToInt(Integer::intValue).sum();
     }
 }
