@@ -20,42 +20,40 @@ public class Quiz {
 }
 
 class Solution {
-    public void rotate(int[][] matrix) {
-        final int rowMax = matrix.length;
-        final int colMax = matrix[0].length;
+    private int maxSize;
 
-        int[][] matrix2 = new int[rowMax][colMax];
+    public void rotate(int[][] matrix) {
+        maxSize = matrix.length;
+
+        int[][] matrix2 = new int[maxSize][maxSize];
 
         for (int row = 0; row < matrix2.length; row++) {
             System.arraycopy(matrix[row], 0, matrix2[row], 0, matrix[row].length);
         }
 
-        for (int count = 0; count < rowMax / 2; count++) {
+        for (int count = 0; count < maxSize / 2; count++) {
             //바깥에서부터 시작
-            final int rowStartIdx = count;
-            final int colStartIdx = count;
-
-            final int rowMaxIdx = matrix.length - 1 - count;
-            final int colMaxIdx = matrix[0].length - 1 - count;
+            final int startIdx = count;
+            final int endIdx = maxSize - 1 - count;
 
             //row 시작 -> col 끝 | 시작에서부터
-            for (int col = colStartIdx; col <= colMaxIdx; col++) {
-                matrix2[col][colMaxIdx] = matrix[rowStartIdx][col];
+            for (int col = startIdx; col <= endIdx; col++) {
+                matrix2[col][endIdx] = matrix[startIdx][col];
             }
 
             //col 끝 -> row 끝 | 시작에서부터
-            for (int row = rowStartIdx; row <= rowMaxIdx; row++) {
-                matrix2[rowMaxIdx][colMaxIdx - row + count] = matrix[row][colMaxIdx];
+            for (int row = startIdx; row <= endIdx; row++) {
+                matrix2[endIdx][endIdx - row + count] = matrix[row][endIdx];
             }
 
             //row 끝 -> col 시작 | 끝에서부터
-            for (int col = colMaxIdx; col >= colStartIdx; col--) {
-                matrix2[col][colStartIdx] = matrix[rowMaxIdx][col];
+            for (int col = endIdx; col >= startIdx; col--) {
+                matrix2[col][startIdx] = matrix[endIdx][col];
             }
 
             //col 시작 -> row 시작 | 끝에서부터
-            for (int row = rowMaxIdx; row >= rowStartIdx; row--) {
-                matrix2[rowStartIdx][colMaxIdx - row + count] = matrix[row][colStartIdx];
+            for (int row = endIdx; row >= startIdx; row--) {
+                matrix2[startIdx][endIdx - row + count] = matrix[row][startIdx];
             }
         }
 
