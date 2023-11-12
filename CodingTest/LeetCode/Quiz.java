@@ -4,46 +4,63 @@ public class Quiz {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-//        System.out.println(solution.countAndSay(1)); //1
-        System.out.println(solution.countAndSay(2)); //11
-        System.out.println(solution.countAndSay(3)); //21
-        System.out.println(solution.countAndSay(4)); //1211
+//        final int[][] matrix = {{1, 2}, {3, 4}};
+//        final int[][] matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+//        solution.rotate(matrix);
+
+        final int[][] matrix2 = {
+                {5, 1, 9, 11},
+                {2, 4, 8, 10},
+                {13, 3, 6, 7},
+                {15, 14, 12, 16}
+        };
+
+        solution.rotate(matrix2);
     }
 }
 
 class Solution {
-    public String countAndSay(int n) {
-        if (n == 1) {
-            return "1";
+    public void rotate(int[][] matrix) {
+        final int rowMax = matrix.length;
+        final int colMax = matrix[0].length;
+
+        int[][] matrix2 = new int[rowMax][colMax];
+
+        for (int row = 0; row < matrix2.length; row++) {
+            System.arraycopy(matrix[row], 0, matrix2[row], 0, matrix[row].length);
         }
 
-        final String sayString = countAndSay(n - 1);
+        for (int count = 0; count < rowMax / 2; count++) {
+            //바깥에서부터 시작
+            final int rowStartIdx = count;
+            final int colStartIdx = count;
 
-        StringBuilder result = new StringBuilder();
-        //sayString을 조작한다.
-        //  -subString으로 숫자를 확인하고, 개수를 센다.
-        int start = 0;
-        int count = 0;
-        for (int end = 0; end < sayString.length(); end++) {
-            if (sayString.charAt(start) == sayString.charAt(end)) {
-                //같은 문자이므로 기존 문자에 개수를 더한다.
-                count++;
-            } else {
-                //다른 문자로 바꾸기 전에 기존 문자를 활용하여 계산
-                result.append(makeString(sayString, start, count));
+            final int rowMaxIdx = matrix.length - 1 - count;
+            final int colMaxIdx = matrix[0].length - 1 - count;
 
-                //새로운 문자이므로 초기화
-                start = end;
-                count = 1;
+            //row 시작 -> col 끝 | 시작에서부터
+            for (int col = colStartIdx; col <= colMaxIdx; col++) {
+                matrix2[col][colMaxIdx] = matrix[rowStartIdx][col];
+            }
+
+            //col 끝 -> row 끝 | 시작에서부터
+            for (int row = rowStartIdx; row <= rowMaxIdx; row++) {
+                matrix2[rowMaxIdx][colMaxIdx - row + count] = matrix[row][colMaxIdx];
+            }
+
+            //row 끝 -> col 시작 | 끝에서부터
+            for (int col = colMaxIdx; col >= colStartIdx; col--) {
+                matrix2[col][colStartIdx] = matrix[rowMaxIdx][col];
+            }
+
+            //col 시작 -> row 시작 | 끝에서부터
+            for (int row = rowMaxIdx; row >= rowStartIdx; row--) {
+                matrix2[rowStartIdx][colMaxIdx - row + count] = matrix[row][colStartIdx];
             }
         }
-        //마지막에 계산이 안된 문자열을 고려하여 추가한다.
-        result.append(makeString(sayString, start, count));
 
-        return result.toString();
-    }
-
-    private String makeString(final String sayString, final int start, final int count) {
-        return "" + count + sayString.charAt(start);
+        for (int row = 0; row < matrix2.length; row++) {
+            System.arraycopy(matrix2[row], 0, matrix[row], 0, matrix2[row].length);
+        }
     }
 }
