@@ -18,7 +18,7 @@ public class Quiz {
 
 class Solution {
     public String sortVowels(String s) {
-        List<Vowel> vowels = new ArrayList<>();
+        List<Character> vowels = new ArrayList<>();
         List<Integer> indexs = new ArrayList<>();
         StringBuilder sb = new StringBuilder(s);
 
@@ -27,14 +27,14 @@ class Solution {
 
             if (isVowel(ch)) {
                 indexs.add(i);
-                vowels.add(new Vowel(ch));
+                vowels.add(ch);
             }
         }
 
         vowels.sort(null);
 
         for (int i = 0; i < indexs.size(); i++) {
-            sb.setCharAt(indexs.get(i), vowels.get(i).ch);
+            sb.setCharAt(indexs.get(i), vowels.get(i));
         }
 
         return sb.toString();
@@ -46,18 +46,5 @@ class Solution {
                 || Character.toLowerCase(ch) == 'i'
                 || Character.toLowerCase(ch) == 'o'
                 || Character.toLowerCase(ch) == 'u';
-    }
-
-    private class Vowel implements Comparable<Vowel> {
-        char ch;
-
-        public Vowel(final char ch) {
-            this.ch = ch;
-        }
-
-        @Override
-        public int compareTo(final Vowel o) {
-            return Character.compare(this.ch, o.ch);
-        }
     }
 }
