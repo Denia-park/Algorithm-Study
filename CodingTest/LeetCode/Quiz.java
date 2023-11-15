@@ -1,50 +1,34 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Quiz {
-    public static void main(String[] args) {
-        Solution solution = new Solution();
+    public static void main(final String[] args) {
+        final Solution solution = new Solution();
 
-        System.out.println(solution.sortVowels("lEetcOde").equals("lEOtcede"));
-        System.out.println(solution.sortVowels("lYmpH").equals("lYmpH"));
+        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{2, 2, 1, 2, 1}) == 2);
+        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{100, 1, 1000}) == 3);
+        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{1, 2, 3, 4, 5}) == 5);
+        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{15}) == 1);
     }
 }
 
-//permuation
-//자음 자리 유지
-//모음은 오름차순으로 정렬
-
 class Solution {
-    public String sortVowels(String s) {
-        List<Character> vowels = new ArrayList<>();
-        List<Integer> indexs = new ArrayList<>();
-        StringBuilder sb = new StringBuilder(s);
+    public int maximumElementAfterDecrementingAndRearranging(final int[] arr) {
+        if (arr.length == 1) {
+            return 1;
+        }
 
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
+        Arrays.sort(arr);
 
-            if (isVowel(ch)) {
-                indexs.add(i);
-                vowels.add(ch);
+        arr[0] = 1;
+
+        for (int i = 1; i < arr.length; i++) {
+            if (Math.abs(arr[i] - arr[i - 1]) > 1) {
+                arr[i] = arr[i - 1] + 1;
             }
         }
 
-        vowels.sort(null);
-
-        for (int i = 0; i < indexs.size(); i++) {
-            sb.setCharAt(indexs.get(i), vowels.get(i));
-        }
-
-        return sb.toString();
-    }
-
-    private boolean isVowel(final char ch) {
-        return Character.toLowerCase(ch) == 'a'
-                || Character.toLowerCase(ch) == 'e'
-                || Character.toLowerCase(ch) == 'i'
-                || Character.toLowerCase(ch) == 'o'
-                || Character.toLowerCase(ch) == 'u';
+        return arr[arr.length - 1];
     }
 }
