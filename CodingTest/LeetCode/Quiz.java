@@ -1,34 +1,51 @@
 package CodingTest.LeetCode;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{2, 2, 1, 2, 1}) == 2);
-        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{100, 1, 1000}) == 3);
-        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{1, 2, 3, 4, 5}) == 5);
-        System.out.println(solution.maximumElementAfterDecrementingAndRearranging(new int[]{15}) == 1);
+        System.out.println(solution.findDifferentBinaryString(new String[]{"01", "10"}));
+        System.out.println(solution.findDifferentBinaryString(new String[]{"111", "011", "001"}));
     }
 }
 
 class Solution {
-    public int maximumElementAfterDecrementingAndRearranging(final int[] arr) {
-        if (arr.length == 1) {
-            return 1;
+
+    private Set<String> stringSet;
+    private int length;
+    private String answer;
+
+    public String findDifferentBinaryString(final String[] nums) {
+        stringSet = Arrays.stream(nums)
+                .collect(Collectors.toSet());
+
+        length = nums.length;
+
+        dfs("");
+
+        return answer;
+    }
+
+    private void dfs(final String str) {
+        if (answer != null) {
+            return;
         }
 
-        Arrays.sort(arr);
-
-        arr[0] = 1;
-
-        for (int i = 1; i < arr.length; i++) {
-            if (Math.abs(arr[i] - arr[i - 1]) > 1) {
-                arr[i] = arr[i - 1] + 1;
+        if (str.length() == length) {
+            if (!stringSet.contains(str)) {
+                answer = str;
+                return;
+            } else {
+                return;
             }
         }
 
-        return arr[arr.length - 1];
+        dfs(str + "0");
+
+        dfs(str + "1");
     }
 }
