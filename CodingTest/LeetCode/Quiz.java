@@ -1,51 +1,36 @@
 package CodingTest.LeetCode;
 
 import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.findDifferentBinaryString(new String[]{"01", "10"}));
-        System.out.println(solution.findDifferentBinaryString(new String[]{"111", "011", "001"}));
+        System.out.println(solution.minPairSum(new int[]{3, 5, 2, 3}));
+        System.out.println(solution.minPairSum(new int[]{3, 5, 4, 2, 4, 6}));
+        System.out.println(solution.minPairSum(new int[]{4, 1, 5, 1, 2, 5, 1, 5, 5, 4}));
     }
 }
 
 class Solution {
+    //정렬
+    public int minPairSum(final int[] nums) {
+        Arrays.sort(nums);
 
-    private Set<String> stringSet;
-    private int length;
-    private String answer;
+        int start = 0;
+        int end = nums.length - 1;
+        int maxValue = -1;
+        while (start < end) {
+            final int curValue = nums[start] + nums[end];
 
-    public String findDifferentBinaryString(final String[] nums) {
-        stringSet = Arrays.stream(nums)
-                .collect(Collectors.toSet());
-
-        length = nums.length;
-
-        dfs("");
-
-        return answer;
-    }
-
-    private void dfs(final String str) {
-        if (answer != null) {
-            return;
-        }
-
-        if (str.length() == length) {
-            if (!stringSet.contains(str)) {
-                answer = str;
-                return;
-            } else {
-                return;
+            if (curValue > maxValue) {
+                maxValue = curValue;
             }
+
+            start++;
+            end--;
         }
 
-        dfs(str + "0");
-
-        dfs(str + "1");
+        return maxValue;
     }
 }
