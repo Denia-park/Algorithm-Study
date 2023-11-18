@@ -6,31 +6,30 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.minPairSum(new int[]{3, 5, 2, 3}));
-        System.out.println(solution.minPairSum(new int[]{3, 5, 4, 2, 4, 6}));
-        System.out.println(solution.minPairSum(new int[]{4, 1, 5, 1, 2, 5, 1, 5, 5, 4}));
+        System.out.println(solution.maxFrequency(new int[]{1, 2, 4}, 5));
+        System.out.println(solution.maxFrequency(new int[]{1, 4, 8, 13}, 5));
+        System.out.println(solution.maxFrequency(new int[]{3, 9, 6}, 2));
     }
 }
 
 class Solution {
-    //정렬
-    public int minPairSum(final int[] nums) {
+    public int maxFrequency(final int[] nums, int k) {
         Arrays.sort(nums);
 
-        int start = 0;
-        int end = nums.length - 1;
-        int maxValue = -1;
-        while (start < end) {
-            final int curValue = nums[start] + nums[end];
+        int count = 1;
 
-            if (curValue > maxValue) {
-                maxValue = curValue;
+        for (int i = 1; i < nums.length; i++) {
+            final int curValue = nums[i];
+            final int preValue = nums[i - 1];
+
+            final int minusValue = (curValue - preValue) * count;
+
+            if (minusValue <= k) {
+                count++;
+                k -= minusValue;
             }
-
-            start++;
-            end--;
         }
 
-        return maxValue;
+        return count;
     }
 }
