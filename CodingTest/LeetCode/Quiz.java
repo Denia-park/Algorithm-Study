@@ -13,23 +13,23 @@ public class Quiz {
 }
 
 class Solution {
-    public int maxFrequency(final int[] nums, int k) {
+    public int maxFrequency(final int[] nums, final int k) {
         Arrays.sort(nums);
 
-        int count = 1;
+        int maxFrequency = 0;
+        long currentSum = 0;
 
-        for (int i = 1; i < nums.length; i++) {
-            final int curValue = nums[i];
-            final int preValue = nums[i - 1];
+        int left = 0;
+        for (int right = 0; right < nums.length; right++) {
+            currentSum += nums[right];
 
-            final int minusValue = (curValue - preValue) * count;
-
-            if (minusValue <= k) {
-                count++;
-                k -= minusValue;
+            while (currentSum + k < (long) nums[right] * (right - left + 1)) {
+                currentSum -= nums[left++];
             }
+
+            maxFrequency = Math.max(maxFrequency, (right - left + 1));
         }
 
-        return count;
+        return maxFrequency;
     }
 }
