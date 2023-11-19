@@ -18,13 +18,10 @@ class Solution {
 
         Arrays.sort(nums);
 
-        for (int i = nums.length - 1; i > 0; i--) {
-            final int num = nums[i];
-            final int preNum = nums[i - 1];
-
-            if (num != preNum) {
-                final int changeCount = nums.length - i;
-                count += changeCount;
+        final int numsLength = nums.length;
+        for (int i = numsLength - 1; i > 0; i--) {
+            if (nums[i] != nums[i - 1]) {
+                count += numsLength - i;
             }
         }
 
