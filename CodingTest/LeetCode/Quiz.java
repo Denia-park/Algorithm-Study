@@ -1,35 +1,44 @@
 package CodingTest.LeetCode;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.maxFrequency(new int[]{1, 2, 4}, 5));
-        System.out.println(solution.maxFrequency(new int[]{1, 4, 8, 13}, 5));
-        System.out.println(solution.maxFrequency(new int[]{3, 9, 6}, 2));
+        System.out.println(solution.reductionOperations(new int[]{5, 1, 3}));
+        System.out.println(solution.reductionOperations(new int[]{1, 1, 1}));
+        System.out.println(solution.reductionOperations(new int[]{1, 1, 2, 2, 3}));
     }
 }
 
 class Solution {
-    public int maxFrequency(final int[] nums, final int k) {
+    public int reductionOperations(final int[] nums) {
+        int count = 0;
+
         Arrays.sort(nums);
 
-        int maxFrequency = 0;
-        long currentSum = 0;
+        final Stack<Integer> stack = new Stack<>();
 
-        int left = 0;
-        for (int right = 0; right < nums.length; right++) {
-            currentSum += nums[right];
+        for (int i = nums.length - 1; i >= 0; i--) {
+            final int num = nums[i];
 
-            while (currentSum + k < (long) nums[right] * (right - left + 1)) {
-                currentSum -= nums[left++];
+            if (stack.isEmpty()) {
+                stack.push(num);
+                continue;
             }
 
-            maxFrequency = Math.max(maxFrequency, (right - left + 1));
+            final Integer peek = stack.peek();
+            if (num == peek) {
+                stack.push(num);
+                continue;
+            }
+
+            count += stack.size();
+            stack.push(num);
         }
 
-        return maxFrequency;
+        return count;
     }
 }
