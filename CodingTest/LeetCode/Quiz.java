@@ -1,7 +1,6 @@
 package CodingTest.LeetCode;
 
 import java.util.Arrays;
-import java.util.Stack;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -19,24 +18,14 @@ class Solution {
 
         Arrays.sort(nums);
 
-        final Stack<Integer> stack = new Stack<>();
-
-        for (int i = nums.length - 1; i >= 0; i--) {
+        for (int i = nums.length - 1; i > 0; i--) {
             final int num = nums[i];
+            final int preNum = nums[i - 1];
 
-            if (stack.isEmpty()) {
-                stack.push(num);
-                continue;
+            if (num != preNum) {
+                final int changeCount = nums.length - i;
+                count += changeCount;
             }
-
-            final Integer peek = stack.peek();
-            if (num == peek) {
-                stack.push(num);
-                continue;
-            }
-
-            count += stack.size();
-            stack.push(num);
         }
 
         return count;
