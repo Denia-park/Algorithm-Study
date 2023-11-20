@@ -8,54 +8,48 @@ public class Quiz {
     }
 }
 
-//순서대로
-//모든 집을 들를 필요는 없다.
-//한번에 하나의 트럭만 이동이 가능하다.
+//1. 모든 쓰레기들을 줍는데 걸리는 시간은 garbage 문자열 배열의 모든 문자열 길이의 합과 같다.
+//2. 각 트럭은 본인 종류의 쓰레기가 위치하는 마지막 장소만 알면 트럭의 이동시간을 계산할 수 있다.
 class Solution {
-    private final String[] garbageType = new String[]{"M", "P", "G"};
-    private int[] gTravel;
-    private String[] gGarbage;
+    private static final int METAL = 0, PAPER = 1, GARBAGE = 2;
+    private final int[] lastIndex = new int[3];
 
     public int garbageCollection(final String[] garbage, final int[] travel) {
-        gTravel = travel;
-        gGarbage = garbage;
         int result = 0;
 
-        //쓰레기 종류 별로 차가 순회한다.
-        for (final String curType : garbageType) {
-            result += collectGarbage(curType);
+        //모든 쓰레기를 줍는데 걸리는 시간을 구한다.
+        int homeIdx = 0;
+        for (final String str : garbage) {
+            result += str.length();
+
+            //해당 하는 쓰레기를 처리하러 트럭이 어느집 까지 가야하는지 파악한다.
+            for (int charIdx = 0; charIdx < str.length(); charIdx++) {
+                final char curChar = str.charAt(charIdx);
+
+                if (curChar == 'M') {
+                    lastIndex[METAL] = homeIdx;
+                } else if (curChar == 'P') {
+                    lastIndex[PAPER] = homeIdx;
+                } else if (curChar == 'G') {
+                    lastIndex[GARBAGE] = homeIdx;
+                }
+            }
+
+            homeIdx++;
         }
 
-        return result;
-    }
+        //거리 값을 계산하기 쉽게 변경한다.
+        //거리를 집끼리의 간견이 아니라 해당 하는 집까지 가는데 걸리는 총 시간으로 바꾼다.
+        for (int i = 1; i < travel.length; i++) {
+            travel[i] = travel[i] + travel[i - 1];
+        }
 
-    private int collectGarbage(final String curType) {
-        int result = 0;
-
-        int tempDistance = 0;
-
-        for (int homeIdx = 0; homeIdx < gGarbage.length; homeIdx++) {
-            final String curHome = gGarbage[homeIdx];
-            int garbageCount = 0;
-
-            int index = curHome.indexOf(curType);
-            while (index != -1) {
-                garbageCount++;
-                index = curHome.indexOf(curType, index + 1);
+        for (final int index : lastIndex) {
+            if (index == 0) {
+                continue;
             }
 
-            if (garbageCount > 0) {
-                //거리 더하기.
-                result += tempDistance;
-                tempDistance = 0;
-            }
-
-            result += garbageCount;
-
-            if (homeIdx < gGarbage.length - 1) {
-                //거리 더해주기 - 쓰레기가 존재하는지 안하는지 모르므로 일단 저장만 해둔다.
-                tempDistance += gTravel[homeIdx];
-            }
+            result += travel[index - 1];
         }
 
         return result;
