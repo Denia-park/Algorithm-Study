@@ -13,10 +13,10 @@ public class Quiz {
 }
 
 class Solution {
-    private final double MOD = (Math.pow(10, 9) + 7);
+    private final int MOD = (int) (Math.pow(10, 9) + 7);
 
     public int countNicePairs(final int[] nums) {
-        long answer = 0;
+        int answer = 0;
 
         //x + rev(y) == y + rev(x) -> x - rev(x) == y - rev(y) -> x - rev(x)가 같은 값 끼리 연산을 해야함
         final int[] newArr = new int[nums.length];
@@ -26,26 +26,14 @@ class Solution {
 
         final Map<Integer, Integer> map = new HashMap<>();
         for (final int value : newArr) {
-            map.put(value, map.getOrDefault(value, 0) + 1);
+            final Integer preValue = map.getOrDefault(value, 0);
+
+            answer = (answer % MOD + preValue % MOD) % MOD;
+
+            map.put(value, preValue + 1);
         }
 
-        for (final Integer value : map.values()) {
-            if (value < 2) {
-                continue;
-            }
-
-            answer = (long) ((answer % MOD + getCombination(value) % MOD) % MOD);
-        }
-
-        return (int) (answer % (int) MOD);
-    }
-
-    private long getCombination(final Integer value) {
-        if (value % 2 == 0) {
-            return (long) (((value / 2) % MOD * (value - 1) % MOD) % MOD);
-        } else {
-            return (long) (((value) % MOD * ((value - 1) / 2) % MOD) % MOD);
-        }
+        return answer;
     }
 
     private int rev(final int num) {
