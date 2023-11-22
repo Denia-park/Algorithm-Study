@@ -25,6 +25,20 @@ public class Quiz {
         );
 
         System.out.println("diagonalOrder1 = " + Arrays.toString(diagonalOrder1));
+
+        final int[] diagonalOrder2 = solution.findDiagonalOrder(List.of(
+                List.of(1, 2, 3, 4, 5, 6))
+        );
+
+        System.out.println("diagonalOrder2 = " + Arrays.toString(diagonalOrder2));
+
+        final int[] diagonalOrder3 = solution.findDiagonalOrder(List.of(
+                List.of(1, 2, 3, 4, 5, 6),
+                List.of(7))
+        );
+
+        System.out.println("diagonalOrder2 = " + Arrays.toString(diagonalOrder3));
+
     }
 }
 
@@ -52,6 +66,10 @@ class Solution {
             if (row == 0) {
                 if (rowCount < rowMax) {
                     rowCount++;
+                }
+
+                if (row == rowMax) {
+                    addRow++;
                 }
 
                 row = rowCount;
