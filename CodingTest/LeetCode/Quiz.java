@@ -44,30 +44,30 @@ class Solution {
     public int[] findDiagonalOrder(final List<List<Integer>> nums) {
         final List<Integer> answer = new ArrayList<>();
 
-        final Map<Integer, Stack<Integer>> map = new HashMap<>();
+        final Map<Integer, Deque<Integer>> map = new HashMap<>();
 
         for (int row = 0; row < nums.size(); row++) {
             for (int col = 0; col < nums.get(row).size(); col++) {
                 final int key = row + col;
 
-                Stack<Integer> stack = map.get(key);
+                Deque<Integer> deque = map.get(key);
 
                 if (map.get(key) == null) {
-                    stack = new Stack<>();
+                    deque = new ArrayDeque<>();
 
-                    map.put(key, stack);
+                    map.put(key, deque);
                 }
 
-                stack.push(nums.get(row).get(col));
+                deque.push(nums.get(row).get(col));
 
-                map.put(key, stack);
+                map.put(key, deque);
             }
         }
 
         map.keySet().stream()
                 .sorted(Comparator.naturalOrder())
                 .forEach(key -> {
-                    final Stack<Integer> integers = map.get(key);
+                    final Deque<Integer> integers = map.get(key);
 
                     while (!integers.isEmpty()) {
                         answer.add(integers.pop());
