@@ -1,8 +1,6 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -46,44 +44,35 @@ class Solution {
     public int[] findDiagonalOrder(final List<List<Integer>> nums) {
         final List<Integer> answer = new ArrayList<>();
 
-        final int totalCount = nums.stream().mapToInt(List::size).sum();
-        final int rowMax = nums.size() - 1;
-        int addRow = 0;
+        final Map<Integer, Stack<Integer>> map = new HashMap<>();
 
-        int row = 0;
-        int col = 0;
+        for (int row = 0; row < nums.size(); row++) {
+            for (int col = 0; col < nums.get(row).size(); col++) {
+                final int key = row + col;
 
-        int rowCount = 0;
+                Stack<Integer> stack = map.get(key);
 
-        while (answer.size() < totalCount) {
-            try {
-                final int value = nums.get(row).get(col);
+                if (map.get(key) == null) {
+                    stack = new Stack<>();
 
-                answer.add(value);
-            } catch (final Exception ignored) {
-            }
-
-            if (row == 0) {
-                if (rowCount < rowMax) {
-                    rowCount++;
+                    map.put(key, stack);
                 }
 
-                if (row == rowMax) {
-                    addRow++;
-                }
+                stack.push(nums.get(row).get(col));
 
-                row = rowCount;
-                col = addRow;
-                continue;
+                map.put(key, stack);
             }
-
-            if (row == rowMax) {
-                addRow++;
-            }
-
-            row--;
-            col++;
         }
+
+        map.keySet().stream()
+                .sorted(Comparator.naturalOrder())
+                .forEach(key -> {
+                    final Stack<Integer> integers = map.get(key);
+
+                    while (!integers.isEmpty()) {
+                        answer.add(integers.pop());
+                    }
+                });
 
         return answer.stream().mapToInt(Integer::intValue).toArray();
     }
