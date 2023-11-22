@@ -1,6 +1,7 @@
 package CodingTest.LeetCode;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -42,11 +43,14 @@ public class Quiz {
 
 class Solution {
     public int[] findDiagonalOrder(final List<List<Integer>> nums) {
-        final List<Integer> answer = new ArrayList<>();
+        final int totalCount = nums.stream().mapToInt(List::size).sum();
+        final int[] answer = new int[totalCount];
 
         final Map<Integer, Deque<Integer>> map = new HashMap<>();
 
         for (int row = 0; row < nums.size(); row++) {
+            final List<Integer> rows = nums.get(row);
+
             for (int col = 0; col < nums.get(row).size(); col++) {
                 final int key = row + col;
 
@@ -58,22 +62,26 @@ class Solution {
                     map.put(key, deque);
                 }
 
-                deque.push(nums.get(row).get(col));
+                deque.push(rows.get(col));
 
                 map.put(key, deque);
             }
         }
 
-        map.keySet().stream()
+        int idx = 0;
+
+        final List<Integer> keys = map.keySet().stream()
                 .sorted(Comparator.naturalOrder())
-                .forEach(key -> {
-                    final Deque<Integer> integers = map.get(key);
+                .collect(Collectors.toList());
 
-                    while (!integers.isEmpty()) {
-                        answer.add(integers.pop());
-                    }
-                });
+        for (final Integer key : keys) {
+            final Deque<Integer> integers = map.get(key);
 
-        return answer.stream().mapToInt(Integer::intValue).toArray();
+            while (!integers.isEmpty()) {
+                answer[idx++] = integers.pop();
+            }
+        }
+
+        return answer;
     }
 }
