@@ -1,87 +1,57 @@
 package CodingTest.LeetCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        final int[] diagonalOrder = solution.findDiagonalOrder(List.of(
-                List.of(1, 2, 3),
-                List.of(4, 5, 6),
-                List.of(7, 8, 9))
-        );
-
-        System.out.println("diagonalOrder = " + Arrays.toString(diagonalOrder));
-
-        final int[] diagonalOrder1 = solution.findDiagonalOrder(List.of(
-                List.of(1, 2, 3, 4, 5),
-                List.of(6, 7),
-                List.of(8),
-                List.of(9, 10, 11),
-                List.of(12, 13, 14, 15, 16))
-        );
-
-        System.out.println("diagonalOrder1 = " + Arrays.toString(diagonalOrder1));
-
-        final int[] diagonalOrder2 = solution.findDiagonalOrder(List.of(
-                List.of(1, 2, 3, 4, 5, 6))
-        );
-
-        System.out.println("diagonalOrder2 = " + Arrays.toString(diagonalOrder2));
-
-        final int[] diagonalOrder3 = solution.findDiagonalOrder(List.of(
-                List.of(1, 2, 3, 4, 5, 6),
-                List.of(7))
-        );
-
-        System.out.println("diagonalOrder2 = " + Arrays.toString(diagonalOrder3));
-
+        System.out.println(solution.checkArithmeticSubarrays(new int[]{4, 6, 5, 9, 3, 7}, new int[]{0, 0, 2}, new int[]{2, 3, 5}));
     }
 }
 
 class Solution {
-    public int[] findDiagonalOrder(final List<List<Integer>> nums) {
-        final int totalCount = nums.stream().mapToInt(List::size).sum();
-        final int[] answer = new int[totalCount];
-
-        final Map<Integer, Deque<Integer>> map = new HashMap<>();
-
-        for (int row = 0; row < nums.size(); row++) {
-            final List<Integer> rows = nums.get(row);
-
-            for (int col = 0; col < nums.get(row).size(); col++) {
-                final int key = row + col;
-
-                Deque<Integer> deque = map.get(key);
-
-                if (map.get(key) == null) {
-                    deque = new ArrayDeque<>();
-
-                    map.put(key, deque);
-                }
-
-                deque.push(rows.get(col));
-
-                map.put(key, deque);
-            }
-        }
-
-        int idx = 0;
-
-        final List<Integer> keys = map.keySet().stream()
-                .sorted(Comparator.naturalOrder())
+    public List<Boolean> checkArithmeticSubarrays(final int[] nums, final int[] l, final int[] r) {
+        final List<Boolean> booleans = new ArrayList<>();
+        final List<Integer> numsList = Arrays.stream(nums)
+                .boxed()
                 .collect(Collectors.toList());
 
-        for (final Integer key : keys) {
-            final Deque<Integer> integers = map.get(key);
+        for (int i = 0; i < l.length; i++) {
+            final int leftStartInclude = l[i];
+            final int rightEndInclude = r[i];
 
-            while (!integers.isEmpty()) {
-                answer[idx++] = integers.pop();
+            final List<Integer> integers = subList(numsList, leftStartInclude, rightEndInclude);
+
+            booleans.add(isArithmeticSequence(integers));
+        }
+
+        return booleans;
+    }
+
+    private List<Integer> subList(final List<Integer> numsList, final int leftStartInclude, final int rightEndExclude) {
+        final List<Integer> returnList = new ArrayList<>();
+
+        for (int i = leftStartInclude; i <= rightEndExclude; i++) {
+            returnList.add(numsList.get(i));
+        }
+
+        return returnList;
+    }
+
+    private Boolean isArithmeticSequence(final List<Integer> integers) {
+        integers.sort(null);
+        final int sub = integers.get(1) - integers.get(0);
+
+        for (int i = 2; i < integers.size(); i++) {
+            if (integers.get(i) - integers.get(i - 1) != sub) {
+                return false;
             }
         }
 
-        return answer;
+        return true;
     }
 }
