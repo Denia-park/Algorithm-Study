@@ -1,57 +1,37 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Deque;
 import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-
-        System.out.println(solution.checkArithmeticSubarrays(new int[]{4, 6, 5, 9, 3, 7}, new int[]{0, 0, 2}, new int[]{2, 3, 5}));
+        final int answer1 = solution.maxCoins(new int[]{2, 4, 1, 2, 7, 8});
+        System.out.println(answer1 + " , " + (answer1 == 9));
+        final int answer2 = solution.maxCoins(new int[]{9, 8, 7, 6, 5, 1, 2, 3, 4});
+        System.out.println(answer2 + ", " + (answer2 == 18));
     }
 }
 
 class Solution {
-    public List<Boolean> checkArithmeticSubarrays(final int[] nums, final int[] l, final int[] r) {
-        final List<Boolean> booleans = new ArrayList<>();
-        final List<Integer> numsList = Arrays.stream(nums)
+    public int maxCoins(final int[] piles) {
+        final Deque<Integer> dq = Arrays.stream(piles)
                 .boxed()
-                .collect(Collectors.toList());
+                .sorted()
+                .collect(Collectors.toCollection(ArrayDeque::new));
 
-        for (int i = 0; i < l.length; i++) {
-            final int leftStartInclude = l[i];
-            final int rightEndInclude = r[i];
+        int answer = 0;
 
-            final List<Integer> integers = subList(numsList, leftStartInclude, rightEndInclude);
+        while (!dq.isEmpty()) {
+            final int maxValue = dq.pollLast();
+            final int secondMaxValue = dq.pollLast();
+            final int minValue = dq.pollFirst();
 
-            booleans.add(isArithmeticSequence(integers));
+            answer += secondMaxValue;
         }
 
-        return booleans;
-    }
-
-    private List<Integer> subList(final List<Integer> numsList, final int leftStartInclude, final int rightEndExclude) {
-        final List<Integer> returnList = new ArrayList<>();
-
-        for (int i = leftStartInclude; i <= rightEndExclude; i++) {
-            returnList.add(numsList.get(i));
-        }
-
-        return returnList;
-    }
-
-    private Boolean isArithmeticSequence(final List<Integer> integers) {
-        integers.sort(null);
-        final int sub = integers.get(1) - integers.get(0);
-
-        for (int i = 2; i < integers.size(); i++) {
-            if (integers.get(i) - integers.get(i - 1) != sub) {
-                return false;
-            }
-        }
-
-        return true;
+        return answer;
     }
 }
