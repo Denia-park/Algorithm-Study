@@ -2,8 +2,6 @@ package CodingTest.LeetCode;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -17,19 +15,18 @@ public class Quiz {
 
 class Solution {
     public int maxCoins(final int[] piles) {
-        final Deque<Integer> dq = Arrays.stream(piles)
-                .boxed()
-                .sorted()
-                .collect(Collectors.toCollection(ArrayDeque::new));
+        Arrays.sort(piles);
+        final ArrayDeque<Integer> dq = new ArrayDeque<>();
+        for (final int pile : piles) {
+            dq.add(pile);
+        }
 
         int answer = 0;
 
         while (!dq.isEmpty()) {
-            final int maxValue = dq.pollLast();
-            final int secondMaxValue = dq.pollLast();
-            final int minValue = dq.pollFirst();
-
-            answer += secondMaxValue;
+            dq.pollLast();
+            answer += dq.pollLast();
+            dq.pollFirst();
         }
 
         return answer;
