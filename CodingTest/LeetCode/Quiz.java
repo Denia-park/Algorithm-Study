@@ -1,34 +1,47 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        final int answer1 = solution.maxCoins(new int[]{2, 4, 1, 2, 7, 8});
-        System.out.println(answer1 + " , " + (answer1 == 9));
-        final int answer2 = solution.maxCoins(new int[]{9, 8, 7, 6, 5, 1, 2, 3, 4});
-        System.out.println(answer2 + ", " + (answer2 == 18));
+        System.out.println(Arrays.toString(solution.getSumAbsoluteDifferences(new int[]{2, 3, 5})));
+        System.out.println(Arrays.toString(solution.getSumAbsoluteDifferences(new int[]{1, 4, 6, 8, 10})));
     }
 }
 
 class Solution {
-    public int maxCoins(final int[] piles) {
-        Arrays.sort(piles);
-        final ArrayDeque<Integer> dq = new ArrayDeque<>();
-        for (final int pile : piles) {
-            dq.add(pile);
+    //처음에 한번 0 인덱스를 기준으로, AbsoluteSum을 구한다.
+    //index를 옮기면서
+    //sum에 index * (nums[index + 1] - nums[index]) 더한다.
+    //sum에서 (total - index) * (nums[index + 1] - nums[index]) 뺀다.
+    public int[] getSumAbsoluteDifferences(final int[] nums) {
+        final int totalLength = nums.length;
+        final int[] result = new int[totalLength];
+
+        int total = initAbsoluteSumAt0Idx(nums);
+
+        result[0] = total;
+
+        for (int index = 1; index < totalLength; index++) {
+            final int diff = nums[index] - nums[index - 1];
+
+            total += ((index * diff) - ((totalLength - index) * diff));
+
+            result[index] = total;
         }
 
-        int answer = 0;
+        return result;
 
-        while (!dq.isEmpty()) {
-            dq.pollLast();
-            answer += dq.pollLast();
-            dq.pollFirst();
+    }
+
+    private int initAbsoluteSumAt0Idx(final int[] nums) {
+        int total = 0;
+
+        for (int i = 1; i < nums.length; i++) {
+            total += (nums[i] - nums[0]);
         }
 
-        return answer;
+        return total;
     }
 }
