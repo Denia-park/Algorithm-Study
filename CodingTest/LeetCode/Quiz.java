@@ -5,43 +5,51 @@ import java.util.Arrays;
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        System.out.println(Arrays.toString(solution.getSumAbsoluteDifferences(new int[]{2, 3, 5})));
-        System.out.println(Arrays.toString(solution.getSumAbsoluteDifferences(new int[]{1, 4, 6, 8, 10})));
+        System.out.println(solution.largestSubmatrix(new int[][]{{0, 0, 1}, {1, 1, 1}, {1, 0, 1}}));
     }
 }
 
 class Solution {
-    //처음에 한번 0 인덱스를 기준으로, AbsoluteSum을 구한다.
-    //index를 옮기면서
-    //sum에 index * (nums[index + 1] - nums[index]) 더한다.
-    //sum에서 (total - index) * (nums[index + 1] - nums[index]) 뺀다.
-    public int[] getSumAbsoluteDifferences(final int[] nums) {
-        final int totalLength = nums.length;
-        final int[] result = new int[totalLength];
+    private int answer;
 
-        int total = initAbsoluteSumAt0Idx(nums);
+    //각 row의 값들을 이전 줄 기준으로 height를 잰다. (0이 나오면 초기화, 즉 연속된 최대 높이를 구한다.)
+    //height를 기준으로 sort를 하고, col을 옮기면서 최대 직사각형 너비값을 구한다.
+    public int largestSubmatrix(final int[][] matrix) {
+        this.answer = 0;
 
-        result[0] = total;
+        //연속된 height 값 구하기
+        calculateHeight(matrix);
 
-        for (int index = 1; index < totalLength; index++) {
-            final int diff = nums[index] - nums[index - 1];
-
-            total += ((index * diff) - ((totalLength - index) * diff));
-
-            result[index] = total;
+        //MaxArea 구하기
+        for (int row = 0; row < matrix.length; row++) {
+            calculateMaxArea(matrix, row);
         }
 
-        return result;
-
+        return this.answer;
     }
 
-    private int initAbsoluteSumAt0Idx(final int[] nums) {
-        int total = 0;
+    private void calculateMaxArea(final int[][] matrix, final int rowIdx) {
+        Arrays.sort(matrix[rowIdx]);
+        for (int colIdx = 0; colIdx < matrix[rowIdx].length; colIdx++) {
+            final int curHeight = matrix[rowIdx][colIdx];
+            if (curHeight == 0) {
+                continue;
+            }
 
-        for (int i = 1; i < nums.length; i++) {
-            total += (nums[i] - nums[0]);
+            final int width = matrix[rowIdx].length - colIdx;
+            this.answer = Math.max(this.answer, width * curHeight);
         }
+    }
 
-        return total;
+    private void calculateHeight(final int[][] matrix) {
+        for (int row = 1; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
+                if (matrix[row][col] == 1) {
+                    matrix[row][col] = matrix[row - 1][col] + 1;
+                } else {
+                    matrix[row][col] = 0;
+                }
+            }
+        }
     }
 }
