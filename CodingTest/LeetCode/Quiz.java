@@ -1,55 +1,79 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        System.out.println(solution.largestSubmatrix(new int[][]{{0, 0, 1}, {1, 1, 1}, {1, 0, 1}}));
+        System.out.println(solution.knightDialer(1));
+        System.out.println(solution.knightDialer(2));
+        System.out.println(solution.knightDialer(3));
+        System.out.println(solution.knightDialer(10));
+        System.out.println(solution.knightDialer(3131));
     }
 }
 
 class Solution {
-    private int answer;
+    private final int MOD = 1_000_000_000 + 7;
 
-    //각 row의 값들을 이전 줄 기준으로 height를 잰다. (0이 나오면 초기화, 즉 연속된 최대 높이를 구한다.)
-    //height를 기준으로 sort를 하고, col을 옮기면서 최대 직사각형 너비값을 구한다.
-    public int largestSubmatrix(final int[][] matrix) {
-        this.answer = 0;
-
-        //연속된 height 값 구하기
-        calculateHeight(matrix);
-
-        //MaxArea 구하기
-        for (int row = 0; row < matrix.length; row++) {
-            calculateMaxArea(matrix, row);
+    public int knightDialer(final int n) {
+        if (n == 1) {
+            return 10;
         }
 
-        return this.answer;
-    }
+        long result = 0;
 
-    private void calculateMaxArea(final int[][] matrix, final int rowIdx) {
-        Arrays.sort(matrix[rowIdx]);
-        for (int colIdx = 0; colIdx < matrix[rowIdx].length; colIdx++) {
-            final int curHeight = matrix[rowIdx][colIdx];
-            if (curHeight == 0) {
-                continue;
-            }
+        long[] dialerCount = new long[]{1, 1, 1, 1, 1, 0, 1, 1, 1, 1};
 
-            final int width = matrix[rowIdx].length - colIdx;
-            this.answer = Math.max(this.answer, width * curHeight);
-        }
-    }
+        for (int i = 1; i < n - 1; i++) {
+            final long[] temp = new long[10];
+            for (int j = 0; j < 10; j++) {
+                final long count = dialerCount[j];
+                if (count == 0) {
+                    continue;
+                }
 
-    private void calculateHeight(final int[][] matrix) {
-        for (int row = 1; row < matrix.length; row++) {
-            for (int col = 0; col < matrix[row].length; col++) {
-                if (matrix[row][col] == 1) {
-                    matrix[row][col] = matrix[row - 1][col] + 1;
-                } else {
-                    matrix[row][col] = 0;
+                if (j == 0) {
+                    temp[4] = (temp[4] % MOD + (count) % MOD) % MOD;
+                    temp[6] = (temp[6] % MOD + (count) % MOD) % MOD;
+                } else if (j == 1) {
+                    temp[6] = (temp[6] % MOD + (count) % MOD) % MOD;
+                    temp[8] = (temp[8] % MOD + (count) % MOD) % MOD;
+                } else if (j == 2) {
+                    temp[7] = (temp[7] % MOD + (count) % MOD) % MOD;
+                    temp[9] = (temp[9] % MOD + (count) % MOD) % MOD;
+                } else if (j == 3) {
+                    temp[4] = (temp[4] % MOD + (count) % MOD) % MOD;
+                    temp[8] = (temp[8] % MOD + (count) % MOD) % MOD;
+                } else if (j == 4) {
+                    temp[0] = (temp[0] % MOD + (count) % MOD) % MOD;
+                    temp[3] = (temp[3] % MOD + (count) % MOD) % MOD;
+                    temp[9] = (temp[9] % MOD + (count) % MOD) % MOD;
+                } else if (j == 6) {
+                    temp[0] = (temp[0] % MOD + (count) % MOD) % MOD;
+                    temp[1] = (temp[1] % MOD + (count) % MOD) % MOD;
+                    temp[7] = (temp[7] % MOD + (count) % MOD) % MOD;
+                } else if (j == 7) {
+                    temp[2] = (temp[2] % MOD + (count) % MOD) % MOD;
+                    temp[6] = (temp[6] % MOD + (count) % MOD) % MOD;
+                } else if (j == 8) {
+                    temp[1] = (temp[1] % MOD + (count) % MOD) % MOD;
+                    temp[3] = (temp[3] % MOD + (count) % MOD) % MOD;
+                } else if (j == 9) {
+                    temp[2] = (temp[2] % MOD + (count) % MOD) % MOD;
+                    temp[4] = (temp[4] % MOD + (count) % MOD) % MOD;
                 }
             }
+
+            dialerCount = temp;
         }
+
+        for (int i = 0; i < 10; i++) {
+            if (i == 4 || i == 6) {
+                result = ((result % MOD) + ((dialerCount[i] * 3) % MOD)) % MOD;
+            } else {
+                result = ((result % MOD) + ((dialerCount[i] * 2) % MOD)) % MOD;
+            }
+        }
+
+        return (int) (result % MOD);
     }
 }
