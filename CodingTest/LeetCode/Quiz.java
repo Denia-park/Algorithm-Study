@@ -32,34 +32,23 @@ class Solution {
                 }
 
                 if (j == 0) {
-                    temp[4] = (temp[4] % MOD + (count) % MOD) % MOD;
-                    temp[6] = (temp[6] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 4, 6);
                 } else if (j == 1) {
-                    temp[6] = (temp[6] % MOD + (count) % MOD) % MOD;
-                    temp[8] = (temp[8] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 6, 8);
                 } else if (j == 2) {
-                    temp[7] = (temp[7] % MOD + (count) % MOD) % MOD;
-                    temp[9] = (temp[9] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 7, 9);
                 } else if (j == 3) {
-                    temp[4] = (temp[4] % MOD + (count) % MOD) % MOD;
-                    temp[8] = (temp[8] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 4, 8);
                 } else if (j == 4) {
-                    temp[0] = (temp[0] % MOD + (count) % MOD) % MOD;
-                    temp[3] = (temp[3] % MOD + (count) % MOD) % MOD;
-                    temp[9] = (temp[9] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 0, 3, 9);
                 } else if (j == 6) {
-                    temp[0] = (temp[0] % MOD + (count) % MOD) % MOD;
-                    temp[1] = (temp[1] % MOD + (count) % MOD) % MOD;
-                    temp[7] = (temp[7] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 0, 1, 7);
                 } else if (j == 7) {
-                    temp[2] = (temp[2] % MOD + (count) % MOD) % MOD;
-                    temp[6] = (temp[6] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 2, 6);
                 } else if (j == 8) {
-                    temp[1] = (temp[1] % MOD + (count) % MOD) % MOD;
-                    temp[3] = (temp[3] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 1, 3);
                 } else if (j == 9) {
-                    temp[2] = (temp[2] % MOD + (count) % MOD) % MOD;
-                    temp[4] = (temp[4] % MOD + (count) % MOD) % MOD;
+                    calculate(temp, count, 2, 4);
                 }
             }
 
@@ -68,12 +57,18 @@ class Solution {
 
         for (int i = 0; i < 10; i++) {
             if (i == 4 || i == 6) {
-                result = ((result % MOD) + ((dialerCount[i] * 3) % MOD)) % MOD;
+                result = (result + ((dialerCount[i] * 3) % MOD)) % MOD;
             } else {
-                result = ((result % MOD) + ((dialerCount[i] * 2) % MOD)) % MOD;
+                result = (result + ((dialerCount[i] * 2) % MOD)) % MOD;
             }
         }
 
-        return (int) (result % MOD);
+        return (int) result;
+    }
+
+    private void calculate(final long[] temp, final long count, final int... indexs) {
+        for (final int index : indexs) {
+            temp[index] = (temp[index] + (count % MOD)) % MOD;
+        }
     }
 }
