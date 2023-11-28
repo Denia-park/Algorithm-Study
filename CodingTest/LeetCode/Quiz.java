@@ -6,9 +6,11 @@ import java.util.List;
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        System.out.println(solution.numberOfWays("SSPPSPS"));
-        System.out.println(solution.numberOfWays("PPSPSP"));
-        System.out.println(solution.numberOfWays("S"));
+        System.out.println(solution.numberOfWays("SSPPSPS") == 3);
+        System.out.println(solution.numberOfWays("PPSPSP") == 1);
+        System.out.println(solution.numberOfWays("S") == 0);
+        System.out.println(solution.numberOfWays("P") == 0);
+        System.out.println(solution.numberOfWays("SPPSSSSPPS") == 1);
     }
 }
 
@@ -33,7 +35,7 @@ class Solution {
             return 0;
         }
 
-        //앉는 자리가 2개 이하면, 1
+        //앉는 자리가 2개면, 1
         if (seatTotalCount == 2) {
             return 1;
         }
@@ -47,7 +49,7 @@ class Solution {
 
             divideCount = ((divideCount % MOD) * ((seatIndex - preSeatIndex) % MOD)) % MOD;
 
-            multiplesOf3Index += 3;
+            multiplesOf3Index += 2;
         }
 
         return (int) (divideCount % MOD);
