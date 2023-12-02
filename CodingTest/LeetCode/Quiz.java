@@ -1,5 +1,7 @@
 package CodingTest.LeetCode;
 
+import java.util.Arrays;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -15,19 +17,23 @@ class Solution {
         int answer = 0;
 
         for (final String tempWord : words) {
+            final int[] charsCountCopy = Arrays.copyOf(charsCount, charsCount.length);
+            final int length = tempWord.length();
             boolean isEnable = true;
 
-            final int[] tempWordCount = new int[26];
-            extractCharArray(tempWordCount, tempWord);
-            for (int j = 0; j < charsCount.length; j++) {
-                if (charsCount[j] < tempWordCount[j]) {
+            for (int j = 0; j < length; j++) {
+                final int charValue = tempWord.charAt(j) - 'a';
+
+                if (0 < charsCountCopy[charValue]) {
+                    charsCountCopy[charValue]--;
+                } else {
                     isEnable = false;
                     break;
                 }
             }
 
             if (isEnable) {
-                answer += tempWord.length();
+                answer += length;
             }
         }
 
