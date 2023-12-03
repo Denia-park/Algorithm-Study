@@ -1,48 +1,37 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        System.out.println(solution.countCharacters(new String[]{"cat", "bt", "hat", "tree"}, "atach"));
+        System.out.println(solution.minTimeToVisitAllPoints(new int[][]{{1, 1}, {3, 4}, {-1, 0}}));
     }
 }
 
 class Solution {
-    public int countCharacters(final String[] words, final String chars) {
-        final int[] charsCount = new int[26];
-        extractCharArray(charsCount, chars);
-
+    public int minTimeToVisitAllPoints(final int[][] points) {
         int answer = 0;
 
-        for (final String tempWord : words) {
-            final int[] charsCountCopy = Arrays.copyOf(charsCount, charsCount.length);
-            final int length = tempWord.length();
-            boolean isEnable = true;
+        for (int idx = 0; idx < points.length - 1; idx++) {
+            final int[] current = points[idx];
+            final int[] next = points[idx + 1];
 
-            for (int j = 0; j < length; j++) {
-                final int charValue = tempWord.charAt(j) - 'a';
+            final int diffX = Math.abs(next[0] - current[0]);
+            final int diffY = Math.abs(next[1] - current[1]);
 
-                if (0 < charsCountCopy[charValue]) {
-                    charsCountCopy[charValue]--;
-                } else {
-                    isEnable = false;
-                    break;
-                }
-            }
+            final int minDiff = Math.min(diffX, diffY);
+            final int maxDiff = Math.max(diffX, diffY);
 
-            if (isEnable) {
-                answer += length;
+            if (minDiff != 0) {
+                final int div = maxDiff / minDiff;
+                answer += div;
+
+                final int rest = maxDiff - div;
+                answer += rest;
+            } else {
+                answer += maxDiff;
             }
         }
 
         return answer;
-    }
-
-    private void extractCharArray(final int[] charsArray, final String string) {
-        for (int i = 0; i < string.length(); i++) {
-            charsArray[string.charAt(i) - 'a']++;
-        }
     }
 }
