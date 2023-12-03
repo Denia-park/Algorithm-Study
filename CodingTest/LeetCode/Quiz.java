@@ -10,26 +10,13 @@ public class Quiz {
 class Solution {
     public int minTimeToVisitAllPoints(final int[][] points) {
         int answer = 0;
+        final int length = points.length;
 
-        for (int idx = 0; idx < points.length - 1; idx++) {
+        for (int idx = 0; idx < length - 1; idx++) {
             final int[] current = points[idx];
             final int[] next = points[idx + 1];
 
-            final int diffX = Math.abs(next[0] - current[0]);
-            final int diffY = Math.abs(next[1] - current[1]);
-
-            final int minDiff = Math.min(diffX, diffY);
-            final int maxDiff = Math.max(diffX, diffY);
-
-            if (minDiff != 0) {
-                final int div = maxDiff / minDiff;
-                answer += div;
-
-                final int rest = maxDiff - div;
-                answer += rest;
-            } else {
-                answer += maxDiff;
-            }
+            answer += Math.max(Math.abs(next[0] - current[0]), Math.abs(next[1] - current[1]));
         }
 
         return answer;
