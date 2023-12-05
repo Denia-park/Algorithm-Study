@@ -3,33 +3,25 @@ package CodingTest.LeetCode;
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        System.out.println(solution.largestGoodInteger("6777133339"));
+        System.out.println(solution.numberOfMatches(7));
+        System.out.println(solution.numberOfMatches(14));
     }
 }
 
 class Solution {
-    public String largestGoodInteger(final String num) {
-        int answer = -1;
+    public int numberOfMatches(int n) {
+        int count = 0;
 
-        char saved = '\0';
-        int saveCount = 0;
-        for (final char ch : num.toCharArray()) {
-            if (saved == ch) {
-                saveCount++;
-
-                if (saveCount >= 3) {
-                    answer = Math.max(answer, ch - '0');
-                }
+        while (n != 1) {
+            if (n % 2 == 0) {
+                n = n / 2;
+                count += n;
             } else {
-                saveCount = 1;
-                saved = ch;
+                n = ((n - 1) / 2) + 1;
+                count += n - 1;
             }
         }
 
-        if (answer == -1) {
-            return "";
-        }
-
-        return String.valueOf(answer).repeat(3);
+        return count;
     }
 }
