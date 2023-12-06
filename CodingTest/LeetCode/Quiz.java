@@ -3,25 +3,31 @@ package CodingTest.LeetCode;
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        System.out.println(solution.numberOfMatches(7));
-        System.out.println(solution.numberOfMatches(14));
+        System.out.println(solution.totalMoney(4));
+        System.out.println(solution.totalMoney(10));
+        System.out.println(solution.totalMoney(20));
     }
 }
 
 class Solution {
-    public int numberOfMatches(int n) {
-        int count = 0;
+    public int totalMoney(final int n) {
+        int startMoney = 0;
+        int dayMoney = 0;
+        int total = 0;
 
-        while (n != 1) {
-            if (n % 2 == 0) {
-                n = n / 2;
-                count += n;
+        int day = 1;
+        while (day <= n) {
+            if (day % 7 == 1) {
+                startMoney++;
+                dayMoney = startMoney;
             } else {
-                n = ((n - 1) / 2) + 1;
-                count += n - 1;
+                dayMoney++;
             }
+
+            total += dayMoney;
+            day++;
         }
 
-        return count;
+        return total;
     }
 }
