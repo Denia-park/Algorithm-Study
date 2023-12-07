@@ -13,9 +13,10 @@ public class Quiz {
 class Solution {
     public String largestOddNumber(final String num) {
         String answer = "";
-        for (int right = 0; right < num.length(); right++) {
+        for (int right = num.length() - 1; right >= 0; right--) {
             if (isOdd(num.charAt(right))) {
                 answer = num.substring(0, right + 1);
+                break;
             }
         }
 
