@@ -3,31 +3,43 @@ package CodingTest.LeetCode;
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
-        System.out.println(solution.totalMoney(4));
-        System.out.println(solution.totalMoney(10));
-        System.out.println(solution.totalMoney(20));
+        System.out.println(solution.largestOddNumber("52"));
+        System.out.println(solution.largestOddNumber("4206"));
+        System.out.println(solution.largestOddNumber("35427"));
+        System.out.println(solution.largestOddNumber("7542351161"));
     }
 }
 
 class Solution {
-    public int totalMoney(final int n) {
-        int startMoney = 0;
-        int dayMoney = 0;
-        int total = 0;
+    public String largestOddNumber(final String num) {
+        int answer = -1;
 
-        int day = 1;
-        while (day <= n) {
-            if (day % 7 == 1) {
-                startMoney++;
-                dayMoney = startMoney;
-            } else {
-                dayMoney++;
+        for (int right = 0; right < num.length(); right++) {
+            if (isOdd(num.charAt(right))) {
+                int left = right;
+
+                while (left >= 0) {
+                    final String substring = num.substring(left, right + 1);
+
+                    try {
+                        final int parseInt = Integer.parseInt(substring);
+
+                        answer = Math.max(answer, parseInt);
+                    } catch (final NumberFormatException ignored) {
+                        break;
+                    }
+
+                    left--;
+                }
             }
-
-            total += dayMoney;
-            day++;
         }
 
-        return total;
+        return answer == -1 ? "" : String.valueOf(answer);
+    }
+
+    private boolean isOdd(final char ch) {
+        final int value = ch - '0';
+
+        return value % 2 != 0;
     }
 }
