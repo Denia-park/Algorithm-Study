@@ -12,29 +12,14 @@ public class Quiz {
 
 class Solution {
     public String largestOddNumber(final String num) {
-        int answer = -1;
-
+        String answer = "";
         for (int right = 0; right < num.length(); right++) {
             if (isOdd(num.charAt(right))) {
-                int left = right;
-
-                while (left >= 0) {
-                    final String substring = num.substring(left, right + 1);
-
-                    try {
-                        final int parseInt = Integer.parseInt(substring);
-
-                        answer = Math.max(answer, parseInt);
-                    } catch (final NumberFormatException ignored) {
-                        break;
-                    }
-
-                    left--;
-                }
+                answer = num.substring(0, right + 1);
             }
         }
 
-        return answer == -1 ? "" : String.valueOf(answer);
+        return answer;
     }
 
     private boolean isOdd(final char ch) {
