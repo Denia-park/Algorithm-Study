@@ -1,5 +1,9 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -11,40 +15,23 @@ public class Quiz {
 }
 
 class Solution {
-    public String tree2str(final TreeNode root) {
+    public List<Integer> inorderTraversal(final TreeNode root) {
         if (root == null) {
-            return "";
+            return Collections.emptyList();
         }
 
-        //재귀를 써야할 것 같다.
-        final StringBuilder sb = new StringBuilder();
+        final List<Integer> answers = new ArrayList<>();
 
-        //val을 표시한다.
-        sb.append(root.val);
+        //왼쪽 탐색
+        answers.addAll(inorderTraversal(root.left));
 
-        if (root.left == null && root.right == null) {
-            return sb.toString();
-        }
+        //값 표현
+        answers.add(root.val);
 
-        //왼쪽부터 탐색한다
-        if (root.left != null) {
-            sb.append("(");
-            sb.append(tree2str(root.left));
-            sb.append(")");
-        }
+        //오른쪽 탐색
+        answers.addAll(inorderTraversal(root.right));
 
-        //오른쪽을 탐색한다.
-        if (root.right != null) {
-            if (root.left == null) {
-                sb.append("()");
-            }
-
-            sb.append("(");
-            sb.append(tree2str(root.right));
-            sb.append(")");
-        }
-
-        return sb.toString();
+        return answers;
     }
 }
 
