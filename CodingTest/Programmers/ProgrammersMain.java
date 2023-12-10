@@ -1,10 +1,10 @@
 package CodingTest.Programmers;
 
 public class ProgrammersMain {
-    public static void main(String[] args) {
-        Solution ts = new Solution();
+    public static void main(final String[] args) {
+        final Solution ts = new Solution();
 
-        int[][] routes = Util.convertStringToJavaIntTwoDimensionalArray(
+        final int[][] routes = BracketUtil.convertStringToJavaIntTwoDimensionalArray(
                 "[[1, 1, 0], [1, 1, 0], [0, 0, 1]]"
         );
 
