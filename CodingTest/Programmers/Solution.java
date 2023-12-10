@@ -25,7 +25,6 @@ class Solution {
         while (curTime <= LAST_ATTACK_TIME) {
             //공격
             if (attackIdx < attacks.length && attacks[attackIdx][0] == curTime) {
-//                System.out.println(String.format("my Health : %d ,attack time : %d, attack damage : %d", myCurrentHealth, attacks[attackIdx][0], attacks[attackIdx][1]));
                 myCurrentHealth -= attacks[attackIdx][1];
 
                 if (myCurrentHealth <= 0) {
@@ -51,10 +50,6 @@ class Solution {
                 }
             }
 
-//            System.out.print("curTime = " + curTime);
-//            System.out.print(" ,continueSuccessTime = " + continueSuccessTime);
-//            System.out.println(" ,myCurrentHealth = " + myCurrentHealth);
-
             curTime++;
         }
 
@@ -62,10 +57,10 @@ class Solution {
     }
 
     private void heal(final int healAmount) {
-        if (myCurrentHealth + healAmount > MY_MAX_HP) {
-            return;
-        }
-
         myCurrentHealth += healAmount;
+
+        if (myCurrentHealth > MY_MAX_HP) {
+            myCurrentHealth = MY_MAX_HP;
+        }
     }
 }
