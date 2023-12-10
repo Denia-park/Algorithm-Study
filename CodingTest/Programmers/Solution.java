@@ -1,76 +1,71 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-
 class Solution {
-    int answer;
-    private List<Computer> computerList;
+    private int CASTING_TIME;
+    private int HEAL_PER_SEC;
+    private int CONTINUE_SUCCESS_HEAL;
+    private int LAST_ATTACK_TIME;
+    private int MY_MAX_HP;
+    private int myCurrentHealth;
 
-    public int solution(int n, int[][] computers) {
-        answer = 0;
-        computerList = new ArrayList<>();
+    public int solution(final int[] bandage, final int health, final int[][] attacks) {
+        CASTING_TIME = bandage[0];
+        HEAL_PER_SEC = bandage[1];
+        CONTINUE_SUCCESS_HEAL = bandage[2];
+        LAST_ATTACK_TIME = attacks[attacks.length - 1][0];
+        MY_MAX_HP = health;
 
-        for (int i = 0; i < computers.length; i++) {
-            final int[] network = computers[i];
+        myCurrentHealth = health;
 
-            List<Integer> tempNetwork = new ArrayList<>();
+        int attackIdx = 0;
 
-            for (int j = 0; j < network.length; j++) {
-                if (i == j) continue;
+        int curTime = 1;
+        int continueSuccessTime = 0;
 
-                if (network[j] == 1) {
-                    tempNetwork.add(j);
+        while (curTime <= LAST_ATTACK_TIME) {
+            //공격
+            if (attackIdx < attacks.length && attacks[attackIdx][0] == curTime) {
+//                System.out.println(String.format("my Health : %d ,attack time : %d, attack damage : %d", myCurrentHealth, attacks[attackIdx][0], attacks[attackIdx][1]));
+                myCurrentHealth -= attacks[attackIdx][1];
+
+                if (myCurrentHealth <= 0) {
+                    return -1;
+                }
+
+                continueSuccessTime = 0;
+
+                attackIdx++;
+            } else {
+                //회복
+                heal(HEAL_PER_SEC);
+
+                continueSuccessTime++;
+
+                //연속시간 조건 만족하면
+                if (continueSuccessTime == CASTING_TIME) {
+                    //연속 성공 회복 올리고
+                    heal(CONTINUE_SUCCESS_HEAL);
+
+                    //연속 시간 초기화
+                    continueSuccessTime = 0;
                 }
             }
 
-            computerList.add(new Computer(i, tempNetwork));
+//            System.out.print("curTime = " + curTime);
+//            System.out.print(" ,continueSuccessTime = " + continueSuccessTime);
+//            System.out.println(" ,myCurrentHealth = " + myCurrentHealth);
+
+            curTime++;
         }
 
-        for (Computer computer : computerList) {
-            if (computer.isVisited) continue;
-
-            answer++;
-
-            bfs(computer);
-        }
-
-        return answer;
+        return myCurrentHealth == 0 ? -1 : myCurrentHealth;
     }
 
-    private void bfs(final Computer computer) {
-        Deque<Computer> dq = new ArrayDeque<>();
-
-        computer.isVisited = true;
-        dq.add(computer);
-
-        while (!dq.isEmpty()) {
-            Computer currentComputer = dq.poll();
-            final List<Integer> networkComputerNums = currentComputer.networkComputerNums;
-
-            for (int i = 0; i < networkComputerNums.size(); i++) {
-                int nextIdx = networkComputerNums.get(i);
-                Computer nextComputer = computerList.get(nextIdx);
-
-                if (nextComputer.isVisited) continue;
-
-                nextComputer.isVisited = true;
-                dq.add(nextComputer);
-            }
+    private void heal(final int healAmount) {
+        if (myCurrentHealth + healAmount > MY_MAX_HP) {
+            return;
         }
-    }
 
-    class Computer {
-        int idx;
-        List<Integer> networkComputerNums;
-        boolean isVisited;
-
-        Computer(int idx, List<Integer> networkComputerNums) {
-            this.idx = idx;
-            this.networkComputerNums = networkComputerNums;
-            this.isVisited = false;
-        }
+        myCurrentHealth += healAmount;
     }
 }
