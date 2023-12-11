@@ -1,34 +1,36 @@
 package CodingTest.LeetCode;
 
-import CodingTest.Programmers.BracketUtil;
-
-import java.util.Arrays;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(Arrays.deepToString(solution.transpose(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1,2,3],[4,5,6],[7,8,9]]"))));
-        System.out.println(Arrays.deepToString(solution.transpose(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1,2,3],[4,5,6]]"))));
+        System.out.println(solution.findSpecialInteger(new int[]{1, 2, 2, 6, 6, 6, 6, 7, 10}));
     }
 }
 
 class Solution {
-    public int[][] transpose(final int[][] matrix) {
-        final int originRowNum = matrix.length;
-        final int originColNum = matrix[0].length;
+    public int findSpecialInteger(final int[] arr) {
+        final int length = arr.length;
 
-        final int newRowNum = originColNum;
-        final int newColNum = originRowNum;
+        final double ratio = (double) length / 4;
 
-        final int[][] newMatrix = new int[newRowNum][newColNum];
+        int saveValue = arr[0];
+        int count = 0;
+        for (int i = 0; i < length; i++) {
+            final int val = arr[i];
 
-        for (int row = 0; row < originRowNum; row++) {
-            for (int col = 0; col < originColNum; col++) {
-                newMatrix[col][row] = matrix[row][col];
+            if (val == saveValue) {
+                count++;
+
+                if (count > ratio) {
+                    return val;
+                }
+            } else {
+                saveValue = val;
+                count = 1;
             }
         }
 
-        return newMatrix;
+        return arr[length - 1];
     }
 }
