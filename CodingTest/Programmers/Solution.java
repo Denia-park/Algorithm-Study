@@ -1,66 +1,72 @@
 package CodingTest.Programmers;
 
+import java.util.*;
+
 class Solution {
-    private int CASTING_TIME;
-    private int HEAL_PER_SEC;
-    private int CONTINUE_SUCCESS_HEAL;
-    private int LAST_ATTACK_TIME;
-    private int MY_MAX_HP;
-    private int myCurrentHealth;
+    private boolean[] isVisited;
+    private Map<Integer, Set<Integer>> result;
+    private int maxDistance = -1;
 
-    public int solution(final int[] bandage, final int health, final int[][] attacks) {
-        CASTING_TIME = bandage[0];
-        HEAL_PER_SEC = bandage[1];
-        CONTINUE_SUCCESS_HEAL = bandage[2];
-        LAST_ATTACK_TIME = attacks[attacks.length - 1][0];
-        MY_MAX_HP = health;
+    public int solution(final int n, final int[][] edge) {
+        isVisited = new boolean[n + 1];
+        result = new TreeMap<>();
 
-        myCurrentHealth = health;
+        final List<List<Integer>> graph = new ArrayList<>();
 
-        int attackIdx = 0;
-
-        int curTime = 1;
-        int continueSuccessTime = 0;
-
-        while (curTime <= LAST_ATTACK_TIME) {
-            //공격
-            if (attackIdx < attacks.length && attacks[attackIdx][0] == curTime) {
-                myCurrentHealth -= attacks[attackIdx][1];
-
-                if (myCurrentHealth <= 0) {
-                    return -1;
-                }
-
-                continueSuccessTime = 0;
-
-                attackIdx++;
-            } else {
-                //회복
-                heal(HEAL_PER_SEC);
-
-                continueSuccessTime++;
-
-                //연속시간 조건 만족하면
-                if (continueSuccessTime == CASTING_TIME) {
-                    //연속 성공 회복 올리고
-                    heal(CONTINUE_SUCCESS_HEAL);
-
-                    //연속 시간 초기화
-                    continueSuccessTime = 0;
-                }
-            }
-
-            curTime++;
+        //그래프 구성 완성
+        for (int i = 0; i < n + 1; i++) {
+            graph.add(new ArrayList<>());
         }
 
-        return myCurrentHealth == 0 ? -1 : myCurrentHealth;
+        for (final int[] ints : edge) {
+            final int from = ints[0];
+            final int to = ints[1];
+            graph.get(from).add(to);
+            graph.get(to).add(from);
+        }
+
+        //bfs로 계산해서 가장 먼 노드의 수를 구하자.
+        bfs(graph);
+
+        return result.get(maxDistance).size();
     }
 
-    private void heal(final int healAmount) {
-        myCurrentHealth += healAmount;
+    private void bfs(final List<List<Integer>> graph) {
+        final Deque<Node> dq = new ArrayDeque<>();
+        isVisited[1] = true;
+        dq.add(new Node(1, 0));
 
-        if (myCurrentHealth > MY_MAX_HP) {
-            myCurrentHealth = MY_MAX_HP;
+        while (!dq.isEmpty()) {
+            final Node node = dq.pollFirst();
+
+            final int value = node.value;
+            final int distance = node.distance;
+
+            maxDistance = Math.max(maxDistance, distance);
+
+            final Set<Integer> saveDistanceSet = result.getOrDefault(distance, new HashSet<>());
+            saveDistanceSet.add(value);
+            result.put(distance, saveDistanceSet);
+
+            for (final Integer nextValue : graph.get(value)) {
+                if (isVisited[nextValue]) {
+                    continue;
+                }
+
+                isVisited[nextValue] = true;
+                final Node nextNode = new Node(nextValue, distance + 1);
+                dq.add(nextNode);
+            }
+        }
+    }
+
+    class Node {
+        int value;
+        int distance;
+
+        public Node(final int value, final int distance) {
+            this.value = value;
+            this.distance = distance;
         }
     }
 }
