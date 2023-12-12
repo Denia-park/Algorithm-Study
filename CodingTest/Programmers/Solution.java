@@ -3,70 +3,88 @@ package CodingTest.Programmers;
 import java.util.*;
 
 class Solution {
-    private boolean[] isVisited;
-    private Map<Integer, Set<Integer>> result;
-    private int maxDistance = -1;
+    private Set<String> wordSet;
+    private Map<Integer, Set<String>> digitCharMap;
+    private String gTarget;
+    private int answer;
 
-    public int solution(final int n, final int[][] edge) {
-        isVisited = new boolean[n + 1];
-        result = new TreeMap<>();
+    public int solution(final String begin, final String target, final String[] words) {
+        answer = 1_000_000_000;
 
-        final List<List<Integer>> graph = new ArrayList<>();
+        gTarget = target;
+        //words를 set으로 저장
+        wordSet = new HashSet<>();
+        digitCharMap = new HashMap<>();
+        for (final String word : words) {
+            for (int i = 0; i < word.length(); i++) {
+                final Set<String> characterSet = digitCharMap.getOrDefault(i, new HashSet<>());
+                characterSet.add(String.valueOf(word.charAt(i)));
+                digitCharMap.put(i, characterSet);
+            }
 
-        //그래프 구성 완성
-        for (int i = 0; i < n + 1; i++) {
-            graph.add(new ArrayList<>());
+            wordSet.add(word);
         }
 
-        for (final int[] ints : edge) {
-            final int from = ints[0];
-            final int to = ints[1];
-            graph.get(from).add(to);
-            graph.get(to).add(from);
+        //words에 target이 없으면 0 반환
+        if (!wordSet.contains(target)) {
+            return 0;
         }
 
-        //bfs로 계산해서 가장 먼 노드의 수를 구하자.
-        bfs(graph);
+        //확인한 단어들도 set으로 관리 -> 그래야 2중 변환을 하지 않음.
+        bfs(new Word(begin, 0));
 
-        return result.get(maxDistance).size();
+        return answer;
     }
 
-    private void bfs(final List<List<Integer>> graph) {
-        final Deque<Node> dq = new ArrayDeque<>();
-        isVisited[1] = true;
-        dq.add(new Node(1, 0));
+    private void bfs(final Word startWord) {
+        final Deque<Word> dq = new ArrayDeque<>();
+        dq.add(startWord);
+        final Set<String> convertedWordSet = new HashSet<>();
+        convertedWordSet.add(startWord.word);
 
         while (!dq.isEmpty()) {
-            final Node node = dq.pollFirst();
+            final Word tempWord = dq.pollFirst();
+            final String checkWord = tempWord.word;
+            final int count = tempWord.count;
 
-            final int value = node.value;
-            final int distance = node.distance;
+            if (checkWord.equals(gTarget)) {
+                answer = Math.min(answer, count);
+                return;
+            }
 
-            maxDistance = Math.max(maxDistance, distance);
+            for (int idx = 0; idx < checkWord.length(); idx++) {
+                final Set<String> characters = digitCharMap.get(idx);
 
-            final Set<Integer> saveDistanceSet = result.getOrDefault(distance, new HashSet<>());
-            saveDistanceSet.add(value);
-            result.put(distance, saveDistanceSet);
+                for (final String st : characters) {
+                    final StringBuilder sb = new StringBuilder(checkWord);
+                    //new String 만들기
+                    final String newString = sb.replace(idx, idx + 1, st).toString();
 
-            for (final Integer nextValue : graph.get(value)) {
-                if (isVisited[nextValue]) {
-                    continue;
+                    if (convertedWordSet.contains(newString)) {
+                        continue;
+                    }
+
+                    //new String이 wordSet에 잇는지 확인, 없으면 넘어감
+                    if (!wordSet.contains(newString)) {
+                        continue;
+                    }
+
+                    //변환 목록에 추가
+                    convertedWordSet.add(newString);
+
+                    dq.add(new Word(newString, count + 1));
                 }
-
-                isVisited[nextValue] = true;
-                final Node nextNode = new Node(nextValue, distance + 1);
-                dq.add(nextNode);
             }
         }
     }
 
-    class Node {
-        int value;
-        int distance;
+    private class Word {
+        private final String word;
+        private final int count;
 
-        public Node(final int value, final int distance) {
-            this.value = value;
-            this.distance = distance;
+        public Word(final String word, final int count) {
+            this.word = word;
+            this.count = count;
         }
     }
 }
