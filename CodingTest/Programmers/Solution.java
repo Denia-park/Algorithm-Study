@@ -1,7 +1,7 @@
 package CodingTest.Programmers;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.Comparator;
 
 enum ExtractString {
     CODE("코드 번호", 0),
@@ -25,12 +25,11 @@ enum ExtractString {
 
 class Solution {
     public int[][] solution(final int[][] data, final String ext, final int val_ext, final String sort_by) {
+        final int matchingIdx = ExtractString.getMatchingIdx(sort_by);
+
         return Arrays.stream(data)
                 .filter(eachData -> eachData[ExtractString.getMatchingIdx(ext)] < val_ext)
-                .sorted((o1, o2) -> {
-                    final int matchingIdx = ExtractString.getMatchingIdx(sort_by);
-                    return Integer.compare(o1[matchingIdx], o2[matchingIdx]);
-                })
-                .collect(Collectors.toList()).toArray(new int[0][0]);
+                .sorted(Comparator.comparingInt(o -> o[matchingIdx]))
+                .toArray(int[][]::new);
     }
 }
