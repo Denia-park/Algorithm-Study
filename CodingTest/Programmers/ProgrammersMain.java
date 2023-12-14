@@ -1,19 +1,17 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(ts.solution(
-                new String[][]{
-                        {"blue", "red", "orange", "red"},
-                        {"red", "red", "blue", "orange"},
-                        {"blue", "orange", "red", "red"},
-                        {"orange", "orange", "red", "blue"}
-                },
-                1,
-                1
-        ));
+        System.out.println(Arrays.deepToString(ts.solution(
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, 20300104, 100, 80], [2, 20300804, 847, 37], [3, 20300401, 10, 8]]"),
+                "date",
+                20300501,
+                "remain"
+        )));
     }
 }
 

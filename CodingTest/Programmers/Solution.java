@@ -1,26 +1,36 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+enum ExtractString {
+    CODE("코드 번호", 0),
+    DATE("제조일", 1),
+    MAXIMUM("최대 수량", 2),
+    REMAIN("현재 수량", 3);
+
+
+    private final String description;
+    private final int index;
+
+    ExtractString(final String description, final int index) {
+        this.description = description;
+        this.index = index;
+    }
+
+    public static int getMatchingIdx(final String targetString) {
+        return valueOf(targetString.toUpperCase()).index;
+    }
+}
+
 class Solution {
-    public int solution(final String[][] board, final int row, final int col) {
-        int answer = 0;
-
-        final int[][] directions = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-
-        final String origin = board[row][col];
-
-        for (final int[] direction : directions) {
-            final int newRow = row + direction[0];
-            final int newCol = col + direction[1];
-
-            if (newRow < 0 || newRow >= board.length || newCol < 0 || newCol >= board[0].length) {
-                continue;
-            }
-
-            if (origin.equals(board[newRow][newCol])) {
-                answer++;
-            }
-        }
-
-        return answer;
+    public int[][] solution(final int[][] data, final String ext, final int val_ext, final String sort_by) {
+        return Arrays.stream(data)
+                .filter(eachData -> eachData[ExtractString.getMatchingIdx(ext)] < val_ext)
+                .sorted((o1, o2) -> {
+                    final int matchingIdx = ExtractString.getMatchingIdx(sort_by);
+                    return Integer.compare(o1[matchingIdx], o2[matchingIdx]);
+                })
+                .collect(Collectors.toList()).toArray(new int[0][0]);
     }
 }
