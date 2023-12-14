@@ -2,57 +2,58 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
+import java.util.Arrays;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.numSpecial(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1,0,0],[0,0,1],[1,0,0]]")));
-        System.out.println(solution.numSpecial(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1,0,0],[0,1,0],[0,0,1]]")));
+        System.out.println(Arrays.deepToString(solution.onesMinusZeros(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[0,1,1],[1,0,1],[0,0,1]]"))));
+        System.out.println(Arrays.deepToString(solution.onesMinusZeros(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1,1,1],[1,1,1]]"))));
     }
 }
 
 class Solution {
-    public int numSpecial(final int[][] mat) {
-        int answer = 0;
+    public int[][] onesMinusZeros(final int[][] grid) {
+        final int totalRow = grid.length;
+        final int totalCol = grid[0].length;
 
-        for (int row = 0; row < mat.length; row++) {
-            for (int col = 0; col < mat[0].length; col++) {
-                if (mat[row][col] == 0) {
-                    continue;
+        final int[][] diff = new int[totalRow][totalCol];
+
+        final int[] rowOneCountArr = new int[totalRow];
+        for (int row = 0; row < totalRow; row++) {
+            final int[] ints = grid[row];
+
+            int tempCount = 0;
+            for (final int anInt : ints) {
+                if (anInt == 1) {
+                    tempCount++;
                 }
+            }
 
-                boolean check = true;
-                //행 체크
-                for (int i = 0; i < mat[0].length; i++) {
-                    final int val = mat[row][i];
+            rowOneCountArr[row] = tempCount;
+        }
 
-                    if (val == 1 && i != col) {
-                        check = false;
-                        break;
-                    }
+        final int[] colOneCountArr = new int[totalCol];
+        for (int col = 0; col < totalCol; col++) {
+            int tempCount = 0;
+            for (int row = 0; row < totalRow; row++) {
+                if (grid[row][col] == 1) {
+                    tempCount++;
                 }
+            }
 
-                if (!check) {
-                    continue;
-                }
+            colOneCountArr[col] = tempCount;
+        }
 
-                //열 체크
-                for (int i = 0; i < mat.length; i++) {
-                    final int val = mat[i][col];
-
-                    if (val == 1 && i != row) {
-                        check = false;
-                        break;
-                    }
-                }
-                if (!check) {
-                    continue;
-                }
-
-                answer++;
+        for (int row = 0; row < totalRow; row++) {
+            for (int col = 0; col < totalCol; col++) {
+                final int oneRowCount = rowOneCountArr[row];
+                final int oneColCount = colOneCountArr[col];
+                diff[row][col] = (oneRowCount + oneColCount) - (totalRow - oneRowCount + totalCol - oneColCount);
             }
         }
 
-        return answer;
+        return diff;
     }
 }
