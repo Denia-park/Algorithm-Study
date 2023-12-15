@@ -1,17 +1,16 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(Arrays.deepToString(ts.solution(
-                BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, 20300104, 100, 80], [2, 20300804, 847, 37], [3, 20300401, 10, 8]]"),
-                "date",
-                20300501,
-                "remain"
-        )));
+        System.out.println(ts.solution(0, 5, 30, 0, 7, 0));
+        System.out.println(ts.solution(12, 0, 0, 12, 0, 30));
+        System.out.println(ts.solution(0, 6, 1, 0, 6, 6));
+        System.out.println(ts.solution(11, 59, 30, 12, 0, 0));
+        System.out.println(ts.solution(11, 58, 59, 11, 59, 0));
+        System.out.println(ts.solution(1, 5, 5, 1, 5, 6));
+        System.out.println(ts.solution(0, 0, 0, 23, 59, 59));
     }
 }
 
