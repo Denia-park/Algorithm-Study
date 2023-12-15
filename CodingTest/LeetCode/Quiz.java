@@ -1,59 +1,35 @@
 package CodingTest.LeetCode;
 
-import CodingTest.Programmers.BracketUtil;
-
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(Arrays.deepToString(solution.onesMinusZeros(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[0,1,1],[1,0,1],[0,0,1]]"))));
-        System.out.println(Arrays.deepToString(solution.onesMinusZeros(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1,1,1],[1,1,1]]"))));
+        final List<List<String>> lists = List.of(List.of("London", "New York"),
+                List.of("New York", "Lima"),
+                List.of("Lima", "Sao Paulo"));
+
+        System.out.println(solution.destCity(lists));
     }
 }
 
 class Solution {
-    public int[][] onesMinusZeros(final int[][] grid) {
-        final int totalRow = grid.length;
-        final int totalCol = grid[0].length;
+    public String destCity(final List<List<String>> paths) {
+        final Map<String, String> map = new HashMap<>();
 
-        final int[][] diff = new int[totalRow][totalCol];
-
-        final int[] rowOneCountArr = new int[totalRow];
-        for (int row = 0; row < totalRow; row++) {
-            final int[] ints = grid[row];
-
-            int tempCount = 0;
-            for (final int anInt : ints) {
-                if (anInt == 1) {
-                    tempCount++;
-                }
-            }
-
-            rowOneCountArr[row] = tempCount;
+        for (final List<String> path : paths) {
+            map.put(path.get(0), path.get(1));
         }
 
-        final int[] colOneCountArr = new int[totalCol];
-        for (int col = 0; col < totalCol; col++) {
-            int tempCount = 0;
-            for (int row = 0; row < totalRow; row++) {
-                if (grid[row][col] == 1) {
-                    tempCount++;
-                }
-            }
-
-            colOneCountArr[col] = tempCount;
-        }
-
-        for (int row = 0; row < totalRow; row++) {
-            for (int col = 0; col < totalCol; col++) {
-                final int oneRowCount = rowOneCountArr[row];
-                final int oneColCount = colOneCountArr[col];
-                diff[row][col] = (oneRowCount + oneColCount) - (totalRow - oneRowCount + totalCol - oneColCount);
+        for (final String value : map.values()) {
+            if (!map.containsKey(value)) {
+                return value;
             }
         }
 
-        return diff;
+        return "";
     }
 }
