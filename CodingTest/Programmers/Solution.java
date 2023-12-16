@@ -1,95 +1,113 @@
 package CodingTest.Programmers;
 
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
 
 class Solution {
-    public int solution(final int h1, final int m1, final int s1, final int h2, final int m2, final int s2) {
+    public int solution(final int[][] land) {
         int answer = 0;
 
-        // 시작 시간과, 종료 시간을 초 단위로 변경
-        final int start = new Time(h1, m1, s1).toSeconds();
-        final int end = new Time(h2, m2, s2).toSeconds();
-
-        // 시작 시간부터 1초씩 올려가며 계산(마지막 초는 포함되면 안됨)
-        // 마지막 초기 포함되면 마지막 초 + 1까지 판단해버림
-        for (int i = start; i < end; i++) {
-            // 현재 시간이 i초일 때의
-            final List<Double> cnt = new Time(i).getDegree();
-            final List<Double> next = new Time(i + 1).getDegree();
-
-            final boolean hMatch = hourMatch(cnt, next);
-            final boolean mMatch = minuteMatch(cnt, next);
-
-            // 초침이 분침과 시침과 겹침이 발생했을 때,
-            if (hMatch && mMatch) {
-                // 시침과 분침의 각도가 같다면 +1만 해줘야함
-                if (Double.compare(next.get(0), next.get(1)) == 0) answer++;
-                    // 아니라면 +2
-                else answer += 2;
-            }
-            // 둘 중 하나라도 겹치면 +1
-            else if (hMatch || mMatch) answer++;
+        final int[][] landCopy = new int[land.length][land[0].length];
+        for (final int[] ints : landCopy) {
+            Arrays.fill(ints, -1);
         }
 
-        // 위 로직은 시작시간에 대한 검사를 안해줬음
-        // 그래서 0시 또는 12시에 시작한다면, 한번 겹치고 시작하는 것이기 때문에 +1
-        if (start == 0 || start == 43200) answer++;
+        //모든 땅에 대해서 석유량 검사해서 값 넣기
+        for (int row = 0; row < land.length; row++) {
+            for (int col = 0; col < land[0].length; col++) {
+                if (isVisited(row, col, landCopy)) {
+                    continue;
+                }
+
+                bfs(row, col, land, landCopy);
+            }
+        }
+
+        //수직으로 내려가면서 값을 더해서 제일 큰 값을 사용
+        for (int col = 0; col < landCopy[0].length; col++) {
+            int tempAnswer = 0;
+            boolean checkFlag = true;
+
+            for (int row = 0; row < landCopy.length; row++) {
+                if (landCopy[row][col] == 0) {
+                    checkFlag = true;
+                } else if (checkFlag) {
+                    tempAnswer += landCopy[row][col];
+                    checkFlag = false;
+                }
+            }
+
+            answer = Math.max(answer, tempAnswer);
+        }
+
         return answer;
     }
 
-    // 시침가 초침의 겹침을 판단
-    boolean hourMatch(final List<Double> cnt, final List<Double> next) {
-        if (Double.compare(cnt.get(0), cnt.get(2)) > 0
-                && Double.compare(next.get(0), next.get(2)) <= 0) {
-            return true;
+    private void bfs(final int row, final int col, final int[][] land, final int[][] landCopy) {
+        final Deque<Point> waitingDeque = new ArrayDeque<>();
+        final Deque<Point> deque = new ArrayDeque<>();
+        final int startValue = land[row][col];
+        landCopy[row][col] = startValue;
+        deque.add(new Point(row, col));
+        waitingDeque.add(new Point(row, col));
+
+        final int[][] direction = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+        int maxOil = 0;
+        while (!deque.isEmpty()) {
+            final Point point = deque.poll();
+            final int curRow = point.row;
+            final int curCol = point.col;
+
+            maxOil++;
+
+            for (final int[] ints : direction) {
+                final int nextRow = curRow + ints[0];
+                final int nextCol = curCol + ints[1];
+
+                if (isOutOfMap(landCopy, nextRow, nextCol)) {
+                    continue;
+                }
+
+                if (isVisited(nextRow, nextCol, landCopy)) {
+                    continue;
+                }
+
+                if (startValue != land[nextRow][nextCol]) {
+                    continue;
+                }
+
+                landCopy[nextRow][nextCol] = startValue;
+                deque.add(new Point(nextRow, nextCol));
+                waitingDeque.add(new Point(nextRow, nextCol));
+            }
         }
-        // 초침이 354도에서 0도로 넘어갈 때 예외 케이스
-        return Double.compare(cnt.get(2), 354d) == 0
-                && Double.compare(cnt.get(0), 354d) > 0;
-    }
 
-    // 분침과 초침의 겹침을 판단
-    boolean minuteMatch(final List<Double> cnt, final List<Double> next) {
-        if (Double.compare(cnt.get(1), cnt.get(2)) > 0
-                && Double.compare(next.get(1), next.get(2)) <= 0) {
-            return true;
+        if (startValue == 0) {
+            return;
         }
-        // 초침이 354도에서 0도로 넘어갈 때 예외 케이스
-        return Double.compare(cnt.get(2), 354d) == 0
-                && Double.compare(cnt.get(1), 354d) > 0;
-    }
-}
 
-// 각 시간과 시간과 관련된 로직을 가지는 Time 클래스 정의
-class Time {
-    int h;
-    int m;
-    int s;
-
-    public Time(final int h, final int m, final int s) {
-        this.h = h;
-        this.m = m;
-        this.s = s;
+        for (final Point point : waitingDeque) {
+            landCopy[point.row][point.col] = maxOil;
+        }
     }
 
-    // 초로 변환된 시간을 가지고도 Time을 만들 수 있도록 생성자 정의
-    public Time(final int seconds) {
-        this.h = seconds / 3600;
-        this.m = (seconds % 3600) / 60;
-        this.s = (seconds % 3600) % 60;
+    private boolean isVisited(final int nextRow, final int nextCol, final int[][] landCopy) {
+        return landCopy[nextRow][nextCol] != -1;
     }
 
-    // 모든 시간을 초로 변환
-    public int toSeconds() {
-        return h * 3600 + m * 60 + s;
+    private boolean isOutOfMap(final int[][] landCopy, final int nextRow, final int nextCol) {
+        return nextRow < 0 || nextRow >= landCopy.length || nextCol < 0 || nextCol >= landCopy[0].length;
     }
 
-    // 각도를 계산해서 List 형태로 반환
-    List<Double> getDegree() {
-        final Double hDegree = (h % 12) * 30d + m * 0.5d + s * (1 / 120d);
-        final Double mDegree = m * 6d + s * (0.1d);
-        final Double sDegree = s * 6d;
+    class Point {
+        int row;
+        int col;
 
-        return List.of(hDegree, mDegree, sDegree);
+        public Point(final int row, final int col) {
+            this.row = row;
+            this.col = col;
+        }
     }
 }
