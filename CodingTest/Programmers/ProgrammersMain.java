@@ -6,6 +6,10 @@ public class ProgrammersMain {
 
         System.out.println(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[0, 0, 0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 1, 1, 0, 0], [1, 1, 0, 0, 0, 1, 1, 0], [1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 1, 1]]")));
         System.out.println(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 0, 0], [1, 0, 1, 0, 0, 1], [1, 0, 0, 1, 0, 0], [1, 0, 0, 1, 0, 1], [1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]]")));
+        System.out.println(ts.solution(new int[][]{{1, 0}, {1, 0}}));
+
+        System.out.println(ts.solution(new int[][]{{1, 1, 1, 1}, {1, 0, 0, 0}, {1, 0, 1, 0}, {1, 0, 0, 0}, {1, 1, 1, 1}}));
+        System.out.println(ts.solution(new int[][]{{1, 1, 1, 1, 0}, {1, 0, 0, 0, 0}, {0, 0, 0, 1, 1}, {1, 0, 0, 1, 0}, {1, 1, 0, 1, 0}}));
     }
 }
 

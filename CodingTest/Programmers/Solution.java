@@ -1,41 +1,42 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
+import java.util.*;
 
 class Solution {
     public int solution(final int[][] land) {
         int answer = 0;
 
-        final int[][] landCopy = new int[land.length][land[0].length];
-        for (final int[] ints : landCopy) {
-            Arrays.fill(ints, -1);
-        }
+        final Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 0);
+        int countIndex = 500000;
 
         //모든 땅에 대해서 석유량 검사해서 값 넣기
         for (int row = 0; row < land.length; row++) {
             for (int col = 0; col < land[0].length; col++) {
-                if (isVisited(row, col, landCopy)) {
+                if (isVisited(col, land[row])) {
                     continue;
                 }
 
-                bfs(row, col, land, landCopy);
+                final int maxOil = bfs(row, col, land, countIndex);
+                map.put(countIndex, maxOil);
+                countIndex++;
             }
         }
 
         //수직으로 내려가면서 값을 더해서 제일 큰 값을 사용
-        for (int col = 0; col < landCopy[0].length; col++) {
+        for (int col = 0; col < land[0].length; col++) {
+            final Set<Integer> set = new HashSet<>();
             int tempAnswer = 0;
-            boolean checkFlag = true;
 
-            for (int row = 0; row < landCopy.length; row++) {
-                if (landCopy[row][col] == 0) {
-                    checkFlag = true;
-                } else if (checkFlag) {
-                    tempAnswer += landCopy[row][col];
-                    checkFlag = false;
+            for (final int[] ints : land) {
+                final int tempIdx = ints[col];
+
+                if (set.contains(tempIdx)) {
+                    continue;
                 }
+
+                tempAnswer += map.get(tempIdx);
+                set.add(tempIdx);
             }
 
             answer = Math.max(answer, tempAnswer);
@@ -44,13 +45,10 @@ class Solution {
         return answer;
     }
 
-    private void bfs(final int row, final int col, final int[][] land, final int[][] landCopy) {
-        final Deque<Point> waitingDeque = new ArrayDeque<>();
+    private int bfs(final int row, final int col, final int[][] land, final int countIndex) {
         final Deque<Point> deque = new ArrayDeque<>();
-        final int startValue = land[row][col];
-        landCopy[row][col] = startValue;
         deque.add(new Point(row, col));
-        waitingDeque.add(new Point(row, col));
+        land[row][col] = countIndex;
 
         final int[][] direction = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -66,42 +64,27 @@ class Solution {
                 final int nextRow = curRow + ints[0];
                 final int nextCol = curCol + ints[1];
 
-                if (isOutOfMap(landCopy, nextRow, nextCol)) {
+                if (isOutOfMap(land, nextRow, nextCol) || isVisited(nextCol, land[nextRow])) {
                     continue;
                 }
 
-                if (isVisited(nextRow, nextCol, landCopy)) {
-                    continue;
-                }
-
-                if (startValue != land[nextRow][nextCol]) {
-                    continue;
-                }
-
-                landCopy[nextRow][nextCol] = startValue;
                 deque.add(new Point(nextRow, nextCol));
-                waitingDeque.add(new Point(nextRow, nextCol));
+                land[nextRow][nextCol] = countIndex;
             }
         }
 
-        if (startValue == 0) {
-            return;
-        }
-
-        for (final Point point : waitingDeque) {
-            landCopy[point.row][point.col] = maxOil;
-        }
+        return maxOil;
     }
 
-    private boolean isVisited(final int nextRow, final int nextCol, final int[][] landCopy) {
-        return landCopy[nextRow][nextCol] != -1;
+    private boolean isVisited(final int col, final int[] rowLand) {
+        return rowLand[col] != 1;
     }
 
-    private boolean isOutOfMap(final int[][] landCopy, final int nextRow, final int nextCol) {
-        return nextRow < 0 || nextRow >= landCopy.length || nextCol < 0 || nextCol >= landCopy[0].length;
+    private boolean isOutOfMap(final int[][] land, final int nextRow, final int nextCol) {
+        return nextRow < 0 || nextRow >= land.length || nextCol < 0 || nextCol >= land[0].length;
     }
 
-    class Point {
+    static class Point {
         int row;
         int col;
 
