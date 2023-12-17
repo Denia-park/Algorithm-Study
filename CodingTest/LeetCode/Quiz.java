@@ -39,14 +39,15 @@ class Solution {
 }
 
 class FoodRatings {
-
     private static final Comparator<Food> FOOD_COMPARATOR = Comparator.comparingInt(Food::getRating).reversed().thenComparing(Food::getName);
     private final Map<String, PriorityQueue<Food>> cuisineFoodMap;
     private final Map<String, String> foodCuisineMap;
+    private final Map<String, Integer> foodRatingMap;
 
     public FoodRatings(final String[] foods, final String[] cuisines, final int[] ratings) {
         cuisineFoodMap = new HashMap<>();
         foodCuisineMap = new HashMap<>();
+        foodRatingMap = new HashMap<>();
 
         for (int i = 0; i < ratings.length; i++) {
             final String tempFood = foods[i];
@@ -61,17 +62,24 @@ class FoodRatings {
             cuisineFoodMap.put(tempCuisine, priorityQueue);
 
             foodCuisineMap.put(tempFood, tempCuisine);
+            foodRatingMap.put(tempFood, tempRating);
         }
     }
 
     public void changeRating(final String foodName, final int newRating) {
+        foodRatingMap.put(foodName, newRating);
+
         final String cuisineName = foodCuisineMap.get(foodName);
         final PriorityQueue<Food> priorityQueue = cuisineFoodMap.get(cuisineName);
-
-        priorityQueue.remove(new Food(foodName, cuisineName, 0));
-
         final Food food = new Food(foodName, cuisineName, newRating);
         priorityQueue.add(food);
+
+        Food highestFood = priorityQueue.peek();
+
+        while (foodRatingMap.get(highestFood.getName()) != highestFood.getRating()) {
+            priorityQueue.poll();
+            highestFood = priorityQueue.peek();
+        }
     }
 
     public String highestRated(final String cuisine) {
