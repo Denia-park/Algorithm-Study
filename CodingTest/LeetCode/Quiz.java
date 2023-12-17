@@ -6,6 +6,8 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
+//        System.out.println(new Food("abc", "B", 1).equals(new Food("abc", "B", 2)));
+
         solution.solution();
     }
 }
@@ -13,34 +15,24 @@ public class Quiz {
 class Solution {
     public void solution() {
         final FoodRatings foodRatings = new FoodRatings(
-                new String[]{"kimchi", "miso", "sushi", "moussaka", "ramen", "bulgogi"},
-                new String[]{"korean", "japanese", "japanese", "greek", "japanese", "korean"},
-                new int[]{9, 12, 8, 15, 14, 7}
+                new String[]{"emgqdbo", "jmvfxjohq", "qnvseohnoe", "yhptazyko", "ocqmvmwjq"},
+                new String[]{"snaxol", "snaxol", "snaxol", "fajbervsj", "fajbervsj"},
+                new int[]{2, 6, 18, 6, 5}
         );
 
-        System.out.println((foodRatings.highestRated("korean"))); // return "kimchi"
-        // "kimchi" is the highest rated korean food with a rating of 9.
-
-        System.out.println((foodRatings.highestRated("japanese"))); // return "ramen"
-        // "ramen" is the highest rated japanese food with a rating of 14.
-
-        foodRatings.changeRating("sushi", 16); // "sushi" now has a rating of 16.
-
-        System.out.println((foodRatings.highestRated("japanese"))); // return "sushi"
-        // "sushi" is the highest rated japanese food with a rating of 16.
-
-        foodRatings.changeRating("ramen", 16); // "ramen" now has a rating of 16.
-
-        System.out.println((foodRatings.highestRated("japanese"))); // return "ramen"
-        // Both "sushi" and "ramen" have a rating of 16.
-        // However, "ramen" is lexicographically smaller than "sushi".
-
+        foodRatings.changeRating("qnvseohnoe", 11);
+        System.out.println((foodRatings.highestRated("fajbervsj")));
+        foodRatings.changeRating("emgqdbo", 3);
+        foodRatings.changeRating("jmvfxjohq", 9);
+        foodRatings.changeRating("emgqdbo", 14);
+        System.out.println((foodRatings.highestRated("fajbervsj")));
+        System.out.println((foodRatings.highestRated("snaxol")));
     }
 }
 
 class FoodRatings {
     private static final Comparator<Food> FOOD_COMPARATOR = Comparator.comparingInt(Food::getRating).reversed().thenComparing(Food::getName);
-    private final Map<String, PriorityQueue<Food>> cuisineFoodMap;
+    private final Map<String, TreeSet<Food>> cuisineFoodMap;
     private final Map<String, String> foodCuisineMap;
     private final Map<String, Integer> foodRatingMap;
 
@@ -56,10 +48,9 @@ class FoodRatings {
 
             final Food food = new Food(tempFood, tempCuisine, tempRating);
 
-
-            final PriorityQueue<Food> priorityQueue = cuisineFoodMap.getOrDefault(tempCuisine, new PriorityQueue<>(FOOD_COMPARATOR));
-            priorityQueue.add(food);
-            cuisineFoodMap.put(tempCuisine, priorityQueue);
+            final TreeSet<Food> set = cuisineFoodMap.getOrDefault(tempCuisine, new TreeSet<>(FOOD_COMPARATOR));
+            set.add(food);
+            cuisineFoodMap.put(tempCuisine, set);
 
             foodCuisineMap.put(tempFood, tempCuisine);
             foodRatingMap.put(tempFood, tempRating);
@@ -67,27 +58,19 @@ class FoodRatings {
     }
 
     public void changeRating(final String foodName, final int newRating) {
-        foodRatingMap.put(foodName, newRating);
-
         final String cuisineName = foodCuisineMap.get(foodName);
-        final PriorityQueue<Food> priorityQueue = cuisineFoodMap.get(cuisineName);
-        final Food food = new Food(foodName, cuisineName, newRating);
-        priorityQueue.add(food);
+        final TreeSet<Food> set = cuisineFoodMap.get(cuisineName);
 
-        Food highestFood = priorityQueue.peek();
+        set.remove(new Food(foodName, cuisineName, foodRatingMap.get(foodName)));
 
-        while (foodRatingMap.get(highestFood.getName()) != highestFood.getRating()) {
-            priorityQueue.poll();
-            highestFood = priorityQueue.peek();
-        }
+        set.add(new Food(foodName, cuisineName, newRating));
+        foodRatingMap.put(foodName, newRating);
     }
 
     public String highestRated(final String cuisine) {
-        final PriorityQueue<Food> priorityQueue = cuisineFoodMap.get(cuisine);
+        final TreeSet<Food> set = cuisineFoodMap.get(cuisine);
 
-        final Food food = priorityQueue.peek();
-
-        return food.getName();
+        return set.first().getName();
     }
 }
 
