@@ -41,12 +41,12 @@ class Solution {
 class FoodRatings {
 
     private static final Comparator<Food> FOOD_COMPARATOR = Comparator.comparingInt(Food::getRating).reversed().thenComparing(Food::getName);
-    private final Map<String, List<Food>> cuisineFoodMap;
-    private final Map<String, Food> foodMap;
+    private final Map<String, PriorityQueue<Food>> cuisineFoodMap;
+    private final Map<String, String> foodCuisineMap;
 
     public FoodRatings(final String[] foods, final String[] cuisines, final int[] ratings) {
         cuisineFoodMap = new HashMap<>();
-        foodMap = new HashMap<>();
+        foodCuisineMap = new HashMap<>();
 
         for (int i = 0; i < ratings.length; i++) {
             final String tempFood = foods[i];
@@ -56,36 +56,37 @@ class FoodRatings {
             final Food food = new Food(tempFood, tempCuisine, tempRating);
 
 
-            final List<Food> foodList = cuisineFoodMap.getOrDefault(tempCuisine, new ArrayList<>());
-            foodList.add(food);
-            cuisineFoodMap.put(tempCuisine, foodList);
-            foodMap.put(tempFood, food);
-        }
+            final PriorityQueue<Food> priorityQueue = cuisineFoodMap.getOrDefault(tempCuisine, new PriorityQueue<>(FOOD_COMPARATOR));
+            priorityQueue.add(food);
+            cuisineFoodMap.put(tempCuisine, priorityQueue);
 
-        for (final List<Food> foodList : cuisineFoodMap.values()) {
-            foodList.sort(FOOD_COMPARATOR);
+            foodCuisineMap.put(tempFood, tempCuisine);
         }
     }
 
     public void changeRating(final String foodName, final int newRating) {
-        final Food food = foodMap.get(foodName);
-        food.setRating(newRating);
+        final String cuisineName = foodCuisineMap.get(foodName);
+        final PriorityQueue<Food> priorityQueue = cuisineFoodMap.get(cuisineName);
 
-        final List<Food> foodList = cuisineFoodMap.get(food.getCuisine());
-        foodList.sort(FOOD_COMPARATOR);
+        priorityQueue.remove(new Food(foodName, cuisineName, 0));
+
+        final Food food = new Food(foodName, cuisineName, newRating);
+        priorityQueue.add(food);
     }
 
     public String highestRated(final String cuisine) {
-        final List<Food> foodList = cuisineFoodMap.get(cuisine);
-        System.out.println(foodList);
-        return foodList.get(0).getName();
+        final PriorityQueue<Food> priorityQueue = cuisineFoodMap.get(cuisine);
+
+        final Food food = priorityQueue.peek();
+
+        return food.getName();
     }
 }
 
 class Food {
     private final String name;
     private final String cuisine;
-    private int rating;
+    private final int rating;
 
     public Food(final String name, final String cuisine, final int rating) {
         this.name = name;
@@ -97,15 +98,20 @@ class Food {
         return name;
     }
 
-    public String getCuisine() {
-        return cuisine;
-    }
-
     public int getRating() {
         return rating;
     }
 
-    public void setRating(final int rating) {
-        this.rating = rating;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Food food = (Food) o;
+        return Objects.equals(getName(), food.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
     }
 }
