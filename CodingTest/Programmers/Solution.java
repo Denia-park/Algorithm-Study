@@ -1,73 +1,92 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 class Solution {
-    public String[] solution(final int[][] line) {
-        int smallX = Integer.MAX_VALUE;
-        int bigX = Integer.MIN_VALUE;
-        int smallY = Integer.MAX_VALUE;
-        int bigY = Integer.MIN_VALUE;
+    public int[] solution(final int n) {
+        //빈 배열 만들기
+        final int[][] arr = new int[n][n];
 
-        final List<int[]> points = new ArrayList<>();
+        //시작 숫자 및 최대 값 지정하기
+        int count = 1;
+        final long maxCount = ((long) n * (n + 1)) / 2;
 
-        //모든 교점 구하기
-        for (int i = 0; i < line.length; i++) {
-            final int[] origin = line[i];
+        //방향 지정하기
+        Direction direction = Direction.DOWN;
 
-            for (int j = i + 1; j < line.length; j++) {
-                final int[] target = line[j];
+        //시작 인덱스 정하기
+        int rowIdx = 0;
+        int colIdx = 0;
 
-                final long mod = ((long) origin[0] * target[1]) - ((long) origin[1] * target[0]);
+        //삼각형 사이즈를 조절할 변수 지정
+        int height = n;
+        int width = 1;
 
-                //평행
-                if (mod == 0) {
-                    continue;
-                }
+        //값 채우기
+        while (count <= maxCount) {
+            arr[rowIdx][colIdx] = count;
 
-                //교점 구하기
-                final long xValue = ((long) origin[1] * target[2]) - ((long) origin[2] * target[1]);
-                final long yValue = ((long) origin[2] * target[0]) - ((long) origin[0] * target[2]);
+            switch (direction) {
+                case DOWN:
+                    if ((rowIdx + 1) == height) {
+                        colIdx++;
 
-                //정수 인지 확인하기
-                if (xValue % mod != 0 || yValue % mod != 0) {
-                    continue;
-                }
+                        //끝에 도달했으므로 방향을 바꿔야 한다.
+                        direction = Direction.RIGHT;
+                        break;
+                    }
 
-                final int pointX = (int) (xValue / mod);
-                final int pointY = (int) (yValue / mod);
+                    rowIdx++;
 
-                //최소, 최대 x, y 구하기
-                bigX = Math.max(bigX, pointX);
-                smallX = Math.min(smallX, pointX);
-                bigY = Math.max(bigY, pointY);
-                smallY = Math.min(smallY, pointY);
+                    break;
+                case UP:
+                    //이미 채워진 값을 만났다 == 꼭대기에 도달했다.
+                    if (arr[rowIdx - 1][colIdx - 1] != 0) {
+                        rowIdx++;
 
-                points.add(new int[]{pointX, pointY});
+                        //한번 삼각형을 완성했으므로, 삼각형의 사이즈를 줄여야 한다.
+                        height--;
+                        width--;
+
+                        //끝에 도달했으므로 방향을 바꿔야 한다.
+                        direction = Direction.DOWN;
+                        break;
+                    }
+
+                    rowIdx--;
+                    colIdx--;
+
+                    break;
+                case RIGHT:
+                    if ((colIdx + 1) == rowIdx + width) {
+                        colIdx--;
+                        rowIdx--;
+
+                        //끝에 도달했으므로 방향을 바꿔야 한다.
+                        direction = Direction.UP;
+                        break;
+                    }
+
+                    colIdx++;
+
+                    break;
+                default:
+                    break;
             }
+
+            count++;
         }
 
-        //좌표를 기준으로 다른 좌표들과의 거리 구하기
-        final int row = bigY - smallY + 1;
-        final int col = bigX - smallX + 1;
-        final char[][] map = new char[row][col];
-        for (final char[] chars : map) {
-            Arrays.fill(chars, '.');
-        }
+        //배열을 값으로 옮기기
+        return Arrays.stream(arr)
+                .flatMapToInt(Arrays::stream)
+                .filter(value -> value != 0)
+                .toArray();
+    }
 
-        //그림 그리기
-        for (final int[] point : points) {
-            map[bigY - point[1]][point[0] - smallX] = '*';
-        }
-
-        //정답 구하기
-        final String[] answer = new String[row];
-        for (int i = 0; i < row; i++) {
-            answer[i] = new String(map[i]);
-        }
-
-        return answer;
+    enum Direction {
+        UP,
+        DOWN,
+        RIGHT
     }
 }

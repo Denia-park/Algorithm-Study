@@ -6,10 +6,10 @@ public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[2, -1, 4], [-2, -1, 4], [0, -1, 1], [5, -8, -12], [5, 8, 12]]"))));
-        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[0, 1, -1], [1, 0, -1], [1, 0, 1]]"))));
-        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, -1, 0], [2, -1, 0]]"))));
-        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, -1, 0], [2, -1, 0], [4, -1, 0]]"))));
+        System.out.println(Arrays.toString(ts.solution(4)));
+//        System.out.println(Arrays.toString(ts.solution(5)));
+//        System.out.println(Arrays.toString(ts.solution(6)));
+//        System.out.println(Arrays.equals(ts.solution(6), new int[]{1, 2, 15, 3, 16, 14, 4, 17, 21, 13, 5, 18, 19, 20, 12, 6, 7, 8, 9, 10, 11}));
     }
 }
 
