@@ -18,19 +18,9 @@ class Solution {
             final int[] origin = line[i];
 
             for (int j = i + 1; j < line.length; j++) {
-                int pointX = 0;
-                int pointY = 0;
-
-                final int originA = origin[0];
-                final int originB = origin[1];
-                final int originE = origin[2];
-
                 final int[] target = line[j];
-                final int targetC = target[0];
-                final int targetD = target[1];
-                final int targetF = target[2];
 
-                final long mod = (long) originA * targetD - (long) originB * targetC;
+                final long mod = ((long) origin[0] * target[1]) - ((long) origin[1] * target[0]);
 
                 //평행
                 if (mod == 0) {
@@ -38,16 +28,16 @@ class Solution {
                 }
 
                 //교점 구하기
-                final long xValue = (long) originB * targetF - (long) originE * targetD;
-                final long yValue = (long) originE * targetC - (long) originA * targetF;
+                final long xValue = ((long) origin[1] * target[2]) - ((long) origin[2] * target[1]);
+                final long yValue = ((long) origin[2] * target[0]) - ((long) origin[0] * target[2]);
 
                 //정수 인지 확인하기
                 if (xValue % mod != 0 || yValue % mod != 0) {
                     continue;
                 }
 
-                pointX = (int) (xValue / mod);
-                pointY = (int) (yValue / mod);
+                final int pointX = (int) (xValue / mod);
+                final int pointY = (int) (yValue / mod);
 
                 //최소, 최대 x, y 구하기
                 bigX = Math.max(bigX, pointX);
