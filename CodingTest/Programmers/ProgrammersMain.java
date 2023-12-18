@@ -1,15 +1,15 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[0, 0, 0, 1, 1, 1, 0, 0], [0, 0, 0, 0, 1, 1, 0, 0], [1, 1, 0, 0, 0, 1, 1, 0], [1, 1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 1, 1]]")));
-        System.out.println(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, 0, 1, 0, 1, 1], [1, 0, 1, 0, 0, 0], [1, 0, 1, 0, 0, 1], [1, 0, 0, 1, 0, 0], [1, 0, 0, 1, 0, 1], [1, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]]")));
-        System.out.println(ts.solution(new int[][]{{1, 0}, {1, 0}}));
-
-        System.out.println(ts.solution(new int[][]{{1, 1, 1, 1}, {1, 0, 0, 0}, {1, 0, 1, 0}, {1, 0, 0, 0}, {1, 1, 1, 1}}));
-        System.out.println(ts.solution(new int[][]{{1, 1, 1, 1, 0}, {1, 0, 0, 0, 0}, {0, 0, 0, 1, 1}, {1, 0, 0, 1, 0}, {1, 1, 0, 1, 0}}));
+        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[2, -1, 4], [-2, -1, 4], [0, -1, 1], [5, -8, -12], [5, 8, 12]]"))));
+        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[0, 1, -1], [1, 0, -1], [1, 0, 1]]"))));
+        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, -1, 0], [2, -1, 0]]"))));
+        System.out.println(Arrays.toString(ts.solution(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, -1, 0], [2, -1, 0], [4, -1, 0]]"))));
     }
 }
 
