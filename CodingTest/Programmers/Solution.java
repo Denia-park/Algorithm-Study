@@ -1,23 +1,35 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 class Solution {
-    public int[] solution(final long n) {
-        final String str = String.valueOf(n);
-        final Deque<Character> stack = new ArrayDeque<>();
+    public String solution(final String s, final int n) {
+        final StringBuilder stringBuilder = new StringBuilder();
 
-        for (final char ch : str.toCharArray()) {
-            stack.push(ch);
+        final int LowerZ = 'z';
+        final int UpperZ = 'Z';
+
+        for (int i = 0; i < s.length(); i++) {
+            final char c = s.charAt(i);
+
+            if (Character.isLowerCase(c)) {
+                int newChar = c + n;
+                if (newChar > LowerZ) {
+                    newChar = newChar - LowerZ + 'a' - 1;
+                }
+
+                stringBuilder.append((char) newChar);
+            } else if (Character.isUpperCase(c)) {
+                int newChar = c + n;
+
+                if (newChar > UpperZ) {
+                    newChar = newChar - UpperZ + 'A' - 1;
+                }
+
+                stringBuilder.append((char) newChar);
+            } else {
+                stringBuilder.append(c);
+            }
         }
 
-        final int[] answer = new int[stack.size()];
-
-        for (int i = 0; i < answer.length; i++) {
-            answer[i] = Character.getNumericValue(stack.pop());
-        }
-
-        return answer;
+        return stringBuilder.toString();
     }
 }
