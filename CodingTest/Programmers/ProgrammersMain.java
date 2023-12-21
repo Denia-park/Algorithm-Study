@@ -18,6 +18,14 @@ public class ProgrammersMain {
                         )
                 )
         );
+        System.out.println(
+                Arrays.toString(
+                        ts.solution(
+                                new String[][]{
+                                        {"PXOOO", "OOOOO", "PXOOO", "OOOOO", "OOOPO"}}
+                        )
+                )
+        );
 //        System.out.println(Arrays.toString(ts.solution(5)));
 //        System.out.println(Arrays.toString(ts.solution(6)));
 //        System.out.println(Arrays.equals(ts.solution(6), new int[]{1, 2, 15, 3, 16, 14, 4, 17, 21, 13, 5, 18, 19, 20, 12, 6, 7, 8, 9, 10, 11}));

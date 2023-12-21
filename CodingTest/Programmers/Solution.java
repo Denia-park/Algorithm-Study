@@ -44,11 +44,11 @@ class Solution {
         return answer;
     }
 
-    private boolean bfs(final String[] map, final int row, final int col) {
+    private boolean bfs(final String[] map, final int startRow, final int startCol) {
         final Set<String> isVisited = new HashSet<>();
         final Deque<int[]> deque = new ArrayDeque<>();
-        deque.push(new int[]{row, col, 0});
-        isVisited.add(row + "," + col);
+        deque.push(new int[]{startRow, startCol, 0});
+        isVisited.add(startRow + "," + startCol);
 
         while (!deque.isEmpty()) {
             final int[] cur = deque.poll();
@@ -57,7 +57,7 @@ class Solution {
             final int curCol = cur[1];
             final int curDist = cur[2];
 
-            if ((curRow != row && curCol != col)
+            if ((curDist != 0)
                     && (map[curRow].charAt(curCol) == PLAYER)
                     && (curDist <= 2)) {
                 return false;
