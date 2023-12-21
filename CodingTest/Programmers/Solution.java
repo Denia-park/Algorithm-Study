@@ -1,35 +1,26 @@
 package CodingTest.Programmers;
 
 class Solution {
-    public String solution(final String s, final int n) {
-        final StringBuilder stringBuilder = new StringBuilder();
+    public int[][] solution(final int[][] arr1, final int[][] arr2) {
+        final int newRowNum = arr1.length;
+        final int newColNum = arr2[0].length;
 
-        final int LowerZ = 'z';
-        final int UpperZ = 'Z';
+        final int[][] answer = new int[newRowNum][newColNum];
 
-        for (int i = 0; i < s.length(); i++) {
-            final char c = s.charAt(i);
+        //행렬의 곱셈
+        for (int row = 0; row < newRowNum; row++) {
+            for (int col = 0; col < newColNum; col++) {
+                int tempValue = 0;
 
-            if (Character.isLowerCase(c)) {
-                int newChar = c + n;
-                if (newChar > LowerZ) {
-                    newChar = newChar - LowerZ + 'a' - 1;
+                //arr1 col만큼, arr2 row만큼
+                for (int idx = 0; idx < arr1[0].length; idx++) {
+                    tempValue += arr1[row][idx] * arr2[idx][col];
                 }
 
-                stringBuilder.append((char) newChar);
-            } else if (Character.isUpperCase(c)) {
-                int newChar = c + n;
-
-                if (newChar > UpperZ) {
-                    newChar = newChar - UpperZ + 'A' - 1;
-                }
-
-                stringBuilder.append((char) newChar);
-            } else {
-                stringBuilder.append(c);
+                answer[row][col] = tempValue;
             }
         }
 
-        return stringBuilder.toString();
+        return answer;
     }
 }
