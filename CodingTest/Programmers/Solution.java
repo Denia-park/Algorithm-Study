@@ -7,6 +7,10 @@ class Solution {
     public int solution(final String original) {
         int answer = Integer.MAX_VALUE;
 
+        if (original.length() == 1) {
+            return 1;
+        }
+
         //stack을 사용해서 같은 단어면 Count 하도록 하면 어떨까 ?
         for (int count = 1; count < original.length(); count++) {
             final Deque<Word> stack = new ArrayDeque<>();
@@ -45,6 +49,7 @@ class Solution {
                     stringBuilder.append(word.getCount()).append(word.getStr());
                 }
             }
+
 
 //            System.out.println(stringBuilder);
 
