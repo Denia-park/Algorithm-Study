@@ -1,30 +1,14 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
         System.out.println(
-                Arrays.toString(
-                        ts.solution(
-                                new String[][]{
-                                        {"POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"},
-                                        {"POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"},
-                                        {"PXOPX", "OXOXP", "OXPOX", "OXXOP", "PXPOX"},
-                                        {"OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"},
-                                        {"PXPXP", "XPXPX", "PXPXP", "XPXPX", "PXPXP"}}
+                ts.solution(
+                                "try hello world"
                         )
-                )
-        );
-        System.out.println(
-                Arrays.toString(
-                        ts.solution(
-                                new String[][]{
-                                        {"PXOOO", "OOOOO", "PXOOO", "OOOOO", "OOOPO"}}
-                        )
-                )
+                        .equals("TrY HeLlO WoRlD")
         );
 //        System.out.println(Arrays.toString(ts.solution(5)));
 //        System.out.println(Arrays.toString(ts.solution(6)));
