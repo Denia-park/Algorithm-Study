@@ -1,14 +1,21 @@
 package CodingTest.Programmers;
 
 class Solution {
-    public int solution(int n) {
-        final StringBuilder tempStr = new StringBuilder();
+    public int[] solution(String s) {
+        int zeroCount = 0;
+        int convertCount = 0;
 
-        while (n > 0) {
-            tempStr.append(n % 3);
-            n /= 3;
+        while (!s.equals("1")) {
+            final int beforeLength = s.length();
+            final int afterLength = s.replace("0", "").length();
+
+            zeroCount += beforeLength - afterLength;
+
+            convertCount++;
+
+            s = Integer.toBinaryString(afterLength);
         }
 
-        return Integer.valueOf(tempStr.toString(), 3);
+        return new int[]{convertCount, zeroCount};
     }
 }
