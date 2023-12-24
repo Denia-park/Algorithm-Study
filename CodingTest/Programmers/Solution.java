@@ -1,21 +1,20 @@
 package CodingTest.Programmers;
 
 class Solution {
-    public int[] solution(String s) {
-        int zeroCount = 0;
-        int convertCount = 0;
+    boolean solution(final String s) {
+        int pCount = 0;
+        int yCount = 0;
 
-        while (!s.equals("1")) {
-            final int beforeLength = s.length();
-            final int afterLength = s.replace("0", "").length();
+        for (int i = 0; i < s.length(); i++) {
+            final char ch = s.charAt(i);
 
-            zeroCount += beforeLength - afterLength;
-
-            convertCount++;
-
-            s = Integer.toBinaryString(afterLength);
+            if (Character.toUpperCase(ch) == 'P') {
+                pCount++;
+            } else if (Character.toUpperCase(ch) == 'Y') {
+                yCount++;
+            }
         }
 
-        return new int[]{convertCount, zeroCount};
+        return pCount == yCount;
     }
 }
