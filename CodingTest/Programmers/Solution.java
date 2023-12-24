@@ -1,20 +1,13 @@
 package CodingTest.Programmers;
 
 class Solution {
-    boolean solution(final String s) {
-        int pCount = 0;
-        int yCount = 0;
+    String[] nums = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
 
-        for (int i = 0; i < s.length(); i++) {
-            final char ch = s.charAt(i);
-
-            if (Character.toUpperCase(ch) == 'P') {
-                pCount++;
-            } else if (Character.toUpperCase(ch) == 'Y') {
-                yCount++;
-            }
+    public int solution(String s) {
+        for (int i = 0; i < nums.length; i++) {
+            s = s.replace(nums[i], String.valueOf(i));
         }
 
-        return pCount == yCount;
+        return Integer.parseInt(s);
     }
 }
