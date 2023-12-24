@@ -19,27 +19,18 @@ class Solution {
         int zeroOneCount = 0;
         int oneZeroCount = 0;
 
-        //2개씩 잘라서 10 만들어서 값 가지기
+        //10 순서 혹은 01 순서로 비교해서 값 비교하기
         for (int i = 0; i < s.length(); i++) {
             if (i % 2 == 0) {
                 if (s.charAt(i) == '0') {
                     zeroOneCount++;
-                }
-            } else {
-                if (s.charAt(i) == '1') {
-                    zeroOneCount++;
-                }
-            }
-        }
-
-        //2개씩 잘라서 01 만들어서 값 가지기
-        for (int i = 0; i < s.length(); i++) {
-            if (i % 2 == 0) {
-                if (s.charAt(i) == '1') {
+                } else {
                     oneZeroCount++;
                 }
             } else {
-                if (s.charAt(i) == '0') {
+                if (s.charAt(i) == '1') {
+                    zeroOneCount++;
+                } else {
                     oneZeroCount++;
                 }
             }
