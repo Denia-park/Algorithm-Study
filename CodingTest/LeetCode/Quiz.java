@@ -1,10 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -17,51 +12,36 @@ public class Quiz {
 }
 
 class Solution {
-    private Map<String, Character> mappingCode;
-    private Set<String> answerSet;
-
     public int numDecodings(final String s) {
-        mappingCode = new HashMap<>();
-        answerSet = new HashSet<>();
-        mappingCode();
-
-        // dfs를 사용하자.
-        dfs(s, "");
-
-        for (final String answer : answerSet) {
-            System.out.println("answer = " + answer);
-        }
-        System.out.println("answerSet Size() = " + answerSet.size());
-        return answerSet.size();
-    }
-
-    private void dfs(final String restString, final String answerString) {
-        if (restString.isEmpty()) {
-            answerSet.add(answerString);
-            return;
+        //s가 null 이거나, 길이가 0이거나, 0으로 시작하면 0을 리턴한다.
+        if (s == null || s.isEmpty() || s.charAt(0) == '0') {
+            return 0;
         }
 
-        // 1. 1개의 문자를 사용하는 경우
-        // 2. 2개의 문자를 사용하는 경우
-        for (int idx = 1; idx <= 2; idx++) {
-            if (restString.length() < idx) {
-                continue;
+        //길이에 대해서 정의
+        final int len = s.length();
+
+        //dp 배열 초기화
+        final int[] dp = new int[len + 1];
+        dp[0] = 1; //dp[0]은 1로 초기화
+        dp[1] = 1; //dp[1]은 1로 초기화
+
+        for (int count = 2; count <= len; count++) {
+            //한자리 숫자 추가하는 경우
+            final int oneDigit = s.charAt(count - 1) - '0';
+
+            //  0으로 시작하면, decode 방법이 없으므로 제외
+            if (oneDigit != 0) {
+                dp[count] += dp[count - 1];
             }
 
-            final String code = restString.substring(0, idx);
-            final String rest = restString.substring(idx);
-
-            if (!mappingCode.containsKey(code)) {
-                continue;
+            //두자리 숫자 추가하는 경우
+            final int twoDigit = Integer.parseInt(s.substring(count - 2, count));
+            if (10 <= twoDigit && twoDigit <= 26) {
+                dp[count] += dp[count - 2];
             }
-
-            dfs(rest, answerString + mappingCode.get(code));
         }
-    }
 
-    private void mappingCode() {
-        for (int i = 0; i < 26; i++) {
-            mappingCode.put(String.valueOf(i + 1), (char) ('A' + i));
-        }
+        return dp[len];
     }
 }
