@@ -1,13 +1,17 @@
 package CodingTest.Programmers;
 
 class Solution {
-    String[] nums = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-
-    public int solution(String s) {
-        for (int i = 0; i < nums.length; i++) {
-            s = s.replace(nums[i], String.valueOf(i));
+    public boolean solution(final String s) {
+        if (s.length() != 4 && s.length() != 6) {
+            return false;
         }
 
-        return Integer.parseInt(s);
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
