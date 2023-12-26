@@ -20,14 +20,10 @@ class Solution {
         dp[0][0] = 1;
 
         //1번째 주사위부터 계산을 하자.
-        for (int diceIdx = 1; diceIdx < n + 1; diceIdx++) {
-            for (int targetIdx = 1; targetIdx < target + 1; targetIdx++) {
-                for (int numIdx = 1; numIdx < k + 1; numIdx++) {
+        for (int diceIdx = 1; diceIdx <= n; diceIdx++) {
+            for (int targetIdx = diceIdx; targetIdx <= Math.min(diceIdx * k, target); targetIdx++) {
+                for (int numIdx = 1; numIdx <= Math.min(k, targetIdx); numIdx++) {
                     final int restValue = targetIdx - numIdx;
-
-                    if (restValue < 0) {
-                        continue;
-                    }
 
                     dp[diceIdx][targetIdx] = (dp[diceIdx][targetIdx] + (dp[diceIdx - 1][restValue] % MOD)) % MOD;
                 }
