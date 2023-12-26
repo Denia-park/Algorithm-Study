@@ -1,85 +1,54 @@
 package CodingTest.Programmers;
 
-import java.util.List;
-
 class Solution {
-    List<Character> specialCharacters = List.of('-', '_', '.');
+    int[][] globalArr;
 
-    public String solution(String new_id) {
-        //1단계 new_id의 모든 대문자를 대응되는 소문자로 치환합니다.
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < new_id.length(); i++) {
-            final char c = new_id.charAt(i);
-            if (Character.isUpperCase(c)) {
-                sb.append(Character.toLowerCase(c));
-            } else {
-                sb.append(c);
-            }
-        }
-        new_id = sb.toString();
+    public int[] solution(final int[][] arr) {
+        globalArr = arr;
 
-        //2단계 new_id에서 알파벳 소문자, 숫자, 빼기(-), 밑줄(_), 마침표(.)를 제외한 모든 문자를 제거합니다.
-        sb = new StringBuilder();
-        for (int i = 0; i < new_id.length(); i++) {
-            final char c = new_id.charAt(i);
-            if (!Character.isLowerCase(c)
-                    && !Character.isDigit(c)
-                    && !specialCharacters.contains(c)) {
-                continue;
-            }
+        return calculate(0, 0, arr.length);
+    }
 
-            sb.append(c);
-        }
-        new_id = sb.toString();
+    private int[] calculate(final int startRow, final int startCol, final int length) {
+        //모든 값이 같은지 판단
+        final int saveValue = globalArr[startRow][startCol];
+        boolean sameFlag = true;
+        for (int row = startRow; row < startRow + length; row++) {
+            for (int col = startCol; col < startCol + length; col++) {
+                final int curValue = globalArr[row][col];
 
-        //3단계 new_id에서 마침표(.)가 2번 이상 연속된 부분을 하나의 마침표(.)로 치환합니다.
-        sb = new StringBuilder();
-        for (int i = 0; i < new_id.length(); i++) {
-            final char c = new_id.charAt(i);
-            if (c == '.') {
-                sb.append('.');
-
-                while (i + 1 < new_id.length() && new_id.charAt(i + 1) == '.') {
-                    i++;
+                if (saveValue != curValue) {
+                    sameFlag = false;
+                    break;
                 }
-            } else {
-                sb.append(c);
             }
-        }
-        new_id = sb.toString();
 
-        //4단계 new_id에서 마침표(.)가 처음이나 끝에 위치한다면 제거합니다.
-        if (!new_id.isEmpty() && new_id.charAt(0) == '.') {
-            new_id = new_id.substring(1);
-        }
-        if (!new_id.isEmpty() && new_id.charAt(new_id.length() - 1) == '.') {
-            new_id = new_id.substring(0, new_id.length() - 1);
-        }
-
-        //5단계 new_id가 빈 문자열이라면, new_id에 "a"를 대입합니다.
-        if (new_id.isEmpty()) {
-            new_id = "a";
-        }
-
-        //6단계 new_id의 길이가 16자 이상이면, new_id의 첫 15개의 문자를 제외한 나머지 문자들을 모두 제거합니다.
-        if (new_id.length() >= 16) {
-            new_id = new_id.substring(0, 15);
-        }
-
-        //        만약 제거 후 마침표(.)가 new_id의 끝에 위치한다면 끝에 위치한 마침표(.) 문자를 제거합니다.
-        if (new_id.charAt(new_id.length() - 1) == '.') {
-            new_id = new_id.substring(0, new_id.length() - 1);
-        }
-
-        //7단계 new_id의 길이가 2자 이하라면, new_id의 마지막 문자를 new_id의 길이가 3이 될 때까지 반복해서 끝에 붙입니다.
-        if (new_id.length() <= 2) {
-            final char lastChar = new_id.charAt(new_id.length() - 1);
-
-            while (new_id.length() < 3) {
-                new_id += lastChar;
+            if (!sameFlag) {
+                break;
             }
         }
 
-        return new_id;
+        if (sameFlag) {
+            return globalArr[startRow][startCol] == 0 ? new int[]{1, 0} : new int[]{0, 1};
+        }
+
+        //다르면 4등분
+        final int[] sumArr = {0, 0};
+        final int halfLength = length / 2;
+        //11시
+        sum(sumArr, calculate(startRow, startCol, halfLength));
+        //1시
+        sum(sumArr, calculate(startRow, startCol + halfLength, halfLength));
+        //7시
+        sum(sumArr, calculate(startRow + halfLength, startCol, halfLength));
+        //5시
+        sum(sumArr, calculate(startRow + halfLength, startCol + halfLength, halfLength));
+
+        return sumArr;
+    }
+
+    private void sum(final int[] sumArr, final int[] calculate) {
+        sumArr[0] += calculate[0];
+        sumArr[1] += calculate[1];
     }
 }
