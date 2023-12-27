@@ -4,30 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
+    private final String[] group = new String[]{"A", "E", "I", "O", "U"};
+    List<String> answerList;
+    private int answer;
+    private String target;
 
-    private List<int[]> answer;
+    public int solution(final String word) {
+        answerList = new ArrayList<>();
+        answer = -1;
+        target = word;
 
-    public int[][] solution(final int totalNum) {
-        answer = new ArrayList<>();
+        search("");
 
-        hanoi(totalNum, 1, 2, 3);
-
-        return answer.toArray(int[][]::new);
+        return answer;
     }
 
-    private void hanoi(final int totalNum, final int from, final int by, final int to) {
-        if (totalNum == 1) {
-            answer.add(new int[]{from, to});
+    private void search(final String curString) {
+        if (curString.length() > 5 || answer != -1) {
             return;
         }
 
-        //totalNum - 1개를 from에서 by로 옮긴다.
-        hanoi(totalNum - 1, from, to, by);
+        if (!curString.isEmpty()) {
+            answerList.add(curString);
+        }
 
-        //1개를 from에서 to로 옮긴다.
-        hanoi(1, from, by, to);
+        if (curString.equals(target)) {
+            answer = answerList.size();
+            return;
+        }
 
-        //totalNum - 1개를 by에서 to로 옮긴다.
-        hanoi(totalNum - 1, by, from, to);
+        for (final String str : group) {
+            search(curString + str);
+        }
     }
 }
