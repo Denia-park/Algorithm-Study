@@ -27,8 +27,13 @@ class Solution {
         while (right < length && left < right) {
             //풍선 색이 다르면 넘어간다
             if (chars[left] != chars[right]) {
-                right++;
                 left++;
+
+                while (chars[left] == EMPTY) {
+                    left++;
+                }
+
+                right = left + 1;
                 continue;
             }
 
@@ -40,12 +45,14 @@ class Solution {
                 chars[left] = EMPTY;
 
                 //left가 터졌으니까 left를 옮겨준다.
+                left++;
+
                 while (chars[left] == EMPTY) {
                     left++;
                 }
 
                 //연속된 풍선을 비교해야 하니까 right도 같이 옮긴다.
-                right++;
+                right = left + 1;
             } else {
                 //더 짧은 시간을 answer에 더한다.
                 answer += neededTime[right];
