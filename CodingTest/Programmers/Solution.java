@@ -27,15 +27,22 @@ class Solution {
 
         students.sort(null);
 
-        if (students.get(0).score == students.get(1).score
-                && students.get(1).score == students.get(2).score) {
-
-            return students.stream()
-                    .mapToInt(Student::getNumber)
-                    .toArray();
+        if (students.get(0).score != students.get(1).score) {
+            return new int[]{
+                    students.get(0).number
+            };
+        } else if (students.get(1).score != students.get(2).score) {
+            return new int[]{
+                    students.get(0).number,
+                    students.get(1).number
+            };
+        } else {
+            return new int[]{
+                    students.get(0).number,
+                    students.get(1).number,
+                    students.get(2).number
+            };
         }
-
-        return new int[]{students.get(0).number};
     }
 
     static class Student implements Comparable<Student> {
