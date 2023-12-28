@@ -64,20 +64,20 @@ class Solution {
                 postfixQueue.addLast(operatorStack.pop());
             }
 
-            final Stack<Integer> calculateStack = new Stack<>();
+            final Stack<Long> calculateStack = new Stack<>();
             while (!postfixQueue.isEmpty()) {
                 final String popped = postfixQueue.pop();
 
                 //연산자 아니면 Stack에 넣기
                 if (!operatorString.contains(popped)) {
-                    calculateStack.push(Integer.valueOf(popped));
+                    calculateStack.push(Long.valueOf(popped));
                     continue;
                 }
 
                 //연산자이면 계산
-                final int value2 = calculateStack.pop();
-                final int value1 = calculateStack.pop();
-                int answerValue = 0;
+                final long value2 = calculateStack.pop();
+                final long value1 = calculateStack.pop();
+                long answerValue = 0;
 
                 switch (popped) {
                     case "+":
