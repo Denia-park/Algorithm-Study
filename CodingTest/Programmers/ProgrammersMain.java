@@ -6,7 +6,8 @@ public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new int[]{1, 2, 3, 4, 5})));
-        System.out.println(Arrays.toString(ts.solution(new int[]{1, 3, 2, 4, 2})));
+        System.out.println(Arrays.toString(ts.solution(10, 2)));
+        System.out.println(Arrays.toString(ts.solution(8, 1)));
+        System.out.println(Arrays.toString(ts.solution(24, 24)));
     }
 }
