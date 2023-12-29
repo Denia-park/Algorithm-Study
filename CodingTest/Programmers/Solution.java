@@ -8,15 +8,15 @@ class Solution {
     public int solution(final String numbers) {
         int answer = 0;
 
-        //에라토스테네스의 체를 통해서 소수 구하기
-        //1이상 7이하 수 -> 최대 7자리 수 -> 10000000까지
-        final boolean[] primeNumbers = eratosthenes();
-
-//        System.out.println(Arrays.toString(primeNumbers));
-
         //number로 모든 수 구하기
         final Set<Integer> allNumbers = permutation(numbers);
-//        System.out.println(allNumbers);
+
+        //수 중에 가장 큰 값
+        final int maxValue = allNumbers.stream().max(Integer::compareTo).orElse(-1);
+
+        //에라토스테네스의 체를 통해서 소수 구하기
+        //1이상 7이하 수 -> 최대 7자리 수 -> 10000000까지지만 maxValue 이용해서 구하기
+        final boolean[] primeNumbers = eratosthenes(maxValue);
 
         //몇개나 되는지 확인하기
         for (final Integer allNumber : allNumbers) {
@@ -30,17 +30,18 @@ class Solution {
         return answer;
     }
 
-    private boolean[] eratosthenes() {
-        final int MAX = 10_000_000;
-        final boolean[] primeNumbers = new boolean[MAX];
+    private boolean[] eratosthenes(final int numMax) {
+        final int calculateMax = numMax + 1;
+
+        final boolean[] primeNumbers = new boolean[calculateMax];
 
         Arrays.fill(primeNumbers, true);
         primeNumbers[0] = false;
         primeNumbers[1] = false;
 
-        //2에서 Math.sqrt(10000000)까지 반복
-        for (int i = 2; i <= Math.sqrt(MAX); i++) {
-            for (int j = (2 * i); j < MAX; j += i) {
+        //2에서 Math.sqrt(max)까지 반복
+        for (int i = 2; i <= Math.sqrt(calculateMax); i++) {
+            for (int j = (2 * i); j < calculateMax; j += i) {
                 primeNumbers[j] = false;
             }
         }
