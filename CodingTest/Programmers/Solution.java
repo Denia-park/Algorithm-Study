@@ -5,86 +5,86 @@ import java.util.*;
 class Solution {
     public int solution(final String[] user_id, final String[] banned_id) {
         final Set<String> answerSet = new HashSet<>();
-        final List<String> userIdList = Arrays.asList(user_id);
 
-        //각 자리수에 들어갈 수 있는 알파벳 및 숫자 추가
-        final Map<Integer, Set<String>> digitCharMap = new HashMap<>();
+        //banId에 맞는 후보(Set<String>)를 구하기 위해서 Map 초기화
+        final Map<Integer, Set<String>> digitCandidateMap = initMap(banned_id);
 
-        for (final String id : user_id) {
-            for (int i = 0; i < id.length(); i++) {
-                final char ch = id.charAt(i);
+        //banId에 해당할 수 있는 모든 userId 목록 구하기
+        findAllCandidateForBanId(user_id, banned_id, digitCandidateMap);
 
-                final Set<String> set = digitCharMap.getOrDefault(i, new HashSet<>());
-                set.add(String.valueOf(ch));
-                digitCharMap.put(i, set);
-            }
-        }
 
-        //ban에 각 요소에 맞는 Id를 찾아서 저장
-        final Map<Integer, List<String>> banTargetIdMap = new HashMap<>();
-        for (int i = 0; i < banned_id.length; i++) {
-            banTargetIdMap.put(i, new ArrayList<>());
-        }
-
-        for (int banIdIdx = 0; banIdIdx < banned_id.length; banIdIdx++) {
-            final String badId = banned_id[banIdIdx];
-            //banId 길이만큼 문자열이 만들어 지면, 존재하는지 확인하고 List에 저장
-            final Deque<String> queue = new ArrayDeque<>();
-            queue.addLast("");
-
-            while (!queue.isEmpty()) {
-                String currentId = queue.pollFirst();
-                final int curIdLength = currentId.length();
-
-                if (curIdLength == badId.length()) {
-                    //해당 아이디가 실제로 존재하는 아이디 인지 확인
-                    if (userIdList.contains(currentId)) {
-                        banTargetIdMap.get(banIdIdx).add(currentId);
-                    }
-
-                    continue;
-                }
-
-                final char curChar = badId.charAt(curIdLength);
-
-                if (curChar != '*') {
-                    currentId += curChar;
-                    queue.addLast(currentId);
-                    continue;
-                }
-
-                for (final String ch : digitCharMap.get(curIdLength)) {
-                    queue.addLast(currentId + ch);
-                }
-            }
-        }
-
-        //아이디는 중복될 수 없다.
-        getIdPermutation(answerSet, banTargetIdMap, 0, "");
+        //가능한 BanId 조합 구하기
+        final ArrayDeque<String> permutationSaveDeque = new ArrayDeque<>();
+        getIdPermutation(answerSet, digitCandidateMap, 0, permutationSaveDeque);
 
         return answerSet.size();
     }
 
-    private void getIdPermutation(final Set<String> answerSet, final Map<Integer, List<String>> banTargetIdMap, final int curIdx, final String curStr) {
+    private Map<Integer, Set<String>> initMap(final String[] banned_id) {
+        final Map<Integer, Set<String>> digitCandidateMap = new HashMap<>();
+        for (int i = 0; i < banned_id.length; i++) {
+            digitCandidateMap.put(i, new HashSet<>());
+        }
+        return digitCandidateMap;
+    }
+
+    private void findAllCandidateForBanId(final String[] user_id, final String[] banned_id, final Map<Integer, Set<String>> digitCandidateMap) {
+        for (int banIdx = 0; banIdx < banned_id.length; banIdx++) {
+            final String banId = banned_id[banIdx];
+
+            final Set<String> digitCandidate = digitCandidateMap.get(banIdx);
+
+            //모든 userId랑 비교하기
+            for (final String userId : user_id) {
+                //userId가 후보가 되는지 확인하기
+
+                //길이가 다르면 후보가 될 수 없다.
+                if (userId.length() != banId.length()) continue;
+
+                //각 자리수를 비교해서 *이 아닌 경우에는 같아야 한다.
+                boolean isCandidate = true;
+
+                for (int digitIdx = 0; digitIdx < userId.length(); digitIdx++) {
+                    final char banIdChar = banId.charAt(digitIdx);
+                    final char userIdChar = userId.charAt(digitIdx);
+
+                    // *인 경우는 무시
+                    if (banIdChar == '*') continue;
+
+                    // *이 아닌 경우에는 같아야 한다.
+                    if (userIdChar != banIdChar) {
+                        isCandidate = false;
+                        break;
+                    }
+                }
+
+                if (isCandidate) {
+                    digitCandidate.add(userId);
+                }
+            }
+        }
+    }
+
+    private void getIdPermutation(final Set<String> answerSet, final Map<Integer, Set<String>> banTargetIdMap, final int curIdx, final ArrayDeque<String> permutationSaveDeque) {
+        //가능한 조합을 끝까지 찾은 경우
         if (curIdx == banTargetIdMap.size()) {
-            final char[] charArray = curStr.toCharArray();
-            Arrays.sort(charArray);
-
-            final Optional<String> value = Arrays.stream(curStr.split(","))
+            final String combinationString = permutationSaveDeque.stream()
                     .sorted()
-                    .reduce((a, b) -> a + b);
+                    .reduce((a, b) -> a + b).get();
 
-            answerSet.add(value.get());
+            answerSet.add(combinationString);
 
             return;
         }
 
-        final List<String> ithStrings = banTargetIdMap.get(curIdx);
+        final Set<String> candidates = banTargetIdMap.get(curIdx);
 
-        for (final String ithStr : ithStrings) {
-            if (Arrays.asList(curStr.split(",")).contains(ithStr)) continue; //이미 선택된 아이디인 경우 (중복 불가)
+        for (final String candidate : candidates) {
+            if (permutationSaveDeque.contains(candidate)) continue;
 
-            getIdPermutation(answerSet, banTargetIdMap, curIdx + 1, curStr + ',' + ithStr);
+            permutationSaveDeque.addLast(candidate);
+            getIdPermutation(answerSet, banTargetIdMap, curIdx + 1, permutationSaveDeque);
+            permutationSaveDeque.pollLast();
         }
     }
 }
