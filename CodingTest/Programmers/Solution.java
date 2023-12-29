@@ -1,122 +1,77 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 class Solution {
-    List<List<String>> operatorPriorities = List.of(
-            List.of("+", "-", "*"),
-            List.of("+", "*", "-"),
-            List.of("-", "+", "*"),
-            List.of("-", "*", "+"),
-            List.of("*", "+", "-"),
-            List.of("*", "-", "+")
-    );
+    public int solution(final String numbers) {
+        int answer = 0;
 
-    public long solution(final String expression) {
-        long answer = 0;
+        //에라토스테네스의 체를 통해서 소수 구하기
+        //1이상 7이하 수 -> 최대 7자리 수 -> 10000000까지
+        final boolean[] primeNumbers = eratosthenes();
 
-        final String[] originNumbers = getOriginNumbers(expression);
-        final List<String> originOperator = getOriginOperator(expression);
+//        System.out.println(Arrays.toString(primeNumbers));
 
-        for (final List<String> operatorPriority : operatorPriorities) {
-            final Deque<String> postfixQueue = calculatePostfixQueue(operatorPriority, originNumbers, originOperator);
+        //number로 모든 수 구하기
+        final Set<Integer> allNumbers = permutation(numbers);
+//        System.out.println(allNumbers);
 
-            answer = Math.max(answer, Math.abs(calculateAnswer(postfixQueue)));
+        //몇개나 되는지 확인하기
+        for (final Integer allNumber : allNumbers) {
+            final int num = allNumber;
+
+            if (primeNumbers[num]) {
+                answer++;
+            }
         }
 
         return answer;
     }
 
-    private String[] getOriginNumbers(final String expression) {
-        return expression.replace("-", ",")
-                .replace("*", ",")
-                .replace("+", ",")
-                .split(",");
+    private boolean[] eratosthenes() {
+        final int MAX = 10_000_000;
+        final boolean[] primeNumbers = new boolean[MAX];
+
+        Arrays.fill(primeNumbers, true);
+        primeNumbers[0] = false;
+        primeNumbers[1] = false;
+
+        //2에서 Math.sqrt(10000000)까지 반복
+        for (int i = 2; i <= Math.sqrt(MAX); i++) {
+            for (int j = (2 * i); j < MAX; j += i) {
+                primeNumbers[j] = false;
+            }
+        }
+
+        return primeNumbers;
     }
 
-    private List<String> getOriginOperator(final String expression) {
-        final List<String> originOperators = new ArrayList<>();
+    private Set<Integer> permutation(final String numbers) {
+        final Set<Integer> set = new HashSet<>();
 
-        for (int i = 0; i < expression.length(); i++) {
-            final char ch = expression.charAt(i);
+        final boolean[] isVisited = new boolean[numbers.length()];
 
-            if (ch == '-' || ch == '*' || ch == '+') {
-                originOperators.add(String.valueOf(ch));
-            }
-        }
+        recurPermutation(set, isVisited, numbers, "");
 
-        return originOperators;
+        return set;
     }
 
-    private Deque<String> calculatePostfixQueue(final List<String> operatorPriority, final String[] originNumbers, final List<String> originOperator) {
-        final Deque<String> postfixQueue = new ArrayDeque<>();
-        final Deque<String> operatorStack = new ArrayDeque<>();
-
-        //postfix로 만들기
-        for (int idx = 0; idx < originNumbers.length; idx++) {
-            //숫자 넣기
-            postfixQueue.addLast(originNumbers[idx]);
-
-            //연산자 넣기
-            if (idx < originOperator.size()) {
-                final String curOperator = originOperator.get(idx);
-
-                while (!operatorStack.isEmpty()) {
-                    final String peekOperator = operatorStack.peek();
-
-                    //현재 연산자가 우선순위가 더 높으면 그냥 push, 아니면 다 꺼내서 Queue에 넣기
-                    if (operatorPriority.indexOf(peekOperator) < operatorPriority.indexOf(curOperator)) {
-                        break;
-                    }
-
-                    postfixQueue.addLast(operatorStack.pop());
-                }
-
-                operatorStack.push(curOperator);
-            }
+    private void recurPermutation(final Set<Integer> set, final boolean[] isVisited, final String numbers, final String curString) {
+        if (!curString.isEmpty()) {
+            set.add(Integer.valueOf(curString));
         }
 
-        //남은 연산자 다 꺼내서 Queue에 넣기
-        while (!operatorStack.isEmpty()) {
-            postfixQueue.addLast(operatorStack.pop());
+        if (curString.length() == numbers.length()) return;
+
+        for (int idx = 0; idx < numbers.length(); idx++) {
+            if (isVisited[idx]) continue;
+
+            final char ch = numbers.charAt(idx);
+            isVisited[idx] = true;
+            recurPermutation(set, isVisited, numbers, curString + ch);
+            isVisited[idx] = false;
         }
-
-        return postfixQueue;
-    }
-
-    private long calculateAnswer(final Deque<String> postfixQueue) {
-        final Deque<Long> calculateStack = new ArrayDeque<>();
-
-        while (!postfixQueue.isEmpty()) {
-            final String popped = postfixQueue.pop();
-
-            //연산자 아니면 Stack에 넣기
-            final List<String> operators = List.of("+", "-", "*");
-            if (!operators.contains(popped)) {
-                calculateStack.push(Long.valueOf(popped));
-                continue;
-            }
-
-            //연산자 맞으면 계산
-            final long value2 = calculateStack.pop();
-            final long value1 = calculateStack.pop();
-
-            switch (popped) {
-                case "+":
-                    calculateStack.push(value1 + value2);
-                    break;
-                case "-":
-                    calculateStack.push(value1 - value2);
-                    break;
-                case "*":
-                    calculateStack.push(value1 * value2);
-                    break;
-            }
-        }
-
-        return calculateStack.pop();
     }
 }
