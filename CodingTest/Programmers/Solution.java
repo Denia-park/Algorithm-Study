@@ -1,78 +1,86 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 class Solution {
-    public int solution(final String numbers) {
-        int answer = 0;
+    public int solution(final String[] user_id, final String[] banned_id) {
+        final Set<String> answerSet = new HashSet<>();
+        final List<String> userIdList = Arrays.asList(user_id);
 
-        //number로 모든 수 구하기
-        final Set<Integer> allNumbers = permutation(numbers);
+        //각 자리수에 들어갈 수 있는 알파벳 및 숫자 추가
+        final Map<Integer, Set<String>> digitCharMap = new HashMap<>();
 
-        //수 중에 가장 큰 값
-        final int maxValue = allNumbers.stream().max(Integer::compareTo).orElse(-1);
+        for (final String id : user_id) {
+            for (int i = 0; i < id.length(); i++) {
+                final char ch = id.charAt(i);
 
-        //에라토스테네스의 체를 통해서 소수 구하기
-        //1이상 7이하 수 -> 최대 7자리 수 -> 10000000까지지만 maxValue 이용해서 구하기
-        final boolean[] primeNumbers = eratosthenes(maxValue);
-
-        //몇개나 되는지 확인하기
-        for (final Integer allNumber : allNumbers) {
-            final int num = allNumber;
-
-            if (primeNumbers[num]) {
-                answer++;
+                final Set<String> set = digitCharMap.getOrDefault(i, new HashSet<>());
+                set.add(String.valueOf(ch));
+                digitCharMap.put(i, set);
             }
         }
 
-        return answer;
-    }
+        //ban에 각 요소에 맞는 Id를 찾아서 저장
+        final Map<Integer, List<String>> banTargetIdMap = new HashMap<>();
+        for (int i = 0; i < banned_id.length; i++) {
+            banTargetIdMap.put(i, new ArrayList<>());
+        }
 
-    private boolean[] eratosthenes(final int numMax) {
-        final int calculateMax = numMax + 1;
+        for (int banIdIdx = 0; banIdIdx < banned_id.length; banIdIdx++) {
+            final String badId = banned_id[banIdIdx];
+            //banId 길이만큼 문자열이 만들어 지면, 존재하는지 확인하고 List에 저장
+            final Deque<String> queue = new ArrayDeque<>();
+            queue.addLast("");
 
-        final boolean[] primeNumbers = new boolean[calculateMax];
+            while (!queue.isEmpty()) {
+                String currentId = queue.pollFirst();
+                final int curIdLength = currentId.length();
 
-        Arrays.fill(primeNumbers, true);
-        primeNumbers[0] = false;
-        primeNumbers[1] = false;
+                if (curIdLength == badId.length()) {
+                    //해당 아이디가 실제로 존재하는 아이디 인지 확인
+                    if (userIdList.contains(currentId)) {
+                        banTargetIdMap.get(banIdIdx).add(currentId);
+                    }
 
-        //2에서 Math.sqrt(max)까지 반복
-        for (int i = 2; i <= Math.sqrt(calculateMax); i++) {
-            for (int j = (2 * i); j < calculateMax; j += i) {
-                primeNumbers[j] = false;
+                    continue;
+                }
+
+                final char curChar = badId.charAt(curIdLength);
+
+                if (curChar != '*') {
+                    currentId += curChar;
+                    queue.addLast(currentId);
+                    continue;
+                }
+
+                for (final String ch : digitCharMap.get(curIdLength)) {
+                    queue.addLast(currentId + ch);
+                }
             }
         }
 
-        return primeNumbers;
+        //아이디는 중복될 수 없다.
+        getIdPermutation(answerSet, banTargetIdMap, 0, "");
+
+        return answerSet.size();
     }
 
-    private Set<Integer> permutation(final String numbers) {
-        final Set<Integer> set = new HashSet<>();
+    private void getIdPermutation(final Set<String> answerSet, final Map<Integer, List<String>> banTargetIdMap, final int curIdx, final String curStr) {
+        if (curIdx == banTargetIdMap.size()) {
+            final char[] charArray = curStr.toCharArray();
+            Arrays.sort(charArray);
 
-        final boolean[] isVisited = new boolean[numbers.length()];
+            answerSet.add(String.valueOf(charArray));
 
-        recurPermutation(set, isVisited, numbers, "");
-
-        return set;
-    }
-
-    private void recurPermutation(final Set<Integer> set, final boolean[] isVisited, final String numbers, final String curString) {
-        if (!curString.isEmpty()) {
-            set.add(Integer.valueOf(curString));
+            return;
         }
 
-        if (curString.length() == numbers.length()) return;
+        final List<String> ithStrings = banTargetIdMap.get(curIdx);
 
-        for (int idx = 0; idx < numbers.length(); idx++) {
-            if (isVisited[idx]) continue;
+        for (final String ithStr : ithStrings) {
+            if (Arrays.asList(curStr.split(",")).contains(ithStr)) continue; //이미 선택된 아이디인 경우 (중복 불가)
 
-            final char ch = numbers.charAt(idx);
-            isVisited[idx] = true;
-            recurPermutation(set, isVisited, numbers, curString + ch);
-            isVisited[idx] = false;
+            getIdPermutation(answerSet, banTargetIdMap, curIdx + 1, curStr + ',' + ithStr);
         }
     }
 }
