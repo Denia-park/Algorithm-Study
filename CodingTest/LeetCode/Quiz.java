@@ -1,54 +1,39 @@
 package CodingTest.LeetCode;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.getLengthOfOptimalCompression("aaabcccd", 2));
+        System.out.println(solution.minDifficulty(new int[]{6, 5, 4, 3, 2, 1}, 2));
+        System.out.println(solution.minDifficulty(new int[]{9, 9, 9}, 4));
+        System.out.println(solution.minDifficulty(new int[]{1, 1, 1}, 3));
     }
 }
 
 class Solution {
-    public int getLengthOfOptimalCompression(final String s, final int k) {
-        final int n = s.length();
-        final int[][] dp = new int[n + 1][k + 1];
+    public int minDifficulty(final int[] jobDifficulty, final int d) {
+        final int len = jobDifficulty.length;
 
-        for (int i = n; i >= 0; i--) {
-            for (int j = 0; j <= k; j++) {
-                // Base case - initial length declaration
-                if (i == n) {
-                    dp[n][j] = 0;
-                    continue;
-                }
+        if (len < d) return -1;
 
-                // Case 1 - delete the ith character if possible (j > 0)
-                dp[i][j] = (j > 0) ? dp[i + 1][j - 1] : Integer.MAX_VALUE;
+        final List<Integer> jobDiffList = Arrays.stream(jobDifficulty)
+                .boxed()
+                .sorted(Comparator.reverseOrder())
+                .collect(Collectors.toList());
 
-                // Case 2 - we keep the ith index.
-                // We have to find the current char's index endpoint
-                int possible_del = j, count = 0;
-                for (int end = i; end < n && possible_del >= 0; end++) {
-                    // Check about the same char "b b b .." for encoding
-                    if (s.charAt(end) == s.charAt(i)) {
-                        count++;
+        final int maxDiff = jobDiffList.get(0);
+        int restDiff = 0;
+        for (int i = jobDifficulty.length - 1; i >= len - (d - 1); i--) {
+            final int diff = jobDifficulty[i];
 
-                        // Assuming the block ends here "aaaa"
-                        dp[i][j] = Math.min(dp[i][j], getLength(count) + dp[end + 1][possible_del]);
-                    } else {
-                        // This character should be deleted to make the length min.
-                        possible_del--;
-                    }
-                }
-            }
+            restDiff += diff;
         }
 
-        return dp[0][k];
-    }
-
-    public int getLength(final int count) {
-        if (count == 1) return 1;
-        else if (count < 10) return 2;
-        else if (count < 100) return 3;
-        else return 4;
+        return maxDiff + restDiff;
     }
 }
