@@ -70,7 +70,11 @@ class Solution {
             final char[] charArray = curStr.toCharArray();
             Arrays.sort(charArray);
 
-            answerSet.add(String.valueOf(charArray));
+            final Optional<String> value = Arrays.stream(curStr.split(","))
+                    .sorted()
+                    .reduce((a, b) -> a + b);
+
+            answerSet.add(value.get());
 
             return;
         }
