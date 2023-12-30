@@ -28,8 +28,8 @@ class Solution {
     }
 
     private void bubbleSort(final int[] tempArr) {
-        for (int startIdx = 0; startIdx < tempArr.length - 1; startIdx++) {
-            for (int diffIdx = startIdx; diffIdx < tempArr.length - 1; diffIdx++) {
+        for (int count = 0; count < tempArr.length - 1; count++) {
+            for (int diffIdx = 0; diffIdx < tempArr.length - 1 - count; diffIdx++) {
                 final int first = tempArr[diffIdx];
                 final int second = tempArr[diffIdx + 1];
 
