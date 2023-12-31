@@ -1,31 +1,39 @@
 package CodingTest.LeetCode;
 
+import java.util.Arrays;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.makeEqual(new String[]{"abc", "aabc", "bc"}));
+        System.out.println(solution.maxLengthBetweenEqualCharacters("aa"));
+        System.out.println(solution.maxLengthBetweenEqualCharacters("abca"));
+        System.out.println(solution.maxLengthBetweenEqualCharacters("cbzxy"));
+        System.out.println(solution.maxLengthBetweenEqualCharacters("abcbxaasadqwc"));
     }
 }
 
 class Solution {
-    public boolean makeEqual(final String[] words) {
-        final int totalWord = words.length;
+    public int maxLengthBetweenEqualCharacters(final String s) {
+        int answer = -1;
 
-        final int[] alphabet = new int[26];
+        final int[] position = new int[26];
+        Arrays.fill(position, -1);
 
-        for (final String word : words) {
-            for (final char ch : word.toCharArray()) {
-                alphabet[ch - 'a']++;
+        for (int idx = 0; idx < s.length(); idx++) {
+            final int chIdx = s.charAt(idx) - 'a';
+            final int prePosition = position[chIdx];
+
+            if (prePosition != -1) {
+                answer = Math.max(answer, idx - prePosition - 1);
+            }
+
+            //idx 저장
+            if (prePosition == -1) {
+                position[chIdx] = idx;
             }
         }
 
-        for (final int value : alphabet) {
-            if (value % totalWord != 0) {
-                return false;
-            }
-        }
-
-        return true;
+        return answer;
     }
 }
