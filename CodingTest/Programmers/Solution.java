@@ -1,48 +1,33 @@
 package CodingTest.Programmers;
 
-import java.util.HashSet;
-import java.util.Set;
-
 class Solution {
-    public int[] solution(final int[] numbers) {
-        final Set<Integer> set = new HashSet<>();
+    public String solution(final String s) {
+        final char[] chars = s.toCharArray();
 
-        for (int firstIdx = 0; firstIdx < numbers.length; firstIdx++) {
-            for (int secondIdx = firstIdx + 1; secondIdx < numbers.length; secondIdx++) {
-                set.add(numbers[firstIdx] + numbers[secondIdx]);
-            }
-        }
+        insertionSort(chars);
 
-        final int[] array = set.stream().mapToInt(i -> i).toArray();
-
-        //정렬
-        selectionSort(array);
-
-        return array;
+        return String.valueOf(chars);
     }
 
-    private void selectionSort(final int[] numbers) {
-        //맨 앞부터 채워나간다.
-        for (int positionIdx = 0; positionIdx < numbers.length; positionIdx++) {
-            //제일 작은 수를 하나 고른다
-            int minIdx = positionIdx;
+    private void insertionSort(final char[] chars) {
+        //1번째부터 끝까지 돌면서 자기 자리를 찾는다.
+        for (int selectIdx = 1; selectIdx < chars.length; selectIdx++) {
+            final char selectValue = chars[selectIdx];
+            int diffIdx = selectIdx - 1;
 
-            for (int idx = positionIdx; idx < numbers.length; idx++) {
-                final int minValue = numbers[minIdx];
-                final int selectValue = numbers[idx];
+            //0번째까지 다 비교를 해서 자기 자리를 찾는다.
+            for (; diffIdx >= 0; diffIdx--) {
+                final char diffValue = chars[diffIdx];
 
-                if (minValue > selectValue) {
-                    minIdx = idx;
+                //자기 자리를 찾을 때 까지 앞의 값들을 뒤로 복사한다.
+                if (diffValue >= selectValue) {
+                    break;
                 }
+
+                chars[diffIdx + 1] = diffValue;
             }
 
-            swap(numbers, positionIdx, minIdx);
+            chars[diffIdx + 1] = selectValue;
         }
-    }
-
-    private void swap(final int[] numbers, final int positionIdx, final int minIdx) {
-        final int temp = numbers[positionIdx];
-        numbers[positionIdx] = numbers[minIdx];
-        numbers[minIdx] = temp;
     }
 }
