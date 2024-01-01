@@ -6,32 +6,31 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.maxLengthBetweenEqualCharacters("aa"));
-        System.out.println(solution.maxLengthBetweenEqualCharacters("abca"));
-        System.out.println(solution.maxLengthBetweenEqualCharacters("cbzxy"));
-        System.out.println(solution.maxLengthBetweenEqualCharacters("abcbxaasadqwc"));
+        System.out.println(solution.findContentChildren(new int[]{1, 2, 3}, new int[]{1, 1}));
+        System.out.println(solution.findContentChildren(new int[]{1, 2}, new int[]{1, 2, 3}));
     }
 }
 
 class Solution {
-    public int maxLengthBetweenEqualCharacters(final String s) {
-        int answer = -1;
+    public int findContentChildren(final int[] g, final int[] s) {
+        int answer = 0;
 
-        final int[] position = new int[26];
-        Arrays.fill(position, -1);
+        Arrays.sort(g);
+        Arrays.sort(s);
 
-        for (int idx = 0; idx < s.length(); idx++) {
-            final int chIdx = s.charAt(idx) - 'a';
-            final int prePosition = position[chIdx];
+        int gIdx = 0;
+        int sIdx = 0;
 
-            if (prePosition != -1) {
-                answer = Math.max(answer, idx - prePosition - 1);
+        while (gIdx < g.length && sIdx < s.length) {
+            final int greed = g[gIdx];
+            final int size = s[sIdx];
+
+            if (greed <= size) {
+                answer++;
+                gIdx++;
             }
 
-            //idx 저장
-            if (prePosition == -1) {
-                position[chIdx] = idx;
-            }
+            sIdx++;
         }
 
         return answer;
