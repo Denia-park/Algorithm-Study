@@ -1,36 +1,42 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.findContentChildren(new int[]{1, 2, 3}, new int[]{1, 1}));
-        System.out.println(solution.findContentChildren(new int[]{1, 2}, new int[]{1, 2, 3}));
+        System.out.println(solution.findMatrix(new int[]{1, 3, 4, 1, 2, 3, 1}));
+        System.out.println(solution.findMatrix(new int[]{1, 2, 3, 4}));
     }
 }
 
 class Solution {
-    public int findContentChildren(final int[] g, final int[] s) {
-        int answer = 0;
+    public List<List<Integer>> findMatrix(final int[] nums) {
+        final Map<Integer, Integer> map = new HashMap<>();
+        int maxCount = 0;
 
-        Arrays.sort(g);
-        Arrays.sort(s);
+        for (final int num : nums) {
+            final int count = map.getOrDefault(num, 0) + 1;
+            maxCount = Math.max(maxCount, count);
+            map.put(num, count);
+        }
 
-        int gIdx = 0;
-        int sIdx = 0;
+        final List<List<Integer>> answer = new ArrayList<>();
+        for (int i = 0; i < maxCount; i++) {
+            answer.add(new ArrayList<>());
+        }
 
-        while (gIdx < g.length && sIdx < s.length) {
-            final int greed = g[gIdx];
-            final int size = s[sIdx];
+        for (final Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            final int num = entry.getKey();
+            final int count = entry.getValue();
 
-            if (greed <= size) {
-                answer++;
-                gIdx++;
+            for (int idx = 0; idx < count; idx++) {
+                answer.get(idx).add(num);
             }
-
-            sIdx++;
         }
 
         return answer;
