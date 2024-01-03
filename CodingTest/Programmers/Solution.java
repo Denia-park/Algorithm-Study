@@ -1,146 +1,77 @@
 package CodingTest.Programmers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-
-/*
-언어는 cpp, java, python, - 중 하나입니다.
-직군은 backend, frontend, - 중 하나입니다.
-경력은 junior, senior, - 중 하나입니다.
-소울푸드는 chicken, pizza, - 중 하나입니다.
- */
+import java.util.Map;
 
 class Solution {
-    public int[] solution(final String[] info, final String[] query) {
-        final List<Language> languages = List.of(
-                new Language("cpp"),
-                new Language("java"),
-                new Language("python")
-        );
+    Map<String, List<Integer>> conditionScoreMap;
 
-        for (final String infoString : info) {
-            final String[] infoArray = infoString.split(" ");
+    public int[] solution(final String[] infos, final String[] query) {
+        conditionScoreMap = new HashMap<>();
 
-            final Language language = languages.stream()
-                    .filter(l -> l.name.equals(infoArray[0]))
-                    .findFirst().get();
-            final Position position = language.positions.stream()
-                    .filter(p -> p.name.equals(infoArray[1]))
-                    .findFirst().get();
-            final Career career = position.careers.stream()
-                    .filter(c -> c.name.equals(infoArray[2]))
-                    .findFirst().get();
-            final SoulFood soulFood = career.soulFoods.stream()
-                    .filter(s -> s.name.equals(infoArray[3]))
-                    .findFirst().get();
+        makeConditions(infos);
 
-            soulFood.addScore(Integer.parseInt(infoArray[4]));
+        for (final List<Integer> list : conditionScoreMap.values()) {
+            list.sort(null);
         }
 
-        languages.stream()
-                .flatMap(lang -> lang.positions.stream())
-                .flatMap(pos -> pos.careers.stream())
-                .flatMap(career -> career.soulFoods.stream())
-                .forEach(soulFood -> soulFood.scores.sort(null));
+        final List<Integer> answer = new ArrayList<>();
 
-        final List<Integer> answerList = new ArrayList<>();
+        for (final String str : query) {
+            final String editStr = str.replace(" and ", "");
+            final int splitIndex = editStr.lastIndexOf(" ");
+            final int targetScore = Integer.parseInt(editStr.substring(splitIndex + 1));
+            final String targetStr = editStr.substring(0, splitIndex);
 
-        for (final String queryString : query) {
-            final String[] split = queryString.replace("and ", "").split(" ");
-            final String languageName = split[0];
-            final String positionName = split[1];
-            final String careerName = split[2];
-            final String soulFoodName = split[3];
-            final int targetScore = Integer.parseInt(split[4]);
+            final List<Integer> valueList = conditionScoreMap.getOrDefault(targetStr, new ArrayList<>());
 
-            final List<Language> filteredLanguages = languages.stream()
-                    .filter(lang -> lang.name.equals(languageName) || languageName.equals("-"))
-                    .collect(Collectors.toList());
-
-            final List<Position> filteredPositions = filteredLanguages.stream()
-                    .flatMap(lang -> lang.positions.stream())
-                    .filter(pos -> pos.name.equals(positionName) || positionName.equals("-"))
-                    .collect(Collectors.toList());
-
-            final List<Career> filteredCareers = filteredPositions.stream()
-                    .flatMap(pos -> pos.careers.stream())
-                    .filter(career -> career.name.equals(careerName) || careerName.equals("-"))
-                    .collect(Collectors.toList());
-
-            final List<SoulFood> filteredSoulFoods = filteredCareers.stream()
-                    .flatMap(career -> career.soulFoods.stream())
-                    .filter(soulFood -> soulFood.name.equals(soulFoodName) || soulFoodName.equals("-"))
-                    .collect(Collectors.toList());
-
-            final int sum = filteredSoulFoods.stream()
-                    .mapToInt(value -> value.countScore(targetScore))
-                    .sum();
-
-            answerList.add(sum);
+            answer.add(valueList.size() - bisectLeft(valueList, targetScore));
         }
 
-        return answerList.stream().mapToInt(Integer::intValue).toArray();
+        return answer.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    static class Language {
-        String name;
-        List<Position> positions = List.of(new Position("backend"), new Position("frontend"));
+    private void makeConditions(final String[] infos) {
+        for (final String info : infos) {
+            final String[] splitInfo = info.split(" ");
 
-        Language(final String name) {
-            this.name = name;
+            dfs(splitInfo, "", 0);
         }
     }
 
-    static class Position {
-        String name;
-        List<Career> careers = List.of(new Career("junior"), new Career("senior"));
+    private void dfs(final String[] splitInfo, final String str, final int curIndex) {
+        //마지막 인덱스
+        if (curIndex == splitInfo.length - 1) {
+            final List<Integer> scoreList = conditionScoreMap.getOrDefault(str, new ArrayList<>());
 
-        Position(final String name) {
-            this.name = name;
+            final String score = splitInfo[curIndex];
+            scoreList.add(Integer.valueOf(score));
+
+            conditionScoreMap.put(str, scoreList);
+            return;
         }
+
+        //일반 조합
+        dfs(splitInfo, str + splitInfo[curIndex], curIndex + 1);
+        // - 조합
+        dfs(splitInfo, str + "-", curIndex + 1);
     }
 
-    static class Career {
-        String name;
-        List<SoulFood> soulFoods = List.of(new SoulFood("chicken"), new SoulFood("pizza"));
+    private int bisectLeft(final List<Integer> scoreList, final int targetScore) {
+        int left = 0;
+        int right = scoreList.size();
 
-        Career(final String name) {
-            this.name = name;
-        }
-    }
-
-    static class SoulFood {
-        String name;
-        List<Integer> scores;
-
-        SoulFood(final String name) {
-            this.name = name;
-            scores = new ArrayList<>();
-        }
-
-        void addScore(final int score) {
-            scores.add(score);
-        }
-
-        int countScore(final int targetScore) {
-            //find lower bound
-            int left = 0;
-            int right = scores.size();
-
-            while (left < right) {
-                final int mid = left + (right - left) / 2;
-
-                if (scores.get(mid) < targetScore) {
-                    left = mid + 1;
-                } else {
-                    right = mid;
-                }
+        while (left < right) {
+            final int mid = (left + right) / 2;
+            if (scoreList.get(mid) >= targetScore) {
+                right = mid;
+            } else {
+                left = mid + 1;
             }
-
-            //return : length - lowerBoundIndex
-            return scores.size() - left;
         }
+
+        return right;
     }
 }
-
