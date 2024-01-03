@@ -1,42 +1,40 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.findMatrix(new int[]{1, 3, 4, 1, 2, 3, 1}));
-        System.out.println(solution.findMatrix(new int[]{1, 2, 3, 4}));
+        System.out.println(solution.numberOfBeams(new String[]{"011001", "000000", "010100", "001000"}));
+        System.out.println(solution.numberOfBeams(new String[]{"000", "111", "000"}));
     }
 }
 
 class Solution {
-    public List<List<Integer>> findMatrix(final int[] nums) {
-        final Map<Integer, Integer> map = new HashMap<>();
-        int maxCount = 0;
+    public int numberOfBeams(final String[] bank) {
+        final int[] eachRowLaserCount = new int[bank.length];
 
-        for (final int num : nums) {
-            final int count = map.getOrDefault(num, 0) + 1;
-            maxCount = Math.max(maxCount, count);
-            map.put(num, count);
-        }
+        for (int row = 0; row < bank.length; row++) {
+            final String string = bank[row];
+            int count = 0;
 
-        final List<List<Integer>> answer = new ArrayList<>();
-        for (int i = 0; i < maxCount; i++) {
-            answer.add(new ArrayList<>());
-        }
-
-        for (final Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            final int num = entry.getKey();
-            final int count = entry.getValue();
-
-            for (int idx = 0; idx < count; idx++) {
-                answer.get(idx).add(num);
+            for (int i = 0; i < string.length(); i++) {
+                if (string.charAt(i) == '1') {
+                    count++;
+                }
             }
+
+            eachRowLaserCount[row] = count;
+        }
+
+        int answer = 0;
+        int prev = 0;
+        for (final int count : eachRowLaserCount) {
+            if (count == 0) {
+                continue;
+            }
+
+            answer += prev * count;
+            prev = count;
         }
 
         return answer;
