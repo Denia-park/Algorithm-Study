@@ -38,6 +38,12 @@ class Solution {
             soulFood.addScore(Integer.parseInt(infoArray[4]));
         }
 
+        languages.stream()
+                .flatMap(lang -> lang.positions.stream())
+                .flatMap(pos -> pos.careers.stream())
+                .flatMap(career -> career.soulFoods.stream())
+                .forEach(soulFood -> soulFood.scores.sort(null));
+
         final List<Integer> answerList = new ArrayList<>();
 
         for (final String queryString : query) {
@@ -118,15 +124,22 @@ class Solution {
         }
 
         int countScore(final int targetScore) {
-            int count = 0;
+            //find lower bound
+            int left = 0;
+            int right = scores.size();
 
-            for (final Integer score : scores) {
-                if (score >= targetScore) {
-                    count++;
+            while (left < right) {
+                final int mid = left + (right - left) / 2;
+
+                if (scores.get(mid) < targetScore) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
                 }
             }
 
-            return count;
+            //return : length - lowerBoundIndex
+            return scores.size() - left;
         }
     }
 }
