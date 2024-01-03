@@ -11,24 +11,19 @@ public class Quiz {
 
 class Solution {
     public int numberOfBeams(final String[] bank) {
-        final int[] eachRowLaserCount = new int[bank.length];
+        int answer = 0;
+        int prev = 0;
 
-        for (int row = 0; row < bank.length; row++) {
-            final String string = bank[row];
+        for (final String string : bank) {
+            final char[] chars = string.toCharArray();
             int count = 0;
 
-            for (int i = 0; i < string.length(); i++) {
-                if (string.charAt(i) == '1') {
+            for (final char ch : chars) {
+                if (ch == '1') {
                     count++;
                 }
             }
 
-            eachRowLaserCount[row] = count;
-        }
-
-        int answer = 0;
-        int prev = 0;
-        for (final int count : eachRowLaserCount) {
             if (count == 0) {
                 continue;
             }
