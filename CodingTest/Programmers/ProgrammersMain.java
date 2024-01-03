@@ -1,11 +1,29 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+
 public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(ts.solution(new String[]{"ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"}, new int[]{2, 3, 4}));
-//        System.out.println(ts.solution(new String[]{"ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"}, new int[]{2, 3, 5}));
-//        System.out.println(ts.solution(new String[]{"XYZ", "XWY", "WXA"}, new int[]{2, 3, 4}));
+        System.out.println(Arrays.toString(ts.solution(
+                        new String[]{
+                                "java backend junior pizza 150",
+                                "python frontend senior chicken 210",
+                                "python frontend senior chicken 150",
+                                "cpp backend senior pizza 260",
+                                "java backend junior chicken 80",
+                                "python backend senior chicken 50"
+                        },
+                        new String[]{
+                                "java and backend and junior and pizza 100",
+                                "python and frontend and senior and chicken 200",
+                                "cpp and - and senior and pizza 250",
+                                "- and backend and senior and - 150",
+                                "- and - and - and chicken 100",
+                                "- and - and - and - 150"
+                        }
+                ))
+        );
     }
 }

@@ -1,79 +1,130 @@
 package CodingTest.Programmers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+언어는 cpp, java, python, - 중 하나입니다.
+직군은 backend, frontend, - 중 하나입니다.
+경력은 junior, senior, - 중 하나입니다.
+소울푸드는 chicken, pizza, - 중 하나입니다.
+ */
+
 class Solution {
-    Map<String, Integer> foodCountMap;
-    Map<Integer, Set<String>> nameLengthMap;
+    public int[] solution(final String[] info, final String[] query) {
+        final int[] answer = {};
+        final List<Language> languages = new ArrayList<>();
 
-    public String[] solution(final String[] orders, final int[] course) {
-        foodCountMap = new HashMap<>();
-        nameLengthMap = new HashMap<>();
+        for (final String infoString : info) {
+            final String[] infoArray = infoString.split(" ");
 
-        //orders를 기반으로 모든 조합들을 구한다. -> Map에 메뉴 이름을 기준으로 개수를 count한다.
-        for (final String order : orders) {
-            //split 한다.
-            final String[] foods = order.split("");
+            final Language language = new Language(infoArray[0]);
+            final Position position = language.positions.stream()
+                    .filter(p -> p.name.equals(infoArray[1]))
+                    .findFirst().get();
+            final Career career = position.careers.stream()
+                    .filter(c -> c.name.equals(infoArray[2]))
+                    .findFirst().get();
+            final SoulFood soulFood = career.soulFoods.stream()
+                    .filter(s -> s.name.equals(infoArray[3]))
+                    .findFirst().get();
 
-            //정렬 한다.
-            Arrays.sort(foods);
+            soulFood.addScore(Integer.parseInt(infoArray[4]));
 
-            //모든 조합들을 map에 저장한다. (최소 조합이 2개)
-            for (int combiLimit = 2; combiLimit <= foods.length; combiLimit++) {
-                combination(foods, combiLimit, 0, "");
-            }
+            languages.add(language);
         }
 
-        final Set<String> answer = new TreeSet<>();
+        final List<Integer> answerList = new ArrayList<>();
 
-        //course를 기준으로 가장 많이 주문한 조합을 구한다.
-        for (final int courseNum : course) {
-            final Set<String> strings = nameLengthMap.get(courseNum);
+        for (final String queryString : query) {
+            final String[] split = queryString.replace("and ", "").split(" ");
+            final String languageName = split[0];
+            final String positionName = split[1];
+            final String careerName = split[2];
+            final String soulFoodName = split[3];
+            final int targetScore = Integer.parseInt(split[4]);
 
-            if (strings == null) {
-                continue;
-            }
-
-            final List<String> sortedFoods = strings.stream()
-                    .sorted((o1, o2) -> foodCountMap.get(o2) - foodCountMap.get(o1))
+            final List<Language> filteredLanguages = languages.stream()
+                    .filter(lang -> lang.name.equals(languageName) || languageName.equals("-"))
                     .collect(Collectors.toList());
 
-            final int maxValue = foodCountMap.get(sortedFoods.get(0));
+            final List<Position> filteredPositions = filteredLanguages.stream()
+                    .flatMap(lang -> lang.positions.stream())
+                    .filter(pos -> pos.name.equals(positionName) || positionName.equals("-"))
+                    .collect(Collectors.toList());
 
-            if (maxValue < 2) {
-                continue;
-            }
+            final List<Career> filteredCareers = filteredPositions.stream()
+                    .flatMap(pos -> pos.careers.stream())
+                    .filter(career -> career.name.equals(careerName) || careerName.equals("-"))
+                    .collect(Collectors.toList());
 
-            for (final String string : sortedFoods) {
-                if (foodCountMap.get(string) != maxValue) {
-                    break;
-                }
+            final List<SoulFood> filteredSoulFoods = filteredCareers.stream()
+                    .flatMap(career -> career.soulFoods.stream())
+                    .filter(soulFood -> soulFood.name.equals(soulFoodName) || soulFoodName.equals("-"))
+                    .collect(Collectors.toList());
 
-                answer.add(string);
-            }
+            final int sum = filteredSoulFoods.stream()
+                    .mapToInt(value -> value.countScore(targetScore))
+                    .sum();
+
+            answerList.add(sum);
         }
 
-        return answer.toArray(String[]::new);
+        return answerList.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    private void combination(final String[] foods, final int limit, final int curIdx, final String curFoodCombination) {
-        if (curFoodCombination.length() == limit) {
-            //map에 저장한다.
-            foodCountMap.put(curFoodCombination, foodCountMap.getOrDefault(curFoodCombination, 0) + 1);
+    static class Language {
+        String name;
+        List<Position> positions = List.of(new Position("backend"), new Position("frontend"));
 
-            //길이에 따라 저장한다.
-            final Set<String> set = nameLengthMap.getOrDefault(limit, new HashSet<>());
-            set.add(curFoodCombination);
-            nameLengthMap.put(limit, set);
-            return;
+        Language(final String name) {
+            this.name = name;
+        }
+    }
+
+    static class Position {
+        String name;
+        List<Career> careers = List.of(new Career("junior"), new Career("senior"));
+
+        Position(final String name) {
+            this.name = name;
+        }
+    }
+
+    static class Career {
+        String name;
+        List<SoulFood> soulFoods = List.of(new SoulFood("chicken"), new SoulFood("pizza"));
+
+        Career(final String name) {
+            this.name = name;
+        }
+    }
+
+    static class SoulFood {
+        String name;
+        List<Integer> scores;
+
+        SoulFood(final String name) {
+            this.name = name;
+            scores = new ArrayList<>();
         }
 
-        //2개부터 foods.length개까지 조합을 구한다.
-        for (int addIdx = curIdx; addIdx < foods.length; addIdx++) {
-            final String curFood = foods[addIdx];
+        void addScore(final int score) {
+            scores.add(score);
+        }
 
-            combination(foods, limit, addIdx + 1, curFoodCombination + curFood);
+        int countScore(final int targetScore) {
+            int count = 0;
+
+            for (final Integer score : scores) {
+                if (score >= targetScore) {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }
+
