@@ -13,13 +13,18 @@ import java.util.stream.Collectors;
 
 class Solution {
     public int[] solution(final String[] info, final String[] query) {
-        final int[] answer = {};
-        final List<Language> languages = new ArrayList<>();
+        final List<Language> languages = List.of(
+                new Language("cpp"),
+                new Language("java"),
+                new Language("python")
+        );
 
         for (final String infoString : info) {
             final String[] infoArray = infoString.split(" ");
 
-            final Language language = new Language(infoArray[0]);
+            final Language language = languages.stream()
+                    .filter(l -> l.name.equals(infoArray[0]))
+                    .findFirst().get();
             final Position position = language.positions.stream()
                     .filter(p -> p.name.equals(infoArray[1]))
                     .findFirst().get();
@@ -31,8 +36,6 @@ class Solution {
                     .findFirst().get();
 
             soulFood.addScore(Integer.parseInt(infoArray[4]));
-
-            languages.add(language);
         }
 
         final List<Integer> answerList = new ArrayList<>();
