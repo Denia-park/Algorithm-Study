@@ -24,26 +24,13 @@ class Solution {
 
         int count = 0;
         for (final Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
-            int value = entry.getValue();
+            final int value = entry.getValue();
 
-            while (value != 0) {
-                //2의 배수, 3의 배수 순으로 먼저 처리한다.
-                if (value % 3 == 0) {
-                    count += (value / 3);
-                    value = 0;
-                } else if (value % 5 == 3 || value % 5 == 0) {
-                    value -= 5;
-                    count += 2;
-                } else if (value % 7 == 3 || value % 7 == 0) {
-                    value -= 7;
-                    count += 3;
-                } else if (value % 2 == 0) {
-                    count += (value / 2);
-                    value = 0;
-                } else {
-                    return -1;
-                }
+            if (value == 1) {
+                return -1;
             }
+
+            count += (int) Math.ceil(value / 3.0);
         }
 
         return count;
