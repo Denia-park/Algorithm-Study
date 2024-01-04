@@ -1,37 +1,49 @@
 package CodingTest.LeetCode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.numberOfBeams(new String[]{"011001", "000000", "010100", "001000"}));
-        System.out.println(solution.numberOfBeams(new String[]{"000", "111", "000"}));
+        System.out.println(solution.minOperations(new int[]{2, 3, 3, 2, 2, 4, 2, 3, 4}));
+        System.out.println(solution.minOperations(new int[]{2, 1, 2, 2, 3, 3}));
     }
 }
 
 class Solution {
-    public int numberOfBeams(final String[] bank) {
-        int answer = 0;
-        int prev = 0;
+    public int minOperations(final int[] nums) {
+        final Map<Integer, Integer> countMap = new HashMap<>();
 
-        for (final String string : bank) {
-            final char[] chars = string.toCharArray();
-            int count = 0;
+        //모든 숫자들을 Map으로 센다.
+        for (final int num : nums) {
+            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+        }
 
-            for (final char ch : chars) {
-                if (ch == '1') {
+        int count = 0;
+        for (final Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
+            int value = entry.getValue();
+
+            while (value != 0) {
+                //2의 배수, 3의 배수 순으로 먼저 처리한다.
+                if (value % 2 == 0) {
+                    value -= 2;
                     count++;
+                } else if (value % 3 == 0) {
+                    value -= 3;
+                    count++;
+                } else {
+                    break;
                 }
             }
 
-            if (count == 0) {
-                continue;
+            //3의 배수, 2의 배수가 아닌 숫자가 남으면 -1을 반환한다.
+            if (value != 0) {
+                return -1;
             }
-
-            answer += prev * count;
-            prev = count;
         }
 
-        return answer;
+        return count;
     }
 }
