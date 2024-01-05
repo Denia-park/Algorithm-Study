@@ -1,7 +1,6 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -15,37 +14,29 @@ public class Quiz {
 
 class Solution {
     public int lengthOfLIS(final int[] nums) {
-        final List<Integer> answer = new ArrayList<>();
+        final int legnth = nums.length;
+        //dp를 사용한다.
+        final int[] dp = new int[legnth];
+        //모든 부분 수열의 최대 길이는 1이다.
+        Arrays.fill(dp, 1);
 
-        for (final int value : nums) {
-            //비어 있거나, 추가할 값이 list의 마지막 값보다 크다면 추가
-            if (answer.isEmpty() || answer.get(answer.size() - 1) < value) {
-                answer.add(value);
-                continue;
-            }
+        //현재 인덱스를 기준으로 이전 인덱스들을 탐색한다.
+        for (int curIdx = 1; curIdx < legnth; curIdx++) {
+            for (int prevIdx = 0; prevIdx < curIdx; prevIdx++) {
+                final int prevValue = nums[prevIdx];
+                final int curValue = nums[curIdx];
 
-            //새로 추가해야하는 값을 적절한 위치에 삽입
-            bisectLeft(answer, value);
-        }
-
-        return answer.size();
-    }
-
-    private void bisectLeft(final List<Integer> answer, final int targetValue) {
-        int left = 0;
-        int right = answer.size();
-
-        while (left < right) {
-            final int midIdx = left + (right - left) / 2;
-            final int midValue = answer.get(midIdx);
-
-            if (midValue < targetValue) {
-                left = midIdx + 1;
-            } else {
-                right = midIdx;
+                //현재 값이 이전 값보다 크다면,
+                //이전 값의 dp에 1을 더한 값과 현재 dp를 비교하여 더 큰 값을 현재 dp에 넣는다.
+                if (prevValue < curValue) {
+                    dp[curIdx] = Math.max(dp[curIdx], dp[prevIdx] + 1);
+                }
             }
         }
 
-        answer.set(right, targetValue);
+        //dp의 최대값을 반환한다.
+        return Arrays.stream(dp)
+                .max()
+                .orElse(0);
     }
 }
