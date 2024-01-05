@@ -1,38 +1,51 @@
 package CodingTest.LeetCode;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.minOperations(new int[]{2, 3, 3, 2, 2, 4, 2, 3, 4}));
-        System.out.println("2 : " + solution.minOperations(new int[]{2, 1, 2, 2, 3, 3}));
-        System.out.println("3 : " + solution.minOperations(new int[]{19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19}));
+        System.out.println("1 : " + solution.lengthOfLIS(new int[]{10, 9, 2, 5, 3, 7, 101, 18}));
+        System.out.println("2 : " + solution.lengthOfLIS(new int[]{0, 1, 0, 3, 2, 3}));
+        System.out.println("3 : " + solution.lengthOfLIS(new int[]{7, 7, 7, 7, 7, 7, 7}));
     }
 }
 
 class Solution {
-    public int minOperations(final int[] nums) {
-        final Map<Integer, Integer> countMap = new HashMap<>();
+    public int lengthOfLIS(final int[] nums) {
+        final List<Integer> answer = new ArrayList<>();
 
-        //모든 숫자들을 Map으로 센다.
-        for (final int num : nums) {
-            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
-        }
-
-        int count = 0;
-        for (final Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
-            final int value = entry.getValue();
-
-            if (value == 1) {
-                return -1;
+        for (final int value : nums) {
+            //비어 있거나, 추가할 값이 list의 마지막 값보다 크다면 추가
+            if (answer.isEmpty() || answer.get(answer.size() - 1) < value) {
+                answer.add(value);
+                continue;
             }
 
-            count += (int) Math.ceil(value / 3.0);
+            //새로 추가해야하는 값을 적절한 위치에 삽입
+            bisectLeft(answer, value);
         }
 
-        return count;
+        return answer.size();
+    }
+
+    private void bisectLeft(final List<Integer> answer, final int targetValue) {
+        int left = 0;
+        int right = answer.size();
+
+        while (left < right) {
+            final int midIdx = left + (right - left) / 2;
+            final int midValue = answer.get(midIdx);
+
+            if (midValue < targetValue) {
+                left = midIdx + 1;
+            } else {
+                right = midIdx;
+            }
+        }
+
+        answer.set(right, targetValue);
     }
 }
