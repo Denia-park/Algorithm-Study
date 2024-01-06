@@ -1,24 +1,12 @@
 package CodingTest.Programmers;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 class Solution {
     public String solution(final String my_string) {
-        final StringBuilder sb = new StringBuilder();
-        final Set<Character> set = new HashSet<>();
-
-        for (int i = 0; i < my_string.length(); i++) {
-            final char ch = my_string.charAt(i);
-
-            if (set.contains(ch)) {
-                continue;
-            }
-
-            set.add(ch);
-            sb.append(ch);
-        }
-
-        return sb.toString();
+        return my_string.chars()
+                .distinct()
+                .mapToObj(c -> String.valueOf((char) c))
+                .collect(Collectors.joining());
     }
 }
