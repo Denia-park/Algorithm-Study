@@ -1,75 +1,45 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.jobScheduling(new int[]{1, 2, 3, 3}, new int[]{3, 4, 5, 6}, new int[]{50, 10, 40, 70}));
+        System.out.println("1 : " + solution.numberOfArithmeticSlices(new int[]{2, 4, 6, 8, 10}));
     }
 }
 
 class Solution {
-    public int jobScheduling(final int[] startTime, final int[] endTime, final int[] profit) {
-        final int numJobs = profit.length; // Number of jobs
-        final Job[] jobs = initJobs(startTime, endTime, profit);
+    public int numberOfArithmeticSlices(final int[] nums) {
+        final int n = nums.length;
+        int totalCount = 0;
 
-        Arrays.sort(jobs, Comparator.comparingInt(job -> job.endTime));
+        final Map<Integer, Integer>[] dp = new HashMap[n];
 
-        final int[] dp = new int[numJobs + 1];
-
-        for (int curCount = 1; curCount <= numJobs; curCount++) {
-            final int jobIdx = curCount - 1;
-
-            final int curStartTime = jobs[jobIdx].startTime;
-            final int curProfit = jobs[jobIdx].profit;
-
-            final int latestNonConflictJobIndex = upperBound(jobs, jobIdx, curStartTime);
-            
-            dp[curCount] = Math.max(dp[curCount - 1], dp[latestNonConflictJobIndex] + curProfit);
+        for (int i = 0; i < n; ++i) {
+            dp[i] = new HashMap<>();
         }
 
-        return dp[numJobs];
-    }
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                final long diff = (long) nums[i] - nums[j];
 
-    private Job[] initJobs(final int[] startTime, final int[] endTime, final int[] profit) {
-        final int numJobs = profit.length; // Number of jobs
-        final Job[] jobs = new Job[numJobs];
+                if (diff > Integer.MAX_VALUE || diff < Integer.MIN_VALUE) {
+                    continue;
+                }
 
-        for (int i = 0; i < numJobs; ++i) {
-            jobs[i] = new Job(endTime[i], startTime[i], profit[i]);
-        }
+                final int diffInt = (int) diff;
 
-        return jobs;
-    }
-
-    private int upperBound(final Job[] jobs, final int endIndex, final int targetTime) {
-        int low = 0;
-        int high = endIndex;
-
-        while (low < high) {
-            final int mid = (low + high) / 2;
-            if (jobs[mid].endTime <= targetTime) {
-                low = mid + 1;
-            } else {
-                high = mid;
+                dp[i].put(diffInt, dp[i].getOrDefault(diffInt, 0) + 1);
+                if (dp[j].containsKey(diffInt)) {
+                    dp[i].put(diffInt, dp[i].get(diffInt) + dp[j].get(diffInt));
+                    totalCount += dp[j].get(diffInt);
+                }
             }
         }
 
-        return high;
-    }
-
-    private static class Job {
-        int endTime;
-        int startTime;
-        int profit;
-
-        public Job(final int endTime, final int startTime, final int profit) {
-            this.endTime = endTime;
-            this.startTime = startTime;
-            this.profit = profit;
-        }
+        return totalCount;
     }
 }
