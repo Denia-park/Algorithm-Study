@@ -1,21 +1,23 @@
 package CodingTest.Programmers;
 
 class Solution {
-    public int solution(final String before, final String after) {
-        final int[] beforeAlphabetCount = new int[26];
-        final int[] afterAlphabetCount = new int[26];
+    public int solution(final int[] numbers) {
+        int answer = 0;
 
-        for (int i = 0; i < before.length(); i++) {
-            beforeAlphabetCount[before.charAt(i) - 'a']++;
-            afterAlphabetCount[after.charAt(i) - 'a']++;
+        final int[] arr = new int[10];
+
+        for (final int number : numbers) {
+            arr[number]++;
         }
 
-        for (int i = 0; i < beforeAlphabetCount.length; i++) {
-            if (beforeAlphabetCount[i] != afterAlphabetCount[i]) {
-                return 0;
+        for (int i = 0; i < arr.length; i++) {
+            final int val = arr[i];
+
+            if (val == 0) {
+                answer += i;
             }
         }
 
-        return 1;
+        return answer;
     }
 }
