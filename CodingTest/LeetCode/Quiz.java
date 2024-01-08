@@ -1,45 +1,59 @@
 package CodingTest.LeetCode;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.numberOfArithmeticSlices(new int[]{2, 4, 6, 8, 10}));
+        System.out.println("1 : " + solution.rangeSumBST(null, 7, 15));
     }
 }
 
 class Solution {
-    public int numberOfArithmeticSlices(final int[] nums) {
-        final int n = nums.length;
-        int totalCount = 0;
+    public int rangeSumBST(final TreeNode root, final int low, final int high) {
+        int answer = 0;
+        final Deque<TreeNode> deque = new ArrayDeque<>();
 
-        final Map<Integer, Integer>[] dp = new HashMap[n];
+        deque.addLast(root);
 
-        for (int i = 0; i < n; ++i) {
-            dp[i] = new HashMap<>();
-        }
+        while (!deque.isEmpty()) {
+            final TreeNode node = deque.pollFirst();
 
-        for (int i = 1; i < n; ++i) {
-            for (int j = 0; j < i; ++j) {
-                final long diff = (long) nums[i] - nums[j];
+            if (low <= node.val && node.val <= high) {
+                answer += node.val;
+            }
 
-                if (diff > Integer.MAX_VALUE || diff < Integer.MIN_VALUE) {
-                    continue;
-                }
+            if (node.val > low && node.left != null) {
+                deque.offerLast(node.left);
+            }
 
-                final int diffInt = (int) diff;
-
-                dp[i].put(diffInt, dp[i].getOrDefault(diffInt, 0) + 1);
-                if (dp[j].containsKey(diffInt)) {
-                    dp[i].put(diffInt, dp[i].get(diffInt) + dp[j].get(diffInt));
-                    totalCount += dp[j].get(diffInt);
-                }
+            if (node.val < high && node.right != null) {
+                deque.add(node.right);
             }
         }
 
-        return totalCount;
+        return answer;
+    }
+}
+
+//Definition for a binary tree node.
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(final int val) {
+        this.val = val;
+    }
+
+    TreeNode(final int val, final TreeNode left, final TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
     }
 }
