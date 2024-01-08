@@ -1,8 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -12,29 +9,30 @@ public class Quiz {
 }
 
 class Solution {
+    int gLow;
+    int gHigh;
+
     public int rangeSumBST(final TreeNode root, final int low, final int high) {
-        int answer = 0;
-        final Deque<TreeNode> deque = new ArrayDeque<>();
+        gLow = low;
+        gHigh = high;
 
-        deque.addLast(root);
+        return recursiveSum(root);
+    }
 
-        while (!deque.isEmpty()) {
-            final TreeNode node = deque.pollFirst();
-
-            if (low <= node.val && node.val <= high) {
-                answer += node.val;
-            }
-
-            if (node.val > low && node.left != null) {
-                deque.offerLast(node.left);
-            }
-
-            if (node.val < high && node.right != null) {
-                deque.add(node.right);
-            }
+    public int recursiveSum(final TreeNode node) {
+        if (node == null) {
+            return 0;
         }
 
-        return answer;
+        int sum = 0;
+
+        final int val = node.val;
+
+        if (gLow <= val && val <= gHigh) {
+            sum += val;
+        }
+
+        return sum + recursiveSum(node.left) + recursiveSum(node.right);
     }
 }
 
