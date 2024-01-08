@@ -1,23 +1,27 @@
 package CodingTest.Programmers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 class Solution {
-    public int solution(final int[] numbers) {
-        int answer = 0;
+    public String solution(final String[] participant, final String[] completion) {
+        final Map<String, Integer> map = new HashMap<>();
 
-        final int[] arr = new int[10];
-
-        for (final int number : numbers) {
-            arr[number]++;
+        for (final String string : participant) {
+            map.put(string, map.getOrDefault(string, 0) + 1);
         }
 
-        for (int i = 0; i < arr.length; i++) {
-            final int val = arr[i];
+        for (final String string : completion) {
+            final int count = map.get(string) - 1;
 
-            if (val == 0) {
-                answer += i;
+            if (count == 0) {
+                map.remove(string);
+                continue;
             }
+
+            map.put(string, count);
         }
 
-        return answer;
+        return map.keySet().iterator().next();
     }
 }
