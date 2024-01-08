@@ -1,27 +1,18 @@
 package CodingTest.Programmers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 class Solution {
-    public String solution(final String[] participant, final String[] completion) {
-        final Map<String, Integer> map = new HashMap<>();
+    static final int DIV_NUM = 1234567;
 
-        for (final String string : participant) {
-            map.put(string, map.getOrDefault(string, 0) + 1);
+    public int solution(final int n) {
+        final int[] dp = new int[n + 1];
+
+        dp[0] = 0;
+        dp[1] = 1;
+
+        for (int i = 2; i <= n; i++) {
+            dp[i] += (dp[i - 1] + dp[i - 2]) % DIV_NUM;
         }
 
-        for (final String string : completion) {
-            final int count = map.get(string) - 1;
-
-            if (count == 0) {
-                map.remove(string);
-                continue;
-            }
-
-            map.put(string, count);
-        }
-
-        return map.keySet().iterator().next();
+        return dp[n];
     }
 }
