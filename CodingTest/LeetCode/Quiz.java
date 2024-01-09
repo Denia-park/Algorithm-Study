@@ -1,38 +1,48 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.rangeSumBST(null, 7, 15));
+        System.out.println("1 : " + solution.leafSimilar(null, null));
     }
 }
 
 class Solution {
-    int gLow;
-    int gHigh;
+    public boolean leafSimilar(final TreeNode root1, final TreeNode root2) {
+        final List<Integer> leaftList1 = new ArrayList<>();
+        final List<Integer> leaftList2 = new ArrayList<>();
 
-    public int rangeSumBST(final TreeNode root, final int low, final int high) {
-        gLow = low;
-        gHigh = high;
+        getLeafList(root1, leaftList1);
+        getLeafList(root2, leaftList2);
 
-        return recursiveSum(root);
+        if (leaftList1.size() != leaftList2.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < leaftList1.size(); i++) {
+            if (leaftList1.get(i) != leaftList2.get(i)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    public int recursiveSum(final TreeNode node) {
-        if (node == null) {
-            return 0;
+    private void getLeafList(final TreeNode root, final List<Integer> leaftList) {
+        if (root == null) {
+            return;
         }
 
-        int sum = 0;
-
-        final int val = node.val;
-
-        if (gLow <= val && val <= gHigh) {
-            sum += val;
+        if (root.left == null && root.right == null) {
+            leaftList.add(root.val);
         }
 
-        return sum + recursiveSum(node.left) + recursiveSum(node.right);
+        getLeafList(root.left, leaftList);
+        getLeafList(root.right, leaftList);
     }
 }
 
