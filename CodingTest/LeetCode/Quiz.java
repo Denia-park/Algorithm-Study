@@ -1,5 +1,8 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -9,48 +12,56 @@ public class Quiz {
 }
 
 class Solution {
-    public int amountOfTime(TreeNode root, final int start) {
+    public int amountOfTime(final TreeNode root, final int start) {
         final int rootValue = root.val;
-        int oppositeHeight = 0;
+        final int maxLeftHeight = getMaxHeight(root.left);
+        final int maxRightHeight = getMaxHeight(root.right);
 
         if (rootValue == start) {
-            return Math.max(getMaxHeight(root.left), getMaxHeight(root.right));
+            return Math.max(maxLeftHeight, maxRightHeight);
         }
-
-        //root에서 start가 없는 끝까지
-        if (start < rootValue) {
-            oppositeHeight = getMaxHeight(root.right);
-        } else {
-            oppositeHeight = getMaxHeight(root.left);
-        }
-
 
         //root에서 start가 있는 쪽 탐색
         //  start까지 계산
         int rootToStartHeight = 0;
+        TreeNode startNode = null;
 
-        while (root != null) {
-            if (root.val == start) {
+        final Deque<MyNode> deque = new ArrayDeque<>();
+        deque.offerLast(new MyNode(root, 0));
+
+        while (!deque.isEmpty()) {
+            final MyNode curNode = deque.pollFirst();
+            final int nodeValue = curNode.node.val;
+            final int nodeHeight = curNode.height;
+
+            if (nodeValue == start) {
+                rootToStartHeight = nodeHeight;
+                startNode = curNode.node;
                 break;
             }
 
-            if (start < root.val) {
-                root = root.left;
-            } else {
-                root = root.right;
-            }
-
-            rootToStartHeight++;
+            if (curNode.node.left != null)
+                deque.offerLast(new MyNode(curNode.node.left, nodeHeight + 1));
+            if (curNode.node.right != null)
+                deque.offerLast(new MyNode(curNode.node.right, nodeHeight + 1));
         }
 
         //start에서 끝까지
-        final int startToEndHeight = getMaxHeight(root);
+        final int startToEndCount = Math.max(getMaxHeight(startNode.left), getMaxHeight(startNode.right));
+
+        int oppositeHeight = 0;
+
+        if (rootToStartHeight + startToEndCount == maxLeftHeight) {
+            oppositeHeight = maxRightHeight;
+        } else {
+            oppositeHeight = maxLeftHeight;
+        }
 
         System.out.println("oppositeHeight : " + oppositeHeight);
         System.out.println("rootToStartHeight : " + rootToStartHeight);
-        System.out.println("startToEndHeight : " + startToEndHeight);
+        System.out.println("startToEndCount : " + startToEndCount);
 
-        return Math.max(oppositeHeight + rootToStartHeight, startToEndHeight);
+        return Math.max(oppositeHeight + rootToStartHeight, startToEndCount);
     }
 
     private int getMaxHeight(final TreeNode root) {
@@ -59,6 +70,16 @@ class Solution {
         }
 
         return Math.max(getMaxHeight(root.left), getMaxHeight(root.right)) + 1;
+    }
+}
+
+class MyNode {
+    TreeNode node;
+    int height;
+
+    public MyNode(final TreeNode node, final int height) {
+        this.node = node;
+        this.height = height;
     }
 }
 
