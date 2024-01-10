@@ -1,48 +1,64 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.leafSimilar(null, null));
+        System.out.println("1 : " + solution.amountOfTime(null, 3));
     }
 }
 
 class Solution {
-    public boolean leafSimilar(final TreeNode root1, final TreeNode root2) {
-        final List<Integer> leaftList1 = new ArrayList<>();
-        final List<Integer> leaftList2 = new ArrayList<>();
+    public int amountOfTime(TreeNode root, final int start) {
+        final int rootValue = root.val;
+        int oppositeHeight = 0;
 
-        getLeafList(root1, leaftList1);
-        getLeafList(root2, leaftList2);
-
-        if (leaftList1.size() != leaftList2.size()) {
-            return false;
+        if (rootValue == start) {
+            return Math.max(getMaxHeight(root.left), getMaxHeight(root.right));
         }
 
-        for (int i = 0; i < leaftList1.size(); i++) {
-            if (leaftList1.get(i) != leaftList2.get(i)) {
-                return false;
+        //root에서 start가 없는 끝까지
+        if (start < rootValue) {
+            oppositeHeight = getMaxHeight(root.right);
+        } else {
+            oppositeHeight = getMaxHeight(root.left);
+        }
+
+
+        //root에서 start가 있는 쪽 탐색
+        //  start까지 계산
+        int rootToStartHeight = 0;
+
+        while (root != null) {
+            if (root.val == start) {
+                break;
             }
+
+            if (start < root.val) {
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+
+            rootToStartHeight++;
         }
 
-        return true;
+        //start에서 끝까지
+        final int startToEndHeight = getMaxHeight(root);
+
+        System.out.println("oppositeHeight : " + oppositeHeight);
+        System.out.println("rootToStartHeight : " + rootToStartHeight);
+        System.out.println("startToEndHeight : " + startToEndHeight);
+
+        return Math.max(oppositeHeight + rootToStartHeight, startToEndHeight);
     }
 
-    private void getLeafList(final TreeNode root, final List<Integer> leaftList) {
+    private int getMaxHeight(final TreeNode root) {
         if (root == null) {
-            return;
+            return 0;
         }
 
-        if (root.left == null && root.right == null) {
-            leaftList.add(root.val);
-        }
-
-        getLeafList(root.left, leaftList);
-        getLeafList(root.right, leaftList);
+        return Math.max(getMaxHeight(root.left), getMaxHeight(root.right)) + 1;
     }
 }
 
