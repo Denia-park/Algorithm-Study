@@ -1,22 +1,35 @@
 package CodingTest.Programmers;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 class Solution {
-    public int solution(final int[][] triangle) {
-        final int length = triangle.length;
-        int maxValue = -1;
+    public int solution(final int col, final int row, final int[][] puddles) {
+        final int[][] dp = new int[row + 1][col + 1];
+        dp[1][1] = 1;
 
-        final int[][] dp = new int[length][length];
-        dp[0][0] = triangle[0][0];
+        final Set<String> checkSet = new HashSet<>();
+        checkSet.add("1,1");
+        for (final int[] puddle : puddles) {
+            final int puddleCol = puddle[0];
+            final int puddleRow = puddle[1];
 
-        for (int row = 1; row < length; row++) {
-            dp[row][0] = dp[row - 1][0] + triangle[row][0];
+            checkSet.add(puddleCol + "," + puddleRow);
+        }
 
-            for (int col = 1; col <= row; col++) {
-                dp[row][col] = Math.max(dp[row - 1][col], dp[row - 1][col - 1]) + triangle[row][col];
-                maxValue = Math.max(maxValue, dp[row][col]);
+        for (int rowIdx = 1; rowIdx < row + 1; rowIdx++) {
+            for (int colIdx = 1; colIdx < col + 1; colIdx++) {
+                if (checkSet.contains(colIdx + "," + rowIdx)) {
+                    continue;
+                }
+
+                dp[rowIdx][colIdx] = dp[rowIdx - 1][colIdx] + dp[rowIdx][colIdx - 1];
             }
         }
 
-        return maxValue;
+        System.out.println(Arrays.deepToString(dp));
+
+        return dp[row][col];
     }
 }
