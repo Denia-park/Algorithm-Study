@@ -1,8 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -12,74 +9,34 @@ public class Quiz {
 }
 
 class Solution {
+    private int maxDistance = 0;
+
     public int amountOfTime(final TreeNode root, final int start) {
-        final int rootValue = root.val;
-        final int maxLeftHeight = getMaxHeight(root.left);
-        final int maxRightHeight = getMaxHeight(root.right);
-
-        if (rootValue == start) {
-            return Math.max(maxLeftHeight, maxRightHeight);
-        }
-
-        //root에서 start가 있는 쪽 탐색
-        //  start까지 계산
-        int rootToStartHeight = 0;
-        TreeNode startNode = null;
-
-        final Deque<MyNode> deque = new ArrayDeque<>();
-        deque.offerLast(new MyNode(root, 0));
-
-        while (!deque.isEmpty()) {
-            final MyNode curNode = deque.pollFirst();
-            final int nodeValue = curNode.node.val;
-            final int nodeHeight = curNode.height;
-
-            if (nodeValue == start) {
-                rootToStartHeight = nodeHeight;
-                startNode = curNode.node;
-                break;
-            }
-
-            if (curNode.node.left != null)
-                deque.offerLast(new MyNode(curNode.node.left, nodeHeight + 1));
-            if (curNode.node.right != null)
-                deque.offerLast(new MyNode(curNode.node.right, nodeHeight + 1));
-        }
-
-        //start에서 끝까지
-        final int startToEndCount = Math.max(getMaxHeight(startNode.left), getMaxHeight(startNode.right));
-
-        int oppositeHeight = 0;
-
-        if (rootToStartHeight + startToEndCount == maxLeftHeight) {
-            oppositeHeight = maxRightHeight;
-        } else {
-            oppositeHeight = maxLeftHeight;
-        }
-
-        System.out.println("oppositeHeight : " + oppositeHeight);
-        System.out.println("rootToStartHeight : " + rootToStartHeight);
-        System.out.println("startToEndCount : " + startToEndCount);
-
-        return Math.max(oppositeHeight + rootToStartHeight, startToEndCount);
+        traverse(root, start);
+        return maxDistance;
     }
 
-    private int getMaxHeight(final TreeNode root) {
+    public int traverse(final TreeNode root, final int start) {
+        int depth = 0;
         if (root == null) {
-            return 0;
+            return depth;
         }
 
-        return Math.max(getMaxHeight(root.left), getMaxHeight(root.right)) + 1;
-    }
-}
+        final int leftDepth = traverse(root.left, start);
+        final int rightDepth = traverse(root.right, start);
 
-class MyNode {
-    TreeNode node;
-    int height;
+        if (root.val == start) {
+            maxDistance = Math.max(leftDepth, rightDepth);
+            depth = -1;
+        } else if (leftDepth >= 0 && rightDepth >= 0) {
+            depth = Math.max(leftDepth, rightDepth) + 1;
+        } else {
+            final int distance = Math.abs(leftDepth) + Math.abs(rightDepth);
+            maxDistance = Math.max(maxDistance, distance);
+            depth = Math.min(leftDepth, rightDepth) - 1;
+        }
 
-    public MyNode(final TreeNode node, final int height) {
-        this.node = node;
-        this.height = height;
+        return depth;
     }
 }
 
