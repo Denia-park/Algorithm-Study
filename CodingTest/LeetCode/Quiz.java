@@ -1,106 +1,59 @@
 package CodingTest.LeetCode;
 
-import java.util.*;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        final TreeNode root = new TreeNode(1);
-        root.left = new TreeNode(5);
-        root.right = new TreeNode(3);
-        root.left.right = new TreeNode(4);
-        root.left.right.left = new TreeNode(9);
-        root.left.right.right = new TreeNode(2);
-        root.right.left = new TreeNode(10);
-        root.right.right = new TreeNode(6);
+        final TreeNode root = new TreeNode(8);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(10);
 
-        System.out.println("1 : " + solution.amountOfTime(root, 3));
+        root.left.left = new TreeNode(1);
+        root.left.right = new TreeNode(6);
+
+        root.left.right.left = new TreeNode(4);
+        root.left.right.right = new TreeNode(7);
+
+        root.right.right = new TreeNode(14);
+
+        root.right.right.left = new TreeNode(13);
+
+        System.out.println("1 : " + solution.maxAncestorDiff(root)); //7
 
         final TreeNode root2 = new TreeNode(1);
-        System.out.println("2 : " + solution.amountOfTime(root2, 1));
+        root2.right = new TreeNode(2);
+        root2.right.right = new TreeNode(0);
+        root2.right.right.left = new TreeNode(3);
+
+        System.out.println("2 : " + solution.maxAncestorDiff(root2)); //3
     }
 }
 
 class Solution {
-    Map<Integer, Set<Integer>> graph;
+    int maxDiffValue;
 
-    public int amountOfTime(final TreeNode root, final int start) {
-        graph = new HashMap<>();
-        binaryTreeToGraph(root);
+    public int maxAncestorDiff(final TreeNode root) {
+        maxDiffValue = Integer.MIN_VALUE;
 
-        System.out.println(graph);
+        //재귀 -> max값은 필드로 저장 //지금까지 내려오면서 subTree 기준 max값을 재귀를 태우자
+        recur(root.left, root.val, root.val);
+        recur(root.right, root.val, root.val);
 
-        return bfs(start);
+        return maxDiffValue;
     }
 
-    private void binaryTreeToGraph(final TreeNode root) {
-        //자식 연결하기
-        final int rootVal = root.val;
-
-        //왼쪽 자식 연결하기
-        final TreeNode leftChild = root.left;
-        if (leftChild != null) {
-            connectChild(leftChild, rootVal);
-            binaryTreeToGraph(leftChild);
+    private void recur(final TreeNode root, final int subTreeMaxValue, final int subTreeMinValue) {
+        if (root == null) {
+            return;
         }
 
-        //오른쪽 자식 연결하기
-        final TreeNode rightChild = root.right;
-        if (rightChild != null) {
-            connectChild(rightChild, rootVal);
-            binaryTreeToGraph(rightChild);
-        }
-    }
+        maxDiffValue = Math.max(maxDiffValue, Math.abs(subTreeMaxValue - root.val));
+        maxDiffValue = Math.max(maxDiffValue, Math.abs(subTreeMinValue - root.val));
 
-    private void connectChild(final TreeNode child, final int rootVal) {
-        final Set<Integer> rootSet = graph.getOrDefault(rootVal, new HashSet<>());
-
-        final int childVal = child.val;
-        rootSet.add(childVal);
-        graph.put(rootVal, rootSet);
-
-        final Set<Integer> leftSet = graph.getOrDefault(childVal, new HashSet<>());
-        leftSet.add(rootVal);
-        graph.put(childVal, leftSet);
-    }
-
-    private int bfs(final int start) {
-        int maxDistance = 0;
-
-        final Set<Integer> isVisited = new HashSet<>();
-
-        final Deque<MyNode> deque = new ArrayDeque<>();
-        deque.add(new MyNode(start, 0));
-        isVisited.add(start);
-
-        while (!deque.isEmpty()) {
-            final MyNode current = deque.pollFirst();
-            final Set<Integer> currentSet = graph.get(current.val);
-            final int currentDistance = current.distance;
-            maxDistance = Math.max(maxDistance, currentDistance);
-
-            if (currentSet == null) continue;
-
-            for (final int next : currentSet) {
-                if (!isVisited.contains(next)) {
-                    deque.add(new MyNode(next, currentDistance + 1));
-                    isVisited.add(next);
-                }
-            }
-        }
-
-        return maxDistance;
-    }
-
-    class MyNode {
-        int val;
-        int distance;
-
-        public MyNode(final int val, final int distance) {
-            this.val = val;
-            this.distance = distance;
-        }
+        final int currentMaxValue = Math.max(subTreeMaxValue, root.val);
+        final int currentMinValue = Math.min(subTreeMinValue, root.val);
+        recur(root.left, currentMaxValue, currentMinValue);
+        recur(root.right, currentMaxValue, currentMinValue);
     }
 }
 
