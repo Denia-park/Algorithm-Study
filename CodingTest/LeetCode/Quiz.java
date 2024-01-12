@@ -12,29 +12,25 @@ public class Quiz {
 }
 
 class Solution {
-    Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u');
+    Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U');
 
     public boolean halvesAreAlike(final String s) {
-        final String lowerCase = s.toLowerCase();
+        final char[] chars = s.toCharArray();
+        final int length = s.length();
 
-        final int length = lowerCase.length();
+        return countVowel(chars, 0, (length / 2))
+                == countVowel(chars, (length / 2), length);
+    }
 
-        int leftCount = 0;
+    private int countVowel(final char[] chars, final int start, final int end) {
+        int count = 0;
 
-        for (int i = 0; i < (length / 2); i++) {
-            if (vowels.contains(lowerCase.charAt(i))) {
-                leftCount++;
+        for (int i = start; i < end; i++) {
+            if (vowels.contains(chars[i])) {
+                count++;
             }
         }
 
-        int rightCount = 0;
-
-        for (int i = (length / 2); i < length; i++) {
-            if (vowels.contains(lowerCase.charAt(i))) {
-                rightCount++;
-            }
-        }
-
-        return leftCount == rightCount;
+        return count;
     }
 }
