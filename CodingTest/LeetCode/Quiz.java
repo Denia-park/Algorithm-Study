@@ -1,6 +1,6 @@
 package CodingTest.LeetCode;
 
-import java.util.List;
+import java.util.Set;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -12,7 +12,7 @@ public class Quiz {
 }
 
 class Solution {
-    List<Character> vowels = List.of('a', 'e', 'i', 'o', 'u');
+    Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u');
 
     public boolean halvesAreAlike(final String s) {
         final String lowerCase = s.toLowerCase();
