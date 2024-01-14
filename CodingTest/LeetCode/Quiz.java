@@ -15,21 +15,26 @@ public class Quiz {
 class Solution {
     public boolean closeStrings(final String word1, final String word2) {
         //길이가 다르면 false
-        if (word1.length() != word2.length()) {
+        final int len1 = word1.length();
+        final int len2 = word2.length();
+        if (len1 != len2) {
             return false;
         }
 
         //사용된 글자의 종류가 다르면 false
         final int[] word1CharCount = new int[26];
-        for (int i = 0; i < word1.length(); i++) {
-            word1CharCount[word1.charAt(i) - 'a']++;
+        final char[] chars1 = word1.toCharArray();
+        for (int i = 0; i < len1; i++) {
+            word1CharCount[chars1[i] - 'a']++;
         }
         final int[] word2CharCount = new int[26];
-        for (int i = 0; i < word2.length(); i++) {
-            word2CharCount[word2.charAt(i) - 'a']++;
+        final char[] chars2 = word2.toCharArray();
+        for (int i = 0; i < len2; i++) {
+            word2CharCount[chars2[i] - 'a']++;
         }
 
-        for (int i = 0; i < word2CharCount.length; i++) {
+        final int chatCountLength = word1CharCount.length;
+        for (int i = 0; i < chatCountLength; i++) {
             if (word1CharCount[i] == 0 && word2CharCount[i] != 0
                     || word1CharCount[i] != 0 && word2CharCount[i] == 0) {
                 return false;
@@ -40,7 +45,7 @@ class Solution {
         Arrays.sort(word1CharCount);
         Arrays.sort(word2CharCount);
 
-        for (int i = 0; i < word2CharCount.length; i++) {
+        for (int i = 0; i < chatCountLength; i++) {
             if (word1CharCount[i] != word2CharCount[i]) {
                 return false;
             }
