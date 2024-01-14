@@ -8,6 +8,11 @@ class Solution {
         int answer = 0;
 
         final int length = s.length();
+
+        if (isOddLength(length)) {
+            return 0;
+        }
+
         final String newStr = s + s;
 
         //length만큼 반복 -> 왼쪽으로 이동
@@ -21,6 +26,10 @@ class Solution {
         }
 
         return answer;
+    }
+
+    private boolean isOddLength(final int length) {
+        return length % 2 != 0;
     }
 
     private boolean isRightBracket(final String checkStr) {
