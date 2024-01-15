@@ -1,60 +1,48 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Stack;
 
 class Solution {
-    public int solution(final String s) {
-        int answer = 0;
+    public int[] solution(final int[] prices) {
+        final int length = prices.length;
+        final int[] answer = new int[length];
 
-        final int length = s.length();
+        final Stack<Price> stack = new Stack<>();
 
-        if (isOddLength(length)) {
-            return 0;
+        for (int timeIdx = 0; timeIdx < length; timeIdx++) {
+            if (stack.isEmpty()) {
+                stack.push(new Price(prices[timeIdx], timeIdx));
+                continue;
+            }
+
+            final Price top = stack.peek();
+
+            if (top.price > prices[timeIdx]) {
+                while (!stack.isEmpty() && (stack.peek().price > prices[timeIdx])) {
+                    final Price topPrice = stack.pop();
+                    answer[topPrice.startTime] = timeIdx - topPrice.startTime;
+                }
+            } else {
+                stack.push(new Price(prices[timeIdx], timeIdx));
+            }
         }
 
-        final String newStr = s + s;
-
-        //length만큼 반복 -> 왼쪽으로 이동
-        //매번 스택이 되는지 확인
-        for (int startIdx = 0; startIdx < s.length(); startIdx++) {
-            final String checkStr = newStr.substring(startIdx, startIdx + length);
-
-            if (isRightBracket(checkStr)) {
-                answer++;
+        for (int i = 0; i < length - 1; i++) {
+            if (answer[i] == 0) {
+                answer[i] = length - 1 - i;
             }
         }
 
         return answer;
     }
 
-    private boolean isOddLength(final int length) {
-        return length % 2 != 0;
-    }
+    class Price {
+        int price;
+        int startTime;
 
-    private boolean isRightBracket(final String checkStr) {
-        final Deque<Character> stack = new ArrayDeque<>();
-        final char[] chars = checkStr.toCharArray();
-
-        for (final char ch : chars) {
-            if (ch == '(' || ch == '{' || ch == '[') {
-                stack.push(ch);
-                continue;
-            }
-
-            if (stack.isEmpty()) {
-                return false;
-            }
-
-            final char pop = stack.pop();
-
-            if (ch == ')' && pop != '('
-                    || ch == '}' && pop != '{'
-                    || ch == ']' && pop != '[') {
-                return false;
-            }
+        public Price(final int price, final int startTime) {
+            this.price = price;
+            this.startTime = startTime;
         }
-
-        return stack.isEmpty();
     }
 }
