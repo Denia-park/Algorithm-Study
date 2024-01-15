@@ -1,56 +1,44 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
+import CodingTest.Programmers.BracketUtil;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.closeStrings("abc", "bca"));
-        System.out.println("2 : " + solution.closeStrings("a", "aa"));
-        System.out.println("3 : " + solution.closeStrings("cabbba", "abbccc"));
+        System.out.println("1 : " + solution.findWinners(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]")));
+        System.out.println("2 : " + solution.findWinners(BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[2,3],[1,3],[5,4],[6,4]]")));
     }
 }
 
 class Solution {
-    public boolean closeStrings(final String word1, final String word2) {
-        //길이가 다르면 false
-        final int len1 = word1.length();
-        final int len2 = word2.length();
-        if (len1 != len2) {
-            return false;
+    public List<List<Integer>> findWinners(final int[][] matches) {
+        final Set<Integer> winner = new HashSet<>();
+        final Map<Integer, Integer> loser = new HashMap<>();
+
+        for (final int[] match : matches) {
+            final int winnerNum = match[0];
+            final int loserNum = match[1];
+
+            winner.add(winnerNum);
+            loser.put(loserNum, loser.getOrDefault(loserNum, 0) + 1);
         }
 
-        //사용된 글자의 종류가 다르면 false
-        final int[] word1CharCount = new int[26];
-        final char[] chars1 = word1.toCharArray();
-        for (int i = 0; i < len1; i++) {
-            word1CharCount[chars1[i] - 'a']++;
-        }
-        final int[] word2CharCount = new int[26];
-        final char[] chars2 = word2.toCharArray();
-        for (int i = 0; i < len2; i++) {
-            word2CharCount[chars2[i] - 'a']++;
+        for (final Integer loserNum : loser.keySet()) {
+            winner.remove(loserNum);
         }
 
-        final int chatCountLength = word1CharCount.length;
-        for (int i = 0; i < chatCountLength; i++) {
-            if (word1CharCount[i] == 0 && word2CharCount[i] != 0
-                    || word1CharCount[i] != 0 && word2CharCount[i] == 0) {
-                return false;
-            }
-        }
-
-        //사용된 글자들의 사용 개수 패턴이 다르면 false
-        Arrays.sort(word1CharCount);
-        Arrays.sort(word2CharCount);
-
-        for (int i = 0; i < chatCountLength; i++) {
-            if (word1CharCount[i] != word2CharCount[i]) {
-                return false;
-            }
-        }
-
-        return true;
+        return List.of(
+                winner.stream()
+                        .sorted()
+                        .collect(Collectors.toList()),
+                loser.keySet().stream()
+                        .filter(loserNum -> loser.get(loserNum) < 2)
+                        .sorted()
+                        .collect(Collectors.toList())
+        );
     }
 }
