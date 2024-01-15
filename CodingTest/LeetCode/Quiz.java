@@ -27,12 +27,9 @@ class Solution {
             loser.put(loserNum, loser.getOrDefault(loserNum, 0) + 1);
         }
 
-        for (final Integer loserNum : loser.keySet()) {
-            winner.remove(loserNum);
-        }
-
         return List.of(
                 winner.stream()
+                        .filter(winnerNum -> !loser.containsKey(winnerNum))
                         .sorted()
                         .collect(Collectors.toList()),
                 loser.keySet().stream()
