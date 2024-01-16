@@ -4,6 +4,7 @@ import CodingTest.HackerRank.Solution;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class Quiz {
@@ -16,6 +17,7 @@ public class Quiz {
 }
 
 class RandomizedSet {
+    final Random random = new Random();
     Set<Integer> set;
 
     public RandomizedSet() {
@@ -33,7 +35,7 @@ class RandomizedSet {
     public int getRandom() {
         final List<Integer> list = List.copyOf(set);
 
-        return list.get((int) (Math.random() * list.size()));
+        return list.get((random.nextInt(list.size())));
     }
 }
 
