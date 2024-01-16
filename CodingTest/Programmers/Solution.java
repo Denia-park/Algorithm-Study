@@ -10,7 +10,6 @@ class Solution {
         final List<Integer> answerList = new ArrayList<>();
 
         int day = 0;
-
         int completeCount = 0;
 
         for (int i = 0; i < progresses.length; i++) {
@@ -29,7 +28,7 @@ class Solution {
                 completeCount = 0;
             }
 
-            final int restProgress = MAX - curTotalProgress;
+            final double restProgress = (double) MAX - curTotalProgress;
             final int progressDay = (int) Math.ceil(restProgress / curSpeed);
 
             day += progressDay;
@@ -40,7 +39,13 @@ class Solution {
         //남은거 처리
         answerList.add(completeCount);
 
-        return answerList.stream().mapToInt(i -> i).toArray();
+        //int 배열로 변환
+        final int[] answer = new int[answerList.size()];
+        for (int i = 0; i < answerList.size(); i++) {
+            answer[i] = answerList.get(i);
+        }
+
+        return answer;
     }
 
     private boolean isComplete(final int curTotalProgress) {
