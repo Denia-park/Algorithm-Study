@@ -8,5 +8,6 @@ public class ProgrammersMain {
 
         System.out.println(Arrays.toString(ts.solution(new int[]{93, 30, 55}, new int[]{1, 30, 5})));
         System.out.println(Arrays.toString(ts.solution(new int[]{95, 90, 99, 99, 80, 99}, new int[]{1, 1, 1, 1, 1, 1})));
+        System.out.println(Arrays.toString(ts.solution(new int[]{51, 0, 1}, new int[]{1, 2, 1})));
     }
 }

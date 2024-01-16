@@ -4,41 +4,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
+    private static final int MAX = 100;
+
     public int[] solution(final int[] progresses, final int[] speeds) {
         final List<Integer> answerList = new ArrayList<>();
 
-        final int max = 100;
         int day = 0;
 
-        int eachCount = 0;
+        int completeCount = 0;
 
         for (int i = 0; i < progresses.length; i++) {
-            if (day * speeds[i] + progresses[i] >= max) {
-                eachCount++;
+            final int curProgress = progresses[i];
+            final int curSpeed = speeds[i];
+
+            final int curTotalProgress = (day * curSpeed) + curProgress;
+
+            if (isComplete(curTotalProgress)) {
+                completeCount++;
                 continue;
             }
 
-            if (eachCount > 0) {
-                answerList.add(eachCount);
+            if (completeCount > 0) {
+                answerList.add(completeCount);
+                completeCount = 0;
             }
 
-            eachCount = 0;
-
-            final int progress = progresses[i];
-            final int rest = max - progress;
-
-            final int speed = speeds[i];
-
-            final int progressDay = (int) Math.ceil(rest / speed);
+            final int restProgress = MAX - curTotalProgress;
+            final int progressDay = (int) Math.ceil(restProgress / curSpeed);
 
             day += progressDay;
 
-            eachCount++;
+            completeCount++;
         }
 
         //남은거 처리
-        answerList.add(eachCount);
+        answerList.add(completeCount);
 
         return answerList.stream().mapToInt(i -> i).toArray();
+    }
+
+    private boolean isComplete(final int curTotalProgress) {
+        return curTotalProgress >= MAX;
     }
 }
