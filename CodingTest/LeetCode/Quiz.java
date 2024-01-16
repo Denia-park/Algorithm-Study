@@ -2,10 +2,7 @@ package CodingTest.LeetCode;
 
 import CodingTest.HackerRank.Solution;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -17,25 +14,61 @@ public class Quiz {
 }
 
 class RandomizedSet {
-    final Random random = new Random();
-    Set<Integer> set;
+    private final Random random = new Random();
+    private final List<Integer> numList = new ArrayList<>();
+    private final Map<Integer, Integer> numMap = new HashMap<>();
 
     public RandomizedSet() {
-        set = new HashSet<>();
+    }
+
+    private boolean isExist(final int val) {
+        //존재하는지 확인
+        return numMap.containsKey(val);
     }
 
     public boolean insert(final int val) {
-        return set.add(val);
+        //존재하면 false
+        if (isExist(val)) {
+            return false;
+        }
+
+        //존재하지 않으면 추가
+        //numList에 마지막에 추가
+        numList.add(val);
+        //numMap에 추가
+        //key : val, value : numList의 index
+        numMap.put(val, numList.size() - 1);
+
+        return true;
     }
 
     public boolean remove(final int val) {
-        return set.remove(val);
+        //존재하지 않으면 false
+        if (!isExist(val)) {
+            return false;
+        }
+
+        //존재하면 삭제
+        //해당하는 val의 index를 가져온다.
+        final int targetIdx = numMap.get(val);
+        //마지막 값과 삭제할 값의 위치를 바꾼다. -> 쉽게 삭제하기 위해
+        //바꾼다고 표현을 했지만 그냥 마지막 값을 삭제할 값의 위치에 덮어씌운다.
+        numList.set(targetIdx, numList.get(numList.size() - 1));
+        //numMap에도 Index를 바꾼다.
+        numMap.put(numList.get(targetIdx), targetIdx);
+        //마지막 값을 삭제한다.
+        numList.remove(numList.size() - 1);
+        //numMap에서 삭제한다.
+        numMap.remove(val);
+
+        return true;
     }
 
     public int getRandom() {
-        final List<Integer> list = List.copyOf(set);
+        //랜덤하게 값을 가져온다.
+        final int randomIdx = random.nextInt(numList.size());
 
-        return list.get((random.nextInt(list.size())));
+        return numList.get(randomIdx);
     }
 }
 
