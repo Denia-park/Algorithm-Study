@@ -1,45 +1,44 @@
 package CodingTest.Programmers;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    public int[] solution(final int[] prices) {
-        final int length = prices.length;
-        final int[] answer = new int[length];
+    public int[] solution(final int[] progresses, final int[] speeds) {
+        final List<Integer> answerList = new ArrayList<>();
 
-        final Stack<Price> stack = new Stack<>();
+        final int max = 100;
+        int day = 0;
 
-        for (int timeIdx = 0; timeIdx < length; timeIdx++) {
-            //현재 가격
-            final int curPrice = prices[timeIdx];
+        int eachCount = 0;
 
-            //스택이 비어있지 않으면, 스택의 top을 가져온다.
-            //그리고 top 가격이 바로 이전 가격 대비해서 가격이 떨어졌으면
-            //스택에서 빼고, 현재 시간과 top의 시간 차이를 구해서 answer에 넣는다.
-            while (!stack.isEmpty() && (stack.peek().price > curPrice)) {
-                final Price topPrice = stack.pop();
-                answer[topPrice.startTime] = timeIdx - topPrice.startTime;
+        for (int i = 0; i < progresses.length; i++) {
+            if (day * speeds[i] + progresses[i] >= max) {
+                eachCount++;
+                continue;
             }
 
-            //현재 가격을 스택에 넣는다.
-            stack.push(new Price(curPrice, timeIdx));
+            if (eachCount > 0) {
+                answerList.add(eachCount);
+            }
+
+            eachCount = 0;
+
+            final int progress = progresses[i];
+            final int rest = max - progress;
+
+            final int speed = speeds[i];
+
+            final int progressDay = (int) Math.ceil(rest / speed);
+
+            day += progressDay;
+
+            eachCount++;
         }
 
-        while (!stack.isEmpty()) {
-            final Price topPrice = stack.pop();
-            answer[topPrice.startTime] = length - 1 - topPrice.startTime;
-        }
+        //남은거 처리
+        answerList.add(eachCount);
 
-        return answer;
-    }
-
-    class Price {
-        int price;
-        int startTime;
-
-        public Price(final int price, final int startTime) {
-            this.price = price;
-            this.startTime = startTime;
-        }
+        return answerList.stream().mapToInt(i -> i).toArray();
     }
 }
