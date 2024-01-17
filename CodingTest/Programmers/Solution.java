@@ -16,18 +16,17 @@ class Solution {
 
         //트럭이 다 지나갈때 까지 반복 (while)
         while (truckCount != truckTotalCount) {
-            //다리를 지난 트럭이 있는지 검사
-            while (!bridge.isEmpty()) {
-                final Truck frontTruck = bridge.peek();
-                frontTruck.move();
+            //모든 트럭들이 이동한다.
+            for (final Truck truck : bridge) {
+                truck.move();
+            }
 
-                if (frontTruck.time < bridgeLength) {
-                    break;
-                }
+            //다리를 지난 트럭이 있는지 검사
+            if (!bridge.isEmpty() && bridge.peek().time >= bridgeLength) {
+                bridgeCurWeight -= bridge.peek().weight;
+                truckCount++;
 
                 bridge.pollFirst();
-                bridgeCurWeight -= frontTruck.weight;
-                truckCount++;
             }
 
             //다리에 진입할 트럭이 있는지 검사
@@ -46,7 +45,6 @@ class Solution {
             time++;
         }
 
-        //  매 초 마다 다리 위의 트럭이 다 지나갔는지 체크 (Queue 사용)
         return time;
     }
 
