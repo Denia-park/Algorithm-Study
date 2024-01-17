@@ -1,54 +1,83 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
-    private static final int MAX = 100;
+    public int solution(final int bridgeLength, final int bridgeMaxWeight, final int[] truck_weights) {
+        final int truckTotalCount = truck_weights.length;
 
-    public int[] solution(final int[] progresses, final int[] speeds) {
-        final List<Integer> answerList = new ArrayList<>();
+        int time = 0;
+        int truckCount = 0;
+        int bridgeCurWeight = 0;
+        int enterTruckIdx = 0;
 
-        int day = 0;
-        int completeCount = 0;
+        final Deque<Truck> bridge = new ArrayDeque<>();
 
-        for (int i = 0; i < progresses.length; i++) {
-            final int curProgress = progresses[i];
-            final int curSpeed = speeds[i];
+        //트럭이 다 지나갈때 까지 반복 (while)
+        while (truckCount != truckTotalCount) {
+            //다리가 꽉 참
+            if (bridge.size() == bridgeLength) {
+                //시간 흐르고, 차 내보낼꺼 있는지 확인
+                time++;
+                while (!bridge.isEmpty()) {
+                    final Truck frontTruck = bridge.peek();
+                    frontTruck.move();
 
-            final int curTotalProgress = (day * curSpeed) + curProgress;
+                    if (frontTruck.time < bridgeLength) {
+                        break;
+                    }
 
-            if (isComplete(curTotalProgress)) {
-                completeCount++;
+                    bridge.pollFirst();
+                    bridgeCurWeight -= frontTruck.weight;
+                    truckCount++;
+                }
+
                 continue;
             }
 
-            if (completeCount > 0) {
-                answerList.add(completeCount);
-                completeCount = 0;
+            //다리가 꽉 안참
+            final Truck enterTruck = new Truck(truck_weights[enterTruckIdx], 0);
+
+            if (enterTruck.weight <= (bridgeMaxWeight - bridgeCurWeight)) {
+                bridge.offerLast(enterTruck);
+                bridgeCurWeight += enterTruck.weight;
+                if (enterTruckIdx < truckTotalCount - 1) {
+                    enterTruckIdx++;
+                }
             }
 
-            final double restProgress = (double) MAX - curTotalProgress;
-            final int progressDay = (int) Math.ceil(restProgress / curSpeed);
+            //시간 흐르고, 차 내보낼꺼 있는지 확인
+            time++;
+            while (!bridge.isEmpty()) {
+                final Truck frontTruck = bridge.peek();
+                frontTruck.move();
 
-            day += progressDay;
+                if (frontTruck.time < bridgeLength) {
+                    break;
+                }
 
-            completeCount++;
+                bridge.pollFirst();
+                bridgeCurWeight -= frontTruck.weight;
+                truckCount++;
+            }
         }
 
-        //남은거 처리
-        answerList.add(completeCount);
-
-        //int 배열로 변환
-        final int[] answer = new int[answerList.size()];
-        for (int i = 0; i < answerList.size(); i++) {
-            answer[i] = answerList.get(i);
-        }
-
-        return answer;
+        //  매 초 마다 다리 위의 트럭이 다 지나갔는지 체크 (Queue 사용)
+        return time;
     }
 
-    private boolean isComplete(final int curTotalProgress) {
-        return curTotalProgress >= MAX;
+    private class Truck {
+        int weight;
+        int time;
+
+        public Truck(final int weight, final int time) {
+            this.weight = weight;
+            this.time = time;
+        }
+
+        void move() {
+            time++;
+        }
     }
 }

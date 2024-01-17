@@ -1,13 +1,11 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(new int[]{93, 30, 55}, new int[]{1, 30, 5})));
-        System.out.println(Arrays.toString(ts.solution(new int[]{95, 90, 99, 99, 80, 99}, new int[]{1, 1, 1, 1, 1, 1})));
-        System.out.println(Arrays.toString(ts.solution(new int[]{51, 0, 1}, new int[]{1, 2, 1})));
+        System.out.println(ts.solution(2, 10, new int[]{7, 4, 5, 6}));
+        System.out.println(ts.solution(100, 100, new int[]{10}));
+        System.out.println(ts.solution(100, 100, new int[]{10, 10, 10, 10, 10, 10, 10, 10, 10, 10}));
     }
 }
