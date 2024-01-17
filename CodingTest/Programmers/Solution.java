@@ -16,39 +16,7 @@ class Solution {
 
         //트럭이 다 지나갈때 까지 반복 (while)
         while (truckCount != truckTotalCount) {
-            //다리가 꽉 참
-            if (bridge.size() == bridgeLength) {
-                //시간 흐르고, 차 내보낼꺼 있는지 확인
-                time++;
-                while (!bridge.isEmpty()) {
-                    final Truck frontTruck = bridge.peek();
-                    frontTruck.move();
-
-                    if (frontTruck.time < bridgeLength) {
-                        break;
-                    }
-
-                    bridge.pollFirst();
-                    bridgeCurWeight -= frontTruck.weight;
-                    truckCount++;
-                }
-
-                continue;
-            }
-
-            //다리가 꽉 안참
-            final Truck enterTruck = new Truck(truck_weights[enterTruckIdx], 0);
-
-            if (enterTruck.weight <= (bridgeMaxWeight - bridgeCurWeight)) {
-                bridge.offerLast(enterTruck);
-                bridgeCurWeight += enterTruck.weight;
-                if (enterTruckIdx < truckTotalCount - 1) {
-                    enterTruckIdx++;
-                }
-            }
-
-            //시간 흐르고, 차 내보낼꺼 있는지 확인
-            time++;
+            //다리를 지난 트럭이 있는지 검사
             while (!bridge.isEmpty()) {
                 final Truck frontTruck = bridge.peek();
                 frontTruck.move();
@@ -61,6 +29,21 @@ class Solution {
                 bridgeCurWeight -= frontTruck.weight;
                 truckCount++;
             }
+
+            //다리에 진입할 트럭이 있는지 검사
+            if (bridge.size() != bridgeLength && enterTruckIdx < truckTotalCount) {
+                final Truck enterTruck = new Truck(truck_weights[enterTruckIdx], 0);
+
+                if (enterTruck.weight <= (bridgeMaxWeight - bridgeCurWeight)) {
+                    bridge.offerLast(enterTruck);
+
+                    bridgeCurWeight += enterTruck.weight;
+                    enterTruckIdx++;
+                }
+            }
+
+            //시간 흐른다.
+            time++;
         }
 
         //  매 초 마다 다리 위의 트럭이 다 지나갔는지 체크 (Queue 사용)
