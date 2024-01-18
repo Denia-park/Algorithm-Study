@@ -1,72 +1,60 @@
 package CodingTest.Programmers;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 class Solution {
-    public int solution(final int bridgeLength, final int bridgeMaxWeight, final int[] truck_weights) {
-        final Deque<Truck> waitQueue = new ArrayDeque<>();
-        final Deque<Truck> moveQueue = new ArrayDeque<>();
+    public int solution(final int n, final int[][] results) {
+        int answer = 0;
+        final int totalNumber = n;
 
-        for (final int truckWeight : truck_weights) {
-            waitQueue.offerLast(new Truck(truckWeight));
+        //배열 초기화
+        final boolean[][] wins = new boolean[totalNumber][totalNumber];
+        final boolean[][] loses = new boolean[totalNumber][totalNumber];
+
+        //결과를 순회하면서 이긴 경우, 진 경우 true로 변경
+        for (final int[] result : results) {
+            final int winNum = result[0] - 1;
+            final int loseNum = result[1] - 1;
+
+            wins[winNum][loseNum] = true;
+            loses[loseNum][winNum] = true;
         }
 
-        int time = 0;
-        int bridgeCurWeight = 0;
+        //플로이드 와샬 알고리즘을 이용하여 이긴 경우, 진 경우를 true로 변경
+        for (int mid = 0; mid < totalNumber; mid++) {
+            for (int start = 0; start < totalNumber; start++) {
+                for (int end = 0; end < totalNumber; end++) {
+                    //나한테 진 사람이 다른 사람을 이긴 경우
+                    if (wins[start][mid] && wins[mid][end]) {
+                        wins[start][end] = true;
+                        loses[end][start] = true;
+                    }
 
-        //트럭이 다 지나갈때 까지 반복 (while)
-        while (!waitQueue.isEmpty() || !moveQueue.isEmpty()) {
-            //시간 흐른다.
-            time++;
-
-            //다리가 비었으면, 바로 트럭을 올린다.
-            if (moveQueue.isEmpty()) {
-                final Truck enterTruck = waitQueue.pollFirst();
-                enterTruck.move();
-
-                moveQueue.offerLast(enterTruck);
-                bridgeCurWeight += enterTruck.weight;
-
-                continue;
-            }
-
-            //모든 트럭들이 이동한다.
-            for (final Truck truck : moveQueue) {
-                truck.move();
-            }
-
-            //다리를 지난 트럭이 있는지 검사
-            if (moveQueue.peek().time > bridgeLength) {
-                final Truck exitTruck = moveQueue.pollFirst();
-                bridgeCurWeight -= exitTruck.weight;
-            }
-
-            //다리에 진입할 트럭이 있는지 검사
-            final int allowableWeight = bridgeMaxWeight - bridgeCurWeight;
-            if (!waitQueue.isEmpty() && waitQueue.peekFirst().weight <= allowableWeight) {
-                final Truck enterTruck = waitQueue.pollFirst();
-                enterTruck.move();
-
-                moveQueue.offerLast(enterTruck);
-                bridgeCurWeight += enterTruck.weight;
+                    //나한테 이긴 사람이 다른 사람에게 진 경우
+                    if (loses[start][mid] && loses[mid][end]) {
+                        wins[end][start] = true;
+                        loses[start][end] = true;
+                    }
+                }
             }
         }
 
-        return time;
-    }
+        //순회하면서 이긴 경우, 진 경우의 합이 n-1인 경우 answer++
+        for (int start = 0; start < totalNumber; start++) {
+            int matchCount = 0;
 
-    private class Truck {
-        int weight;
-        int time;
+            for (int end = 0; end < totalNumber; end++) {
+                //start가 end에게 이긴 경우, start가 end에게 진 경우
+                //존재하면 승부 결과를 matchCount++
+                if (wins[start][end] || loses[start][end]) {
+                    matchCount++;
+                }
+            }
 
-        public Truck(final int weight) {
-            this.weight = weight;
-            this.time = 0;
+            //나를 제외한 (n-1)명의 선수와 승부를 했으면 answer++
+            if (matchCount == (totalNumber - 1)) {
+                answer++;
+            }
         }
 
-        void move() {
-            time++;
-        }
+        return answer;
     }
 }

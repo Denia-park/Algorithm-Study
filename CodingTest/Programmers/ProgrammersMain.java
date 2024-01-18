@@ -4,8 +4,10 @@ public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(ts.solution(2, 10, new int[]{7, 4, 5, 6}));
-        System.out.println(ts.solution(100, 100, new int[]{10}));
-        System.out.println(ts.solution(100, 100, new int[]{10, 10, 10, 10, 10, 10, 10, 10, 10, 10}));
+        System.out.println(ts.solution(
+                        5,
+                        BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[4, 3], [4, 2], [3, 2], [1, 2], [2, 5]]")
+                )
+        );
     }
 }
