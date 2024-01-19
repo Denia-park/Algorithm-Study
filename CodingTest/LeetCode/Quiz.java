@@ -1,7 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -32,18 +30,20 @@ class Solution {
 
         for (int row = 1; row < len; row++) {
             for (int col = 0; col < len; col++) {
+                final int[] rowInts = dp[row - 1];
                 int selectValue = Integer.MAX_VALUE;
+
                 //왼쪽 대각선 위
                 if (col != 0) {
-                    selectValue = dp[row - 1][col - 1];
+                    selectValue = rowInts[col - 1];
                 }
 
                 //바로 위
-                selectValue = Math.min(selectValue, dp[row - 1][col]);
+                selectValue = Math.min(selectValue, rowInts[col]);
 
                 //오른쪽 대각선 위
                 if (col != (len - 1)) {
-                    selectValue = Math.min(selectValue, dp[row - 1][col + 1]);
+                    selectValue = Math.min(selectValue, rowInts[col + 1]);
                 }
 
                 dp[row][col] = matrix[row][col] + selectValue;
@@ -51,6 +51,12 @@ class Solution {
         }
 
         //최소 값을 찾는다.
-        return Arrays.stream(dp[len - 1]).min().getAsInt();
+        int answer = Integer.MAX_VALUE;
+
+        for (final int minVal : dp[len - 1]) {
+            answer = Math.min(answer, minVal);
+        }
+
+        return answer;
     }
 }
