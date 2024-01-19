@@ -1,24 +1,56 @@
 package CodingTest.LeetCode;
 
+import java.util.Arrays;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.climbStairs(2));
-        System.out.println("2 : " + solution.climbStairs(3));
+        System.out.println("1 : " + solution.minFallingPathSum(
+                new int[][]{
+                        {2, 1, 3},
+                        {6, 5, 4},
+                        {7, 8, 9}
+                }
+        ));
+        System.out.println("2 : " + solution.minFallingPathSum(
+                new int[][]{
+                        {-19, 57},
+                        {-40, -5}
+                }
+        ));
     }
 }
 
 class Solution {
-    public int climbStairs(final int n) {
-        final int[] dp = new int[n + 1];
-        dp[0] = 1;
-        dp[1] = 1;
+    public int minFallingPathSum(final int[][] matrix) {
+        final int len = matrix.length;
 
-        for (int i = 2; i < dp.length; i++) {
-            dp[i] = dp[i - 2] + dp[i - 1];
+        final int[][] dp = new int[len][len];
+
+        System.arraycopy(matrix[0], 0, dp[0], 0, len);
+
+        for (int row = 1; row < len; row++) {
+            for (int col = 0; col < len; col++) {
+                int selectValue = Integer.MAX_VALUE;
+                //왼쪽 대각선 위
+                if (col != 0) {
+                    selectValue = dp[row - 1][col - 1];
+                }
+
+                //바로 위
+                selectValue = Math.min(selectValue, dp[row - 1][col]);
+
+                //오른쪽 대각선 위
+                if (col != (len - 1)) {
+                    selectValue = Math.min(selectValue, dp[row - 1][col + 1]);
+                }
+
+                dp[row][col] = matrix[row][col] + selectValue;
+            }
         }
 
-        return dp[n];
+        //최소 값을 찾는다.
+        return Arrays.stream(dp[len - 1]).min().getAsInt();
     }
 }
