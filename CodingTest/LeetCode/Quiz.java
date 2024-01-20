@@ -26,12 +26,11 @@ class Solution {
 
         //부분 수열의 개수를 늘리면서, 최소 값을 구하기
         for (int startIdx = 1; startIdx <= len; startIdx++) {
-            for (int endIdx = startIdx; endIdx <= len; endIdx++) {
-                if (startIdx == endIdx) {
-                    dp[endIdx] = arr[startIdx - 1];
-                } else {
-                    dp[endIdx] = Math.min(dp[endIdx - 1], arr[endIdx - 1]);
-                }
+            dp[startIdx] = arr[startIdx - 1];
+            answer = (answer + dp[startIdx]) % MOD;
+
+            for (int endIdx = startIdx + 1; endIdx <= len; endIdx++) {
+                dp[endIdx] = Math.min(dp[endIdx - 1], arr[endIdx - 1]);
 
                 answer = (answer + dp[endIdx]) % MOD;
             }
