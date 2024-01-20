@@ -24,7 +24,7 @@ class Solution {
 
         //방문 여부 관련 선언
         //key = 시작 노드, value = 연결 노드
-        final Map<Node, List<Node>> visited = new HashMap<>();
+        final Map<Node, Set<Node>> visited = new HashMap<>();
 
         for (final int arrow : arrows) {
             //교차점 처리를 위한 스케일 업
@@ -37,12 +37,12 @@ class Solution {
                 //처음 방문하는 경우 => map에 키 값이 없는 경우
                 if (!visited.containsKey(nextNode)) {
                     //리스트에 연결되었다고 표시 (리스트에 값 추가)
-                    visited.put(nextNode, makeNewList(curNode));
+                    visited.put(nextNode, makeNewSet(curNode));
 
                     if (visited.containsKey(curNode)) {
                         visited.get(curNode).add(nextNode);
                     } else {
-                        visited.put(curNode, makeNewList(nextNode));
+                        visited.put(curNode, makeNewSet(nextNode));
                     }
                 }
 
@@ -63,8 +63,8 @@ class Solution {
         return answer;
     }
 
-    private List<Node> makeNewList(final Node nextNode) {
-        final List<Node> returnList = new ArrayList<>();
+    private Set<Node> makeNewSet(final Node nextNode) {
+        final Set<Node> returnList = new HashSet<>();
 
         returnList.add(nextNode);
 
