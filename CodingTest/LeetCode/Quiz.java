@@ -14,19 +14,19 @@ public class Quiz {
 }
 
 class Solution {
-    final static int MOD = (int) (Math.pow(10, 9) + 7);
+    static final int MOD = (int) (Math.pow(10, 9) + 7);
 
     public int sumSubarrayMins(final int[] arr) {
         final int len = arr.length;
 
         //start ~ end 까지의 최소 값
-        final long[][] dp = new long[len + 1][len + 1];
+        final int[][] dp = new int[len + 1][len + 1];
 
         //최소 값을 구해야 하므로
         //자기 자신의 subarray 제외하고는, 처음엔 다 최대 값 넣기
         for (int start = 0; start <= len; start++) {
             for (int end = 0; end <= len; end++) {
-                if (start == 0 || end == 0 || start != end) {
+                if (end == 0 || start != end) {
                     dp[start][end] = Integer.MAX_VALUE;
                 } else {
                     dp[start][end] = arr[start - 1];
@@ -45,8 +45,8 @@ class Solution {
 
         //Integer.MaxValue가 아닌 값들만 구해서 더하면 최소 값이 된다.
         long sum = 0;
-        for (final long[] longs : dp) {
-            for (final long val : longs) {
+        for (final int[] ints : dp) {
+            for (final int val : ints) {
                 if (val == Integer.MAX_VALUE) {
                     continue;
                 }
