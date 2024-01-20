@@ -1,5 +1,8 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -19,23 +22,28 @@ class Solution {
     public int sumSubarrayMins(final int[] arr) {
         final int len = arr.length;
 
-        //start ~ end 까지의 최소 값
-        final int[] dp = new int[len + 1];
+        final Deque<Integer> deque = new ArrayDeque<>();
+        long sum = 0;
 
-        int answer = 0;
+        for (int idx = 0; idx <= len; idx++) {
+            //모든 idx를 다 돈 경우, 최소 값이 바뀌는 경우
+            while (!deque.isEmpty() && (idx == len || arr[deque.peek()] >= arr[idx])) {
+                //deque의 top 값에 대해서 계산을 한다.
+                final int mid = deque.poll();
 
-        //부분 수열의 개수를 늘리면서, 최소 값을 구하기
-        for (int startIdx = 1; startIdx <= len; startIdx++) {
-            dp[startIdx] = arr[startIdx - 1];
-            answer = (answer + dp[startIdx]) % MOD;
+                //현재 최소 값으로 몇 개의 subArray가 만들어 졌는지 개수 체크
+                final int leftBoundary = deque.isEmpty() ? -1 : deque.peek();
+                final int rightBoundary = idx;
 
-            for (int endIdx = startIdx + 1; endIdx <= len; endIdx++) {
-                dp[endIdx] = Math.min(dp[endIdx - 1], arr[endIdx - 1]);
+                final long count = (long) (mid - leftBoundary) * (rightBoundary - mid) % MOD;
 
-                answer = (answer + dp[endIdx]) % MOD;
+                //개수 * 최소 값
+                sum = (sum + (count * arr[mid]) % MOD) % MOD;
             }
+
+            deque.push(idx);
         }
 
-        return answer;
+        return (int) sum;
     }
 }
