@@ -1,60 +1,96 @@
 package CodingTest.Programmers;
 
+import java.util.*;
+
 class Solution {
-    public int solution(final int n, final int[][] results) {
+
+    //방향 배열 설정
+    final int[][] directions = new int[][]{
+            {-1, 0},
+            {-1, 1},
+            {0, 1},
+            {1, 1},
+            {1, 0},
+            {1, -1},
+            {0, -1},
+            {-1, -1}
+    };
+
+    public int solution(final int[] arrows) {
         int answer = 0;
-        final int totalNumber = n;
 
-        //배열 초기화
-        final boolean[][] wins = new boolean[totalNumber][totalNumber];
-        final boolean[][] loses = new boolean[totalNumber][totalNumber];
+        //시작 노드
+        Node curNode = new Node(0, 0);
 
-        //결과를 순회하면서 이긴 경우, 진 경우 true로 변경
-        for (final int[] result : results) {
-            final int winNum = result[0] - 1;
-            final int loseNum = result[1] - 1;
+        //방문 여부 관련 선언
+        //key = 시작 노드, value = 연결 노드
+        final Map<Node, List<Node>> visited = new HashMap<>();
 
-            wins[winNum][loseNum] = true;
-            loses[loseNum][winNum] = true;
-        }
+        for (final int arrow : arrows) {
+            //교차점 처리를 위한 스케일 업
+            for (int count = 0; count < 2; count++) {
+                final Node nextNode = new Node(
+                        curNode.row + directions[arrow][0],
+                        curNode.col + directions[arrow][1]
+                );
 
-        //플로이드 와샬 알고리즘을 이용하여 이긴 경우, 진 경우를 true로 변경
-        for (int mid = 0; mid < totalNumber; mid++) {
-            for (int start = 0; start < totalNumber; start++) {
-                for (int end = 0; end < totalNumber; end++) {
-                    //나한테 진 사람이 다른 사람을 이긴 경우
-                    if (wins[start][mid] && wins[mid][end]) {
-                        wins[start][end] = true;
-                        loses[end][start] = true;
-                    }
+                //처음 방문하는 경우 => map에 키 값이 없는 경우
+                if (!visited.containsKey(nextNode)) {
+                    //리스트에 연결되었다고 표시 (리스트에 값 추가)
+                    visited.put(nextNode, makeNewList(curNode));
 
-                    //나한테 이긴 사람이 다른 사람에게 진 경우
-                    if (loses[start][mid] && loses[mid][end]) {
-                        wins[end][start] = true;
-                        loses[start][end] = true;
+                    if (visited.containsKey(curNode)) {
+                        visited.get(curNode).add(nextNode);
+                    } else {
+                        visited.put(curNode, makeNewList(nextNode));
                     }
                 }
-            }
-        }
 
-        //순회하면서 이긴 경우, 진 경우의 합이 n-1인 경우 answer++
-        for (int start = 0; start < totalNumber; start++) {
-            int matchCount = 0;
+                //해당 노드에 이미 방문했고, 간선을 처음 통과하는 경우
+                else if (!visited.get(nextNode).contains(curNode)) {
+                    visited.get(nextNode).add(curNode);
+                    visited.get(curNode).add(nextNode);
 
-            for (int end = 0; end < totalNumber; end++) {
-                //start가 end에게 이긴 경우, start가 end에게 진 경우
-                //존재하면 승부 결과를 matchCount++
-                if (wins[start][end] || loses[start][end]) {
-                    matchCount++;
+                    answer++;
                 }
-            }
 
-            //나를 제외한 (n-1)명의 선수와 승부를 했으면 answer++
-            if (matchCount == (totalNumber - 1)) {
-                answer++;
+                //방에 대한 처리를 했으므로
+                //점을 이동시켜야 함
+                curNode = nextNode;
             }
         }
 
         return answer;
+    }
+
+    private List<Node> makeNewList(final Node nextNode) {
+        final List<Node> returnList = new ArrayList<>();
+
+        returnList.add(nextNode);
+
+        return returnList;
+    }
+
+    static class Node {
+        int row;
+        int col;
+
+        Node(final int row, final int col) {
+            this.row = row;
+            this.col = col;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            final Node node = (Node) o;
+            return row == node.row && col == node.col;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(row, col);
+        }
     }
 }

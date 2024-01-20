@@ -4,10 +4,6 @@ public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(ts.solution(
-                        5,
-                        BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[4, 3], [4, 2], [3, 2], [1, 2], [2, 5]]")
-                )
-        );
+        System.out.println(ts.solution(new int[]{6, 6, 6, 4, 4, 4, 2, 2, 2, 0, 0, 0, 1, 6, 5, 5, 3, 6, 0}));
     }
 }
