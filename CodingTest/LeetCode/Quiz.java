@@ -20,24 +20,24 @@ class Solution {
         final int len = arr.length;
 
         //start ~ end 까지의 최소 값
-        final int[][] dp = new int[len + 1][len + 1];
+        final int[][] dp = new int[len][len];
 
         //최소 값을 구해야 하므로
         //자기 자신의 subarray 제외하고는, 처음엔 다 최대 값 넣기
-        for (int start = 0; start <= len; start++) {
-            for (int end = 0; end <= len; end++) {
-                if (end == 0 || start != end) {
+        for (int start = 0; start < len; start++) {
+            for (int end = 0; end < len; end++) {
+                if (start != end) {
                     dp[start][end] = Integer.MAX_VALUE;
                 } else {
-                    dp[start][end] = arr[start - 1];
+                    dp[start][end] = arr[start];
                 }
             }
         }
 
         //부분 수열의 개수를 늘리면서, 최소 값을 구하기
-        for (int count = 1; count <= len; count++) {
-            for (int start = 1; start <= len; start++) {
-                for (int end = start + count; end <= len; end++) {
+        for (int count = 1; count < len; count++) {
+            for (int start = 0; start < len; start++) {
+                for (int end = start + count; end < len; end++) {
                     dp[start][end] = Math.min(dp[start][end - 1], dp[end][end]);
                 }
             }
