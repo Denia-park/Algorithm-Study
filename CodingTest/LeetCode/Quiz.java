@@ -4,59 +4,57 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.minFallingPathSum(
-                new int[][]{
-                        {2, 1, 3},
-                        {6, 5, 4},
-                        {7, 8, 9}
-                }
+        System.out.println("1 : " + solution.sumSubarrayMins(
+                new int[]{3, 1, 2, 4}
         ));
-        System.out.println("2 : " + solution.minFallingPathSum(
-                new int[][]{
-                        {-19, 57},
-                        {-40, -5}
-                }
+        System.out.println("2 : " + solution.sumSubarrayMins(
+                new int[]{11, 81, 94, 43, 3}
         ));
     }
 }
 
 class Solution {
-    public int minFallingPathSum(final int[][] matrix) {
-        final int len = matrix.length;
+    final static int MOD = (int) (Math.pow(10, 9) + 7);
 
-        final int[][] dp = new int[len][len];
+    public int sumSubarrayMins(final int[] arr) {
+        final int len = arr.length;
 
-        System.arraycopy(matrix[0], 0, dp[0], 0, len);
+        //start ~ end 까지의 최소 값
+        final long[][] dp = new long[len + 1][len + 1];
 
-        for (int row = 1; row < len; row++) {
-            for (int col = 0; col < len; col++) {
-                final int[] rowInts = dp[row - 1];
-                int selectValue = Integer.MAX_VALUE;
-
-                //왼쪽 대각선 위
-                if (col != 0) {
-                    selectValue = rowInts[col - 1];
+        //최소 값을 구해야 하므로
+        //자기 자신의 subarray 제외하고는, 처음엔 다 최대 값 넣기
+        for (int start = 0; start <= len; start++) {
+            for (int end = 0; end <= len; end++) {
+                if (start == 0 || end == 0 || start != end) {
+                    dp[start][end] = Integer.MAX_VALUE;
+                } else {
+                    dp[start][end] = arr[start - 1];
                 }
-
-                //바로 위
-                selectValue = Math.min(selectValue, rowInts[col]);
-
-                //오른쪽 대각선 위
-                if (col != (len - 1)) {
-                    selectValue = Math.min(selectValue, rowInts[col + 1]);
-                }
-
-                dp[row][col] = matrix[row][col] + selectValue;
             }
         }
 
-        //최소 값을 찾는다.
-        int answer = Integer.MAX_VALUE;
-
-        for (final int minVal : dp[len - 1]) {
-            answer = Math.min(answer, minVal);
+        //부분 수열의 개수를 늘리면서, 최소 값을 구하기
+        for (int count = 1; count <= len; count++) {
+            for (int start = 1; start <= len; start++) {
+                for (int end = start + count; end <= len; end++) {
+                    dp[start][end] = Math.min(dp[start][end - 1], dp[end][end]);
+                }
+            }
         }
 
-        return answer;
+        //Integer.MaxValue가 아닌 값들만 구해서 더하면 최소 값이 된다.
+        long sum = 0;
+        for (final long[] longs : dp) {
+            for (final long val : longs) {
+                if (val == Integer.MAX_VALUE) {
+                    continue;
+                }
+
+                sum = (sum + val) % MOD;
+            }
+        }
+
+        return (int) sum;
     }
 }
