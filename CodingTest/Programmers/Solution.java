@@ -56,23 +56,13 @@ class Solution {
         final List<Integer> preOrders = new ArrayList<>();
         calculatePreOrderList(root, preOrders);
 
-        final int[] preOrderInts = new int[length];
-        for (int i = 0; i < length; i++) {
-            preOrderInts[i] = preOrders.get(i);
-        }
-
         //후위 순회
         final List<Integer> postOrders = new ArrayList<>();
         calculatePostOrderList(root, postOrders);
 
-        final int[] postOrderInts = new int[length];
-        for (int i = 0; i < length; i++) {
-            postOrderInts[i] = postOrders.get(i);
-        }
-
         return new int[][]{
-                preOrderInts,
-                postOrderInts
+                preOrders.stream().mapToInt(Integer::intValue).toArray(),
+                postOrders.stream().mapToInt(Integer::intValue).toArray()
         };
     }
 
