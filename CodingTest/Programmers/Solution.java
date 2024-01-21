@@ -12,57 +12,41 @@ class Solution {
         //Point 삽입
         final int length = nodeinfo.length;
         for (int i = 0; i < length; i++) {
-            final int[] ints = nodeinfo[i];
-            final int x = ints[0];
-            final int y = ints[1];
-
-            preTreeList.add(new Point(i + 1, x, y));
+            preTreeList.add(new Point((i + 1), nodeinfo[i][0], nodeinfo[i][1]));
         }
 
         //preTreeList 정렬 -> Y가 높은 순, x가 작은 순
-        preTreeList.sort(Comparator.comparingInt(Point::getY).reversed().thenComparingInt(Point::getX));
+        preTreeList.sort(
+                Comparator.comparingInt((Point point) -> point.y).reversed()
+                        .thenComparingInt((Point point) -> point.x)
+        );
 
-        //높이 따라 List로 Point 정리하기
-        final List<List<Point>> heightSortedPoints = new ArrayList<>();
+        final Point root = preTreeList.get(0);
 
-        int curHeight = preTreeList.get(0).y;
-        List<Point> tempList = new ArrayList<>();
-        for (final Point point : preTreeList) {
-            if (curHeight == point.getY()) {
-                tempList.add(point);
-            } else {
-                heightSortedPoints.add(tempList);
-                tempList = new ArrayList<>();
+        for (int i = 1; i < length; i++) {
+            final Point curPoint = preTreeList.get(i);
+            Point parent = root;
 
-                tempList.add(point);
-                curHeight = point.getY();
-            }
-        }
-
-        //남은 List 추가하기
-        heightSortedPoints.add(tempList);
-
-        final List<Point> points = heightSortedPoints.get(0);
-        final Point root = points.get(0);
-
-        for (int curChildIdx = 1; curChildIdx < heightSortedPoints.size(); curChildIdx++) {
-            //추가해야 하는 자식 List
-            final List<Point> childList = heightSortedPoints.get(curChildIdx);
-
-            for (final Point child : childList) {
-                final int x = child.x;
-                Point curPoint = root;
-                while (true) {
-                    if (curPoint.left != null && x < curPoint.x) {
-                        curPoint = curPoint.left;
-                    } else if (x < curPoint.x) {
-                        curPoint.left = child;
+            while (true) {
+                if (curPoint.x < parent.x) {
+                    //왼쪽이 비어있으면 삽입
+                    if (parent.left == null) {
+                        parent.left = curPoint;
                         break;
-                    } else if (curPoint.right != null && x > curPoint.x) {
-                        curPoint = curPoint.right;
-                    } else {
-                        curPoint.right = child;
+                    }
+                    //비어있지 않으면 왼쪽으로 이동
+                    else {
+                        parent = parent.left;
+                    }
+                } else {
+                    //오른쪽이 비어있으면 삽입
+                    if (parent.right == null) {
+                        parent.right = curPoint;
                         break;
+                    }
+                    //비어있지 않으면 오른쪽으로 이동
+                    else {
+                        parent = parent.right;
                     }
                 }
             }
@@ -79,7 +63,7 @@ class Solution {
 
         //후위 순회
         final List<Integer> postOrders = new ArrayList<>();
-        calculateetPostOrderList(root, postOrders);
+        calculatePostOrderList(root, postOrders);
 
         final int[] postOrderInts = new int[length];
         for (int i = 0; i < length; i++) {
@@ -93,26 +77,18 @@ class Solution {
     }
 
     private void calculatePreOrderList(final Point root, final List<Integer> preOrders) {
-        if (root == null) {
-            return;
-        }
+        if (root == null) return;
 
         preOrders.add(root.number);
-
         calculatePreOrderList(root.left, preOrders);
-
         calculatePreOrderList(root.right, preOrders);
     }
 
-    private void calculateetPostOrderList(final Point root, final List<Integer> postOrders) {
-        if (root == null) {
-            return;
-        }
+    private void calculatePostOrderList(final Point root, final List<Integer> postOrders) {
+        if (root == null) return;
 
-        calculateetPostOrderList(root.left, postOrders);
-
-        calculateetPostOrderList(root.right, postOrders);
-
+        calculatePostOrderList(root.left, postOrders);
+        calculatePostOrderList(root.right, postOrders);
         postOrders.add(root.number);
     }
 
@@ -127,23 +103,6 @@ class Solution {
             this.number = number;
             this.x = x;
             this.y = y;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        @Override
-        public String toString() {
-            return "Point{" +
-                    "number=" + number +
-                    ", x=" + x +
-                    ", y=" + y +
-                    '}';
         }
     }
 }
