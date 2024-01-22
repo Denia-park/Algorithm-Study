@@ -6,11 +6,15 @@ public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(Arrays.deepToString(ts.solution(
-                        BracketUtil.convertStringToJavaIntTwoDimensionalArray(
-                                "[[5,3],[11,5],[13,3],[3,5],[6,1],[1,3],[8,6],[7,2],[2,2]]"
-                        )
+        System.out.println(Arrays.toString(ts.solution(
+                        new String[]{"I 16", "I -5643", "D - 1", "D 1", "D 1", "I 123", "D - 1"}
                 ))
         );
+        System.out.println(Arrays.toString(ts.solution(
+                        new String[]{"I -45", "I 653", "D 1", "I -642", "I 45", "I 97", "D 1", "D -1", "I 333"}
+                ))
+        );
+
+
     }
 }
