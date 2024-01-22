@@ -19,26 +19,18 @@ class Solution {
     public int[] findErrorNums(final int[] nums) {
         final int[] answer = new int[2];
 
-        Arrays.sort(nums);
-
-        int save = 0;
+        final int[] countArray = new int[nums.length + 1];
 
         for (final int num : nums) {
-            if (num - save > 1) {
-                answer[1] = save + 1;
-            } else if (num - save == 0) {
-                answer[0] = save;
-            }
-
-            if (answer[0] != 0 && answer[1] != 0) {
-                break;
-            }
-
-            save = num;
+            countArray[num]++;
         }
 
-        if (answer[1] == 0) {
-            answer[1] = nums.length;
+        for (int i = 1; i < nums.length + 1; i++) {
+            if (countArray[i] == 0) {
+                answer[1] = i;
+            } else if (countArray[i] == 2) {
+                answer[0] = i;
+            }
         }
 
         return answer;
