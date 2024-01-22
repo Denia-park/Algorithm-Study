@@ -1,29 +1,46 @@
 package CodingTest.LeetCode;
 
+import java.util.Arrays;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.rob(
-                new int[]{1, 2, 3, 1}
-        ));
-        System.out.println("2 : " + solution.rob(
-                new int[]{2, 7, 9, 3, 1}
-        ));
+        System.out.println("1 : " + Arrays.toString(solution.findErrorNums(
+                new int[]{1, 2, 2, 4}
+        )));
+        System.out.println("2 : " + Arrays.toString(solution.findErrorNums(
+                new int[]{1, 1}
+        )));
     }
 }
 
 class Solution {
-    public int rob(final int[] nums) {
-        final int length = nums.length;
-        final int[] dp = new int[length + 1];
+    public int[] findErrorNums(final int[] nums) {
+        final int[] answer = new int[2];
 
-        dp[1] = nums[0];
+        Arrays.sort(nums);
 
-        for (int i = 2; i <= length; i++) {
-            dp[i] = Math.max(dp[i - 1], dp[i - 2] + nums[i - 1]);
+        int save = 0;
+
+        for (final int num : nums) {
+            if (num - save > 1) {
+                answer[1] = save + 1;
+            } else if (num - save == 0) {
+                answer[0] = save;
+            }
+
+            if (answer[0] != 0 && answer[1] != 0) {
+                break;
+            }
+
+            save = num;
         }
 
-        return dp[length];
+        if (answer[1] == 0) {
+            answer[1] = nums.length;
+        }
+
+        return answer;
     }
 }
