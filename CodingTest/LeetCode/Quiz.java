@@ -1,5 +1,6 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
@@ -17,50 +18,48 @@ public class Quiz {
 
 /*
 아이디어
-- 백트래킹
+- Bit Operation
 
 시간복잡도
-- 2^n (getCombi(), n은 arr의 길이) * m (isUnique(), m은 가장 긴 문자열의 길이)
-=> (2^16) * (16*26) == 27262976
+- O(N * M), where N is the number of strings in the array and M is the maximum length of a string in the array.
 
 자료구조
-- dfs (재귀)
+-
 
  */
 
 class Solution {
-
-    private int answer;
+    static final int EMPTY_STRING = 0;
 
     public int maxLength(final List<String> arr) {
-        answer = 0;
+        final List<Integer> dp = new ArrayList<>();
+        dp.add(EMPTY_STRING);
 
-        getCombi(arr, 0, "");
+        int result = 0;
 
-        return answer;
-    }
+        for (final String s : arr) {
+            int a = 0;
+            int dup = 0;
 
-    private void getCombi(final List<String> arr, final int startIdx, final String path) {
-        if (!isUnique(path)) return;
+            for (final char c : s.toCharArray()) {
+                final int bitValue = 1 << (c - 'a');
+                dup |= a & bitValue;
+                a |= bitValue;
+            }
 
-        answer = Math.max(answer, path.length());
+            if (dup > 0) continue;
 
-        for (int idx = startIdx; idx < arr.size(); idx++) {
-            getCombi(arr, idx + 1, path + arr.get(idx));
+            for (int i = dp.size() - 1; i >= 0; i--) {
+                final int dpVal = dp.get(i);
+
+                if ((dpVal & a) > 0) continue;
+
+                dp.add(dpVal | a);
+
+                result = Math.max(result, Integer.bitCount(dpVal | a));
+            }
         }
-    }
 
-    private boolean isUnique(final String target) {
-        final int[] arr = new int[26];
-
-        for (final char ch : target.toCharArray()) {
-            final int curIdx = ch - 'a';
-
-            if (arr[curIdx] > 0) return false;
-
-            arr[curIdx]++;
-        }
-
-        return true;
+        return result;
     }
 }
