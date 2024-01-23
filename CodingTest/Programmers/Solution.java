@@ -28,9 +28,18 @@ class Solution {
 
         int curTime = 0;
         for (final Disk disk : disks) {
+            final int start = disk.getStart();
+            if (curTime < start) {
+                curTime = start;
+            }
+
             curTime += disk.getProcessTime();
 
             disk.setComplete(curTime);
+        }
+
+        for (final Disk disk : disks) {
+            System.out.println(disk);
         }
 
         final OptionalDouble average = disks.stream()
