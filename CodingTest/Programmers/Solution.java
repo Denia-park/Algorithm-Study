@@ -27,25 +27,42 @@ class Solution {
         final PriorityQueue<Disk> pq = new PriorityQueue<>(Comparator.comparingInt(Disk::getProcess));
 
         int curTime = 0;
-        int completeCount = 0;
-        int jobsIdx = 0;
 
-        final int totalLength = jobs.length;
+        for (final Disk curDisk : disks) {
+            final int curStart = curDisk.getStart();
 
-        while (completeCount < totalLength) {
-            while (jobsIdx < totalLength && disks.get(jobsIdx).getStart() <= curTime) {
-                pq.add(disks.get(jobsIdx));
-                jobsIdx++;
+            //현재 시간 보다 요청시간이 빠르면 다 추가
+            if (curStart <= curTime) {
+                pq.add(curDisk);
+                continue;
             }
 
             if (pq.isEmpty()) {
-                curTime = disks.get(jobsIdx).getStart();
-            } else {
-                final Disk curDisk = pq.poll();
-                curTime += curDisk.getProcess();
-                curDisk.setComplete(curTime);
-                completeCount++;
+                curTime = curStart;
+                pq.add(curDisk);
+                continue;
             }
+
+            //현재 시간 보다 요청 시간이 느리면 우선 현재 큐에 있는 작업들을 처리
+            //queue에 있는 작업을 처리
+            while (!pq.isEmpty() && curTime < curStart) {
+                final Disk topDisk = pq.poll();
+                curTime += topDisk.getProcess();
+                topDisk.setComplete(curTime);
+            }
+
+            if (curTime < curStart) {
+                curTime = curStart;
+            }
+
+            pq.add(curDisk);
+        }
+
+        //남은 작업 처리
+        while (!pq.isEmpty()) {
+            final Disk topDisk = pq.poll();
+            curTime += topDisk.getProcess();
+            topDisk.setComplete(curTime);
         }
 
         final OptionalDouble average = disks.stream()
