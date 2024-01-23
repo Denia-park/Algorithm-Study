@@ -19,57 +19,33 @@ class Solution {
 
         //jobs를 Disk List로 변경
         for (final int[] job : jobs) {
-            final int start = job[0];
-            final int process = job[1];
-
-            disks.add(new Disk(start, start + process));
+            disks.add(new Disk(job[0], job[1]));
         }
 
-        disks.sort(Comparator.comparingInt(Disk::getStart));
+        disks.sort(Comparator.comparingInt(Disk::getStart).thenComparingInt(Disk::getProcess));
 
-        final PriorityQueue<Disk> pq = new PriorityQueue<>(
-                Comparator.comparingInt(Disk::getEnd)
-        );
+        final PriorityQueue<Disk> pq = new PriorityQueue<>(Comparator.comparingInt(Disk::getProcess));
 
         int curTime = 0;
+        int completeCount = 0;
+        int jobsIdx = 0;
 
-        for (final Disk disk : disks) {
+        final int totalLength = jobs.length;
+
+        while (completeCount < totalLength) {
+            while (jobsIdx < totalLength && disks.get(jobsIdx).getStart() <= curTime) {
+                pq.add(disks.get(jobsIdx));
+                jobsIdx++;
+            }
+
             if (pq.isEmpty()) {
-                curTime = disk.getStart();
-                pq.add(disk);
-                continue;
+                curTime = disks.get(jobsIdx).getStart();
+            } else {
+                final Disk curDisk = pq.poll();
+                curTime += curDisk.getProcess();
+                curDisk.setComplete(curTime);
+                completeCount++;
             }
-
-            final Disk peek = pq.peek();
-            final int end = peek.getEnd();
-            final int start = disk.getStart();
-
-            if (start <= (curTime + end)) {
-                pq.add(disk);
-                continue;
-            }
-
-            while (!pq.isEmpty()) {
-                final Disk top = pq.poll();
-
-                curTime += top.getProcessTime();
-                top.setComplete(curTime);
-            }
-
-            //시작시간이 현재 시간보다 이후 인 경우, 시작 시간 변경
-            curTime = start;
-            pq.add(disk);
-        }
-
-        while (!pq.isEmpty()) {
-            final Disk top = pq.poll();
-
-            curTime += top.getProcessTime();
-            top.setComplete(curTime);
-        }
-
-        for (final Disk disk : disks) {
-            System.out.println(disk);
         }
 
         final OptionalDouble average = disks.stream()
@@ -81,12 +57,12 @@ class Solution {
 
     static class Disk {
         int start;
-        int end;
+        int process;
         int complete;
 
-        Disk(final int start, final int end) {
+        Disk(final int start, final int process) {
             this.start = start;
-            this.end = end;
+            this.process = process;
             this.complete = 0;
         }
 
@@ -94,12 +70,8 @@ class Solution {
             return start;
         }
 
-        public int getEnd() {
-            return end;
-        }
-
-        public int getProcessTime() {
-            return end - start;
+        public int getProcess() {
+            return process;
         }
 
         public int getComplete() {
@@ -109,14 +81,45 @@ class Solution {
         public void setComplete(final int complete) {
             this.complete = complete;
         }
-
-        @Override
-        public String toString() {
-            return "Disk{" +
-                    "start=" + start +
-                    ", end=" + end +
-                    ", complete=" + complete +
-                    '}';
-        }
     }
 }
+
+/*
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
+//정답 참고
+//https://codevang.tistory.com/316
+
+class Solution {
+    public int solution(int[][] jobs) {
+        int answer = 0;
+        int curTime = 0;
+        int jobsIdx = 0;
+        int completeCount = 0;
+
+        Arrays.sort(jobs, Comparator.comparingInt(a -> a[0]));
+
+        PriorityQueue<int[]> waitingQueue = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+
+        while (completeCount < jobs.length) {
+            while (jobsIdx < jobs.length && jobs[jobsIdx][0] <= curTime) {
+                waitingQueue.add(jobs[jobsIdx]);
+                jobsIdx++;
+            }
+
+            if (waitingQueue.isEmpty()) {
+                curTime = jobs[jobsIdx][0];
+            } else {
+                int[] job = waitingQueue.poll();
+                answer += curTime + job[1] - job[0];
+                curTime += job[1];
+                completeCount++;
+            }
+        }
+
+        return answer / jobs.length;
+    }
+}
+ */
