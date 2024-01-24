@@ -95,9 +95,13 @@ class Solution {
                 if (count % 2 == 1) {
                     odd++;
                 }
+
+                if (odd > 1) {
+                    return false;
+                }
             }
 
-            return odd <= 1;
+            return true;
         }
 
         return true;
