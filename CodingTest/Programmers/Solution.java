@@ -17,12 +17,14 @@ import java.util.Map;
 - Set 사용
  */
 class Solution {
+    int[] answer;
+    int answerLength;
+
     public int[] solution(final String[] gems) {
-        final int[] answer = new int[2];
-        int answerLength = Integer.MAX_VALUE;
+        answer = new int[2];
+        answerLength = Integer.MAX_VALUE;
 
         final int gemTypeCount = new HashSet<>(List.of(gems)).size();
-
         final int gemLength = gems.length;
 
         final Map<String, Integer> gemMap = new HashMap<>();
@@ -33,51 +35,24 @@ class Solution {
         while (startIdx < gemLength) {
             if (gemMap.size() == gemTypeCount) {
                 //모든 보석을 다 구했으니까 answer 계산
-                final int tempGemCount = endIdx - startIdx + 1;
+                calculateAnswer(startIdx, endIdx);
 
-                if (tempGemCount < answerLength) {
-                    answerLength = tempGemCount;
-
-                    answer[0] = startIdx + 1;
-                    answer[1] = endIdx + 1;
-                }
-
-                if (startIdx == endIdx && endIdx < gemLength - 1) {
+                if (isNotLastIdx(endIdx, gemLength) && startIdx == endIdx) {
                     endIdx++;
 
-                    final String endGemName = gems[endIdx];
-
-                    gemMap.put(endGemName, gemMap.getOrDefault(endGemName, 0) + 1);
+                    addEndGem(gemMap, gems[endIdx]);
                 } else {
-                    final String startGemName = gems[startIdx];
-
-                    final int startGemCount = gemMap.getOrDefault(startGemName, 0) - 1;
-
-                    if (startGemCount == 0) {
-                        gemMap.remove(startGemName);
-                    } else {
-                        gemMap.put(startGemName, startGemCount);
-                    }
+                    removeStartGem(gemMap, gems[startIdx]);
 
                     startIdx++;
                 }
             } else {
-                if (endIdx < gemLength - 1) {
+                if (isNotLastIdx(endIdx, gemLength)) {
                     endIdx++;
 
-                    final String endGemName = gems[endIdx];
-
-                    gemMap.put(endGemName, gemMap.getOrDefault(endGemName, 0) + 1);
+                    addEndGem(gemMap, gems[endIdx]);
                 } else {
-                    final String startGemName = gems[startIdx];
-
-                    final int startGemCount = gemMap.getOrDefault(startGemName, 0) - 1;
-
-                    if (startGemCount == 0) {
-                        gemMap.remove(startGemName);
-                    } else {
-                        gemMap.put(startGemName, startGemCount);
-                    }
+                    removeStartGem(gemMap, gems[startIdx]);
 
                     startIdx++;
                 }
@@ -85,5 +60,34 @@ class Solution {
         }
 
         return answer;
+    }
+
+    private void calculateAnswer(final int startIdx, final int endIdx) {
+        final int tempGemCount = endIdx - startIdx + 1;
+
+        if (tempGemCount < answerLength) {
+            answerLength = tempGemCount;
+
+            answer[0] = startIdx + 1;
+            answer[1] = endIdx + 1;
+        }
+    }
+
+    private boolean isNotLastIdx(final int endIdx, final int gemLength) {
+        return endIdx < gemLength - 1;
+    }
+
+    private void addEndGem(final Map<String, Integer> gemMap, final String endGemName) {
+        gemMap.put(endGemName, gemMap.getOrDefault(endGemName, 0) + 1);
+    }
+
+    private void removeStartGem(final Map<String, Integer> gemMap, final String startGemName) {
+        final int startGemCount = gemMap.getOrDefault(startGemName, 0) - 1;
+
+        if (startGemCount == 0) {
+            gemMap.remove(startGemName);
+        } else {
+            gemMap.put(startGemName, startGemCount);
+        }
     }
 }
