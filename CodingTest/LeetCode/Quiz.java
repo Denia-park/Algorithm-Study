@@ -71,21 +71,13 @@ class Solution {
         //deque size가 짝수면, 모두 짝수
         //deque size가 홀수면, 한개는 홀수, 나머지 짝수
         int odd = 0;
-        int sum = 0;
 
         for (final int count : arr) {
             if (count % 2 == 1) {
                 odd++;
             }
-
-            sum += count;
         }
-
-        if (sum % 2 == 0) {
-            return odd == 0;
-        } else {
-            return odd <= 1;
-        }
+        return odd <= 1;
     }
 }
 
