@@ -1,8 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -37,18 +34,18 @@ class Solution {
 
     public int pseudoPalindromicPaths(final TreeNode root) {
         answer = 0;
-        final Deque<Integer> deque = new ArrayDeque<>();
+        final int[] arr = new int[10];
 
         //leaf 노드까지 가야함 -> 양쪽 노드가 null인 노드
-        deque.addLast(root.val);
-        dfs(root, deque);
+        arr[root.val]++;
+        dfs(root, arr);
 
         return answer;
     }
 
-    private void dfs(final TreeNode root, final Deque<Integer> deque) {
+    private void dfs(final TreeNode root, final int[] arr) {
         if (root.left == null && root.right == null) {
-            if (isPalindrome(deque)) {
+            if (isPalindrome(arr)) {
                 answer++;
             }
 
@@ -57,54 +54,38 @@ class Solution {
 
         if (root.left != null) {
             final int leftVal = root.left.val;
-            deque.addLast(leftVal);
-            dfs(root.left, deque);
-            deque.pollLast();
+            arr[leftVal]++;
+            dfs(root.left, arr);
+            arr[leftVal]--;
         }
 
         if (root.right != null) {
             final int rightVal = root.right.val;
-            deque.addLast(rightVal);
-            dfs(root.right, deque);
-            deque.pollLast();
+            arr[rightVal]++;
+            dfs(root.right, arr);
+            arr[rightVal]--;
         }
     }
 
-    public boolean isPalindrome(final Deque<Integer> deque) {
-        final int[] arr = new int[10];
-
-        for (final int val : deque) {
-            arr[val]++;
-        }
-
-        final int size = deque.size();
-
+    public boolean isPalindrome(final int[] arr) {
         //deque size가 짝수면, 모두 짝수
-        if (size % 2 == 0) {
-            for (final int count : arr) {
-                if (count % 2 == 1) {
-                    return false;
-                }
-            }
-        }
         //deque size가 홀수면, 한개는 홀수, 나머지 짝수
-        else {
-            int odd = 0;
+        int odd = 0;
+        int sum = 0;
 
-            for (final int count : arr) {
-                if (count % 2 == 1) {
-                    odd++;
-                }
-
-                if (odd > 1) {
-                    return false;
-                }
+        for (final int count : arr) {
+            if (count % 2 == 1) {
+                odd++;
             }
 
-            return true;
+            sum += count;
         }
 
-        return true;
+        if (sum % 2 == 0) {
+            return odd == 0;
+        } else {
+            return odd <= 1;
+        }
     }
 }
 
