@@ -27,34 +27,25 @@ class Solution {
         final int gemTypeCount = new HashSet<>(List.of(gems)).size();
         final int gemLength = gems.length;
 
-        final Map<String, Integer> gemMap = new HashMap<>();
+        final Map<String, Integer> gemCountMap = new HashMap<>();
 
         int startIdx = 0;
         int endIdx = -1;
 
-        while (startIdx < gemLength) {
-            if (gemMap.size() == gemTypeCount) {
-                //모든 보석을 다 구했으니까 answer 계산
+        while (endIdx < gemLength) {
+            //모든 보석이 다 포함됨
+            if (gemCountMap.size() == gemTypeCount) {
+                //answer 계산
                 calculateAnswer(startIdx, endIdx);
 
-                if (isNotLastIdx(endIdx, gemLength) && startIdx == endIdx) {
-                    endIdx++;
-
-                    addEndGem(gemMap, gems[endIdx]);
-                } else {
-                    removeStartGem(gemMap, gems[startIdx]);
-
-                    startIdx++;
-                }
+                //보석을 빼면서 더 짧은 길이를 구한다.
+                removeStartGem(gemCountMap, gems[startIdx]);
+                startIdx++;
             } else {
-                if (isNotLastIdx(endIdx, gemLength)) {
-                    endIdx++;
-
-                    addEndGem(gemMap, gems[endIdx]);
-                } else {
-                    removeStartGem(gemMap, gems[startIdx]);
-
-                    startIdx++;
+                //보석을 추가하면서 모든 보석이 다 포함되는 경우를 구한다.
+                endIdx++;
+                if (endIdx < gemLength) {
+                    addEndGem(gemCountMap, gems[endIdx]);
                 }
             }
         }
@@ -73,10 +64,6 @@ class Solution {
         }
     }
 
-    private boolean isNotLastIdx(final int endIdx, final int gemLength) {
-        return endIdx < gemLength - 1;
-    }
-
     private void addEndGem(final Map<String, Integer> gemMap, final String endGemName) {
         gemMap.put(endGemName, gemMap.getOrDefault(endGemName, 0) + 1);
     }
@@ -86,8 +73,9 @@ class Solution {
 
         if (startGemCount == 0) {
             gemMap.remove(startGemName);
-        } else {
-            gemMap.put(startGemName, startGemCount);
+            return;
         }
+
+        gemMap.put(startGemName, startGemCount);
     }
 }
