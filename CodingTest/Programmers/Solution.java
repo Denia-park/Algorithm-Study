@@ -1,81 +1,78 @@
 package CodingTest.Programmers;
 
-import java.util.HashMap;
-import java.util.HashSet;
+//아이디어 -> 우선 순위 큐 사용해야 함 (waititng Queue)
+//작업 하던 와중에 들어오는 작업이 있으면 우선순위에 맞춰서 순서 재조정
+//작업이 없는 상황이면 먼저 들어온 작업부터 처리함
+
+//시간복잡도
+//n * logN
+
+//자료 구조
+//우선순위 큐
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.PriorityQueue;
 
-/*
-아이디어
-- 투포인터
-- 동일한 보석이 포함되지 않은 길이가 가장 긴 포인터를 반환
-
-시간 복잡도
-- N
-
-자료구조
-- Set 사용
- */
 class Solution {
-    int[] answer;
-    int answerLength;
+    public int solution(final int[][] jobs) {
+        final List<Task> tasks = new ArrayList<>();
+        //jobs -> Tasks
+        for (final int[] job : jobs) {
+            tasks.add(new Task(job[0], job[1]));
+        }
+        //시작 시간에 맞춰서 오름차순 정렬
+        tasks.sort(Comparator.comparingInt((Task task) -> task.startTime));
 
-    public int[] solution(final String[] gems) {
-        answer = new int[2];
-        answerLength = Integer.MAX_VALUE;
+        //작업이 빨리 끝나는 애들부터 처리하는 우선순위 큐
+        final PriorityQueue<Task> waitQue = new PriorityQueue<>(
+                Comparator.comparingInt((Task task) -> task.processTime)
+        );
 
-        final int gemTypeCount = new HashSet<>(List.of(gems)).size();
-        final int gemLength = gems.length;
+        //현재 시간
+        int curTime = 0;
+        int jobIdx = 0;
+        int completeJobCount = 0;
 
-        final Map<String, Integer> gemCountMap = new HashMap<>();
+        final int totalJob = jobs.length;
+        while (completeJobCount < totalJob) {
 
-        int startIdx = 0;
-        int endIdx = -1;
+            //현재 시간에 입력 된 task를 확인 후 Queue에 넣는다.
+            while (jobIdx < totalJob && tasks.get(jobIdx).startTime <= curTime) {
+                waitQue.add(tasks.get(jobIdx));
+                jobIdx++;
+            }
 
-        while (endIdx < gemLength) {
-            //모든 보석이 다 포함됨
-            if (gemCountMap.size() == gemTypeCount) {
-                //answer 계산
-                calculateAnswer(startIdx, endIdx);
-
-                //보석을 빼면서 더 짧은 길이를 구한다.
-                removeStartGem(gemCountMap, gems[startIdx]);
-                startIdx++;
+            //작업 처리를 시작
+            //시간이 안맞아서 아직 처리해야 하는 Task가 없으면, 첫번째 작업 시간으로 이동한다.
+            if (waitQue.isEmpty()) {
+                curTime = tasks.get(jobIdx).startTime;
             } else {
-                //보석을 추가하면서 모든 보석이 다 포함되는 경우를 구한다.
-                endIdx++;
-                if (endIdx < gemLength) {
-                    addEndGem(gemCountMap, gems[endIdx]);
-                }
+                //처리해야 하는 작업이 있으면 처리
+                final Task playTask = waitQue.poll();
+
+                curTime += playTask.processTime;
+                playTask.endTime = curTime;
+
+                //작업이 완료되었으므로, 완료 작업 수를 1 늘려준다.
+                completeJobCount++;
             }
         }
 
-        return answer;
+        return (int) tasks.stream()
+                .mapToInt((Task task) -> task.endTime - task.startTime)
+                .average().getAsDouble();
     }
+}
 
-    private void calculateAnswer(final int startIdx, final int endIdx) {
-        final int tempGemCount = endIdx - startIdx + 1;
+class Task {
+    int startTime;
+    int processTime;
+    int endTime;
 
-        if (tempGemCount < answerLength) {
-            answerLength = tempGemCount;
-
-            answer[0] = startIdx + 1;
-            answer[1] = endIdx + 1;
-        }
-    }
-
-    private void addEndGem(final Map<String, Integer> gemMap, final String endGemName) {
-        gemMap.put(endGemName, gemMap.getOrDefault(endGemName, 0) + 1);
-    }
-
-    private void removeStartGem(final Map<String, Integer> gemMap, final String startGemName) {
-        final int startGemCount = gemMap.getOrDefault(startGemName, 0) - 1;
-
-        if (startGemCount == 0) {
-            gemMap.remove(startGemName);
-            return;
-        }
-
-        gemMap.put(startGemName, startGemCount);
+    public Task(final int startTime, final int processTime) {
+        this.startTime = startTime;
+        this.processTime = processTime;
     }
 }
