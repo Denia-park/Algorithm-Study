@@ -4,98 +4,61 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        final TreeNode root = new TreeNode(2);
-        root.left = new TreeNode(3);
-        root.left.left = new TreeNode(3);
-        root.left.right = new TreeNode(1);
+        System.out.println("1 : " + solution.longestCommonSubsequence(
+                "abcde",
+                "ace"
+        ));
 
-        root.right = new TreeNode(1);
-        root.right.right = new TreeNode(1);
+        System.out.println("2 : " + solution.longestCommonSubsequence(
+                "abc",
+                "abc"
+        ));
 
-        System.out.println("1 : " + solution.pseudoPalindromicPaths(
-                root
+        System.out.println("3 : " + solution.longestCommonSubsequence(
+                "abc",
+                "def"
+        ));
+
+        System.out.println("4 : " + solution.longestCommonSubsequence(
+                "bab",
+                "ab"
+        ));
+
+        System.out.println("4 : " + solution.longestCommonSubsequence(
+                "bca",
+                "abc"
         ));
     }
 }
 
-/*
-아이디어
-- DFS
-
-시간복잡도
--
-
-자료구조
-- 이진 트리
- */
-
 class Solution {
-    int answer;
+    public int longestCommonSubsequence(final String text1, final String text2) {
+        //input strings length
+        final int len1 = text1.length();
+        final char[] chars1 = text1.toCharArray();
+        final int len2 = text2.length();
+        final char[] chars2 = text2.toCharArray();
 
-    public int pseudoPalindromicPaths(final TreeNode root) {
-        answer = 0;
-        final int[] arr = new int[10];
+        //Create a 2D array to store the lengths of longes common subsequences
+        //for all subproblems, initialized with zero
+        final int[][] dp = new int[len1 + 1][len2 + 1];
 
-        //leaf 노드까지 가야함 -> 양쪽 노드가 null인 노드
-        arr[root.val]++;
-        dfs(root, arr);
-
-        return answer;
-    }
-
-    private void dfs(final TreeNode root, final int[] arr) {
-        if (root.left == null && root.right == null) {
-            if (isPalindrome(arr)) {
-                answer++;
-            }
-
-            return;
-        }
-
-        if (root.left != null) {
-            final int leftVal = root.left.val;
-            arr[leftVal]++;
-            dfs(root.left, arr);
-            arr[leftVal]--;
-        }
-
-        if (root.right != null) {
-            final int rightVal = root.right.val;
-            arr[rightVal]++;
-            dfs(root.right, arr);
-            arr[rightVal]--;
-        }
-    }
-
-    public boolean isPalindrome(final int[] arr) {
-        //deque size가 짝수면, 모두 짝수
-        //deque size가 홀수면, 한개는 홀수, 나머지 짝수
-        int odd = 0;
-
-        for (final int count : arr) {
-            if (count % 2 == 1) {
-                odd++;
+        //Build dp array from bottom up
+        for (int idx1 = 1; idx1 <= len1; idx1++) {
+            for (int idx2 = 1; idx2 <= len2; idx2++) {
+                //if char matches, take diagonal value and add 1
+                if (chars1[idx1 - 1] == chars2[idx2 - 1]) {
+                    dp[idx1][idx2] = dp[idx1 - 1][idx2 - 1] + 1;
+                }
+                // If characters do not match, take the maximum value from
+                // above (dp[i-1][j]) or left (dp[i][j-1])
+                else {
+                    dp[idx1][idx2] = Math.max(dp[idx1 - 1][idx2], dp[idx1][idx2 - 1]);
+                }
             }
         }
-        return odd <= 1;
-    }
-}
 
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode() {
-    }
-
-    TreeNode(final int val) {
-        this.val = val;
-    }
-
-    TreeNode(final int val, final TreeNode left, final TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
+        //The bottom-right cell contains the length of the longest
+        return dp[len1][len2];
     }
 }
