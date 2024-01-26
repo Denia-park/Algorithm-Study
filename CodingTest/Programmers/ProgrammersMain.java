@@ -7,8 +7,8 @@ public class ProgrammersMain {
         final Solution ts = new Solution();
 
         System.out.println((Arrays.toString(ts.solution(
-                        10,
-                        new long[]{1, 3, 4, 1, 3, 1}
+                        new String[]{"frodo", "front", "frost", "frozen", "frame", "kakao"},
+                        new String[]{"fro??", "????o", "fr???", "fro???", "pro?"}
                 )))
         );
 
