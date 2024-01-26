@@ -1,5 +1,7 @@
 package CodingTest.LeetCode;
 
+import java.util.Arrays;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -26,7 +28,7 @@ public class Quiz {
 - DFS로 이동하면서 거리 더하기
 
 시간복잡도
--
+- O(mnN)
 
 자료구조
 -
@@ -36,8 +38,6 @@ class Solution {
     static final int MOD = (int) (Math.pow(10, 9) + 7);
     int maxRow;
     int maxCol;
-    int maxMove;
-    int answer;
 
     int[][] directions = new int[][]{
             {-1, 0},
@@ -46,36 +46,47 @@ class Solution {
             {0, -1}
     };
 
-    public int findPaths(final int m, final int n, final int maxMoveCount, final int startRow, final int startColumn) {
+    public int findPaths(final int m, final int n, final int maxMove, final int startRow, final int startColumn) {
         maxRow = m;
         maxCol = n;
-        maxMove = maxMoveCount;
-        answer = 0;
+        final int[][][] dp = new int[maxRow][maxCol][maxMove + 1];
 
-        dfs(startRow, startColumn, 0);
+        initDpArray(dp);
 
-        return answer;
+        return dfs(startRow, startColumn, maxMove, dp);
     }
 
-    private void dfs(final int curRow, final int curCol, final int curMoveCount) {
-        if (curMoveCount > maxMove) {
-            return;
+    private void initDpArray(final int[][][] dp) {
+        for (final int[][] rows : dp) {
+            for (final int[] row : rows) {
+                Arrays.fill(row, -1);
+            }
         }
+    }
 
-        if (isOut(curRow, curCol)) {
-            answer = (answer + 1) % MOD;
-            return;
-        }
+    private int dfs(final int curRow, final int curCol, final int curMoveCount, final int[][][] dp) {
+        if (isOutOfBoundary(curRow, curCol)) return 1;
+        if (curMoveCount == 0) return 0;
+
+        final int dpVal = dp[curRow][curCol][curMoveCount];
+        if (dpVal >= 0) return dpVal;
+
+        int sumVal = 0;
 
         for (final int[] direction : directions) {
             final int nextRow = curRow + direction[0];
             final int nextCol = curCol + direction[1];
+            final int nextCount = curMoveCount - 1;
 
-            dfs(nextRow, nextCol, curMoveCount + 1);
+            sumVal = (sumVal + (dfs(nextRow, nextCol, nextCount, dp) % MOD)) % MOD;
         }
+
+        dp[curRow][curCol][curMoveCount] = sumVal;
+
+        return sumVal;
     }
 
-    public boolean isOut(final int row, final int col) {
+    public boolean isOutOfBoundary(final int row, final int col) {
         return row < 0 || row >= maxRow || col < 0 || col >= maxCol;
     }
 }
