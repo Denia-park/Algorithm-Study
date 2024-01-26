@@ -4,61 +4,78 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println("1 : " + solution.longestCommonSubsequence(
-                "abcde",
-                "ace"
+        System.out.println("1 : " + solution.findPaths(
+                2,
+                2,
+                2,
+                0,
+                0
         ));
-
-        System.out.println("2 : " + solution.longestCommonSubsequence(
-                "abc",
-                "abc"
-        ));
-
-        System.out.println("3 : " + solution.longestCommonSubsequence(
-                "abc",
-                "def"
-        ));
-
-        System.out.println("4 : " + solution.longestCommonSubsequence(
-                "bab",
-                "ab"
-        ));
-
-        System.out.println("4 : " + solution.longestCommonSubsequence(
-                "bca",
-                "abc"
+        System.out.println("2 : " + solution.findPaths(
+                1,
+                3,
+                3,
+                0,
+                1
         ));
     }
 }
 
+/*
+아이디어
+- DFS로 이동하면서 거리 더하기
+
+시간복잡도
+-
+
+자료구조
+-
+ */
+
 class Solution {
-    public int longestCommonSubsequence(final String text1, final String text2) {
-        //input strings length
-        final int len1 = text1.length();
-        final char[] chars1 = text1.toCharArray();
-        final int len2 = text2.length();
-        final char[] chars2 = text2.toCharArray();
+    static final int MOD = (int) (Math.pow(10, 9) + 7);
+    int maxRow;
+    int maxCol;
+    int maxMove;
+    int answer;
 
-        //Create a 2D array to store the lengths of longes common subsequences
-        //for all subproblems, initialized with zero
-        final int[][] dp = new int[len1 + 1][len2 + 1];
+    int[][] directions = new int[][]{
+            {-1, 0},
+            {0, 1},
+            {1, 0},
+            {0, -1}
+    };
 
-        //Build dp array from bottom up
-        for (int idx1 = 1; idx1 <= len1; idx1++) {
-            for (int idx2 = 1; idx2 <= len2; idx2++) {
-                //if char matches, take diagonal value and add 1
-                if (chars1[idx1 - 1] == chars2[idx2 - 1]) {
-                    dp[idx1][idx2] = dp[idx1 - 1][idx2 - 1] + 1;
-                }
-                // If characters do not match, take the maximum value from
-                // above (dp[i-1][j]) or left (dp[i][j-1])
-                else {
-                    dp[idx1][idx2] = Math.max(dp[idx1 - 1][idx2], dp[idx1][idx2 - 1]);
-                }
-            }
+    public int findPaths(final int m, final int n, final int maxMoveCount, final int startRow, final int startColumn) {
+        maxRow = m;
+        maxCol = n;
+        maxMove = maxMoveCount;
+        answer = 0;
+
+        dfs(startRow, startColumn, 0);
+
+        return answer;
+    }
+
+    private void dfs(final int curRow, final int curCol, final int curMoveCount) {
+        if (curMoveCount > maxMove) {
+            return;
         }
 
-        //The bottom-right cell contains the length of the longest
-        return dp[len1][len2];
+        if (isOut(curRow, curCol)) {
+            answer = (answer + 1) % MOD;
+            return;
+        }
+
+        for (final int[] direction : directions) {
+            final int nextRow = curRow + direction[0];
+            final int nextCol = curCol + direction[1];
+
+            dfs(nextRow, nextCol, curMoveCount + 1);
+        }
+    }
+
+    public boolean isOut(final int row, final int col) {
+        return row < 0 || row >= maxRow || col < 0 || col >= maxCol;
     }
 }
