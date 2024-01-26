@@ -1,74 +1,48 @@
 package CodingTest.Programmers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /*
 아이디어
-- MST
+- union - find 에서 find 알고리즘만 따와서 사용
 
-- MST -> 크루스칼 및 프림 풀이법이 있다
-- 크루스칼 - Union + Find 써야함 (O(e * log e))
-- 프림 - 우선순위 큐를 이용함 (O(node * node))
+시간 복잡도
+- O(N) ~ O(N^2) 사이
 
-- 프림 알고리즘 사용함
-
-시간복잡도
-- n*n
-
-자료 구조
-- Heao -> priorityHeap (거리가 짧은 순)
+자료구조
+- 재귀
  */
-
-import java.util.*;
-
 class Solution {
-    public int solution(final int n, final int[][] costs) {
-        int answer = 0;
+    public long[] solution(final long k, final long[] roomNumbers) {
+        final long[] answer = new long[roomNumbers.length];
 
-        //graph 만들기
-        final Map<Integer, List<Island>> graph = new HashMap<>();
-        for (int i = 0; i < n; i++) {
-            graph.put(i, new ArrayList<>());
-        }
+        //차지된 방에 대해서 Map으로 표시
+        //Key : 차지된 방 번호, Value : 해당 방을 원할 경우 줘야하는 방 번호
+        final Map<Long, Long> occupiedRoom = new HashMap<>();
 
-        for (final int[] costArr : costs) {
-            final int from = costArr[0];
-            final int to = costArr[1];
-            final int cost = costArr[2];
-
-            graph.get(from).add(new Island(to, cost));
-            graph.get(to).add(new Island(from, cost));
-        }
-
-        final boolean[] isVisited = new boolean[n];
-
-        //우선순위 큐 만들기
-        final PriorityQueue<Island> pq = new PriorityQueue<>(Comparator.comparingInt((Island island) -> island.cost));
-        pq.add(new Island(0, 0));
-
-        while (!pq.isEmpty()) {
-            final Island current = pq.poll();
-            final int curNum = current.num;
-
-            if (isVisited[curNum]) continue;
-
-            isVisited[curNum] = true;
-            answer += current.cost;
-
-            for (final Island island : graph.get(curNum)) {
-                if (isVisited[island.num]) continue;
-
-                pq.add(new Island(island.num, island.cost));
-            }
+        for (int i = 0; i < roomNumbers.length; i++) {
+            answer[i] = getRoom(occupiedRoom, roomNumbers[i]);
         }
 
         return answer;
     }
 
-    static class Island {
-        int num, cost;
+    private long getRoom(final Map<Long, Long> occupiedRoom, final long room) {
+        //방이 비어있으면 해당 방을 배정하고, 해당 방을 원할 경우 줘야하는 방을 기입
+        if (!occupiedRoom.containsKey(room)) {
+            final long nextRoom = room + 1;
 
-        Island(final int num, final int cost) {
-            this.num = num;
-            this.cost = cost;
+            occupiedRoom.put(room, nextRoom);
+            return room;
         }
+
+        //방이 이미 차있으면, 해당 방 번호를 통해서 줘야하는 방에 대해서 알아낸다.
+        final Long nextRoom = occupiedRoom.get(room);
+        //줘야하는 방이 그새 뺏기지 않았는지 확인한다.
+        final long returnRoom = getRoom(occupiedRoom, nextRoom);
+        occupiedRoom.put(room, returnRoom);
+
+        return returnRoom;
     }
 }
