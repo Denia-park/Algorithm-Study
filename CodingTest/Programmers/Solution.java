@@ -1,51 +1,75 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
-    public int solution(final String skill, final String[] skill_trees) {
-        int answer = 0;
+    Map<Integer, int[]> coordiMap;
+    private String myHand;
 
-        //모든 스킬 트리에 대해서 해당 스킬이 올바른지 검사
-        for (final String skillTree : skill_trees) {
-            //순서가 정해진 스킬들에 대해서 몇번째로 배웠는지 기록할 array 추가
-            final int[] skilIdxArray = new int[skill.length()];
-            //초기화 -> 배우지 않았음을 의미
-            Arrays.fill(skilIdxArray, -1);
+    public String solution(final int[] numbers, final String hand) {
+        final StringBuilder sb = new StringBuilder();
+        myHand = hand;
+        coordiMap = new HashMap<>();
+        init(coordiMap);
 
-            //스킬들을 몇번째로 배웠는지 계산
-            for (int skillIdx = 0; skillIdx < skill.length(); skillIdx++) {
-                skilIdxArray[skillIdx] = skillTree.indexOf(skill.charAt(skillIdx));
-            }
+        final List<Integer> leftNums = List.of(1, 4, 7);
+        final List<Integer> middleNums = List.of(2, 5, 8, 0);
+        int[] left = new int[]{3, 0};
+        int[] right = new int[]{3, 2};
 
-            //제대로 배웠는지 판단할 변수
-            boolean isOkay = true;
-
-            //현재 스킬을 기준으로해서, 이전 스킬들을 확인하면서 이전 스킬들을 안 배웠는데 현재 스킬을 배운 경우나, 순서가 잘못된 경우를 검사
-            for (int curIdx = 1; curIdx < skill.length(); curIdx++) {
-                //현재 스킬이 안 배운 스킬이면 스킵
-                if (skilIdxArray[curIdx] == -1) {
-                    continue;
+        for (final int number : numbers) {
+            if (middleNums.contains(number)) {
+                final String value = check(number, left, right);
+                if (value.equals("L")) {
+                    left = coordiMap.get(number);
+                } else {
+                    right = coordiMap.get(number);
                 }
-
-                //현재 스킬 이전의 스킬들을 제대로 배웠는지 검사
-                for (int startIdx = 0; startIdx < curIdx; startIdx++) {
-                    //이전 스킬들을 안배우고 넘어오면 잘못된 스킬트리
-                    //이전 스킬보다 현재 스킬을 먼저 배우면 잘못된 스킬트리
-                    if (skilIdxArray[startIdx] == -1 || skilIdxArray[curIdx] < skilIdxArray[startIdx]) {
-                        isOkay = false;
-                        break;
-                    }
-                }
-            }
-
-            //제대로 된 경우만 카운트
-            if (isOkay) {
-                answer++;
+                sb.append(value);
+            } else if (leftNums.contains(number)) {
+                sb.append("L");
+                left = coordiMap.get(number);
+            } else {
+                sb.append("R");
+                right = coordiMap.get(number);
             }
         }
 
+        return sb.toString();
+    }
 
-        return answer;
+    private void init(final Map<Integer, int[]> coordiMap) {
+        coordiMap.put(1, new int[]{0, 0});
+        coordiMap.put(2, new int[]{0, 1});
+        coordiMap.put(3, new int[]{0, 2});
+        coordiMap.put(4, new int[]{1, 0});
+        coordiMap.put(5, new int[]{1, 1});
+        coordiMap.put(6, new int[]{1, 2});
+        coordiMap.put(7, new int[]{2, 0});
+        coordiMap.put(8, new int[]{2, 1});
+        coordiMap.put(9, new int[]{2, 2});
+        coordiMap.put(0, new int[]{3, 1});
+    }
+
+    private String check(final int number, final int[] left, final int[] right) {
+        final int[] numberCoordi = coordiMap.get(number);
+
+        final int leftDistance = Math.abs(numberCoordi[0] - left[0]) + Math.abs(numberCoordi[1] - left[1]);
+        final int rightDistance = Math.abs(numberCoordi[0] - right[0]) + Math.abs(numberCoordi[1] - right[1]);
+
+        //왼쪽이 가까우면 왼손
+        if (leftDistance < rightDistance) {
+            return "L";
+        }
+
+        //오른손이 가까우면 오른손
+        if (leftDistance > rightDistance) {
+            return "R";
+        }
+
+        //같으면 myHand
+        return myHand.substring(0, 1).toUpperCase();
     }
 }
