@@ -1,63 +1,52 @@
 package CodingTest.LeetCode;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
-//        final Solution solution = new Solution();
+        final Solution solution = new Solution();
 
-        final MyQueue myQueue = new MyQueue();
-        myQueue.push(1); // queue is: [1]
-        myQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)
-        myQueue.peek(); // return 1
-        myQueue.pop(); // return 1, queue is [2]
-        myQueue.empty(); // return false
+        System.out.println(solution.evalRPN(new String[]{"2", "1", "+", "3", "*"}));
+        System.out.println(solution.evalRPN(new String[]{"4", "13", "5", "/", "+"}));
+        System.out.println(solution.evalRPN(new String[]{"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"}));
     }
 }
 
-class MyQueue {
-    Stack<Integer> input;
-    Stack<Integer> output;
+class Solution {
+    List<String> operators = List.of("+", "-", "*", "/");
 
-    public MyQueue() {
-        input = new Stack<>();
-        output = new Stack<>();
-    }
+    public int evalRPN(final String[] tokens) {
+        final Deque<Integer> stack = new ArrayDeque<>();
 
-    public void push(final int x) {
-        input.push(x);
-    }
+        for (final String token : tokens) {
+            if (!operators.contains(token)) {
+                stack.push(Integer.valueOf(token));
+                continue;
+            }
 
-    public int pop() {
-        moveAllItemFromInputToOutputIfOutputIsEmpty();
+            final int num2 = stack.pop();
+            final int num1 = stack.pop();
 
-        return output.pop();
-    }
-
-    private void moveAllItemFromInputToOutputIfOutputIsEmpty() {
-        if (output.isEmpty()) {
-            while (!input.isEmpty()) {
-                output.push(input.pop());
+            switch (token) {
+                case "+":
+                    stack.push(num1 + num2);
+                    break;
+                case "-":
+                    stack.push(num1 - num2);
+                    break;
+                case "*":
+                    stack.push(num1 * num2);
+                    break;
+                case "/":
+                    stack.push(num1 / num2);
+                    break;
+                default:
+                    break;
             }
         }
-    }
 
-    public int peek() {
-        moveAllItemFromInputToOutputIfOutputIsEmpty();
-
-        return output.peek();
-    }
-
-    public boolean empty() {
-        return (input.size() + output.size()) == 0;
+        return stack.pop();
     }
 }
-
-/**
- * Your MyQueue object will be instantiated and called as such:
- * MyQueue obj = new MyQueue();
- * obj.push(x);
- * int param_2 = obj.pop();
- * int param_3 = obj.peek();
- * boolean param_4 = obj.empty();
- */
