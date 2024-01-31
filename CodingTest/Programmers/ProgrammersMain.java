@@ -4,8 +4,14 @@ public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(ts.solution(new int[]{1, 1, 1, 1, 1}, 3));
-        System.out.println(ts.solution(new int[]{4, 1, 2, 1}, 4));
+        System.out.println(ts.solution(
+                3,
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, 1, 0], [1, 1, 0], [0, 0, 1]]")
+        ));
+        System.out.println(ts.solution(
+                3,
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray("[[1, 1, 0], [1, 1, 1], [0, 1, 1]]")
+        ));
 
     }
 }
