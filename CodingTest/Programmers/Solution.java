@@ -1,12 +1,9 @@
 package CodingTest.Programmers;
 
 /*
-아이디어 - BFS
+아이디어 - DFS
 네트워크 개수 구하기
  */
-
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 class Solution {
     public int solution(final int n, final int[][] computers) {
@@ -17,30 +14,23 @@ class Solution {
         for (int start = 0; start < n; start++) {
             if (isVisited[start]) continue;
 
-            bfs(computers, isVisited, start);
+            dfs(computers, isVisited, start);
             answer++;
         }
 
         return answer;
     }
 
-    private void bfs(final int[][] computers, final boolean[] isVisited, final int start) {
-        final Deque<Integer> deque = new ArrayDeque<>();
-        deque.addLast(start);
+    private void dfs(final int[][] computers, final boolean[] isVisited, final int start) {
         isVisited[start] = true;
+        final int[] computer = computers[start];
 
-        while (!deque.isEmpty()) {
-            final Integer poll = deque.pollLast();
+        for (int next = 0; next < computer.length; next++) {
+            final int isAble = computer[next];
+            if (isVisited[next] || isAble == 0) continue;
 
-            final int[] computer = computers[poll];
-
-            for (int next = 0; next < computer.length; next++) {
-                final Integer isAble = computer[next];
-                if (isVisited[next] || isAble == 0) continue;
-
-                deque.addLast(next);
-                isVisited[next] = true;
-            }
+            isVisited[next] = true;
+            dfs(computers, isVisited, next);
         }
     }
 }
