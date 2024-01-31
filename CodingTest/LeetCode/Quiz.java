@@ -16,43 +16,28 @@ public class Quiz {
 
 class Solution {
     public int[] dailyTemperatures(final int[] temperatures) {
-        final int[] answer = new int[temperatures.length];
+        final int length = temperatures.length;
+        final int[] answer = new int[length];
 
-        final Deque<Temp> dq = new ArrayDeque<>();
-        for (int idx = 0; idx < temperatures.length; idx++) {
+        final Deque<int[]> dq = new ArrayDeque<>();
+        for (int idx = 0; idx < length; idx++) {
             final int temp = temperatures[idx];
-
-            //비어있으면 추가한다.
-            if (dq.isEmpty()) {
-                dq.push(new Temp(idx, temp));
-                continue;
-            }
 
             //비어있지 않으면 현재 기온과 비교한다.
             //Stack을 뒤지면서 다 처리해야 한다.
             while (!dq.isEmpty()) {
                 //지금이 더 따뜻하면, 기존 값을 빼고 answer에 값을 추가한다.
-                final Temp curTemp = dq.peek();
+                final int[] curTemp = dq.peek();
 
-                if (curTemp.value >= temp) break;
+                if (curTemp[1] >= temp) break;
 
                 dq.poll();
-                answer[curTemp.idx] = idx - curTemp.idx;
+                answer[curTemp[0]] = idx - curTemp[0];
             }
 
-            dq.push(new Temp(idx, temp));
+            dq.push(new int[]{idx, temp});
         }
 
         return answer;
-    }
-
-    static class Temp {
-        int idx;
-        int value;
-
-        public Temp(final int idx, final int value) {
-            this.idx = idx;
-            this.value = value;
-        }
     }
 }
