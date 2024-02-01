@@ -54,7 +54,12 @@ class Solution {
         for (final List<Integer> integers : answer) {
             final int[] tempArr = new int[3];
 
-            for (int i = 0; i < integers.size(); i++) {
+            final int size = integers.size();
+            if (size % 3 != 0) {
+                return new int[0][0];
+            }
+
+            for (int i = 0; i < size; i++) {
                 final Integer val = integers.get(i);
 
                 tempArr[i] = val;
