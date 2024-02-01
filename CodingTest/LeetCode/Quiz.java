@@ -1,8 +1,6 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -15,40 +13,19 @@ public class Quiz {
 
 class Solution {
     public int[][] divideArray(final int[] nums, final int k) {
-        final List<List<Integer>> answer = new ArrayList<>();
-
         Arrays.sort(nums);
 
-        List<Integer> temp = new ArrayList<>();
-        for (final int num : nums) {
-            if (temp.size() < 3) {
-                temp.add(num);
-            } else {
-                answer.add(temp);
-                temp = new ArrayList<>();
-                temp.add(num);
-            }
-        }
+        final int len = nums.length;
+        final int[][] answer = new int[len / 3][3];
 
-        answer.add(temp);
-
-        final int[][] answerArr = new int[answer.size()][3];
-
-        int idx = 0;
-        for (final List<Integer> integers : answer) {
-            final int[] tempArr = new int[3];
-
-            if (integers.get(2) - integers.get(0) > k) {
+        for (int i = 0; i < len; i += 3) {
+            if (nums[i + 2] - nums[i] > k) {
                 return new int[0][0];
             }
 
-            for (int i = 0; i < 3; i++) {
-                tempArr[i] = integers.get(i);
-            }
-
-            answerArr[idx++] = tempArr;
+            answer[i / 3] = new int[]{nums[i], nums[i + 1], nums[i + 2]};
         }
 
-        return answerArr;
+        return answer;
     }
 }
