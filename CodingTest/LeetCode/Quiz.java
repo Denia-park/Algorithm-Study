@@ -1,43 +1,68 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Deque;
+import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(Arrays.toString(solution.dailyTemperatures(new int[]{73, 74, 75, 71, 69, 72, 76, 73})));
-        System.out.println(Arrays.toString(solution.dailyTemperatures(new int[]{30, 40, 50, 60})));
-        System.out.println(Arrays.toString(solution.dailyTemperatures(new int[]{30, 60, 90})));
+        System.out.println(Arrays.deepToString(solution.divideArray(new int[]{1, 3, 4, 8, 7, 9, 3, 5, 1}, 2)));
+        System.out.println(Arrays.deepToString(solution.divideArray(new int[]{1, 3, 3, 2, 7, 3}, 3)));
     }
 }
 
 class Solution {
-    public int[] dailyTemperatures(final int[] temperatures) {
-        final int length = temperatures.length;
-        final int[] answer = new int[length];
+    public int[][] divideArray(final int[] nums, final int k) {
+        final List<List<Integer>> answer = new ArrayList<>();
 
-        final Deque<int[]> dq = new ArrayDeque<>();
-        for (int idx = 0; idx < length; idx++) {
-            final int temp = temperatures[idx];
+        Arrays.sort(nums);
 
-            //비어있지 않으면 현재 기온과 비교한다.
-            //Stack을 뒤지면서 다 처리해야 한다.
-            while (!dq.isEmpty()) {
-                //지금이 더 따뜻하면, 기존 값을 빼고 answer에 값을 추가한다.
-                final int[] curTemp = dq.peek();
-
-                if (curTemp[1] >= temp) break;
-
-                dq.poll();
-                answer[curTemp[0]] = idx - curTemp[0];
+        final List<Integer> temp = new ArrayList<>();
+        for (final int num : nums) {
+            if (temp.isEmpty()) {
+                temp.add(num);
+                continue;
             }
 
-            dq.push(new int[]{idx, temp});
+            final Integer minValue = temp.get(0);
+            if (num - minValue <= k && temp.size() < 3) {
+                temp.add(num);
+            } else {
+                final List<Integer> move = new ArrayList<>();
+                for (final Integer val : temp) {
+                    move.add(val);
+                }
+
+                answer.add(move);
+                temp.clear();
+
+                temp.add(num);
+            }
         }
 
-        return answer;
+        if (temp.size() % 3 != 0) {
+            return new int[0][0];
+        }
+
+        answer.add(temp);
+
+        final int[][] answerArr = new int[answer.size()][3];
+
+        int idx = 0;
+        for (final List<Integer> integers : answer) {
+            final int[] tempArr = new int[3];
+
+            for (int i = 0; i < integers.size(); i++) {
+                final Integer val = integers.get(i);
+
+                tempArr[i] = val;
+            }
+
+            answerArr[idx++] = tempArr;
+        }
+
+        return answerArr;
     }
 }
