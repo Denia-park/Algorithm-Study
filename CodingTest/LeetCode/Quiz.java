@@ -19,31 +19,15 @@ class Solution {
 
         Arrays.sort(nums);
 
-        final List<Integer> temp = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
         for (final int num : nums) {
-            if (temp.isEmpty()) {
-                temp.add(num);
-                continue;
-            }
-
-            final Integer minValue = temp.get(0);
-            if (num - minValue <= k && temp.size() < 3) {
+            if (temp.size() < 3) {
                 temp.add(num);
             } else {
-                final List<Integer> move = new ArrayList<>();
-                for (final Integer val : temp) {
-                    move.add(val);
-                }
-
-                answer.add(move);
-                temp.clear();
-
+                answer.add(temp);
+                temp = new ArrayList<>();
                 temp.add(num);
             }
-        }
-
-        if (temp.size() % 3 != 0) {
-            return new int[0][0];
         }
 
         answer.add(temp);
@@ -54,15 +38,12 @@ class Solution {
         for (final List<Integer> integers : answer) {
             final int[] tempArr = new int[3];
 
-            final int size = integers.size();
-            if (size % 3 != 0) {
+            if (integers.get(2) - integers.get(0) > k) {
                 return new int[0][0];
             }
 
-            for (int i = 0; i < size; i++) {
-                final Integer val = integers.get(i);
-
-                tempArr[i] = val;
+            for (int i = 0; i < 3; i++) {
+                tempArr[i] = integers.get(i);
             }
 
             answerArr[idx++] = tempArr;
