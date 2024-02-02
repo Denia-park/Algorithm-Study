@@ -5,14 +5,14 @@ public class ProgrammersMain {
         final Solution ts = new Solution();
 
         System.out.println(ts.solution(
-                "hit",
-                "cog",
-                new String[]{"hot", "dot", "dog", "lot", "log", "cog"}
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray(
+                        "[[1,0,1,1,1],[1,0,1,0,1],[1,0,1,1,1],[1,1,1,0,1],[0,0,0,0,1]]"
+                )
         ));
         System.out.println(ts.solution(
-                "hit",
-                "cog",
-                new String[]{"hot", "dot", "dog", "lot", "log"}
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray(
+                        "[[1,0,1,1,1],[1,0,1,0,1],[1,0,1,1,1],[1,1,1,0,0],[0,0,0,0,1]]"
+                )
         ));
 
     }
