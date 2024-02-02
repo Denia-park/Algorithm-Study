@@ -27,13 +27,13 @@ class Main {
 }
 
 class Solution {
-    String WALL = "#";
-    String EMPTY = ".";
-    String FIRE = "F";
-    String JH = "J";
+    public static final String WALL = "#";
+    public static final String EMPTY = ".";
+    public static final String FIRE = "F";
+    public static final String JH = "J";
 
-    int FIRE_NUM = 4;
-    int JH_NUM = 3;
+    public static final int FIRE_NUM = 4;
+    public static final int JH_NUM = 3;
 
     int[][] direcs = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
@@ -67,48 +67,50 @@ class Solution {
             }
         }
 
-        //지훈 이동
         //불 이동
-        final Deque<int[]> dq = new ArrayDeque<>();
-        dq.addAll(fires);//불
+        //지훈 이동
+        final Deque<int[]> dq = new ArrayDeque<>(fires);//불
         dq.addLast(jihun);//지훈
 
         while (!dq.isEmpty()) {
             final int[] cur = dq.pollFirst();
 
             //지훈인지 불인지 확인
-            if (cur[3] == JH_NUM) {
-                for (final int[] direc : direcs) {
-                    final int nextR = cur[0] + direc[0];
-                    final int nextC = cur[1] + direc[1];
+            for (final int[] direc : direcs) {
+                final int nextR = cur[0] + direc[0];
+                final int nextC = cur[1] + direc[1];
+                final int checkNum = cur[3];
+
+
+                if (isOutOfMap(nextR, totalR, nextC, totalC)) {
                     //지훈인데 현재 값이 밖으로 나갔으면 통과
-                    if (nextR < 0 || nextR >= totalR || nextC < 0 || nextC >= totalC) {
+                    if (checkNum == JH_NUM) {
                         answer = Math.min(answer, cur[2] + 1);
-                        continue;
                     }
 
+                    continue;
+                }
+
+                if (checkNum == JH_NUM) {
                     if (!map[nextR][nextC].equals(EMPTY)) continue;
 
                     dq.addLast(new int[]{nextR, nextC, cur[2] + 1, JH_NUM});
                     map[nextR][nextC] = JH;
-                }
-            } else { //불
-                for (final int[] direc : direcs) {
-                    final int nextR = cur[0] + direc[0];
-                    final int nextC = cur[1] + direc[1];
-                    //불이므로 그냥 4방향으로 퍼짐
-                    if (nextR < 0 || nextR >= totalR || nextC < 0 || nextC >= totalC) {
-                        continue;
-                    }
-
+                } else {
                     if (map[nextR][nextC].equals(WALL) || map[nextR][nextC].equals(FIRE)) continue;
 
                     dq.addLast(new int[]{nextR, nextC, cur[2] + 1, FIRE_NUM});
                     map[nextR][nextC] = FIRE;
                 }
             }
+
+            if (answer != Integer.MAX_VALUE) break;
         }
 
         System.out.println(answer == Integer.MAX_VALUE ? "IMPOSSIBLE" : answer);
+    }
+
+    private boolean isOutOfMap(final int nextR, final int totalR, final int nextC, final int totalC) {
+        return nextR < 0 || nextR >= totalR || nextC < 0 || nextC >= totalC;
     }
 }
