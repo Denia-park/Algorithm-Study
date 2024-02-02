@@ -4,9 +4,7 @@ package CodingTest.Baekjoon;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
+import java.util.*;
 
 class Main {
     public static void main(final String[] args) throws Exception {
@@ -46,16 +44,20 @@ class Solution {
         final int totalC = map[0].length;
 
         final int[] jihun = new int[4];
-        final int[] fire = new int[4];
+        final List<int[]> fires = new ArrayList<>();
 
         //불 및 지훈이 어딨는지 탐색
         for (int r = 0; r < totalR; r++) {
             for (int c = 0; c < totalC; c++) {
                 if (map[r][c].equals("F")) {
+                    final int[] fire = new int[4];
+
                     fire[0] = r;
                     fire[1] = c;
                     fire[2] = 0;
                     fire[3] = FIRE_NUM;
+
+                    fires.add(fire);
                 } else if (map[r][c].equals("J")) {
                     jihun[0] = r;
                     jihun[1] = c;
@@ -69,7 +71,7 @@ class Solution {
         //불 이동
         final Deque<int[]> dq = new ArrayDeque<>();
         dq.addLast(jihun);//지훈
-        dq.addLast(fire);//불
+        dq.addAll(fires);//불
 
         while (!dq.isEmpty()) {
             final int[] cur = dq.pollFirst();
