@@ -85,7 +85,7 @@ class Solution {
                         continue;
                     }
 
-                    if (map[nextR][nextC] != EMPTY) continue;
+                    if (!map[nextR][nextC].equals(EMPTY)) continue;
 
                     dq.addLast(new int[]{nextR, nextC, cur[2] + 1, JH_NUM});
                     map[nextR][nextC] = JH;
@@ -99,7 +99,7 @@ class Solution {
                         continue;
                     }
 
-                    if (map[nextR][nextC] == WALL || map[nextR][nextC] == FIRE) continue;
+                    if (map[nextR][nextC].equals(WALL) || map[nextR][nextC].equals(FIRE)) continue;
 
                     dq.addLast(new int[]{nextR, nextC, cur[2] + 1, FIRE_NUM});
                     map[nextR][nextC] = FIRE;
