@@ -1,89 +1,112 @@
 package CodingTest.Baekjoon;
 
-//빗물 14719
+//불! 4179
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
-        BjSolution sol = new BjSolution();
+class Main {
+    public static void main(final String[] args) throws Exception {
+        final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        final int[] line1 = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::valueOf).toArray();
+        final int sizeRow = line1[0];
+        final int sizeCol = line1[1];
 
-        int[] inputs = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-        int row = inputs[0];
-        int col = inputs[1];
+        final String[][] map = new String[sizeRow][sizeCol];
 
-        int[] heightArr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        for (int i = 0; i < sizeRow; i++) {
+            final String[] tempLine = br.readLine().split("");
+            map[i] = tempLine;
+        }
 
-        sol.solve(row, col, heightArr);
+        final Solution sol = new Solution();
+        sol.solve(map);
     }
 }
 
-class BjSolution {
-    public void solve(int row, int col, int[] heightArr) {
-        int answer = 0;
+class Solution {
+    String WALL = "#";
+    String EMPTY = ".";
+    String FIRE = "F";
+    String JH = "J";
 
-        int[][] map = new int[row][col];
-        int cIdx = 0;
+    int FIRE_NUM = 4;
+    int JH_NUM = 3;
 
-        for (int height : heightArr) {
-            int rIdx = row - 1;
-            for (int count = 0; count < height; count++) {
-                map[rIdx][cIdx] = 1;
-                rIdx--;
-            }
+    int[][] direcs = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
-            cIdx++;
-        }
+    void solve(final String[][] map) {
+        int answer = Integer.MAX_VALUE;
 
-        for (int r = 0; r < row; r++) {
-            //시작 값 초기화, 벽이 없는 상태
-            boolean isLeftWallClosed = false;
-            //빗물 저정할 값
-            int tempSaveWater = 0;
+        final int totalR = map.length;
+        final int totalC = map[0].length;
 
-            for (int c = 0; c < col; c++) {
-                //벽이 있으면
-                //벽 상태 초기화 + 이전에 고인 빗물이 있으면 answer에 추가
-                if (isWall(map, r, c)) {
-                    if (isLeftWallClosed) {
-                        answer += tempSaveWater;
-                        tempSaveWater = 0;
-                    }
+        final int[] jihun = new int[4];
+        final int[] fire = new int[4];
 
-                    isLeftWallClosed = true;
-                } else {
-                    //지금이 비었고, 이전에 벽이 있었으면 비가 고임
-                    if (isLeftWallClosed) {
-                        tempSaveWater++;
-                    }
+        //불 및 지훈이 어딨는지 탐색
+        for (int r = 0; r < totalR; r++) {
+            for (int c = 0; c < totalC; c++) {
+                if (map[r][c].equals("F")) {
+                    fire[0] = r;
+                    fire[1] = c;
+                    fire[2] = 0;
+                    fire[3] = FIRE_NUM;
+                } else if (map[r][c].equals("J")) {
+                    jihun[0] = r;
+                    jihun[1] = c;
+                    jihun[2] = 0; //count
+                    jihun[3] = JH_NUM;
                 }
             }
         }
 
-        System.out.println(answer);
-    }
+        //지훈 이동
+        //불 이동
+        final Deque<int[]> dq = new ArrayDeque<>();
+        dq.addLast(jihun);//지훈
+        dq.addLast(fire);//불
 
-    private boolean isWall(final int[][] map, final int r, final int c) {
-        return map[r][c] == 1;
+        while (!dq.isEmpty()) {
+            final int[] cur = dq.pollFirst();
+
+            //지훈인지 불인지 확인
+            if (cur[3] == JH_NUM) {
+                for (final int[] direc : direcs) {
+                    final int nextR = cur[0] + direc[0];
+                    final int nextC = cur[1] + direc[1];
+                    //지훈인데 현재 값이 밖으로 나갔으면 통과
+                    if (nextR < 0 || nextR >= totalR || nextC < 0 || nextC >= totalC) {
+                        answer = Math.min(answer, cur[2] + 1);
+                        continue;
+                    }
+
+                    if (map[nextR][nextC] != EMPTY) continue;
+
+                    dq.addLast(new int[]{nextR, nextC, cur[2] + 1, JH_NUM});
+                    map[nextR][nextC] = JH;
+                }
+            } else { //불
+                for (final int[] direc : direcs) {
+                    final int nextR = cur[0] + direc[0];
+                    final int nextC = cur[1] + direc[1];
+                    //불이므로 그냥 4방향으로 퍼짐
+                    if (nextR < 0 || nextR >= totalR || nextC < 0 || nextC >= totalC) {
+                        continue;
+                    }
+
+                    if (map[nextR][nextC] == WALL || map[nextR][nextC] == FIRE) continue;
+
+                    dq.addLast(new int[]{nextR, nextC, cur[2] + 1, FIRE_NUM});
+                    map[nextR][nextC] = FIRE;
+                }
+            }
+        }
+
+        System.out.println(answer == Integer.MAX_VALUE ? "IMPOSSIBLE" : answer);
     }
 }
-
-//        *StringTokenizer*
-//        StringTokenizer st;
-//        st = new StringTokenizer(br.readLine());
-//        int stNum = Integer.parseInt(st.nextToken());
-//        int testValue = Integer.parseInt(br.readLine());
-
-//        *BufferedReader*
-//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//
-//        int testCaseNum = Integer.parseInt(br.readLine());
-//        String[] testCase = new String[testCaseNum];
-//        for (int i = 0; i < testCaseNum; i++) {
-//            testCase[i] = br.readLine();
-//        }
