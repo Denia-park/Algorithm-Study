@@ -1,30 +1,40 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(Arrays.deepToString(solution.divideArray(new int[]{1, 3, 4, 8, 7, 9, 3, 5, 1}, 2)));
-        System.out.println(Arrays.deepToString(solution.divideArray(new int[]{1, 3, 3, 2, 7, 3}, 3)));
+        System.out.println((solution.sequentialDigits(100, 300)));
+        System.out.println((solution.sequentialDigits(1000, 13000)));
     }
 }
 
 class Solution {
-    public int[][] divideArray(final int[] nums, final int k) {
-        Arrays.sort(nums);
+    public List<Integer> sequentialDigits(final int low, final int high) {
+        final List<Integer> answer = new ArrayList<>();
+        // 가능한 숫자는 12 ~~~
+        // 앞자리 바꿔가면서, 뒷자리를 계속 추가하면서 High랑 비교하자.
 
-        final int len = nums.length;
-        final int[][] answer = new int[len / 3][3];
+        for (int start = 1; start <= 8; start++) {
+            int last = start + 1;
+            String temp = start + "" + (last);
 
-        for (int i = 0; i < len; i += 3) {
-            if (nums[i + 2] - nums[i] > k) {
-                return new int[0][0];
+            while (last < 10
+                    && temp.length() < 10
+                    && Integer.valueOf(temp) <= high) {
+                if (Integer.valueOf(temp) >= low) {
+                    answer.add(Integer.valueOf(temp));
+                }
+
+                last += 1;
+                temp += ("" + last);
             }
-
-            answer[i / 3] = new int[]{nums[i], nums[i + 1], nums[i + 2]};
         }
+
+        answer.sort(null);
 
         return answer;
     }
