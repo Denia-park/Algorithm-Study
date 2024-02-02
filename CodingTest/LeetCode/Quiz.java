@@ -18,19 +18,18 @@ class Solution {
         // 가능한 숫자는 12 ~~~
         // 앞자리 바꿔가면서, 뒷자리를 계속 추가하면서 High랑 비교하자.
 
-        for (int start = 1; start <= 8; start++) {
-            int last = start + 1;
-            String temp = start + "" + (last);
+        for (int i = 1; i <= 8; i++) {
+            int num = i;
+            int next = i + 1;
 
-            while (last < 10
-                    && temp.length() < 10
-                    && Integer.valueOf(temp) <= high) {
-                if (Integer.valueOf(temp) >= low) {
-                    answer.add(Integer.valueOf(temp));
+            while (num <= high && next <= 9) {
+                num = num * 10 + next;
+
+                if (low <= num && num <= high) {
+                    answer.add(num);
                 }
 
-                last += 1;
-                temp += ("" + last);
+                next += 1;
             }
         }
 
