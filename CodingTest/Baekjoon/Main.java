@@ -70,8 +70,8 @@ class Solution {
         //지훈 이동
         //불 이동
         final Deque<int[]> dq = new ArrayDeque<>();
-        dq.addLast(jihun);//지훈
         dq.addAll(fires);//불
+        dq.addLast(jihun);//지훈
 
         while (!dq.isEmpty()) {
             final int[] cur = dq.pollFirst();
