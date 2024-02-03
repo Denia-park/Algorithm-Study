@@ -1,59 +1,58 @@
 package CodingTest.Programmers;
-/*
-아이디어 - bfs (최단거리 구하기)
-*/
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Arrays;
 
 class Solution {
-    int[][] directions = {
-            {-1, 0}, //북
-            {0, 1}, //동
-            {1, 0}, //남
-            {0, -1}, //서
-    };
+    public int solution(final int n, final int[] lost, final int[] reserve) {
+        int answer = 0;
 
-    public int solution(final int[][] maps) {
-        return bfs(maps);
-    }
+        final int[] students = new int[n];
+        Arrays.fill(students, 1);
 
-    //0은 벽, 1은 벽 X
-    int bfs(final int[][] maps) {
-        final int totalRow = maps.length;
-        final int totalCol = maps[0].length;
-        final boolean[][] isVisited = new boolean[totalRow][totalCol];
+        for (final int l : lost) {
+            students[l - 1]--;
+        }
 
-        final Deque<int[]> dq = new ArrayDeque<>();
-        dq.addLast(new int[]{0, 0, 1});
-        isVisited[0][0] = true;
+        for (final int l : reserve) {
+            students[l - 1]++;
+        }
 
-        while (!dq.isEmpty()) {
-            final int[] curPos = dq.pollFirst();
-            final int curR = curPos[0];
-            final int curC = curPos[1];
-            final int curD = curPos[2];
+        //0번에 대해서 구하기
+        if (students[0] == 0 && students[1] == 2) {
+            students[1]--;
+            students[0]++;
+        }
 
-            if (curR == totalRow - 1 && curC == totalCol - 1) {
-                return curD;
-            }
+        for (int i = 1; i < students.length - 1; i++) {
+            final int curVal = students[i];
 
-            for (final int[] nextVal : directions) {
-                final int nextR = curR + nextVal[0];
-                final int nextC = curC + nextVal[1];
+            if (curVal != 0) continue;
 
-                //map 밖으로 벗어나는지 확인
-                if (nextR < 0 || nextR >= totalRow || nextC < 0 || nextC >= totalCol) continue;
-
-                //1인지 아닌지 확인, 방문 했는지 확인
-                if (maps[nextR][nextC] == 0 || isVisited[nextR][nextC]) continue;
-
-                //다음으로 진행하고, 방문 체크
-                dq.addLast(new int[]{nextR, nextC, curD + 1});
-                isVisited[nextR][nextC] = true;
+            final int preVal = students[i - 1];
+            final int postVal = students[i + 1];
+            if (preVal == 2) {
+                students[i - 1]--;
+                students[i]++;
+            } else if (postVal == 2) {
+                students[i + 1]--;
+                students[i]++;
             }
         }
 
-        return -1;
+        //끝번에 대해서 구하기
+        if (students[students.length - 1] == 0 && students[students.length - 2] == 2) {
+            students[students.length - 2]--;
+            students[students.length - 1]++;
+        }
+
+        for (int i = 0; i < students.length; i++) {
+            final int curVal = students[i];
+
+            if (curVal > 0) {
+                answer++;
+            }
+        }
+
+        return answer;
     }
 }
