@@ -3,34 +3,21 @@ package CodingTest.Programmers;
 import java.util.Stack;
 
 class Solution {
-    public String solution(final String number, final int k) {
+    public String solution(final String number, int k) {
         final Stack<Integer> stack = new Stack<>();
 
-        final int[] nums = new int[number.length()];
+        final int[] nums = getNums(number);
 
-        final char[] charArray = number.toCharArray();
-
-        for (int i = 0; i < charArray.length; i++) {
-            nums[i] = charArray[i] - '0';
-        }
-
-        int count = 0;
         for (final int num : nums) {
-            while (!stack.isEmpty()) {
-                final int peek = stack.peek();
-
-                if (peek < num && count < k) {
-                    stack.pop();
-                    count++;
-                } else {
-                    break;
-                }
+            while (!stack.isEmpty() && stack.peek() < num && 0 < k) {
+                stack.pop();
+                k--;
             }
 
             stack.push(num);
         }
 
-        for (int i = count; i < k; i++) {
+        for (int i = k; i > 0; i--) {
             stack.pop();
         }
 
@@ -40,5 +27,16 @@ class Solution {
         }
 
         return sb.toString();
+    }
+
+    private int[] getNums(final String number) {
+        final char[] charArray = number.toCharArray();
+        final int[] tempNums = new int[number.length()];
+
+        for (int i = 0; i < charArray.length; i++) {
+            tempNums[i] = charArray[i] - '0';
+        }
+
+        return tempNums;
     }
 }
