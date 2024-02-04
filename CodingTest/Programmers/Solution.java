@@ -30,6 +30,10 @@ class Solution {
             stack.push(num);
         }
 
+        for (int i = count; i < k; i++) {
+            stack.pop();
+        }
+
         final StringBuilder sb = new StringBuilder();
         for (final Integer val : stack) {
             sb.append(val);
