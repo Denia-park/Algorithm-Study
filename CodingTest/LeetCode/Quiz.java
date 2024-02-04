@@ -29,16 +29,15 @@ class Solution {
         int st = 0;
         int ed = 0;
 
+        char edChar = str.charAt(ed);
+        strMap.put(edChar, strMap.getOrDefault(edChar, 0) + 1);
+
         int answerLen = INF;
         String answerStr = "";
 
         while (st < str.length()) {
-            final char edChar = str.charAt(ed);
-
-            strMap.put(edChar, strMap.getOrDefault(edChar, 0) + 1);
-
             final int curLen = ed - st + 1;
-            if (st <= ed && isRight(strMap, targetMap) && curLen < answerLen) {
+            if (isRight(strMap, targetMap) && curLen < answerLen) {
                 answerLen = curLen;
                 answerStr = str.substring(st, ed + 1);
 
@@ -56,6 +55,8 @@ class Solution {
                 st++;
             } else {
                 ed++;
+                edChar = str.charAt(ed);
+                strMap.put(edChar, strMap.getOrDefault(edChar, 0) + 1);
             }
         }
 
