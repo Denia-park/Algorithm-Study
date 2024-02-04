@@ -1,5 +1,8 @@
 package CodingTest.LeetCode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -14,52 +17,49 @@ public class Quiz {
 }
 
 class Solution {
-    public String minWindow(final String s, final String t) {
-        // ASCII 문자를 위한 해시맵 역할을 하는 정수 배열을 초기화합니다.
-        final int[] map = new int[128];
-
-        // 문자열 t에 포함된 문자의 수를 세기 위한 변수입니다.
-        int count = t.length();
-
-        // 슬라이딩 윈도우의 시작점과 끝점, 최소 길이, 그리고 최소 길이를 가지는 시작 인덱스를 초기화합니다.
-        int start = 0, end = 0, minLen = Integer.MAX_VALUE, startIndex = 0;
-
-        // 문자열 t에 포함된 각 문자에 대해 map 배열의 해당 문자 위치의 값을 증가시킵니다.
-        for (final char c : t.toCharArray()) {
-            map[c] += 1;
+    public String minWindow(final String str, final String t) {
+        final int length = str.length();
+        final Map<Character, Integer> targetMap = new HashMap<>();
+        for (final char ch : t.toCharArray()) {
+            targetMap.put(ch, targetMap.getOrDefault(ch, 0) + 1);
         }
 
-        // 문자열 s를 char 배열로 변환합니다.
-        final char[] chS = s.toCharArray();
+        final int need = targetMap.size();
+        int left = 0, right = 0;
+        int count = 0;
 
-        // 문자열 s를 끝까지 탐색합니다.
-        while (end < chS.length) {
-            // 현재 end 위치의 문자가 t에 포함되어 있다면 count를 감소시킵니다.
-            if (map[chS[end]] > 0) {
-                count -= 1;
-            }
-            map[chS[end]] -= 1;
-            end += 1;
+        final Map<Character, Integer> windowCounts = new HashMap<>();
+        final int[] ans = {Integer.MAX_VALUE, 0, 0};
 
-            // 필요한 모든 문자가 윈도우에 포함된 경우
-            while (count == 0) {
-                // 현재 윈도우의 길이가 이전에 찾은 최소 길이보다 작다면, 최소 길이와 시작 인덱스를 업데이트합니다.
-                if ((end - start) < minLen) {
-                    startIndex = start;
-                    minLen = end - start;
-                }
-                // start 위치의 문자를 다시 윈도우 밖으로 이동시키면서 해당 문자의 map 값을 증가시킵니다.
-                if (map[chS[start]] == 0) {
-                    count += 1;
-                }
-                map[chS[start]] += 1;
-                start += 1;
+        while (right < length) {
+            final char rch = str.charAt(right);
+            windowCounts.put(rch, windowCounts.getOrDefault(rch, 0) + 1);
+
+            if (targetMap.containsKey(rch) && windowCounts.get(rch).equals(targetMap.get(rch))) {
+                count++;
             }
+
+            while (left <= right && count == need) {
+                final int curWordLen = right - left + 1;
+                if (curWordLen < ans[0]) {
+                    ans[0] = curWordLen;
+                    ans[1] = left;
+                    ans[2] = right;
+                }
+
+                final char lch = str.charAt(left);
+                windowCounts.put(lch, windowCounts.get(lch) - 1);
+
+                if (targetMap.containsKey(lch) && windowCounts.get(lch) < targetMap.get(lch)) {
+                    count--;
+                }
+
+                left++;
+            }
+
+            right++;
         }
 
-        // 최소 길이가 갱신되지 않았다면, t의 모든 문자를 포함하는 부분 문자열을 찾지 못한 것이므로 빈 문자열을 반환합니다.
-        // 그렇지 않다면, 최소 길이의 부분 문자열을 반환합니다.
-        return minLen == Integer.MAX_VALUE ? "" :
-                new String(chS, startIndex, minLen);
+        return ans[0] == Integer.MAX_VALUE ? "" : str.substring(ans[1], ans[2] + 1);
     }
 }
