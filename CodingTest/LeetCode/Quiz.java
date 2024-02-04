@@ -7,10 +7,11 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println((solution.minWindow("ADOBECODEBANC", "ABC")));
-        System.out.println((solution.minWindow("a", "a")));
-        System.out.println((solution.minWindow("a", "aa")));
-        System.out.println((solution.minWindow("ab", "a")));
+//        System.out.println((solution.minWindow("ADOBECODEBANC", "ABC")));
+//        System.out.println((solution.minWindow("a", "a")));
+//        System.out.println((solution.minWindow("a", "aa")));
+//        System.out.println((solution.minWindow("ab", "a")));
+        System.out.println((solution.minWindow("cabefgecdaecf", "cae")));
     }
 }
 
@@ -37,9 +38,11 @@ class Solution {
 
         while (st < str.length()) {
             final int curLen = ed - st + 1;
-            if (isRight(strMap, targetMap) && curLen < answerLen) {
-                answerLen = curLen;
-                answerStr = str.substring(st, ed + 1);
+            if (isRight(strMap, targetMap)) {
+                if (curLen < answerLen) {
+                    answerLen = curLen;
+                    answerStr = str.substring(st, ed + 1);
+                }
 
                 //빼기
                 final char stChar = str.charAt(st);
@@ -66,7 +69,7 @@ class Solution {
     boolean isRight(final Map<Character, Integer> origin, final Map<Character, Integer> target) {
         for (final Character ch : target.keySet()) {
             final Integer originVal = origin.getOrDefault(ch, 0);
-            final Integer targetVal = target.getOrDefault(ch, 0);
+            final Integer targetVal = target.get(ch);
 
             if (originVal < targetVal) {
                 return false;
