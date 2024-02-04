@@ -1,39 +1,40 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
+import java.util.Stack;
 
 class Solution {
-    public int solution(final int n, final int[] lost, final int[] reserve) {
-        final int[] students = new int[n + 2];
-        Arrays.fill(students, 1);
+    public String solution(final String number, final int k) {
+        final Stack<Integer> stack = new Stack<>();
 
-        students[0] = 0;
-        students[n + 1] = 0;
+        final int[] nums = new int[number.length()];
 
-        for (final int l : lost) {
-            students[l]--;
+        final char[] charArray = number.toCharArray();
+
+        for (int i = 0; i < charArray.length; i++) {
+            nums[i] = charArray[i] - '0';
         }
 
-        for (final int l : reserve) {
-            students[l]++;
-        }
+        int count = 0;
+        for (final int num : nums) {
+            while (!stack.isEmpty()) {
+                final int peek = stack.peek();
 
-        for (int i = 1; i < students.length - 1; i++) {
-            final int curVal = students[i];
-
-            if (curVal != 0) continue;
-
-            final int preVal = students[i - 1];
-            final int postVal = students[i + 1];
-            if (preVal == 2) {
-                students[i - 1]--;
-                students[i]++;
-            } else if (postVal == 2) {
-                students[i + 1]--;
-                students[i]++;
+                if (peek < num && count < k) {
+                    stack.pop();
+                    count++;
+                } else {
+                    break;
+                }
             }
+
+            stack.push(num);
         }
 
-        return (int) Arrays.stream(students).filter(i -> i > 0).count();
+        final StringBuilder sb = new StringBuilder();
+        for (final Integer val : stack) {
+            sb.append(val);
+        }
+
+        return sb.toString();
     }
 }
