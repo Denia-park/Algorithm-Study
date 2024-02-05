@@ -5,17 +5,10 @@ public class ProgrammersMain {
         final Solution ts = new Solution();
 
         System.out.println(ts.solution(
-                "1924", 2
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray(
+                        "[[-20,-15], [-14,-5], [-18,-13], [-5,-3]]"
+                )
         ));
-
-        System.out.println(ts.solution(
-                "1231234", 3
-        ));
-
-        System.out.println(ts.solution(
-                "4177252841", 4
-        ));
-
     }
 }
 

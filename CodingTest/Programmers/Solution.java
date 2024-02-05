@@ -1,42 +1,25 @@
 package CodingTest.Programmers;
 
-import java.util.Stack;
+import java.util.Arrays;
+import java.util.Comparator;
 
 class Solution {
-    public String solution(final String number, int k) {
-        final Stack<Integer> stack = new Stack<>();
+    static final int ST = 0;
+    static final int ED = 1;
 
-        final int[] nums = getNums(number);
+    public int solution(final int[][] routes) {
+        int answer = 0;
 
-        for (final int num : nums) {
-            while (!stack.isEmpty() && stack.peek() < num && 0 < k) {
-                stack.pop();
-                k--;
+        Arrays.sort(routes, Comparator.comparingInt(value -> value[ST]));
+
+        int preCarEnd = -30001;
+        for (final int[] route : routes) {
+            if (preCarEnd < route[ST]) {
+                answer++;
+                preCarEnd = route[ED];
             }
-
-            stack.push(num);
         }
 
-        for (int i = k; i > 0; i--) {
-            stack.pop();
-        }
-
-        final StringBuilder sb = new StringBuilder();
-        for (final Integer val : stack) {
-            sb.append(val);
-        }
-
-        return sb.toString();
-    }
-
-    private int[] getNums(final String number) {
-        final char[] charArray = number.toCharArray();
-        final int[] tempNums = new int[number.length()];
-
-        for (int i = 0; i < charArray.length; i++) {
-            tempNums[i] = charArray[i] - '0';
-        }
-
-        return tempNums;
+        return answer;
     }
 }
