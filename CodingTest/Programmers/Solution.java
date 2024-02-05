@@ -10,14 +10,13 @@ class Solution {
     public int solution(final int[][] routes) {
         int answer = 0;
 
-        Arrays.sort(routes, Comparator.comparingInt((int[] value) -> value[ST])
-                .thenComparingInt((int[] value) -> value[ED]));
+        Arrays.sort(routes, Comparator.comparingInt((int[] value) -> value[ED]));
 
-        int preCarEnd = -30001;
+        int preCarStart = -30001;
         for (final int[] route : routes) {
-            if (preCarEnd < route[ST]) {
+            if (preCarStart < route[ST]) {
                 answer++;
-                preCarEnd = route[ED];
+                preCarStart = route[ED];
             }
         }
 
