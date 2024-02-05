@@ -1,65 +1,54 @@
 package CodingTest.LeetCode;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println((solution.minWindow("ADOBECODEBANC", "ABC")));
-        System.out.println((solution.minWindow("a", "a")));
-        System.out.println((solution.minWindow("a", "aa")));
-        System.out.println((solution.minWindow("ab", "a")));
-        System.out.println((solution.minWindow("cabefgecdaecf", "cae")));
-        System.out.println((solution.minWindow("cab", "ab")));
+        System.out.println((solution.firstUniqChar("leetcode")));
+        System.out.println((solution.firstUniqChar("loveleetcode")));
+        System.out.println((solution.firstUniqChar("aabb")));
     }
 }
 
 class Solution {
-    public String minWindow(final String str, final String t) {
-        final int length = str.length();
-        final Map<Character, Integer> targetMap = new HashMap<>();
-        for (final char ch : t.toCharArray()) {
-            targetMap.put(ch, targetMap.getOrDefault(ch, 0) + 1);
+    public int firstUniqChar(final String s) {
+        final char[] chars = s.toCharArray();
+
+        final Map<Character, MyChar> map = new HashMap<>();
+
+        for (int i = 0; i < chars.length; i++) {
+            final char ch = chars[i];
+
+            final MyChar myChar = map.getOrDefault(ch, new MyChar(i));
+            myChar.count();
+            map.put(ch, myChar);
         }
 
-        final int need = targetMap.size();
-        int left = 0, right = 0;
-        int count = 0;
+        final List<Map.Entry<Character, MyChar>> list = map.entrySet().stream()
+                .filter(entry -> entry.getValue().count < 2)
+                .sorted(Comparator.comparingInt(value -> value.getValue().idx))
+                .collect(Collectors.toList());
 
-        final Map<Character, Integer> windowCounts = new HashMap<>();
-        final int[] ans = {Integer.MAX_VALUE, 0, 0};
+        return list.isEmpty() ? -1 : list.get(0).getValue().idx;
+    }
 
-        while (right < length) {
-            final char rch = str.charAt(right);
-            windowCounts.put(rch, windowCounts.getOrDefault(rch, 0) + 1);
+    static class MyChar {
+        int idx;
+        int count;
 
-            if (targetMap.containsKey(rch) && windowCounts.get(rch).equals(targetMap.get(rch))) {
-                count++;
-            }
-
-            while (left <= right && count == need) {
-                final int curWordLen = right - left + 1;
-                if (curWordLen < ans[0]) {
-                    ans[0] = curWordLen;
-                    ans[1] = left;
-                    ans[2] = right;
-                }
-
-                final char lch = str.charAt(left);
-                windowCounts.put(lch, windowCounts.get(lch) - 1);
-
-                if (targetMap.containsKey(lch) && windowCounts.get(lch) < targetMap.get(lch)) {
-                    count--;
-                }
-
-                left++;
-            }
-
-            right++;
+        public MyChar(final int idx) {
+            this.idx = idx;
+            this.count = 0;
         }
 
-        return ans[0] == Integer.MAX_VALUE ? "" : str.substring(ans[1], ans[2] + 1);
+        void count() {
+            count++;
+        }
     }
 }
