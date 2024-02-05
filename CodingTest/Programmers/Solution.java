@@ -10,7 +10,8 @@ class Solution {
     public int solution(final int[][] routes) {
         int answer = 0;
 
-        Arrays.sort(routes, Comparator.comparingInt(value -> value[ST]));
+        Arrays.sort(routes, Comparator.comparingInt((int[] value) -> value[ST])
+                .thenComparingInt((int[] value) -> value[ED]));
 
         int preCarEnd = -30001;
         for (final int[] route : routes) {
