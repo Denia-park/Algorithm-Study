@@ -1,31 +1,38 @@
 package CodingTest.LeetCode;
 
+import java.util.*;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println((solution.firstUniqChar("leetcode")));
-        System.out.println((solution.firstUniqChar("loveleetcode")));
-        System.out.println((solution.firstUniqChar("aabb")));
+        System.out.println((solution.groupAnagrams(
+                new String[]{"eat", "tea", "tan", "ate", "nat", "bat"}
+        )));
+        System.out.println((solution.groupAnagrams(
+                new String[]{""}
+        )));
+        System.out.println((solution.groupAnagrams(
+                new String[]{"a"}
+        )));
     }
 }
 
 class Solution {
-    public int firstUniqChar(final String s) {
-        final char[] chars = s.toCharArray();
-        final int[] arr = new int[26];
+    public List<List<String>> groupAnagrams(final String[] strs) {
+        final Map<String, List<String>> map = new HashMap<>();
 
-        for (final char ch : chars) {
-            arr[ch - 'a']++;
+        for (final String str : strs) {
+            final char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+
+            final String temp = new String(chars);
+
+            final List<String> list = map.getOrDefault(temp, new ArrayList<>());
+            list.add(str);
+            map.put(temp, list);
         }
 
-        final int charsLen = chars.length;
-        for (int i = 0; i < charsLen; i++) {
-            if (arr[chars[i] - 'a'] == 1) {
-                return i;
-            }
-        }
-
-        return -1;
+        return new ArrayList<>(map.values());
     }
 }
