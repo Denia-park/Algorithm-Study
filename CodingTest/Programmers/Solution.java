@@ -46,16 +46,14 @@ class Solution {
                 .map(Map.Entry::getKey)
                 .forEach(
                         name -> {
-                            final List<String> list = resultMap.get(name);
-
-                            for (final String str : list) {
-                                mailMap.put(str, mailMap.getOrDefault(str, 0));
+                            for (final String str : resultMap.get(name)) {
+                                mailMap.put(str, mailMap.getOrDefault(str, 0) + 1);
                             }
                         }
                 );
 
         return Arrays.stream(id_list)
-                .mapToInt(id -> mailMap.getOrDefault(id_list, 0))
+                .mapToInt(id -> mailMap.getOrDefault(id, 0))
                 .toArray();
     }
 }
