@@ -26,11 +26,7 @@ class Solution {
             final char[] chars = str.toCharArray();
             Arrays.sort(chars);
 
-            final String temp = new String(chars);
-
-            final List<String> list = map.getOrDefault(temp, new ArrayList<>());
-            list.add(str);
-            map.put(temp, list);
+            map.computeIfAbsent(new String(chars), key -> new ArrayList<>()).add(str);
         }
 
         return new ArrayList<>(map.values());
