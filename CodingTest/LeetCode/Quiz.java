@@ -6,29 +6,46 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println((solution.groupAnagrams(
-                new String[]{"eat", "tea", "tan", "ate", "nat", "bat"}
-        )));
-        System.out.println((solution.groupAnagrams(
-                new String[]{""}
-        )));
-        System.out.println((solution.groupAnagrams(
-                new String[]{"a"}
-        )));
+        System.out.println(solution.frequencySort("tree"));
+        System.out.println(solution.frequencySort("cccaaa"));
+        System.out.println(solution.frequencySort("Aabb"));
     }
 }
 
 class Solution {
-    public List<List<String>> groupAnagrams(final String[] strs) {
-        final Map<String, List<String>> map = new HashMap<>();
+    public String frequencySort(final String s) {
+        final Map<Character, MyCh> map = new HashMap<>();
 
-        for (final String str : strs) {
-            final char[] chars = str.toCharArray();
-            Arrays.sort(chars);
+        final char[] chars = s.toCharArray();
 
-            map.computeIfAbsent(new String(chars), key -> new ArrayList<>()).add(str);
+        for (final char ch : chars) {
+            map.computeIfAbsent(ch, key -> new MyCh(key, 0)).up();
         }
 
-        return new ArrayList<>(map.values());
+        final List<MyCh> list = new ArrayList<>(map.values());
+        list.sort(Comparator.comparingInt((MyCh myCh) -> myCh.count).reversed());
+
+        final StringBuilder sb = new StringBuilder();
+        for (final MyCh myCh : list) {
+            for (int i = 0; i < myCh.count; i++) {
+                sb.append(myCh.ch);
+            }
+        }
+
+        return sb.toString();
+    }
+
+    static class MyCh {
+        char ch;
+        int count;
+
+        public MyCh(final char ch, final int count) {
+            this.ch = ch;
+            this.count = count;
+        }
+
+        public void up() {
+            count++;
+        }
     }
 }
