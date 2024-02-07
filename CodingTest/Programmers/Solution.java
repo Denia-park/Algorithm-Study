@@ -23,11 +23,11 @@ class Solution {
     private boolean isPrimeNum(final String s) {
         if (s.isBlank()) return false;
 
-        final int val = Integer.parseInt(s);
+        final long val = Long.parseLong(s);
 
         if (val <= 1) return false;
 
-        final int root = (int) Math.sqrt(val);
+        final long root = (long) Math.sqrt(val);
         for (int i = 2; i <= root; i++) {
             if (val % i == 0) {
                 return false;
