@@ -15,21 +15,16 @@ public class Quiz {
 class Solution {
     public String frequencySort(final String s) {
         final Map<Character, MyCh> map = new HashMap<>();
-
-        final char[] chars = s.toCharArray();
-
-        for (final char ch : chars) {
-            map.computeIfAbsent(ch, key -> new MyCh(key, 0)).up();
+        for (final char ch : s.toCharArray()) {
+            map.computeIfAbsent(ch, MyCh::new).up();
         }
 
         final List<MyCh> list = new ArrayList<>(map.values());
-        list.sort(Comparator.comparingInt((MyCh myCh) -> myCh.count).reversed());
+        list.sort(Comparator.comparingInt(MyCh::getCount).reversed());
 
         final StringBuilder sb = new StringBuilder();
         for (final MyCh myCh : list) {
-            for (int i = 0; i < myCh.count; i++) {
-                sb.append(myCh.ch);
-            }
+            sb.append(String.valueOf(myCh.ch).repeat(myCh.count));
         }
 
         return sb.toString();
@@ -39,13 +34,17 @@ class Solution {
         char ch;
         int count;
 
-        public MyCh(final char ch, final int count) {
+        public MyCh(final char ch) {
             this.ch = ch;
-            this.count = count;
+            this.count = 0;
         }
 
         public void up() {
             count++;
+        }
+
+        public int getCount() {
+            return count;
         }
     }
 }
