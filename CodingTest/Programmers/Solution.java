@@ -11,7 +11,7 @@ class Solution {
         //Set으로 주차장 관리
         final Set<String> park = new HashSet<>();
 
-        //주차장을 이용한 이용내역
+        //주차장을 이용한 이용내역 (총 시간만 저장)
         final Map<String, Integer> cars = new TreeMap<>();
 
         for (final String record : records) {
@@ -32,9 +32,7 @@ class Solution {
 
                 final String inputTime = parkInput.get(carNumber);
                 final String outputTime = time;
-                final int originFee = cars.getOrDefault(carNumber, 0);
-                final int cost = calculateCost(fees, inputTime, outputTime, originFee);
-                cars.put(carNumber, cost);
+                addTimeToCar(cars, carNumber, inputTime, outputTime);
             }
         }
 
@@ -42,37 +40,33 @@ class Solution {
         for (final String carNumber : park) {
             final String inputTime = parkInput.get(carNumber);
             final String outputTime = "23:59";
-            final int originFee = cars.getOrDefault(carNumber, 0);
-            final int cost = calculateCost(fees, inputTime, outputTime, originFee);
-            cars.put(carNumber, cost);
+            addTimeToCar(cars, carNumber, inputTime, outputTime);
         }
 
         //차량번호가 작은 자동차부터 차례대로 return (TreeMap 사용)
         final int[] answer = new int[cars.size()];
 
         int idx = 0;
-        for (final Integer val : cars.values()) {
-            answer[idx++] = val;
+        for (final int time : cars.values()) {
+            answer[idx++] = calculateCostByTime(time, fees);
         }
 
         return answer;
     }
 
-    private int calculateCost(final int[] fees, final String inputTime, final String outTime, final int originFee) {
-        //들어온 시간, 나간 시간
-        final int totalTime = convertTimeToMin(inputTime, outTime);
-
-        return calculateCostByTime(totalTime, fees) + originFee;
+    private void addTimeToCar(final Map<String, Integer> cars, final String carNumber, final String inputTime, final String outputTime) {
+        final int totalTime = cars.getOrDefault(carNumber, 0) + calculateTime(inputTime, outputTime);
+        cars.put(carNumber, totalTime);
     }
 
-    private int convertTimeToMin(final String inputTime, final String outTime) {
-        final int inMin = convertStringToInt(inputTime);
-        final int outMin = convertStringToInt(outTime);
+    private int calculateTime(final String inputTime, final String outTime) {
+        final int inMin = convertTimeToMin(inputTime);
+        final int outMin = convertTimeToMin(outTime);
 
         return outMin - inMin;
     }
 
-    private int convertStringToInt(final String inputTime) {
+    private int convertTimeToMin(final String inputTime) {
         final String[] split = inputTime.split(":");
         return Integer.parseInt(split[0]) * 60 + Integer.parseInt(split[1]);
     }
