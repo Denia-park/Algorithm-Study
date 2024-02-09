@@ -1,35 +1,52 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.numSquares(12));
-        System.out.println(solution.numSquares(13));
+        System.out.println(solution.largestDivisibleSubset(new int[]{1, 2, 3}));
+        System.out.println(solution.largestDivisibleSubset(new int[]{1, 2, 4, 8}));
     }
 }
 
 class Solution {
-    public int numSquares(final int n) {
-        final int[] dp = new int[n + 1];
-        Arrays.fill(dp, Integer.MAX_VALUE);
+    public List<Integer> largestDivisibleSubset(final int[] nums) {
+        final int length = nums.length;
+        final int[] dp = new int[length];
+        Arrays.fill(dp, 1);
+        Arrays.sort(nums);
 
-        dp[0] = 0;
+        int maxSize = 1;
+        int maxIndex = 0;
+        for (int end = 1; end < length; end++) {
+            for (int loop = 0; loop < end; loop++) {
+                if (nums[end] % nums[loop] == 0) {
+                    dp[end] = Math.max(dp[end], dp[loop] + 1);
 
-        //Bottom-up Calculate
-        for (int i = 1; i <= n; i++) {
-            int minValue = Integer.MAX_VALUE;
-            final int sqrt = (int) Math.sqrt(i);
-
-            for (int j = 1; j <= sqrt; j++) {
-                minValue = Math.min(minValue, dp[i - (j * j)] + 1);
+                    if (dp[end] > maxSize) {
+                        maxSize = dp[end];
+                        maxIndex = end;
+                    }
+                }
             }
-
-            dp[i] = minValue;
         }
 
-        return dp[n];
+        final List<Integer> result = new ArrayList<>();
+        int max = nums[maxIndex];
+        for (int i = maxIndex; i >= 0; i--) {
+            final int curVal = nums[i];
+
+            if (max % curVal == 0 && dp[i] == maxSize) {
+                result.add(curVal);
+                max = curVal;
+                maxSize--;
+            }
+        }
+
+        return result;
     }
 }
