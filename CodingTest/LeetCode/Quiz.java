@@ -15,36 +15,34 @@ public class Quiz {
 
 class Solution {
     public List<Integer> largestDivisibleSubset(final int[] nums) {
-        final int length = nums.length;
-        final int[] dp = new int[length];
-        Arrays.fill(dp, 1);
         Arrays.sort(nums);
+        final int length = nums.length;
 
-        int maxSize = 1;
+        final int[] groupSize = new int[length];
+        final int[] prevElement = new int[length];
         int maxIndex = 0;
-        for (int end = 1; end < length; end++) {
-            for (int loop = 0; loop < end; loop++) {
-                if (nums[end] % nums[loop] == 0) {
-                    dp[end] = Math.max(dp[end], dp[loop] + 1);
 
-                    if (dp[end] > maxSize) {
-                        maxSize = dp[end];
-                        maxIndex = end;
-                    }
+        for (int end = 0; end < length; end++) {
+            groupSize[end] = 1;
+            prevElement[end] = -1;
+
+            for (int loop = 0; loop < end; loop++) {
+                if (nums[end] % nums[loop] == 0 && groupSize[end] < (1 + groupSize[loop])) {
+                    groupSize[end] = 1 + groupSize[loop];
+                    prevElement[end] = loop;
+
                 }
+            }
+
+            if (groupSize[end] > groupSize[maxIndex]) {
+                maxIndex = end;
             }
         }
 
-        final List<Integer> result = new ArrayList<>();
-        int max = nums[maxIndex];
-        for (int i = maxIndex; i >= 0; i--) {
-            final int curVal = nums[i];
-
-            if (max % curVal == 0 && dp[i] == maxSize) {
-                result.add(curVal);
-                max = curVal;
-                maxSize--;
-            }
+        final List<Integer> result = new ArrayList();
+        while (maxIndex != -1) {
+            result.add(nums[maxIndex]);
+            maxIndex = prevElement[maxIndex];
         }
 
         return result;
