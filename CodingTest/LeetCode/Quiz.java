@@ -1,50 +1,45 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.largestDivisibleSubset(new int[]{1, 2, 3}));
-        System.out.println(solution.largestDivisibleSubset(new int[]{1, 2, 4, 8}));
+        System.out.println(solution.countSubstrings("abc"));
+        System.out.println(solution.countSubstrings("aaa"));
     }
 }
 
 class Solution {
-    public List<Integer> largestDivisibleSubset(final int[] nums) {
-        Arrays.sort(nums);
-        final int length = nums.length;
+    public int countSubstrings(final String s) {
+        int answer = 0;
+        final int length = s.length();
 
-        final int[] groupSize = new int[length];
-        final int[] prevElement = new int[length];
-        int maxIndex = 0;
+        for (int st = 0; st < length; st++) {
+            for (int en = st; en < length; en++) {
+                final String sub = s.substring(st, en + 1);
 
-        for (int end = 0; end < length; end++) {
-            groupSize[end] = 1;
-            prevElement[end] = -1;
-
-            for (int loop = 0; loop < end; loop++) {
-                if (nums[end] % nums[loop] == 0 && groupSize[end] < (1 + groupSize[loop])) {
-                    groupSize[end] = 1 + groupSize[loop];
-                    prevElement[end] = loop;
-
+                if (isPalindrome(sub)) {
+                    answer++;
                 }
             }
+        }
 
-            if (groupSize[end] > groupSize[maxIndex]) {
-                maxIndex = end;
+        return answer;
+    }
+
+    private boolean isPalindrome(final String sub) {
+        final int len = sub.length();
+
+        //팰린드롬 확인 -> 양쪽에서 중간으로 Idx를 바꿔가면서 비교하면 된다.
+        for (int idx = 0; idx < len / 2; idx++) {
+            final int st = idx;
+            final int ed = len - 1 - idx;
+
+            if (sub.charAt(st) != sub.charAt(ed)) {
+                return false;
             }
         }
 
-        final List<Integer> result = new ArrayList();
-        while (maxIndex != -1) {
-            result.add(nums[maxIndex]);
-            maxIndex = prevElement[maxIndex];
-        }
-
-        return result;
+        return true;
     }
 }
