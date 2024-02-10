@@ -82,7 +82,12 @@ class Solution {
         for (int i = 0; i < apeachInfo.length; i++) {
             final int score = 10 - i;
 
-            if (apeachInfo[i] < rionInfo[i]) {
+            final int aTemp = apeachInfo[i];
+            final int rTemp = rionInfo[i];
+
+            if (aTemp == 0 && rTemp == 0) continue;
+
+            if (aTemp < rTemp) {
                 rS += score;
             } else {
                 aS += score;
