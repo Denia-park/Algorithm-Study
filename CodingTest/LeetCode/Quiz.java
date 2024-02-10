@@ -6,6 +6,7 @@ public class Quiz {
 
         System.out.println(solution.countSubstrings("abc"));
         System.out.println(solution.countSubstrings("aaa"));
+        System.out.println(solution.countSubstrings("fdsklf"));
     }
 }
 
@@ -20,9 +21,11 @@ class Solution {
 
             //홀수개
             while (left >= 0 && right < length) {
-                if (s.charAt(left) == s.charAt(right)) {
-                    answer++;
+                if (s.charAt(left) != s.charAt(right)) {
+                    break;
                 }
+
+                answer++;
 
                 left--;
                 right++;
@@ -34,9 +37,11 @@ class Solution {
 
             //짝수개
             while (left >= 0 && right < length) {
-                if (s.charAt(left) == s.charAt(right)) {
-                    answer++;
+                if (s.charAt(left) != s.charAt(right)) {
+                    break;
                 }
+
+                answer++;
 
                 left--;
                 right++;
