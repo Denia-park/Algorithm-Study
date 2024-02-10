@@ -1,87 +1,94 @@
 package CodingTest.Programmers;
 
-import java.util.*;
+import java.util.Arrays;
 
 class Solution {
-    public int[] solution(final int[] fees, final String[] records) {
-        //모든 출차 기록을 가지고 차들에 대한, 누적 주차 시간을 구한다.
-        //출입시 찍힘
-        final Map<String, String> parkInput = new HashMap<>();
+    int[] apeachInfo;
+    int maxDiff = 0;
+    int[] answer;
 
-        //Set으로 주차장 관리
-        final Set<String> park = new HashSet<>();
+    public int[] solution(final int leftArrowCount, final int[] info) {
+        apeachInfo = info;
+        answer = null;
 
-        //주차장을 이용한 이용내역 (총 시간만 저장)
-        final Map<String, Integer> cars = new TreeMap<>();
+        //이기고, 지고 의 모든 경우를 구한다.
+        final int curIdx = 0;
+        final int[] rionInfo = new int[11];
+        sol(leftArrowCount, rionInfo, curIdx);
 
-        for (final String record : records) {
-            //In, Out 판단
-            final String[] split = record.split(" ");
-            final String time = split[0];
-            final String carNumber = split[1];
-            final String ioStr = split[2];
+        //answer에서 가장 낮은 점수를 많이 받은 점수 return하기
+        return answer == null ? new int[]{-1} : answer;
+    }
 
-            //In이면 주차장에 넣고, 시간 넣기
-            if (ioStr.equals("IN")) {
-                park.add(carNumber);
-                parkInput.put(carNumber, time);
+    private void sol(final int leftArrowCount, final int[] rionInfo, final int curIdx) {
+        if (curIdx >= apeachInfo.length) {
+            //몇점 차로 이겼는지 계산하기
+            final int diff = calculateScore(rionInfo);
+
+            //점수 차이가 maxDiff 넘었는지 체크
+            //같아도 낮은 점수가 더 많은게 좋으니까 체크한다.
+            if (diff >= maxDiff) {
+                maxDiff = diff;
+
+                if (answer == null) {
+                    answer = Arrays.copyOf(rionInfo, rionInfo.length);
+                } else {
+                    if (isBetter(rionInfo)) {
+                        answer = Arrays.copyOf(rionInfo, rionInfo.length);
+                    }
+                }
             }
-            //Out이면 주차장에서 빼기, 시간 빼기, 이용내역에 업데이트
-            else {
-                park.remove(carNumber);
 
-                final String inputTime = parkInput.get(carNumber);
-                final String outputTime = time;
-                addTimeToCar(cars, carNumber, inputTime, outputTime);
+            return;
+        }
+
+        //1점을 쏴야하는 경우에는 모든 화살을 다 털어야 한다. (=> 낮은 점수가 많은 사람이 이김)
+        if (curIdx == apeachInfo.length - 1) {
+            rionInfo[curIdx] = leftArrowCount;
+            sol(0, rionInfo, curIdx + 1);
+            return;
+        }
+
+        //이기면 한발만 더 쏴서 이기고, 질꺼면 하나도 안 쏜다.
+        //이긴 경우
+        final int shoot = apeachInfo[curIdx] + 1;
+        if (leftArrowCount - shoot >= 0) {
+            rionInfo[curIdx] = shoot;
+            sol(leftArrowCount - shoot, rionInfo, curIdx + 1);
+        }
+
+        //진 경우
+        rionInfo[curIdx] = 0;
+        sol(leftArrowCount, rionInfo, curIdx + 1);
+    }
+
+    private boolean isBetter(final int[] rionInfo) {
+        for (int i = rionInfo.length - 1; i >= 0; i--) {
+            final int rionVal = rionInfo[i];
+            final int defaultVal = answer[i];
+
+            if (rionVal > defaultVal) {
+                return true;
             }
         }
 
-        //아직 주차장에 남아있는 차들을 시간 계산하기 -> 이용내역에 업데이트
-        for (final String carNumber : park) {
-            final String inputTime = parkInput.get(carNumber);
-            final String outputTime = "23:59";
-            addTimeToCar(cars, carNumber, inputTime, outputTime);
+        return false;
+    }
+
+    private int calculateScore(final int[] rionInfo) {
+        int aS = 0;
+        int rS = 0;
+
+        for (int i = 0; i < apeachInfo.length; i++) {
+            final int score = 10 - i;
+
+            if (apeachInfo[i] < rionInfo[i]) {
+                rS += score;
+            } else {
+                aS += score;
+            }
         }
 
-        //차량번호가 작은 자동차부터 차례대로 return (TreeMap 사용)
-        final int[] answer = new int[cars.size()];
-
-        int idx = 0;
-        for (final int time : cars.values()) {
-            answer[idx++] = calculateCostByTime(time, fees);
-        }
-
-        return answer;
-    }
-
-    private void addTimeToCar(final Map<String, Integer> cars, final String carNumber, final String inputTime, final String outputTime) {
-        final int totalTime = cars.getOrDefault(carNumber, 0) + calculateTime(inputTime, outputTime);
-        cars.put(carNumber, totalTime);
-    }
-
-    private int calculateTime(final String inputTime, final String outTime) {
-        final int inMin = convertTimeToMin(inputTime);
-        final int outMin = convertTimeToMin(outTime);
-
-        return outMin - inMin;
-    }
-
-    private int convertTimeToMin(final String inputTime) {
-        final String[] split = inputTime.split(":");
-        return Integer.parseInt(split[0]) * 60 + Integer.parseInt(split[1]);
-    }
-
-    private int calculateCostByTime(final int totalTime, final int[] fees) {
-        final int defaultTime = fees[0];
-        final int defaultFee = fees[1];
-        final int perTime = fees[2];
-        final int perFee = fees[3];
-
-        if (totalTime <= defaultTime) {
-            return defaultFee;
-        }
-
-        final int restTime = totalTime - defaultTime;
-        return defaultFee + ((int) Math.ceil((double) restTime / perTime) * perFee);
+        return rS - aS;
     }
 }
