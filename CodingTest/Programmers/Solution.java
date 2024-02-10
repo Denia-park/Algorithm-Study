@@ -27,15 +27,12 @@ class Solution {
 
             //점수 차이가 maxDiff 넘었는지 체크
             //같아도 낮은 점수가 더 많은게 좋으니까 체크한다.
-            if (diff >= maxDiff) {
+            if (diff > maxDiff) {
                 maxDiff = diff;
-
-                if (answer == null) {
+                answer = Arrays.copyOf(rionInfo, rionInfo.length);
+            } else if (diff > 0 && diff == maxDiff) {
+                if (isBetter(rionInfo)) {
                     answer = Arrays.copyOf(rionInfo, rionInfo.length);
-                } else {
-                    if (isBetter(rionInfo)) {
-                        answer = Arrays.copyOf(rionInfo, rionInfo.length);
-                    }
                 }
             }
 
@@ -69,6 +66,8 @@ class Solution {
 
             if (rionVal > defaultVal) {
                 return true;
+            } else if (rionVal < defaultVal) {
+                return false;
             }
         }
 
