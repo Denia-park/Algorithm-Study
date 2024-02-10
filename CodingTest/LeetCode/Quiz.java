@@ -15,31 +15,34 @@ class Solution {
         final int length = s.length();
 
         for (int st = 0; st < length; st++) {
-            for (int en = st; en < length; en++) {
-                final String sub = s.substring(st, en + 1);
+            int left = st;
+            int right = st;
 
-                if (isPalindrome(sub)) {
+            //홀수개
+            while (left >= 0 && right < length) {
+                if (s.charAt(left) == s.charAt(right)) {
                     answer++;
                 }
+
+                left--;
+                right++;
+            }
+
+            //짝수개
+            left = st;
+            right = st + 1;
+
+            //짝수개
+            while (left >= 0 && right < length) {
+                if (s.charAt(left) == s.charAt(right)) {
+                    answer++;
+                }
+
+                left--;
+                right++;
             }
         }
 
         return answer;
-    }
-
-    private boolean isPalindrome(final String sub) {
-        final int len = sub.length();
-
-        //팰린드롬 확인 -> 양쪽에서 중간으로 Idx를 바꿔가면서 비교하면 된다.
-        for (int idx = 0; idx < len / 2; idx++) {
-            final int st = idx;
-            final int ed = len - 1 - idx;
-
-            if (sub.charAt(st) != sub.charAt(ed)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
