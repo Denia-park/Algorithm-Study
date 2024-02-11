@@ -44,6 +44,10 @@ class Solution {
 
         if (currRow == rowLen) return 0; // last row
 
+        if (dp[currRow][aCol][bCol] != null) {
+            return dp[currRow][aCol][bCol];
+        }
+
         int result = 0;
         result += grid[currRow][aCol];
         result += grid[currRow][bCol];
@@ -58,6 +62,9 @@ class Solution {
         }
 
         result += max; //add maximum result
+
+        dp[currRow][aCol][bCol] = result;
+
         return result;
     }
 }
