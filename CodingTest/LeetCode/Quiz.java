@@ -37,7 +37,7 @@ class Solution {
         //소프티어처럼 1번 끝나면, 2번이 출발한다.
         //모든 경우의 수를 고려해서 최대 값을 구한다.
         final int collect = 0;
-        final int robotNum = 0;
+        final int robotNum = 1;
         calculate(grid, collect, robotNum, 0, 0);
 
         return answer;
@@ -45,42 +45,39 @@ class Solution {
 
     private void calculate(final int[][] grid, final int collect, final int robotNum, final int r, final int c) {
         //2번까지 모두 끝남 -> 최대 값 비교
-        if (robotNum == 1 && r == rowLen) {
-            answer = Math.max(this.answer, collect);
+        if (robotNum == 2 && r == rowLen) {
+            answer = Math.max(answer, collect);
             return;
         }
 
         //1번이 끝남 -> 2번 시작
-        if (robotNum == 0 && r == rowLen) {
-            calculate(grid, collect, 1, 0, colLen - 1);
+        if (robotNum == 1 && r == rowLen) {
+            calculate(grid, collect, 2, 0, colLen - 1);
             return;
         }
+
+        //현재 자리에서 체리 수집
+        final int cherry = grid[r][c];
+        grid[r][c] = 0;
 
         //왼쪽
         final int leftC = c - 1;
         if (0 <= leftC && leftC < colLen) {
-            final int cherry = grid[r][c];
-            grid[r][c] = 0;
             calculate(grid, collect + cherry, robotNum, r + 1, leftC);
-            grid[r][c] = cherry;
         }
 
         //아래
         final int downC = c;
         if (0 <= downC && downC < colLen) {
-            final int cherry = grid[r][c];
-            grid[r][c] = 0;
             calculate(grid, collect + cherry, robotNum, r + 1, downC);
-            grid[r][c] = cherry;
         }
 
         //오른쪽
         final int rightC = c + 1;
         if (0 <= rightC && rightC < colLen) {
-            final int cherry = grid[r][c];
-            grid[r][c] = 0;
             calculate(grid, collect + cherry, robotNum, r + 1, rightC);
-            grid[r][c] = cherry;
         }
+
+        grid[r][c] = cherry;
     }
 }
