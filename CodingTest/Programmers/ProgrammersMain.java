@@ -1,27 +1,22 @@
 package CodingTest.Programmers;
 
-import java.util.Arrays;
-
 public class ProgrammersMain {
     public static void main(final String[] args) {
         final Solution ts = new Solution();
 
-        System.out.println(Arrays.toString(ts.solution(
-                5,
-                new int[]{2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}
-        )));
-        System.out.println(Arrays.toString(ts.solution(
-                1,
-                new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-        )));
-        System.out.println(Arrays.toString(ts.solution(
-                9,
-                new int[]{0, 0, 1, 2, 0, 1, 1, 1, 1, 1, 1}
-        )));
-        System.out.println(Arrays.toString(ts.solution(
-                10,
-                new int[]{0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 3}
-        )));
+        System.out.println(ts.solution(
+                new int[]{0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1},
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray(
+                        "[[0,1],[1,2],[1,4],[0,8],[8,7],[9,10],[9,11],[4,3],[6,5],[4,6],[8,9]]"
+                )
+        ));
+
+        System.out.println(ts.solution(
+                new int[]{0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0},
+                BracketUtil.convertStringToJavaIntTwoDimensionalArray(
+                        "[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6],[3,7],[4,8],[6,9],[9,10]]"
+                )
+        ));
     }
 }
 
