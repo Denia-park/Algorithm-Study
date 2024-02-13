@@ -1,39 +1,41 @@
 package CodingTest.LeetCode;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.majorityElement(
-                new int[]{3, 2, 3}
+        System.out.println(solution.firstPalindrome(
+                new String[]{"abc", "car", "ada", "racecar", "cool"}
         ));
-        System.out.println(solution.majorityElement(
-                new int[]{2, 2, 1, 1, 1, 2, 2}
+        System.out.println(solution.firstPalindrome(
+                new String[]{"notapalindrome", "racecar"}
+        ));
+        System.out.println(solution.firstPalindrome(
+                new String[]{"def", "ghi"}
         ));
     }
 }
 
 class Solution {
-    public int majorityElement(final int[] nums) {
-        int max = 0;
-        int key = 0;
-
-        final Map<Integer, Integer> map = new HashMap<>();
-
-        for (final int num : nums) {
-            final Integer i = map.getOrDefault(num, 0);
-
-            if (i + 1 > max) {
-                max = i + 1;
-                key = num;
+    public String firstPalindrome(final String[] words) {
+        for (final String word : words) {
+            if (isPalindrome(word)) {
+                return word;
             }
-
-            map.put(num, i + 1);
         }
 
-        return key;
+        return "";
+    }
+
+    private boolean isPalindrome(final String word) {
+        final int len = word.length();
+
+        for (int i = 0; i < len / 2; i++) {
+            if (word.charAt(i) != word.charAt(len - 1 - i)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
