@@ -30,14 +30,14 @@ class Solution {
             }
         }
 
-        final List<Integer> answer = new ArrayList<>();
+        final int[] answer = new int[nums.length];
 
         final int len = posi.size();
         for (int i = 0; i < len; i++) {
-            answer.add(posi.get(i));
-            answer.add(nega.get(i));
+            answer[i * 2] = posi.get(i);
+            answer[i * 2 + 1] = nega.get(i);
         }
 
-        return answer.stream().mapToInt(i -> i).toArray();
+        return answer;
     }
 }
