@@ -1,41 +1,43 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.firstPalindrome(
-                new String[]{"abc", "car", "ada", "racecar", "cool"}
-        ));
-        System.out.println(solution.firstPalindrome(
-                new String[]{"notapalindrome", "racecar"}
-        ));
-        System.out.println(solution.firstPalindrome(
-                new String[]{"def", "ghi"}
-        ));
+        System.out.println(Arrays.toString(solution.rearrangeArray(
+                new int[]{3, 1, -2, -5, 2, -4}
+        )));
+        System.out.println(Arrays.toString(solution.rearrangeArray(
+                new int[]{1, -1}
+        )));
     }
 }
 
 class Solution {
-    public String firstPalindrome(final String[] words) {
-        for (final String word : words) {
-            if (isPalindrome(word)) {
-                return word;
+    public int[] rearrangeArray(final int[] nums) {
+        final List<Integer> posi = new ArrayList<>();
+        final List<Integer> nega = new ArrayList<>();
+
+        for (final int i : nums) {
+            if (i > 0) {
+                posi.add(i);
+            } else {
+                nega.add(i);
             }
         }
 
-        return "";
-    }
+        final List<Integer> answer = new ArrayList<>();
 
-    private boolean isPalindrome(final String word) {
-        final int len = word.length();
-
-        for (int i = 0; i < len / 2; i++) {
-            if (word.charAt(i) != word.charAt(len - 1 - i)) {
-                return false;
-            }
+        final int len = posi.size();
+        for (int i = 0; i < len; i++) {
+            answer.add(posi.get(i));
+            answer.add(nega.get(i));
         }
 
-        return true;
+        return answer.stream().mapToInt(i -> i).toArray();
     }
 }
