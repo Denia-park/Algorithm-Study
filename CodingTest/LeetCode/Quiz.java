@@ -1,8 +1,6 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -19,23 +17,20 @@ public class Quiz {
 
 class Solution {
     public int[] rearrangeArray(final int[] nums) {
-        final List<Integer> posi = new ArrayList<>();
-        final List<Integer> nega = new ArrayList<>();
+        final int length = nums.length;
+        final int[] answer = new int[length];
 
-        for (final int i : nums) {
-            if (i > 0) {
-                posi.add(i);
+        int posIdx = 0;
+        int negIdx = 1;
+
+        for (final int val : nums) {
+            if (val > 0) {
+                answer[posIdx] = val;
+                posIdx += 2;
             } else {
-                nega.add(i);
+                answer[negIdx] = val;
+                negIdx += 2;
             }
-        }
-
-        final int[] answer = new int[nums.length];
-
-        final int len = posi.size();
-        for (int i = 0; i < len; i++) {
-            answer[i * 2] = posi.get(i);
-            answer[i * 2 + 1] = nega.get(i);
         }
 
         return answer;
