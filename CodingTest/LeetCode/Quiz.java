@@ -33,10 +33,8 @@ class Solution {
 
         //처음에 3개로 값을 구해보고, 계속 조금씩 더하면서 폴리곤이 만들어지는지 체크하고
         //폴리곤이 만들어지면 둘레 값을 구한다.
-        long preSum = (long) nums[0] + nums[1];
-        for (int i = 2; i < nums.length; i++) {
-            final int val = nums[i];
-
+        long preSum = 0;
+        for (final int val : nums) {
             if (preSum > val) {
                 ans = preSum + val;
             }
