@@ -6,33 +6,44 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(Arrays.toString(solution.rearrangeArray(
-                new int[]{3, 1, -2, -5, 2, -4}
-        )));
-        System.out.println(Arrays.toString(solution.rearrangeArray(
-                new int[]{1, -1}
-        )));
+        System.out.println(
+                solution.largestPerimeter(
+                        new int[]{5, 5, 5}
+                )
+        );
+        System.out.println(
+                solution.largestPerimeter(
+                        new int[]{1, 12, 1, 2, 5, 50, 3}
+                )
+        );
+        System.out.println(
+                solution.largestPerimeter(
+                        new int[]{5, 5, 50}
+                )
+        );
+
     }
 }
 
 class Solution {
-    public int[] rearrangeArray(final int[] nums) {
-        final int length = nums.length;
-        final int[] answer = new int[length];
+    public long largestPerimeter(final int[] nums) {
+        Arrays.sort(nums);
 
-        int posIdx = 0;
-        int negIdx = 1;
+        int ans = -1;
 
-        for (final int val : nums) {
-            if (val > 0) {
-                answer[posIdx] = val;
-                posIdx += 2;
-            } else {
-                answer[negIdx] = val;
-                negIdx += 2;
+        //처음에 3개로 값을 구해보고, 계속 조금씩 더하면서 폴리곤이 만들어지는지 체크하고
+        //폴리곤이 만들어지면 둘레 값을 구한다.
+        int preSum = nums[0] + nums[1];
+        for (int i = 2; i < nums.length; i++) {
+            final int val = nums[i];
+
+            if (preSum > val) {
+                ans = preSum + val;
             }
+
+            preSum += val;
         }
 
-        return answer;
+        return ans;
     }
 }
