@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BracketUtil {
-    public static int[][] convertStringToJavaIntTwoDimensionalArray(final String source) {
+    public static int[][] convertStrToIntArr(final String source) {
         final String newString = source.substring(1, source.length() - 1);
 
         final String[] intArrays = newString.replace("], [", "]&[").replace("],[", "]&[").split("&");
