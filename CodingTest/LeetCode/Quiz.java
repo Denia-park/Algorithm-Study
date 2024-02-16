@@ -1,47 +1,62 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
         System.out.println(
-                solution.largestPerimeter(
-                        new int[]{5, 5, 5}
+                solution.findLeastNumOfUniqueInts(
+                        new int[]{5, 5, 4}, 1
                 )
         );
         System.out.println(
-                solution.largestPerimeter(
-                        new int[]{1, 12, 1, 2, 5, 50, 3}
+                solution.findLeastNumOfUniqueInts(
+                        new int[]{4, 3, 1, 1, 3, 3, 2}, 3
                 )
         );
-        System.out.println(
-                solution.largestPerimeter(
-                        new int[]{5, 5, 50}
-                )
-        );
-
     }
 }
 
 class Solution {
-    public long largestPerimeter(final int[] nums) {
-        Arrays.sort(nums);
+    public int findLeastNumOfUniqueInts(final int[] arr, int k) {
+        final Map<Integer, Num> countMap = new HashMap<>();
+        for (final int val : arr) {
+            final Num num = countMap.getOrDefault(val, new Num(val));
+            num.up();
 
-        long ans = -1;
-
-        //처음에 3개로 값을 구해보고, 계속 조금씩 더하면서 폴리곤이 만들어지는지 체크하고
-        //폴리곤이 만들어지면 둘레 값을 구한다.
-        long preSum = 0;
-        for (final int val : nums) {
-            if (preSum > val) {
-                ans = preSum + val;
-            }
-
-            preSum += val;
+            countMap.put(val, num);
         }
 
-        return ans;
+        final List<Num> list = new ArrayList<>(countMap.values());
+        list.sort(Comparator.comparingInt((Num n) -> n.count));
+
+        int answer = 0;
+        for (final Num num : list) {
+            final int count = num.count;
+
+            if (count <= k) {
+                k -= count;
+            } else {
+                answer++;
+            }
+        }
+
+        return answer;
+    }
+
+    static class Num {
+        int val;
+        int count;
+
+        Num(final int val) {
+            this.val = val;
+            this.count = 0;
+        }
+
+        void up() {
+            this.count++;
+        }
     }
 }
