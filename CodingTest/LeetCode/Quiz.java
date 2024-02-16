@@ -30,17 +30,17 @@ class Solution {
         final List<Map.Entry<Integer, Integer>> entries = new ArrayList<>(countMap.entrySet());
         entries.sort(Comparator.comparingInt(Map.Entry::getValue));
 
-        int answer = 0;
         for (final Map.Entry<Integer, Integer> entry : entries) {
             final Integer count = entry.getValue();
 
             if (count <= k) {
                 k -= count;
+                countMap.remove(entry.getKey());
             } else {
-                answer++;
+                break;
             }
         }
 
-        return answer;
+        return countMap.size();
     }
 }
