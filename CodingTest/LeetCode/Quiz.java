@@ -21,20 +21,18 @@ public class Quiz {
 
 class Solution {
     public int findLeastNumOfUniqueInts(final int[] arr, int k) {
-        final Map<Integer, Num> countMap = new HashMap<>();
+        final Map<Integer, Integer> countMap = new HashMap<>();
         for (final int val : arr) {
-            final Num num = countMap.getOrDefault(val, new Num(val));
-            num.up();
-
-            countMap.put(val, num);
+            final Integer num = countMap.getOrDefault(val, 0);
+            countMap.put(val, num + 1);
         }
 
-        final List<Num> list = new ArrayList<>(countMap.values());
-        list.sort(Comparator.comparingInt((Num n) -> n.count));
+        final List<Map.Entry<Integer, Integer>> entries = new ArrayList<>(countMap.entrySet());
+        entries.sort(Comparator.comparingInt(Map.Entry::getValue));
 
         int answer = 0;
-        for (final Num num : list) {
-            final int count = num.count;
+        for (final Map.Entry<Integer, Integer> entry : entries) {
+            final Integer count = entry.getValue();
 
             if (count <= k) {
                 k -= count;
@@ -44,19 +42,5 @@ class Solution {
         }
 
         return answer;
-    }
-
-    static class Num {
-        int val;
-        int count;
-
-        Num(final int val) {
-            this.val = val;
-            this.count = 0;
-        }
-
-        void up() {
-            this.count++;
-        }
     }
 }
