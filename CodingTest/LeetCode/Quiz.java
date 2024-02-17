@@ -1,5 +1,8 @@
 package CodingTest.LeetCode;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -22,54 +25,43 @@ public class Quiz {
     }
 }
 
-//벽돌 및 사다리 중에 어떤게 더 옳은 선택인지 모르니까, 둘 다 도전해봐야 한다.
 class Solution {
-    int[] gHeights;
-    Integer[][][] dp;
+    public int furthestBuilding(final int[] heights, int bricks, int ladders) {
+        final PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
 
-    public int furthestBuilding(final int[] heights, final int bricks, final int ladders) {
-        dp = new Integer[heights.length][bricks + 1][ladders + 1];
-        gHeights = heights;
-        final int curIdx = 0;
-        int answer = -1;
+        int idx;
+        for (idx = 0; idx < heights.length - 1; idx++) {
+            final int height = heights[idx];
+            final int nextHeight = heights[idx + 1];
 
-        answer = Math.max(answer, go(curIdx, bricks, ladders));
-
-        return answer;
-    }
-
-    private int go(final int curIdx, final int bricks, final int ladders) {
-        int result = curIdx;
-        final int nextIdx = curIdx + 1;
-
-        if (nextIdx >= gHeights.length) {
-            return result;
-        }
-
-        if (dp[curIdx][bricks][ladders] != null) {
-            return dp[curIdx][bricks][ladders];
-        }
-
-        final int curHeight = gHeights[curIdx];
-        final int nextHeight = gHeights[nextIdx];
-
-        if (curHeight >= nextHeight) {
-            result = Math.max(result, go(nextIdx, bricks, ladders));
-        } else {
-            //벽돌 쓴 경우 (가능한 경우에만 사용 가능)
-            final int diffHeight = nextHeight - curHeight;
-            if (diffHeight <= bricks) {
-                result = Math.max(result, go(nextIdx, bricks - diffHeight, ladders));
+            if (height >= nextHeight) {
+                continue;
             }
 
-            //사다리 쓴 경우 (가능한 경우에만 사용 가능)
-            if (ladders > 0) {
-                result = Math.max(result, go(nextIdx, bricks, ladders - 1));
+            final int diff = nextHeight - height;
+
+            if (bricks >= diff) {
+                bricks -= diff;
+                //우선순위 큐에 사용한 벽돌 수를 저장
+                pq.offer(diff);
+                continue;
+            }
+
+
+            //벽돌도 모자르고, 사다리로 모자르면 끝
+            if (ladders <= 0) {
+                break;
+            }
+
+            //벽돌이 모자를 때, 최고로 벽돌을 많이 쓴 타이밍에 대신 사다리를 사용
+            //사다리가 남아 있으면 -> 사다리를 하나 차감하고, 많이 쓴 벽돌을 원상복구 시키면서 현재 쓰는 벽돌 차감
+            ladders -= 1;
+            if (!pq.isEmpty()) {
+                final int maxBrick = pq.poll();
+                bricks += (maxBrick - diff);
             }
         }
 
-        //마지막 Idx를 반환한다.
-        dp[curIdx][bricks][ladders] = result;
-        return result;
+        return idx;
     }
 }
