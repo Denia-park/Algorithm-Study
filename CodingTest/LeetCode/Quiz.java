@@ -25,8 +25,10 @@ public class Quiz {
 //벽돌 및 사다리 중에 어떤게 더 옳은 선택인지 모르니까, 둘 다 도전해봐야 한다.
 class Solution {
     int[] gHeights;
+    Integer[][][] dp;
 
     public int furthestBuilding(final int[] heights, final int bricks, final int ladders) {
+        dp = new Integer[heights.length][bricks + 1][ladders + 1];
         gHeights = heights;
         final int curIdx = 0;
         int answer = -1;
@@ -42,6 +44,10 @@ class Solution {
 
         if (nextIdx >= gHeights.length) {
             return result;
+        }
+
+        if (dp[curIdx][bricks][ladders] != null) {
+            return dp[curIdx][bricks][ladders];
         }
 
         final int curHeight = gHeights[curIdx];
@@ -63,6 +69,7 @@ class Solution {
         }
 
         //마지막 Idx를 반환한다.
+        dp[curIdx][bricks][ladders] = result;
         return result;
     }
 }
