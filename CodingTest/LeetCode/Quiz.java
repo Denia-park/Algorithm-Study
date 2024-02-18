@@ -28,6 +28,14 @@ public class Quiz {
                         )
                 )
         );
+        System.out.println(
+                solution.mostBooked(
+                        3,
+                        BracketUtil.convertStrToIntArr(
+                                "[[0,10],[1,9],[2,8],[3,7],[4,6]]"
+                        )
+                )
+        );
     }
 }
 
@@ -35,42 +43,47 @@ class Solution {
     public int mostBooked(final int n, final int[][] meetings) {
         //현재 사용중인 방을 우선순위 큐로 다룬다
         //빨리 끝나는 순으로 정렬이 되도록 한다.
-        final PriorityQueue<Room> pq = new PriorityQueue<>(
+        final PriorityQueue<Room> playRoom = new PriorityQueue<>(
                 Comparator.comparingInt(Room::getEndTime)
+        );
+        final PriorityQueue<Room> waitRoom = new PriorityQueue<>(
+                Comparator.comparingInt(Room::getIdx)
         );
 
         final List<Room> list = new ArrayList<>();
 
         for (int idx = 0; idx < n; idx++) {
-            list.add(new Room(idx, 0, null));
+            final Room room = new Room(idx, 0, null);
+            list.add(room);
+            waitRoom.add(room);
         }
 
         //모든 미팅이 끝날때까지 순환
         for (final int[] meeting : meetings) {
-            if (pq.size() < n) { //방을 만든다.
-                final Room addRoom = list.get(pq.size());
+            if (playRoom.size() < n) { //방을 만든다.
+                final Room addRoom = waitRoom.poll();
                 addRoom.up();
                 addRoom.time = meeting;
 
-                pq.add(addRoom);
+                playRoom.add(addRoom);
             } else { //방이 끝날때까지 기다렸다가 들어간다.
                 //현재 시간을 구한다 (미팅이 끝난 시간이랑 현재 미팅 시작시간을 비교)
                 //애초에 현재 미팅이 늦게 시작하면 현재 미팅은 방이 다 비고 시작함
-                final int curTime = Math.max(pq.peek().time[1], meeting[0]);
+                final int curTime = Math.max(playRoom.peek().time[1], meeting[0]);
                 //현재 시작하는 미팅시간보다 빨리 끝나는 애들은 다 빼준다.
-                while (!pq.isEmpty() && pq.peek().getEndTime() <= curTime) {
-                    pq.poll();
+                while (!playRoom.isEmpty() && playRoom.peek().getEndTime() <= curTime) {
+                    waitRoom.add(playRoom.poll());
                 }
 
                 final int duration = meeting[1] - meeting[0];
                 final int newStartTime = curTime;
                 final int[] newMeeting = new int[]{newStartTime, newStartTime + duration};
 
-                final Room addRoom = list.get(pq.size());
+                final Room addRoom = waitRoom.poll();
                 addRoom.up();
                 addRoom.time = newMeeting;
 
-                pq.add(addRoom);
+                playRoom.add(addRoom);
             }
         }
 
@@ -79,7 +92,7 @@ class Solution {
 //        }
 
         //많이 쓴 방 순으로 정렬, 값이 작은 순으로 정렬
-        return pq.stream()
+        return playRoom.stream()
                 .sorted(Comparator.comparingInt(Room::getCount).reversed().thenComparingInt(Room::getIdx))
                 .collect(Collectors.toList()).get(0).idx;
     }
