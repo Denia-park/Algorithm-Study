@@ -2,10 +2,7 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Quiz {
@@ -36,6 +33,14 @@ public class Quiz {
                         )
                 )
         );
+        System.out.println(
+                solution.mostBooked(
+                        4,
+                        BracketUtil.convertStrToIntArr(
+                                "[[18,19],[3,12],[17,19],[2,13],[7,10]]"
+                        )
+                )
+        );
     }
 }
 
@@ -57,6 +62,10 @@ class Solution {
             list.add(room);
             waitRoom.add(room);
         }
+
+        Arrays.sort(meetings, Comparator.comparingInt(
+                (int[] value) -> value[0]
+        ));
 
         //모든 미팅이 끝날때까지 순환
         for (final int[] meeting : meetings) {
