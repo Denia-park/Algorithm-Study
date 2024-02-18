@@ -2,7 +2,8 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -29,106 +30,54 @@ public class Quiz {
 
 class Solution {
     public int mostBooked(final int n, final int[][] meetings) {
-        //현재 사용중인 방을 우선순위 큐로 다룬다
-        //빨리 끝나는 순으로 정렬이 되도록 한다.
-        final PriorityQueue<Room> playRoom = new PriorityQueue<>(
-                Comparator.comparingInt(Room::getEndTime)
-        );
-        final PriorityQueue<Room> waitRoom = new PriorityQueue<>(
-                Comparator.comparingInt(Room::getIdx)
-        );
+        final int[] ans = new int[n];
+        final long[] times = new long[n];
+        Arrays.sort(meetings, Comparator.comparingInt(o -> o[0]));
 
-        final List<Room> list = new ArrayList<>();
-
-        for (int idx = 0; idx < n; idx++) {
-            final Room room = new Room(idx, 0, null);
-            list.add(room);
-            waitRoom.add(room);
-        }
-
-        Arrays.sort(meetings, Comparator.comparingInt(
-                (int[] value) -> value[0]
-        ));
-
-        //모든 미팅이 끝날때까지 순환
         for (final int[] meeting : meetings) {
-            //현재 시각 기준으로 방 빼야 함
-            int curTime = meeting[0];
+            final int start = meeting[0];
+            final int end = meeting[1];
 
-            //현재 시작하는 미팅시간보다 빨리 끝나는 애들은 다 빼준다.
-            while (!playRoom.isEmpty() && playRoom.peek().getEndTime() <= curTime) {
-                waitRoom.add(playRoom.poll());
+            boolean flag = false;
+            int minIdx = -1;
+            long val = Long.MAX_VALUE;
+
+            //모든 방을 돌면서, 제일 빨리 끝나는 방을 찾는다.
+            for (int idx = 0; idx < n; idx++) {
+                //제일 빨리 끝나는 방 저장
+                if (times[idx] < val) {
+                    val = times[idx];
+                    minIdx = idx;
+                }
+
+                //시작할 수 있는 방을 찾았으면 멈춘다.
+                if (times[idx] <= start) {
+                    flag = true;
+                    ans[idx]++;
+                    times[idx] = end;
+                    break;
+                }
             }
 
-            //빈 방이 있으면 할당한다.
-            if (!waitRoom.isEmpty()) {
-                final Room room = waitRoom.poll();
-                room.up();
-                room.time = meeting;
-
-                playRoom.add(room);
-                continue;
+            //방을 못 찾았으면, 제일 빨리 끝나는 방에서 시작한다.
+            if (!flag) {
+                ans[minIdx]++;
+                times[minIdx] += (end - start);
             }
-
-            //빈 방이 없으면, 기다렸다가 들어가야함
-            //제일 빨리 끝나는 방을 기다린다.
-            final Room firstEndRoom = playRoom.poll();
-            curTime = firstEndRoom.time[1];
-
-            final int duration = meeting[1] - meeting[0];
-            final int[] newMeeting = new int[]{curTime, curTime + duration};
-
-            firstEndRoom.up();
-            firstEndRoom.time = newMeeting;
-
-            playRoom.add(firstEndRoom);
-
         }
 
-//        for (final Room room : list) {
-//            System.out.println(room);
-//        }
+        //가장 많이 사용한 방을 찾는다.
+        int max = -1;
+        int resultIdx = -1;
+        for (int i = 0; i < ans.length; i++) {
+            final int val = ans[i];
 
-        //많이 쓴 방 순으로 정렬, 값이 작은 순으로 정렬
-        list.sort(
-                Comparator
-                        .comparingInt(Room::getCount).reversed()
-                        .thenComparingInt(Room::getIdx)
-        );
-
-        return list.get(0).idx;
-    }
-
-    class Room {
-        int idx;
-        int count;
-        int[] time;
-
-        Room(final int idx, final int count, final int[] time) {
-            this.idx = idx;
-            this.count = count;
-            this.time = time;
+            if (val > max) {
+                max = val;
+                resultIdx = i;
+            }
         }
 
-        void up() {
-            count++;
-        }
-
-        int getIdx() {
-            return idx;
-        }
-
-        int getCount() {
-            return count;
-        }
-
-        int getEndTime() {
-            return time[1];
-        }
-
-        @Override
-        public String toString() {
-            return "[" + idx + " : " + count + "]";
-        }
+        return resultIdx;
     }
 }
