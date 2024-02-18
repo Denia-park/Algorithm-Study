@@ -2,7 +2,9 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
@@ -37,25 +39,44 @@ class Solution {
                 Comparator.comparingInt(Room::getEndTime)
         );
 
+        final List<Room> list = new ArrayList<>();
+
+        for (int idx = 0; idx < n; idx++) {
+            list.add(new Room(idx, 0, null));
+        }
+
         //모든 미팅이 끝날때까지 순환
         for (final int[] meeting : meetings) {
             if (pq.size() < n) { //방을 만든다.
-                final int idx = pq.size();
+                final Room addRoom = list.get(pq.size());
+                addRoom.up();
+                addRoom.time = meeting;
 
-                pq.add(new Room(idx, 1, meeting));
+                pq.add(addRoom);
             } else { //방이 끝날때까지 기다렸다가 들어간다.
-                //제일 빨리 끝난 방
-                final Room room = pq.poll();
-                final int idx = room.idx;
-                final int count = room.count;
+                //현재 시간을 구한다 (미팅이 끝난 시간이랑 현재 미팅 시작시간을 비교)
+                //애초에 현재 미팅이 늦게 시작하면 현재 미팅은 방이 다 비고 시작함
+                final int curTime = Math.max(pq.peek().time[1], meeting[0]);
+                //현재 시작하는 미팅시간보다 빨리 끝나는 애들은 다 빼준다.
+                while (!pq.isEmpty() && pq.peek().getEndTime() <= curTime) {
+                    pq.poll();
+                }
 
                 final int duration = meeting[1] - meeting[0];
-                final int newStartTime = room.getEndTime();
+                final int newStartTime = curTime;
                 final int[] newMeeting = new int[]{newStartTime, newStartTime + duration};
 
-                pq.add(new Room(idx, count + 1, newMeeting));
+                final Room addRoom = list.get(pq.size());
+                addRoom.up();
+                addRoom.time = newMeeting;
+
+                pq.add(addRoom);
             }
         }
+
+//        for (Room room : list) {
+//            System.out.println(room);
+//        }
 
         //많이 쓴 방 순으로 정렬, 값이 작은 순으로 정렬
         return pq.stream()
@@ -74,6 +95,10 @@ class Solution {
             this.time = time;
         }
 
+        void up() {
+            count++;
+        }
+
         int getIdx() {
             return idx;
         }
@@ -84,6 +109,11 @@ class Solution {
 
         int getEndTime() {
             return time[1];
+        }
+
+        @Override
+        public String toString() {
+            return "[" + idx + " : " + count + "]";
         }
     }
 }
