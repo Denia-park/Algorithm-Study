@@ -3,41 +3,56 @@ package CodingTest.LeetCode;
 import CodingTest.Programmers.BracketUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(
-                solution.mostBooked(
-                        2,
-                        BracketUtil.convertStrToIntArr(
-                                "[[0,10],[1,5],[2,7],[3,4]]"
-                        )
-                )
-        );
-        System.out.println(
-                solution.mostBooked(
-                        3,
-                        BracketUtil.convertStrToIntArr(
-                                "[[1,20],[2,10],[3,5],[4,9],[6,8]]"
-                        )
-                )
-        );
-        System.out.println(
-                solution.mostBooked(
-                        3,
-                        BracketUtil.convertStrToIntArr(
-                                "[[0,10],[1,9],[2,8],[3,7],[4,6]]"
-                        )
-                )
-        );
+//        System.out.println(
+//                solution.mostBooked(
+//                        2,
+//                        BracketUtil.convertStrToIntArr(
+//                                "[[0,10],[1,5],[2,7],[3,4]]"
+//                        )
+//                )
+//        );
+//        System.out.println(
+//                solution.mostBooked(
+//                        3,
+//                        BracketUtil.convertStrToIntArr(
+//                                "[[1,20],[2,10],[3,5],[4,9],[6,8]]"
+//                        )
+//                )
+//        );
+//        System.out.println(
+//                solution.mostBooked(
+//                        3,
+//                        BracketUtil.convertStrToIntArr(
+//                                "[[0,10],[1,9],[2,8],[3,7],[4,6]]"
+//                        )
+//                )
+//        );
+//        System.out.println(
+//                solution.mostBooked(
+//                        4,
+//                        BracketUtil.convertStrToIntArr(
+//                                "[[18,19],[3,12],[17,19],[2,13],[7,10]]"
+//                        )
+//                )
+//        );
+//        System.out.println(
+//                solution.mostBooked(
+//                        2,
+//                        BracketUtil.convertStrToIntArr(
+//                                "[[10,11],[2,10],[1,17],[9,13],[18,20]]"
+//                        )
+//                )
+//        );
         System.out.println(
                 solution.mostBooked(
                         4,
                         BracketUtil.convertStrToIntArr(
-                                "[[18,19],[3,12],[17,19],[2,13],[7,10]]"
+                                "[[19,20],[14,15],[13,14],[11,20]]"
                         )
                 )
         );
@@ -101,9 +116,13 @@ class Solution {
 //        }
 
         //많이 쓴 방 순으로 정렬, 값이 작은 순으로 정렬
-        return playRoom.stream()
-                .sorted(Comparator.comparingInt(Room::getCount).reversed().thenComparingInt(Room::getIdx))
-                .collect(Collectors.toList()).get(0).idx;
+        list.sort(
+                Comparator
+                        .comparingInt(Room::getCount).reversed()
+                        .thenComparingInt(Room::getIdx)
+        );
+
+        return list.get(0).idx;
     }
 
     class Room {
