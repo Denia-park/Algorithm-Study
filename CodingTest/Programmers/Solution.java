@@ -1,66 +1,69 @@
 package CodingTest.Programmers;
 
-//https://school.programmers.co.kr/questions/25471
-
 class Solution {
-    static final int ATTACK = 1;
-    static final int HEAL = 2;
+    private static final int A = 1;
+    private static final int B = 2;
+    private final int[][] directions = {
+            {-1, 0},
+            {0, 1},
+            {1, 0},
+            {0, -1}
+    };
+    private int answer;
+    private int[][] board;
 
-    public int solution(final int[][] board, final int[][] skill) {
-        int answer = 0;
+    public int solution(final int[][] bo, final int[] aloc, final int[] bloc) {
+        answer = -1;
+        board = bo;
 
-        final int[][] newBoard = new int[board.length + 1][board[0].length + 1];
-
-        //누적합 구하기
-        //(r1, c1) ~ (r2, c2) 좌표에 n의 값을 변화주고 싶다.
-        //r1, c1 = n
-        //r1, c2 + 1 = -n
-        //r2 + 1, c1 = -n
-        //r2 + 1 , c2 + 1 = n
-
-        //오른쪽으로 다 더하고 아래쪽으로 더하기
-
-        //skill을 다 적용
-        for (final int[] ints : skill) {
-            final int type = ints[0] == ATTACK ? -1 : 1;
-            final int r1 = ints[1];
-            final int c1 = ints[2];
-            final int r2 = ints[3];
-            final int c2 = ints[4];
-            final int degree = ints[5];
-
-            final int add = type * degree;
-
-            newBoard[r1][c1] += add;
-            newBoard[r1][c2 + 1] -= add;
-            newBoard[r2 + 1][c1] -= add;
-            newBoard[r2 + 1][c2 + 1] += add;
-        }
-
-        //누적합 계산
-        for (int r = 0; r < newBoard.length; r++) {
-            for (int c = 1; c < newBoard[0].length; c++) {
-                newBoard[r][c] += newBoard[r][c - 1];
-            }
-        }
-
-        for (int c = 0; c < newBoard[0].length; c++) {
-            for (int r = 1; r < newBoard.length; r++) {
-                newBoard[r][c] += newBoard[r - 1][c];
-            }
-        }
-
-        //멀쩡한 건물의 수를 센다.
-        for (int r = 0; r < board.length; r++) {
-            for (int c = 0; c < board[0].length; c++) {
-                final int sum = newBoard[r][c] + board[r][c];
-
-                if (sum > 0) {
-                    answer++;
-                }
-            }
-        }
+        simul(aloc, bloc, A, 0);
 
         return answer;
+    }
+
+    private void simul(final int[] aloc, final int[] bloc, final int order, final int count) {
+        final int[] manLoc = order == A ? aloc : bloc;
+        final int row = manLoc[0];
+        final int col = manLoc[1];
+
+        //누군가 있다가 나가면 맵이 부숴짐 => 패배함 (answer 업데이트)
+        if (board[row][col] == 0) {
+            answer = Math.max(answer, count);
+            return;
+        }
+
+        //밖으로 나가면 안되고, 발판이 있는 곳만 움직일 수 있음
+        boolean moveFlag = false;
+        for (final int[] direction : directions) {
+            final int nR = row + direction[0];
+            final int nC = col + direction[1];
+
+            if (isOut(nR, nC) || board[nR][nC] == 0) {
+                continue;
+            }
+
+            moveFlag = true;
+            //내가 움직인 곳 발판 사라짐
+            board[row][col] = 0;
+
+            //움직인다
+            if (order == A) {
+                simul(new int[]{nR, nC}, bloc, B, count + 1);
+            } else {
+                simul(aloc, new int[]{nR, nC}, A, count + 1);
+            }
+
+            //내가 움직인 곳 발판 다시 살림
+            board[row][col] = 1;
+        }
+
+        //내가 못 움직임 => 패배함 (answer 업데이트)
+        if (!moveFlag) {
+            answer = Math.max(answer, count);
+        }
+    }
+
+    private boolean isOut(final int r, final int c) {
+        return r < 0 || r >= board.length || c < 0 || c >= board[0].length;
     }
 }
