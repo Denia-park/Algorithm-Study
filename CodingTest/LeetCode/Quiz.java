@@ -11,24 +11,7 @@ public class Quiz {
 }
 
 class Solution {
-    public boolean isPowerOfTwo(int n) {
-        if (n <= 0) return false;
-        else if (n == 1) return true;
-
-        if (n > 1) {
-            while (n != 1) {
-                if (n % 2 == 1) {
-                    return false;
-                }
-
-                n /= 2;
-            }
-        } else if (0 < n && n < 1) {
-            while (n < 1) {
-                n *= 2;
-            }
-        }
-
-        return n == 1;
+    public boolean isPowerOfTwo(final int n) {
+        return n > 0 && (n & n - 1) == 0;
     }
 }
