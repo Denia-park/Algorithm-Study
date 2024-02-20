@@ -14,16 +14,9 @@ public class Quiz {
 
 class Solution {
     public int missingNumber(final int[] nums) {
-        Arrays.sort(nums);
-
-        for (int i = 0; i < nums.length; i++) {
-            final int val = nums[i];
-
-            if (val != i) {
-                return i;
-            }
-        }
-
-        return nums.length;
+        final int n = nums.length;
+        final int tsum = (n * (n + 1)) / 2;
+        final int actualSum = Arrays.stream(nums).sum();
+        return tsum - actualSum;
     }
 }
