@@ -1,68 +1,83 @@
 package CodingTest.Programmers;
 
+import java.util.*;
+
 class Solution {
-    // 방향 벡터 정의: 상, 하, 좌, 우
-    private static final int[] dr = {-1, 1, 0, 0};
-    private static final int[] dc = {0, 0, -1, 1};
-    // '무한대'를 나타내는 상수, 최소 턴 계산에 사용
-    private static final int INF = 987654321;
 
-    // 주요 해결 방법을 구현한 메서드
-    public int solution(final int[][] board, final int[] aloc, final int[] bloc) {
-        // 두 플레이어 위치를 기반으로 최소 턴 수를 계산
-        return solve(board, aloc[0], aloc[1], bloc[0], bloc[1])[1];
-    }
+    private static final int DONUT = 0;
+    private static final int BLOCK = 1;
+    private static final int EIGHT = 2;
+    private Map<Integer, Node> map;
 
-    // 게임의 승패와 최소 턴 수를 계산하는 메서드
-    private int[] solve(final int[][] board, final int r1, final int c1, final int r2, final int c2) {
-        // 현재 위치에서 게임이 끝났는지 확인
-        if (isFinished(board, r1, c1)) return new int[]{0, 0};
+    public int[] solution(final int[][] edges) {
+        final int[] answer = new int[4];
 
-        // 두 플레이어가 같은 위치에 있으면 현재 플레이어 승리
-        if (r1 == r2 && c1 == c2) return new int[]{1, 1};
+        map = new HashMap<>();
 
-        int minTurn = INF, maxTurn = 0;
-        boolean canWin = false;
+        //정점을 저장
+        for (final int[] edge : edges) {
+            final int from = edge[0];
+            final int to = edge[1];
 
-        // 모든 가능한 이동 시도
-        for (int i = 0; i < 4; i++) {
-            final int nr = r1 + dr[i];
-            final int nc = c1 + dc[i];
-            if (!inRange(board, nr, nc) || board[nr][nc] == 0) continue; // 이동할 수 없는 경우
+            //out 증가
+            final Node fromNode = map.getOrDefault(from, new Node(from));
+            fromNode.outCnt++;
+            fromNode.add(to);
 
-            board[r1][c1] = 0; // 현재 위치에서 이동
-            final int[] result = solve(board, r2, c2, nr, nc); // 재귀적으로 다음 턴 계산
-            board[r1][c1] = 1; // Undo move
-
-            // 승리할 수 있는 경우와 그렇지 않은 경우를 분리하여 처리
-            if (result[0] == 0) { //상대방이 패배한다는 의미 -> 내가 승리
-                canWin = true;
-                minTurn = Math.min(minTurn, result[1]);
-            } else if (!canWin) {
-                maxTurn = Math.max(maxTurn, result[1]);
-            }
+            //in 증가
+            final Node toNode = map.getOrDefault(to, new Node(to));
+            toNode.inCnt++;
         }
 
-        // 승리할 수 있는 경우 최소 턴, 그렇지 않은 경우 최대 턴 반환
-        final int turn = canWin ? minTurn : maxTurn;
-        // 승패를 판단하고, 현재 턴을 소모하므로 turn + 1을 반환
-        return new int[]{canWin ? 1 : 0, turn + 1};
-    }
+        //정점 찾기
+        final Node rootNode = map.values().stream()
+                .sorted(Comparator.comparingInt(node -> node.inCnt))
+                .filter(node -> node.outCnt >= 2)
+                .findFirst().get();
 
-    // 현재 위치에서 더 이동할 수 있는지 확인하는 메서드
-    private boolean isFinished(final int[][] board, final int r, final int c) {
-        for (int i = 0; i < 4; i++) {
-            final int nr = r + dr[i];
-            final int nc = c + dc[i];
-            if (inRange(board, nr, nc) && board[nr][nc] == 1) {
-                return false; // 이동할 수 있는 위치가 있으면 게임 계속
-            }
+        answer[0] = rootNode.num;
+
+        for (final Integer startNum : rootNode.outNums) {
+            final int idx = dfs(startNum, true, startNum);
+            answer[idx + 1]++;
         }
-        return true; // 더 이동할 수 없으면 게임 종료
+
+        return answer;
     }
 
-    // 주어진 위치가 보드판 내에 있는지 확인하는 메서드
-    private boolean inRange(final int[][] board, final int r, final int c) {
-        return r >= 0 && r < board.length && c >= 0 && c < board[0].length;
+    private int dfs(final Integer startNum, final boolean isFirstNode, final int curNum) {
+        //8자 인지 확인하기
+        final Node curNode = map.get(curNum);
+        if (curNode.inCnt >= 2 && curNode.outCnt >= 2) {
+            return EIGHT;
+        }
+
+        //처음이 아닌데, 자기 자신을 다시 만나면 도넛
+        if (!isFirstNode && startNum == curNum) {
+            return DONUT;
+        }
+
+        //더 이상 못가면 막대
+        final List<Integer> outNums = map.get(curNum).outNums;
+        if (outNums.isEmpty()) {
+            return BLOCK;
+        }
+
+        return dfs(startNum, false, outNums.get(0));
+    }
+
+    class Node {
+        int num;
+        int inCnt;
+        int outCnt;
+        List<Integer> outNums = new ArrayList<>();
+
+        public Node(final int num) {
+            this.num = num;
+        }
+
+        void add(final int val) {
+            outNums.add(val);
+        }
     }
 }
