@@ -1,6 +1,9 @@
 package CodingTest.Programmers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
 
@@ -20,19 +23,19 @@ class Solution {
             final int to = edge[1];
 
             //out 증가
-            final Node fromNode = map.getOrDefault(from, new Node(from));
+            final Node fromNode = map.computeIfAbsent(from, Node::new);
             fromNode.outCnt++;
             fromNode.add(to);
 
+
             //in 증가
-            final Node toNode = map.getOrDefault(to, new Node(to));
+            final Node toNode = map.computeIfAbsent(to, Node::new);
             toNode.inCnt++;
         }
 
         //정점 찾기
         final Node rootNode = map.values().stream()
-                .sorted(Comparator.comparingInt(node -> node.inCnt))
-                .filter(node -> node.outCnt >= 2)
+                .filter(node -> node.outCnt >= 2 && node.inCnt == 0)
                 .findFirst().get();
 
         answer[0] = rootNode.num;
