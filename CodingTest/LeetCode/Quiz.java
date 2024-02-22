@@ -2,9 +2,6 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -26,37 +23,21 @@ public class Quiz {
 
 class Solution {
     public int findJudge(final int n, final int[][] trust) {
-        if (n == 1) {
-            return 1;
+        final int[] trusting = new int[n + 1];
+        final int[] trusted = new int[n + 1];
+
+        for (int i = 0; i < trust.length; i++) {
+            trusting[trust[i][0]]++;
+            trusted[trust[i][1]]++;
         }
 
-        //입력이 n -1개 이면서 출력이 0개
-        final Map<Integer, Man> map = new HashMap<>();
+        int ans = -1;
 
-        for (final int[] ints : trust) {
-            final int from = ints[0];
-            final int to = ints[1];
-
-            final Man fMan = map.computeIfAbsent(from, Man::new);
-            fMan.out++;
-
-            final Man tMan = map.computeIfAbsent(to, Man::new);
-            tMan.in++;
+        for (int i = 1; i <= n; i++) {
+            if (trusting[i] == 0 && trusted[i] == n - 1)
+                ans = i;
         }
 
-        return map.values().stream()
-                .filter(man -> man.in == n - 1 && man.out == 0)
-                .mapToInt(man -> man.idx)
-                .findFirst().orElse(-1);
-    }
-
-    public class Man {
-        int idx;
-        int in;
-        int out;
-
-        Man(final int idx) {
-            this.idx = idx;
-        }
+        return ans;
     }
 }
