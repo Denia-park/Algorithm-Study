@@ -26,6 +26,10 @@ public class Quiz {
 
 class Solution {
     public int findJudge(final int n, final int[][] trust) {
+        if (n == 1) {
+            return 1;
+        }
+
         //입력이 n -1개 이면서 출력이 0개
         final Map<Integer, Man> map = new HashMap<>();
 
