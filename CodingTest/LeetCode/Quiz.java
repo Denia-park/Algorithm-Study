@@ -2,42 +2,84 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.findJudge(2,
+        System.out.println(solution.findCheapestPrice(4,
                 BracketUtil.convertStrToIntArr(
-                        "[[1, 2]]"
-                )));
-        System.out.println(solution.findJudge(3,
+                        "[[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]]"
+                ),
+                0, 3, 1));
+        System.out.println(solution.findCheapestPrice(3,
                 BracketUtil.convertStrToIntArr(
-                        "[[1, 3], [2, 3]]"
-                )));
-        System.out.println(solution.findJudge(3,
-                BracketUtil.convertStrToIntArr(
-                        "[[1, 3], [2, 3], [3, 1]]"
-                )));
+                        "[[0,1,100],[1,2,100],[0,2,500]]"
+                ),
+                0, 2, 1));
+        System.out.println(
+                solution.findCheapestPrice(5,
+                        BracketUtil.convertStrToIntArr(
+                                "[[0,1,100],[1,2,100],[0,2,500]]"
+                        ),
+                        0, 2, 0)
+        );
     }
 }
 
 class Solution {
-    public int findJudge(final int n, final int[][] trust) {
-        final int[] trusting = new int[n + 1];
-        final int[] trusted = new int[n + 1];
+    List<List<int[]>> graph;
+    int answer;
+    int start;
+    int end;
+    int nodeLimit;
+    boolean[] isVisited;
 
-        for (int i = 0; i < trust.length; i++) {
-            trusting[trust[i][0]]++;
-            trusted[trust[i][1]]++;
+    public int findCheapestPrice(final int n, final int[][] flights, final int src, final int dst, final int k) {
+        answer = Integer.MAX_VALUE;
+        graph = new ArrayList<>();
+        start = src;
+        end = dst;
+        nodeLimit = k;
+        isVisited = new boolean[n];
+
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
         }
 
-        int ans = -1;
+        for (final int[] flight : flights) {
+            final int from = flight[0];
+            final int to = flight[1];
+            final int cost = flight[2];
 
-        for (int i = 1; i <= n; i++) {
-            if (trusting[i] == 0 && trusted[i] == n - 1)
-                ans = i;
+            graph.get(from).add(new int[]{to, cost});
         }
 
-        return ans;
+        isVisited[src] = true;
+        dfs(src, 0, 0);
+
+        return answer == Integer.MAX_VALUE ? -1 : answer;
+    }
+
+    private void dfs(final int curNode, final int nodeCount, final int costSum) {
+        if (curNode == end && nodeCount - 1 <= nodeLimit) {
+            answer = Math.min(answer, costSum);
+            return;
+        }
+
+        for (final int[] ints : graph.get(curNode)) {
+            final int next = ints[0];
+            final int cost = ints[1];
+
+            if (isVisited[next] || nodeCount - 1 > nodeLimit) {
+                continue;
+            }
+
+            isVisited[next] = true;
+            dfs(next, nodeCount + 1, costSum + cost);
+            isVisited[next] = false;
+        }
     }
 }
