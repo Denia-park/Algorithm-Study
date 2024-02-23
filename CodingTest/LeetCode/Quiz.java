@@ -2,10 +2,7 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -32,55 +29,42 @@ public class Quiz {
 }
 
 class Solution {
-    List<List<int[]>> graph;
-    boolean[] isVisited;
-
     public int findCheapestPrice(final int n, final int[][] flights, final int src, final int dst, final int k) {
-        graph = new ArrayList<>();
-        isVisited = new boolean[n];
-
-        for (int i = 0; i < n; i++) {
-            graph.add(new ArrayList<>());
-        }
-
+        final Map<Integer, List<int[]>> adj = new HashMap<>();
         for (final int[] flight : flights) {
-            graph.get(flight[0]).add(new int[]{flight[1], flight[2]});
+            adj.computeIfAbsent(flight[0], key -> new ArrayList<>()).add(new int[]{flight[1], flight[2]});
         }
 
-        final int result = bfs(src, dst, k);
-        return result == Integer.MAX_VALUE ? -1 : result;
-    }
-
-    private int bfs(final int src, final int dst, final int k) {
-        int result = Integer.MAX_VALUE;
+        final int[] dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[src] = 0;
 
         final Deque<int[]> dq = new ArrayDeque<>();
-        dq.addLast(new int[]{src, 0, 0});
-        isVisited[src] = true;
+        dq.offerLast(new int[]{src, 0});
+        int stops = 0;
 
-        while (!dq.isEmpty()) {
-            final int[] curVal = dq.pollFirst();
-            final int curNode = curVal[0];
-            final int cost = curVal[1];
-            final int count = curVal[2];
+        while (!dq.isEmpty() && stops <= k) {
+            int size = dq.size();
+            while (size-- > 0) {
+                final int[] curr = dq.poll();
+                final int curNode = curr[0];
+                final int curPrice = curr[1];
 
-            if (curNode == dst) {
-                result = Math.min(result, cost);
-                continue;
-            }
+                if (!adj.containsKey(curNode)) continue;
 
-            for (final int[] nexts : graph.get(curNode)) {
-                final int next = nexts[0];
-                final int addCost = nexts[1];
+                for (final int[] next : adj.get(curNode)) {
+                    final int nextNode = next[0];
+                    final int nextPrice = next[1];
 
-                if (count > k) {
-                    continue;
+                    if (curPrice + nextPrice >= dist[nextNode]) continue;
+                    dist[nextNode] = curPrice + nextPrice;
+
+                    dq.offerLast(new int[]{nextNode, dist[nextNode]});
                 }
-
-                dq.addLast(new int[]{next, cost + addCost, count + 1});
             }
+            stops++;
         }
 
-        return result;
+        return dist[dst] == Integer.MAX_VALUE ? -1 : dist[dst];
     }
 }
