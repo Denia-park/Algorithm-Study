@@ -31,19 +31,17 @@ public class Quiz {
 
 class Solution {
     List<List<int[]>> graph;
-    int answer;
-    int start;
     int end;
     int nodeLimit;
     boolean[] isVisited;
+    Integer[][] dp;
 
     public int findCheapestPrice(final int n, final int[][] flights, final int src, final int dst, final int k) {
-        answer = Integer.MAX_VALUE;
         graph = new ArrayList<>();
-        start = src;
         end = dst;
         nodeLimit = k;
         isVisited = new boolean[n];
+        dp = new Integer[n][k + 2];
 
         for (int i = 0; i < n; i++) {
             graph.add(new ArrayList<>());
@@ -58,15 +56,16 @@ class Solution {
         }
 
         isVisited[src] = true;
-        dfs(src, 0, 0);
 
-        return answer == Integer.MAX_VALUE ? -1 : answer;
+        final int result = dfs(src, 0, 0);
+        return result == Integer.MAX_VALUE ? -1 : result;
     }
 
-    private void dfs(final int curNode, final int nodeCount, final int costSum) {
+    private int dfs(final int curNode, final int nodeCount, final int costSum) {
+        int result = Integer.MAX_VALUE;
+
         if (curNode == end && nodeCount - 1 <= nodeLimit) {
-            answer = Math.min(answer, costSum);
-            return;
+            return costSum;
         }
 
         for (final int[] ints : graph.get(curNode)) {
@@ -77,9 +76,17 @@ class Solution {
                 continue;
             }
 
+            if (dp[next][nodeCount] != null) {
+                return dp[next][nodeCount];
+            }
+
             isVisited[next] = true;
-            dfs(next, nodeCount + 1, costSum + cost);
+            final int temp = dfs(next, nodeCount + 1, costSum + cost);
+            dp[next][nodeCount] = temp;
+            result = Math.min(result, temp);
             isVisited[next] = false;
         }
+
+        return result;
     }
 }
