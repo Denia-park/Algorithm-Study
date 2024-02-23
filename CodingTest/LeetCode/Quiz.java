@@ -2,7 +2,9 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class Quiz {
@@ -31,60 +33,52 @@ public class Quiz {
 
 class Solution {
     List<List<int[]>> graph;
-    int end;
-    int nodeLimit;
     boolean[] isVisited;
-    Integer[][] dp;
 
     public int findCheapestPrice(final int n, final int[][] flights, final int src, final int dst, final int k) {
         graph = new ArrayList<>();
-        end = dst;
-        nodeLimit = k;
         isVisited = new boolean[n];
-        dp = new Integer[n][k + 2];
 
         for (int i = 0; i < n; i++) {
             graph.add(new ArrayList<>());
         }
 
         for (final int[] flight : flights) {
-            final int from = flight[0];
-            final int to = flight[1];
-            final int cost = flight[2];
-
-            graph.get(from).add(new int[]{to, cost});
+            graph.get(flight[0]).add(new int[]{flight[1], flight[2]});
         }
 
-        isVisited[src] = true;
-
-        final int result = dfs(src, 0, 0);
+        final int result = bfs(src, dst, k);
         return result == Integer.MAX_VALUE ? -1 : result;
     }
 
-    private int dfs(final int curNode, final int nodeCount, final int costSum) {
+    private int bfs(final int src, final int dst, final int k) {
         int result = Integer.MAX_VALUE;
 
-        if (curNode == end && nodeCount - 1 <= nodeLimit) {
-            return costSum;
-        }
+        final Deque<int[]> dq = new ArrayDeque<>();
+        dq.addLast(new int[]{src, 0, 0});
+        isVisited[src] = true;
 
-        for (final int[] ints : graph.get(curNode)) {
-            final int next = ints[0];
-            final int cost = ints[1];
+        while (!dq.isEmpty()) {
+            final int[] curVal = dq.pollFirst();
+            final int curNode = curVal[0];
+            final int cost = curVal[1];
+            final int count = curVal[2];
 
-            if (isVisited[next] || nodeCount - 1 > nodeLimit) {
+            if (curNode == dst) {
+                result = Math.min(result, cost);
                 continue;
             }
 
-            if (dp[next][nodeCount] != null) {
-                return dp[next][nodeCount];
-            }
+            for (final int[] nexts : graph.get(curNode)) {
+                final int next = nexts[0];
+                final int addCost = nexts[1];
 
-            isVisited[next] = true;
-            final int temp = dfs(next, nodeCount + 1, costSum + cost);
-            dp[next][nodeCount] = temp;
-            result = Math.min(result, temp);
-            isVisited[next] = false;
+                if (count > k) {
+                    continue;
+                }
+
+                dq.addLast(new int[]{next, cost + addCost, count + 1});
+            }
         }
 
         return result;
