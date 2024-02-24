@@ -2,7 +2,10 @@ package CodingTest.LeetCode;
 
 import CodingTest.Programmers.BracketUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -38,7 +41,7 @@ class Solution {
         //유니온 - 파인드로 묶어줄 로직
         int idx = 0;
         final int size = meetings.length;
-        final Set<Integer> listeners = new HashSet<>(n);
+        final List<Integer> listeners = new ArrayList<>(n);
         while (idx < size) {
             final int time = meetings[idx][2];
             listeners.clear();
@@ -56,7 +59,6 @@ class Solution {
                 listeners.add(meeting[1]);
                 idx++;
             }
-
 
             for (final Integer man : listeners) {
                 final int parent = find(parents, man);
