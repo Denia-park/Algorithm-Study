@@ -3,7 +3,6 @@ package CodingTest.LeetCode;
 import CodingTest.Programmers.BracketUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -26,9 +25,7 @@ public class Quiz {
 
 class Solution {
     public List<Integer> findAllPeople(final int n, final int[][] meetings, final int firstPerson) {
-        final List<int[]> list = Arrays.stream(meetings)
-                .sorted(Comparator.comparingInt(v -> v[2]))
-                .collect(Collectors.toList());
+        Arrays.sort(meetings, Comparator.comparingInt(v -> v[2]));
 
         //parents 초기화
         final int[] parents = new int[n];
@@ -40,15 +37,15 @@ class Solution {
 
         //유니온 - 파인드로 묶어줄 로직
         int idx = 0;
-        final int size = list.size();
-        final Set<Integer> listeners = new HashSet<>();
+        final int size = meetings.length;
+        final Set<Integer> listeners = new HashSet<>(n);
         while (idx < size) {
-            final int time = list.get(idx)[2];
+            final int time = meetings[idx][2];
             listeners.clear();
 
             //같은 시간인 애들은 한번에 다 계산을 해야함
-            while (idx < size && time == list.get(idx)[2]) {
-                final int[] meeting = list.get(idx);
+            while (idx < size && time == meetings[idx][2]) {
+                final int[] meeting = meetings[idx];
                 final int parent0 = find(parents, meeting[0]);
                 final int parent1 = find(parents, meeting[1]);
                 if (parent0 != parent1) {//부모가 다르면
@@ -71,7 +68,7 @@ class Solution {
         }
 
         //제대로 비밀을 아는 사람을 구할 로직 -> 부모 같은 데, 그 부모가 비밀을 알고 있으면 모두 다 비밀을 안다.
-        final List<Integer> answer = new ArrayList<>();
+        final List<Integer> answer = new ArrayList<>(n);
         for (int man = 0; man < n; man++) {
             final int parent = find(parents, man);
             if (parent == 0) {
@@ -82,12 +79,8 @@ class Solution {
         return answer;
     }
 
-    private int find(final int[] parents, final int child) {
-        if (parents[child] == child) {
-            return parents[child];
-        }
-
-        parents[child] = find(parents, parents[child]);
-        return parents[child];
+    private int find(final int[] groups, int index) {
+        while (index != groups[index]) index = groups[index];
+        return index;
     }
 }
