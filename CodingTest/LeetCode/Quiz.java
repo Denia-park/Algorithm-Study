@@ -18,22 +18,12 @@ public class Quiz {
 
 class Solution {
     public boolean isSameTree(final TreeNode p, final TreeNode q) {
-        final String strP = inorder(p);
-        final String strQ = inorder(q);
+        if (p == null && q == null) return true;
+        if (p == null || q == null) return false;
 
-        return strP.equals(strQ);
-    }
-
-    private String inorder(final TreeNode p) {
-        if (p == null) {
-            return "";
-        }
-
-        final String sb = "l:" + inorder(p.left) +
-                "c:" + p.val + "," +
-                "r:" + inorder(p.right);
-
-        return sb;
+        return p.val == q.val
+                && isSameTree(p.left, q.left)
+                && isSameTree(p.right, q.right);
     }
 }
 
