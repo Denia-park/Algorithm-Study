@@ -1,59 +1,48 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-//        System.out.println(solution.isSameTree(
-//                new int[]{2, 3, 6}
-//        ));
-//        System.out.println(solution.isSameTree(
-//                new int[]{3, 9, 5}
-//        ));
-//        System.out.println(solution.isSameTree(
-//                new int[]{4, 3, 12, 8}
-//        ));
+        System.out.println(solution.commonChars(
+                new String[]{"bella", "label", "roller"}
+        ));
+        System.out.println(solution.commonChars(
+                new String[]{"cool", "lock", "cook"}
+        ));
     }
 }
 
 class Solution {
-    int answer;
+    public List<String> commonChars(final String[] words) {
+        final int[] chars = new int[26];
 
-    public int diameterOfBinaryTree(final TreeNode root) {
-        answer = -1;
-        checkHeight(root);
+        final int len = words.length;
+        for (final String word : words) {
+            final char[] temp = word.toCharArray();
 
-        return answer;
-    }
-
-    private int checkHeight(final TreeNode root) {
-        if (root == null) {
-            return 0;
+            for (final char c : temp) {
+                chars[c - 'a']++;
+            }
         }
 
-        final int leftVal = checkHeight(root.left);
-        final int rightVal = checkHeight(root.right);
-        answer = Math.max(answer, leftVal + rightVal);
+        final List<String> answer = new ArrayList<>();
 
-        return Math.max(leftVal, rightVal) + 1;
-    }
-}
+        for (int i = 0; i < chars.length; i++) {
+            final int val = chars[i];
 
-class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
+            final int div = val / len;
+            if (div > 0 && val % len == 0) {
+                for (int j = 0; j < div; j++) {
+                    final char c = (char) ('a' + i);
+                    answer.add(String.valueOf(c));
+                }
+            }
+        }
 
-    TreeNode() {
-    }
-
-    TreeNode(final int val) {
-        this.val = val;
-    }
-
-    TreeNode(final int val, final TreeNode left, final TreeNode right) {
-        this.val = val;
-        this.left = left;
-        this.right = right;
+        return answer;
     }
 }
