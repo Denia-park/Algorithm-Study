@@ -17,8 +17,12 @@ public class Quiz {
 }
 
 class Solution {
+    int answer;
+
     public int diameterOfBinaryTree(final TreeNode root) {
-        return checkHeight(root.left) + checkHeight(root.right);
+        answer = -1;
+
+        return Math.max(answer, checkHeight(root.left) + checkHeight(root.right));
     }
 
     private int checkHeight(final TreeNode root) {
@@ -26,7 +30,11 @@ class Solution {
             return 0;
         }
 
-        return Math.max(checkHeight(root.left), checkHeight(root.right)) + 1;
+        final int leftVal = checkHeight(root.left);
+        final int rightVal = checkHeight(root.right);
+        answer = Math.max(answer, leftVal + rightVal);
+
+        return Math.max(leftVal, rightVal) + 1;
     }
 }
 
