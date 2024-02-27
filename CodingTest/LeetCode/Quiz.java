@@ -1,6 +1,7 @@
 package CodingTest.LeetCode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Quiz {
@@ -19,13 +20,18 @@ public class Quiz {
 class Solution {
     public List<String> commonChars(final String[] words) {
         final int[] chars = new int[26];
-
-        final int len = words.length;
+        Arrays.fill(chars, Integer.MAX_VALUE);
+        
         for (final String word : words) {
             final char[] temp = word.toCharArray();
 
+            final int[] tempChars = new int[26];
             for (final char c : temp) {
-                chars[c - 'a']++;
+                tempChars[c - 'a']++;
+            }
+
+            for (int i = 0; i < 26; i++) {
+                chars[i] = Math.min(chars[i], tempChars[i]);
             }
         }
 
@@ -34,12 +40,8 @@ class Solution {
         for (int i = 0; i < chars.length; i++) {
             final int val = chars[i];
 
-            final int div = val / len;
-            if (div > 0 && val % len == 0) {
-                for (int j = 0; j < div; j++) {
-                    final char c = (char) ('a' + i);
-                    answer.add(String.valueOf(c));
-                }
+            for (int j = 0; j < val; j++) {
+                answer.add(String.valueOf((char) ('a' + i)));
             }
         }
 
