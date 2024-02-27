@@ -21,8 +21,9 @@ class Solution {
 
     public int diameterOfBinaryTree(final TreeNode root) {
         answer = -1;
+        checkHeight(root);
 
-        return Math.max(answer, checkHeight(root.left) + checkHeight(root.right));
+        return answer;
     }
 
     private int checkHeight(final TreeNode root) {
