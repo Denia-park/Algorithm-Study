@@ -17,13 +17,16 @@ public class Quiz {
 }
 
 class Solution {
-    public boolean isSameTree(final TreeNode p, final TreeNode q) {
-        if (p == null && q == null) return true;
-        if (p == null || q == null) return false;
+    public int diameterOfBinaryTree(final TreeNode root) {
+        return checkHeight(root.left) + checkHeight(root.right);
+    }
 
-        return p.val == q.val
-                && isSameTree(p.left, q.left)
-                && isSameTree(p.right, q.right);
+    private int checkHeight(final TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        return Math.max(checkHeight(root.left), checkHeight(root.right)) + 1;
     }
 }
 
