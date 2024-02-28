@@ -1,50 +1,61 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.commonChars(
-                new String[]{"bella", "label", "roller"}
-        ));
-        System.out.println(solution.commonChars(
-                new String[]{"cool", "lock", "cook"}
-        ));
+//        System.out.println(solution.findBottomLeftValue(
+//        ));
+//        System.out.println(solution.findBottomLeftValue(
+//        ));
     }
 }
 
 class Solution {
-    public List<String> commonChars(final String[] words) {
-        final int[] chars = new int[26];
-        Arrays.fill(chars, Integer.MAX_VALUE);
-        
-        for (final String word : words) {
-            final char[] temp = word.toCharArray();
 
-            final int[] tempChars = new int[26];
-            for (final char c : temp) {
-                tempChars[c - 'a']++;
-            }
+    private int depth;
+    private int answer;
 
-            for (int i = 0; i < 26; i++) {
-                chars[i] = Math.min(chars[i], tempChars[i]);
-            }
-        }
+    public int findBottomLeftValue(final TreeNode root) {
+        //preorder를 통해서 탐색을 하고, 새로운 depth를 갈 때마다 answer를 업데이트
+        depth = -1;
+        answer = 0;
 
-        final List<String> answer = new ArrayList<>();
-
-        for (int i = 0; i < chars.length; i++) {
-            final int val = chars[i];
-
-            for (int j = 0; j < val; j++) {
-                answer.add(String.valueOf((char) ('a' + i)));
-            }
-        }
+        checkLeftByInorder(root, 0);
 
         return answer;
+    }
+
+    private void checkLeftByInorder(final TreeNode root, final int curDepth) {
+        if (root == null) {
+            return;
+        }
+
+        if (curDepth > depth) {
+            depth = curDepth;
+            answer = root.val;
+        }
+
+        checkLeftByInorder(root.left, curDepth + 1);
+        checkLeftByInorder(root.right, curDepth + 1);
+    }
+}
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode() {
+    }
+
+    TreeNode(final int val) {
+        this.val = val;
+    }
+
+    TreeNode(final int val, final TreeNode left, final TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
     }
 }
