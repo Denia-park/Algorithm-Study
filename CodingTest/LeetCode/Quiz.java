@@ -1,43 +1,91 @@
 package CodingTest.LeetCode;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-//        System.out.println(solution.findBottomLeftValue(
+//        System.out.println(solution.isEvenOddTree(
 //        ));
-//        System.out.println(solution.findBottomLeftValue(
+//        System.out.println(solution.isEvenOddTree(
 //        ));
     }
 }
 
 class Solution {
 
-    private int depth;
-    private int answer;
+    private Map<Integer, Stack<Integer>> stackMap;
 
-    public int findBottomLeftValue(final TreeNode root) {
-        //preorder를 통해서 탐색을 하고, 새로운 depth를 갈 때마다 answer를 업데이트
-        depth = -1;
-        answer = 0;
+    public boolean isEvenOddTree(final TreeNode root) {
+        stackMap = new HashMap<>();
 
-        checkLeftByInorder(root, 0);
-
-        return answer;
+        return check(root, 0);
     }
 
-    private void checkLeftByInorder(final TreeNode root, final int curDepth) {
+    private boolean check(final TreeNode root, final int depth) {
+        //inorder로 순회
         if (root == null) {
-            return;
+            return true;
         }
 
-        if (curDepth > depth) {
-            depth = curDepth;
-            answer = root.val;
+        boolean answer;
+
+        answer = check(root.left, depth + 1);
+
+        if (depth != 0) {
+            //홀수
+            if (depth % 2 == 1) {
+                final int val = root.val;
+                //홀수이면, 문제
+                if (val % 2 == 1) {
+                    return false;
+                }
+
+                //짝수이면, 이전 값에 비해 감소하는지 비교하기.
+                final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
+                if (stack.isEmpty()) {
+                    stack.push(val);
+                } else {
+                    final int peek = stack.peek();
+                    if (peek <= val) {
+                        return false;
+                    }
+
+                    stack.push(val);
+                }
+                stackMap.put(depth, stack);
+            }
+
+            //짝수
+            else if (depth % 2 == 0) {
+                final int val = root.val;
+                //짝수이면, 문제
+                if (val % 2 == 0) {
+                    return false;
+                }
+
+                //홀수이면, 이전 값에 비해 증가하는지 비교하기.
+                final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
+                if (stack.isEmpty()) {
+                    stack.push(val);
+                } else {
+                    final int peek = stack.peek();
+                    if (peek >= val) {
+                        return false;
+                    }
+
+                    stack.push(val);
+                }
+                stackMap.put(depth, stack);
+            }
         }
 
-        checkLeftByInorder(root.left, curDepth + 1);
-        checkLeftByInorder(root.right, curDepth + 1);
+        answer = answer && check(root.right, depth + 1);
+
+        return answer;
     }
 }
 
