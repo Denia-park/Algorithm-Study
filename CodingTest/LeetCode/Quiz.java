@@ -35,52 +35,50 @@ class Solution {
 
         answer = check(root.left, depth + 1);
 
-        if (depth != 0) {
-            //홀수
-            if (depth % 2 == 1) {
-                final int val = root.val;
-                //홀수이면, 문제
-                if (val % 2 == 1) {
+        //홀수
+        if (depth % 2 == 1) {
+            final int val = root.val;
+            //홀수이면, 문제
+            if (val % 2 == 1) {
+                return false;
+            }
+
+            //짝수이면, 이전 값에 비해 감소하는지 비교하기.
+            final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
+            if (stack.isEmpty()) {
+                stack.push(val);
+            } else {
+                final int peek = stack.peek();
+                if (peek <= val) {
                     return false;
                 }
 
-                //짝수이면, 이전 값에 비해 감소하는지 비교하기.
-                final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
-                if (stack.isEmpty()) {
-                    stack.push(val);
-                } else {
-                    final int peek = stack.peek();
-                    if (peek <= val) {
-                        return false;
-                    }
+                stack.push(val);
+            }
+            stackMap.put(depth, stack);
+        }
 
-                    stack.push(val);
-                }
-                stackMap.put(depth, stack);
+        //짝수
+        else if (depth % 2 == 0) {
+            final int val = root.val;
+            //짝수이면, 문제
+            if (val % 2 == 0) {
+                return false;
             }
 
-            //짝수
-            else if (depth % 2 == 0) {
-                final int val = root.val;
-                //짝수이면, 문제
-                if (val % 2 == 0) {
+            //홀수이면, 이전 값에 비해 증가하는지 비교하기.
+            final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
+            if (stack.isEmpty()) {
+                stack.push(val);
+            } else {
+                final int peek = stack.peek();
+                if (peek >= val) {
                     return false;
                 }
 
-                //홀수이면, 이전 값에 비해 증가하는지 비교하기.
-                final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
-                if (stack.isEmpty()) {
-                    stack.push(val);
-                } else {
-                    final int peek = stack.peek();
-                    if (peek >= val) {
-                        return false;
-                    }
-
-                    stack.push(val);
-                }
-                stackMap.put(depth, stack);
+                stack.push(val);
             }
+            stackMap.put(depth, stack);
         }
 
         answer = answer && check(root.right, depth + 1);
