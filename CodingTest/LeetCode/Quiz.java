@@ -1,8 +1,7 @@
 package CodingTest.LeetCode;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -16,74 +15,45 @@ public class Quiz {
 }
 
 class Solution {
-
-    private Map<Integer, Stack<Integer>> stackMap;
-
     public boolean isEvenOddTree(final TreeNode root) {
-        stackMap = new HashMap<>();
+        final Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode current = root;
+        queue.add(current);
 
-        return check(root, 0);
-    }
+        boolean even = true;
 
-    private boolean check(final TreeNode root, final int depth) {
-        //inorder로 순회
-        if (root == null) {
-            return true;
-        }
+        while (!queue.isEmpty()) {
+            int size = queue.size();
 
-        boolean answer;
-
-        answer = check(root.left, depth + 1);
-
-        //홀수
-        if (depth % 2 == 1) {
-            final int val = root.val;
-            //홀수이면, 문제
-            if (val % 2 == 1) {
-                return false;
+            int prev = Integer.MAX_VALUE;
+            if (even) {
+                prev = Integer.MIN_VALUE;
             }
 
-            //짝수이면, 이전 값에 비해 감소하는지 비교하기.
-            final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
-            if (stack.isEmpty()) {
-                stack.push(val);
-            } else {
-                final int peek = stack.peek();
-                if (peek <= val) {
+            while (size > 0) {
+                current = queue.poll();
+
+                if ((even && (current.val % 2 == 0 || current.val <= prev))
+                        || !even && (current.val % 2 == 1 || current.val >= prev)) {
                     return false;
                 }
 
-                stack.push(val);
-            }
-            stackMap.put(depth, stack);
-        }
-
-        //짝수
-        else if (depth % 2 == 0) {
-            final int val = root.val;
-            //짝수이면, 문제
-            if (val % 2 == 0) {
-                return false;
-            }
-
-            //홀수이면, 이전 값에 비해 증가하는지 비교하기.
-            final Stack<Integer> stack = stackMap.getOrDefault(depth, new Stack<>());
-            if (stack.isEmpty()) {
-                stack.push(val);
-            } else {
-                final int peek = stack.peek();
-                if (peek >= val) {
-                    return false;
+                prev = current.val;
+                if (current.left != null) {
+                    queue.add(current.left);
                 }
 
-                stack.push(val);
+                if (current.right != null) {
+                    queue.add(current.right);
+                }
+
+                size--;
             }
-            stackMap.put(depth, stack);
+
+            even = !even;
         }
 
-        answer = answer && check(root.right, depth + 1);
-
-        return answer;
+        return true;
     }
 }
 
