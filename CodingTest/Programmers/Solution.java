@@ -12,7 +12,7 @@ class Solution {
 
         //이분 탐색을 통해 모두 처리가 가능한 시간을 구하자
         long l = 1;
-        long r = 10000L * (restWork / cores.length);
+        long r = 10000L * restWork / cores.length;
         while (l <= r) {
             final long mid = l + ((r - l) / 2);
 
