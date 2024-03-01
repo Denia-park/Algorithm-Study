@@ -13,16 +13,12 @@ class Solution {
             pq.add(new Core(i + 1, cores[i]));
         }
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n - 1; i++) {
             final Core core = pq.poll();
 
             core.endTime += core.spend;
 
             pq.add(core);
-        }
-
-        while (pq.size() != 1) {
-            pq.poll();
         }
 
         return pq.poll().idx;
