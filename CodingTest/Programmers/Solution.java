@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 class Solution {
     public int solution(final int n, final int[] cores) {
         final PriorityQueue<Core> pq = new PriorityQueue<>(
-                Comparator.comparingInt((Core c) -> c.endTime).thenComparingInt((Core c) -> c.idx)
+                Comparator.comparingLong((Core c) -> c.endTime).thenComparingInt((Core c) -> c.idx)
         );
 
         for (int i = 0; i < cores.length; i++) {
@@ -30,7 +30,7 @@ class Solution {
 
     class Core {
         int idx;
-        int endTime;
+        long endTime;
         int spend;
 
         public Core(final int idx, final int spend) {
