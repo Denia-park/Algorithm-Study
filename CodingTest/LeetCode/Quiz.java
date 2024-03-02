@@ -4,32 +4,38 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.maximumOddBinaryNumber(
-                "010"
+        System.out.println(solution.sortedSquares(
+                new int[]{-4, -1, 0, 3, 10}
         ));
-        System.out.println(solution.maximumOddBinaryNumber(
-                "0101"
+        System.out.println(solution.sortedSquares(
+                new int[]{-7, -3, 2, 3, 11}
         ));
     }
 }
 
 class Solution {
-    public String maximumOddBinaryNumber(final String s) {
-        int one = 0;
-        int zero = 0;
+    public int[] sortedSquares(final int[] nums) {
+        final int length = nums.length;
+        int left = 0;
+        int right = length - 1;
 
-        final char[] chars = s.toCharArray();
-        final int length = chars.length;
-        for (int i = 0; i < length; i++) {
-            final char c = chars[i];
+        int idx = length - 1;
+        final int[] answer = new int[length];
 
-            if (c == '0') {
-                zero++;
+        while (left <= right) {
+            final int lVal = Math.abs(nums[left]);
+            final int rVal = Math.abs(nums[right]);
+
+            if (lVal > rVal) {
+                answer[idx] = lVal * lVal;
+                left++;
             } else {
-                one++;
+                answer[idx] = rVal * rVal;
+                right--;
             }
+            idx--;
         }
 
-        return "1".repeat(one - 1) + "0".repeat(zero) + "1";
+        return answer;
     }
 }
