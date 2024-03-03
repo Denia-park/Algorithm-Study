@@ -1,41 +1,67 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.sortedSquares(
-                new int[]{-4, -1, 0, 3, 10}
-        ));
-        System.out.println(solution.sortedSquares(
-                new int[]{-7, -3, 2, 3, 11}
-        ));
+//        System.out.println(solution.removeNthFromEnd(
+//                new int[]{1, 2, 3, 4, 5}, 2
+//        ));
+//        System.out.println(solution.removeNthFromEnd(
+//                new int[]{1}, 1
+//        ));
+//        System.out.println(solution.removeNthFromEnd(
+//                new int[]{1, 2}, 1
+//        ));
     }
 }
 
 class Solution {
-    public int[] sortedSquares(final int[] nums) {
-        final int length = nums.length;
-        int left = 0;
-        int right = length - 1;
+    public ListNode removeNthFromEnd(final ListNode head, final int n) {
+        final List<ListNode> nodes = new ArrayList<>();
 
-        int idx = length - 1;
-        final int[] answer = new int[length];
-
-        while (left <= right) {
-            final int lVal = Math.abs(nums[left]);
-            final int rVal = Math.abs(nums[right]);
-
-            if (lVal > rVal) {
-                answer[idx] = lVal * lVal;
-                left++;
-            } else {
-                answer[idx] = rVal * rVal;
-                right--;
-            }
-            idx--;
+        int size = 0;
+        ListNode cur = head;
+        while (cur != null) {
+            nodes.add(cur);
+            cur = cur.next;
+            size++;
         }
 
-        return answer;
+        final int preIdx = size - n - 1;
+        if (preIdx < 0) {
+            return head.next;
+        }
+        final ListNode preNode = nodes.get(preIdx);
+
+        final int postIdx = size - n + 1;
+        ListNode postNode = null;
+        if (postIdx < size) {
+            postNode = nodes.get(postIdx);
+        }
+
+        preNode.next = postNode;
+
+        return head;
+    }
+}
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode() {
+    }
+
+    ListNode(final int val) {
+        this.val = val;
+    }
+
+    ListNode(final int val, final ListNode next) {
+        this.val = val;
+        this.next = next;
     }
 }
