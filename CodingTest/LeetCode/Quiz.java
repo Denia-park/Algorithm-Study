@@ -37,13 +37,9 @@ class Solution {
         }
         final ListNode preNode = nodes.get(preIdx);
 
-        final int postIdx = size - n + 1;
-        ListNode postNode = null;
-        if (postIdx < size) {
-            postNode = nodes.get(postIdx);
-        }
+        final ListNode deleteNode = nodes.get(size - n);
 
-        preNode.next = postNode;
+        preNode.next = deleteNode.next;
 
         return head;
     }
