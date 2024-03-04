@@ -25,7 +25,8 @@ class Solution {
 
             dq.addLast(data);
 
-            if (i >= k) {
+            //k-1 번째부터 슬라이딩 윈도우의 크기가 Max이므로 해당 값 중에 최소 값을 구한다.
+            if (i >= (k - 1)) {
                 answer = Math.min(answer, dq.peekFirst().val);
             }
         }
