@@ -1,63 +1,60 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-//        System.out.println(solution.removeNthFromEnd(
-//                new int[]{1, 2, 3, 4, 5}, 2
-//        ));
-//        System.out.println(solution.removeNthFromEnd(
-//                new int[]{1}, 1
-//        ));
-//        System.out.println(solution.removeNthFromEnd(
-//                new int[]{1, 2}, 1
-//        ));
+        System.out.println(solution.bagOfTokensScore(
+                new int[]{100}, 50
+        ));
+        System.out.println(solution.bagOfTokensScore(
+                new int[]{200, 100}, 150
+        ));
+        System.out.println(solution.bagOfTokensScore(
+                new int[]{100, 200, 300, 400}, 200
+        ));
     }
 }
 
 class Solution {
-    public ListNode removeNthFromEnd(final ListNode head, final int n) {
-        final List<ListNode> nodes = new ArrayList<>();
+    public int bagOfTokensScore(final int[] tokens, final int power) {
+        //tokens를 정렬
+        Arrays.sort(tokens);
 
-        int size = 0;
-        ListNode cur = head;
-        while (cur != null) {
-            nodes.add(cur);
-            cur = cur.next;
-            size++;
+        int start = 0;
+        int end = tokens.length - 1;
+
+        int curPower = power;
+        int curScore = 0;
+
+        int maxScore = curScore;
+
+        while (start <= end) {
+            final int startVal = tokens[start];
+            final int endVal = tokens[end];
+
+            if (curPower >= startVal) {
+                curPower -= startVal;
+                curScore++;
+
+                maxScore = Math.max(maxScore, curScore);
+                start++;
+                continue;
+            }
+
+            if (curScore > 0) {
+                curScore--;
+
+                curPower += endVal;
+                end--;
+                continue;
+            }
+
+            break;
         }
 
-        final int preIdx = size - n - 1;
-        if (preIdx < 0) {
-            return head.next;
-        }
-        final ListNode preNode = nodes.get(preIdx);
-
-        final ListNode deleteNode = nodes.get(size - n);
-
-        preNode.next = deleteNode.next;
-
-        return head;
-    }
-}
-
-class ListNode {
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(final int val) {
-        this.val = val;
-    }
-
-    ListNode(final int val, final ListNode next) {
-        this.val = val;
-        this.next = next;
+        return maxScore;
     }
 }
