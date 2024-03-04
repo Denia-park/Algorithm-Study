@@ -1,52 +1,46 @@
 package CodingTest.Programmers;
 
+//이분 탐색으로 풀어보기
 class Solution {
-    public int solution(final int n, final int[] cores) {
-        if (n <= cores.length) {
-            return n;
-        }
+    public int solution(final int[] stones, final int k) {
+        int answer = 1;
 
-        final int restWork = n - cores.length;
+        int s = 1; //최소 인원
+        int e = 200_000_000; //최대 인원
 
-        long minTime = Long.MAX_VALUE;
+        while (s <= e) {
+            final int m = s + ((e - s) / 2);
 
-        //이분 탐색을 통해 모두 처리가 가능한 시간을 구하자
-        long l = 1;
-        long r = 10000L * restWork / cores.length;
-        while (l <= r) {
-            final long mid = l + ((r - l) / 2);
+            //m명의 인원이면 해당 징검다리를 통과할 수 있나?
+            if (isPossible(stones, m, k)) {
+                answer = Math.max(answer, m);
 
-            final int work = calculate(mid, cores);
-
-            if (work >= restWork) {
-                minTime = Math.min(minTime, mid);
-                r = mid - 1;
+                //가능하면 최소 인원 늘리기
+                s = m + 1;
             } else {
-                l = mid + 1;
+                //불가능하면 최대 인원 줄이기
+                e = m - 1;
             }
         }
 
-        final int finishedWork = calculate(minTime - 1, cores);
-        int lastRestWork = restWork - finishedWork;
-
-        int idx = 0;
-        while (lastRestWork > 0) {
-            if (minTime % cores[idx] == 0) {
-                lastRestWork--;
-            }
-            idx++;
-        }
-
-        return idx;
+        return answer;
     }
 
-    private int calculate(final long mid, final int[] cores) {
+    private boolean isPossible(final int[] stones, final int m, final int limit) {
         int count = 0;
 
-        for (final int core : cores) {
-            count += (int) (mid / core);
+        for (final int stone : stones) {
+            if (stone - m <= 0) {
+                count++;
+            } else {
+                count = 0;
+            }
+
+            if (count > limit) {
+                return false;
+            }
         }
 
-        return count;
+        return true;
     }
 }
