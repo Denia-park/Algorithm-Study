@@ -1,60 +1,50 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.bagOfTokensScore(
-                new int[]{100}, 50
-        ));
-        System.out.println(solution.bagOfTokensScore(
-                new int[]{200, 100}, 150
-        ));
-        System.out.println(solution.bagOfTokensScore(
-                new int[]{100, 200, 300, 400}, 200
-        ));
+        System.out.println(solution.minimumLength("ca"));
+        System.out.println(solution.minimumLength("cabaabac"));
+        System.out.println(solution.minimumLength("aabccabba"));
+        System.out.println(solution.minimumLength("bbbbbbbbbbbbbbbbbbb"));
     }
 }
 
 class Solution {
-    public int bagOfTokensScore(final int[] tokens, final int power) {
-        //tokens를 정렬
-        Arrays.sort(tokens);
+    public int minimumLength(final String s) {
+        final char[] chars = s.toCharArray();
 
         int start = 0;
-        int end = tokens.length - 1;
+        int end = s.length() - 1;
 
-        int curPower = power;
-        int curScore = 0;
+        String str = s;
+        while (!str.isEmpty() && start < end) {
+//            System.out.println(str);
 
-        int maxScore = curScore;
+            int tempS = start;
 
-        while (start <= end) {
-            final int startVal = tokens[start];
-            final int endVal = tokens[end];
-
-            if (curPower >= startVal) {
-                curPower -= startVal;
-                curScore++;
-
-                maxScore = Math.max(maxScore, curScore);
-                start++;
-                continue;
+            while (chars[tempS] == chars[start]) {
+                tempS++;
             }
 
-            if (curScore > 0) {
-                curScore--;
+            int tempE = end;
+            while (tempS <= tempE && chars[tempE] == chars[end]) {
+                tempE--;
+            }
 
-                curPower += endVal;
-                end--;
+//            System.out.println(start + " : " + end);
+
+            if (chars[start] == chars[end]) {
+                str = s.substring(tempS, tempE + 1);
+                start = tempS;
+                end = tempE;
                 continue;
             }
 
             break;
         }
 
-        return maxScore;
+        return str.length();
     }
 }
