@@ -24,7 +24,7 @@ class Solution {
 
             int tempS = start;
 
-            while (chars[tempS] == chars[start]) {
+            while (tempS < s.length() && chars[tempS] == chars[start]) {
                 tempS++;
             }
 
