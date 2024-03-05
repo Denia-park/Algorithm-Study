@@ -18,33 +18,22 @@ class Solution {
         int start = 0;
         int end = s.length() - 1;
 
-        String str = s;
-        while (!str.isEmpty() && start < end) {
-//            System.out.println(str);
-
-            int tempS = start;
-
-            while (tempS < s.length() && chars[tempS] == chars[start]) {
-                tempS++;
+        while (start < end) {
+            if (chars[start] != chars[end]) {
+                break;
             }
 
-            int tempE = end;
-            while (tempS <= tempE && chars[tempE] == chars[end]) {
-                tempE--;
+            final char ch = chars[start];
+
+            while (start <= end && chars[start] == ch) {
+                start++;
             }
 
-//            System.out.println(start + " : " + end);
-
-            if (chars[start] == chars[end]) {
-                str = s.substring(tempS, tempE + 1);
-                start = tempS;
-                end = tempE;
-                continue;
+            while (start < end && chars[end] == ch) {
+                end--;
             }
-
-            break;
         }
 
-        return str.length();
+        return end - start + 1;
     }
 }
