@@ -19,7 +19,7 @@ class Solution {
 
         while (cur != null && !isVisited.contains(cur)) {
             isVisited.add(cur);
-            cur = head.next;
+            cur = cur.next;
         }
 
         return cur != null;
