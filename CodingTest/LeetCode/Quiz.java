@@ -1,39 +1,37 @@
 package CodingTest.LeetCode;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.minimumLength("ca"));
-        System.out.println(solution.minimumLength("cabaabac"));
-        System.out.println(solution.minimumLength("aabccabba"));
-        System.out.println(solution.minimumLength("bbbbbbbbbbbbbbbbbbb"));
+//        System.out.println(solution.hasCycle("ca"));
     }
 }
 
 class Solution {
-    public int minimumLength(final String s) {
-        final char[] chars = s.toCharArray();
+    public boolean hasCycle(final ListNode head) {
+        final Set<ListNode> isVisited = new HashSet<>();
 
-        int start = 0;
-        int end = s.length() - 1;
+        ListNode cur = head;
 
-        while (start < end) {
-            if (chars[start] != chars[end]) {
-                break;
-            }
-
-            final char ch = chars[start];
-
-            while (start <= end && chars[start] == ch) {
-                start++;
-            }
-
-            while (start < end && chars[end] == ch) {
-                end--;
-            }
+        while (cur != null && !isVisited.contains(cur)) {
+            isVisited.add(cur);
+            cur = head.next;
         }
 
-        return end - start + 1;
+        return cur != null;
+    }
+}
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(final int x) {
+        val = x;
+        next = null;
     }
 }
