@@ -1,8 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -13,16 +10,17 @@ public class Quiz {
 
 class Solution {
     public boolean hasCycle(final ListNode head) {
-        final Set<ListNode> isVisited = new HashSet<>();
-
         ListNode cur = head;
+        ListNode fast = head;
 
-        while (cur != null && !isVisited.contains(cur)) {
-            isVisited.add(cur);
+        while (fast != null && fast.next != null) {
             cur = cur.next;
+            fast = fast.next.next;
+
+            if (cur == fast) return true;
         }
 
-        return cur != null;
+        return false;
     }
 }
 
