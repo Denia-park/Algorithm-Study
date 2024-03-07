@@ -1,26 +1,28 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-//        System.out.println(solution.hasCycle("ca"));
+//        System.out.println(solution.middleNode("ca"));
     }
 }
 
 class Solution {
-    public boolean hasCycle(final ListNode head) {
+    public ListNode middleNode(final ListNode head) {
+        final List<ListNode> save = new ArrayList<>();
+
         ListNode cur = head;
-        ListNode fast = head;
 
-        while (fast != null && fast.next != null) {
+        while (cur != null) {
+            save.add(cur);
             cur = cur.next;
-            fast = fast.next.next;
-
-            if (cur == fast) return true;
         }
 
-        return false;
+        return save.get(save.size() / 2);
     }
 }
 
