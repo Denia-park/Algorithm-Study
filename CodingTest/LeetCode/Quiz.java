@@ -35,7 +35,7 @@ class Solution {
             final int cur = pq.poll();
 
             if (cur != max) {
-                continue;
+                break;
             }
 
             sum += cur;
