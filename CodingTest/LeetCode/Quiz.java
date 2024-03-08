@@ -1,37 +1,46 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-//        System.out.println(solution.middleNode("ca"));
+        System.out.println(solution.maxFrequencyElements(new int[]{1, 2, 2, 3, 1, 4}));
+        System.out.println(solution.maxFrequencyElements(new int[]{1, 2, 3, 4, 5}));
     }
 }
 
 class Solution {
-    public ListNode middleNode(final ListNode head) {
-        final List<ListNode> save = new ArrayList<>();
+    public int maxFrequencyElements(final int[] nums) {
+        final PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
 
-        ListNode cur = head;
-
-        while (cur != null) {
-            save.add(cur);
-            cur = cur.next;
+        final int[] arr = new int[101];
+        for (final int num : nums) {
+            arr[num]++;
         }
 
-        return save.get(save.size() / 2);
-    }
-}
+        for (final int count : arr) {
+            if (count == 0) {
+                continue;
+            }
 
-class ListNode {
-    int val;
-    ListNode next;
+            pq.add(count);
+        }
 
-    ListNode(final int x) {
-        val = x;
-        next = null;
+        int sum = 0;
+        final int max = pq.peek();
+        while (!pq.isEmpty()) {
+            final int cur = pq.poll();
+
+            if (cur != max) {
+                continue;
+            }
+
+            sum += cur;
+        }
+
+        return sum;
     }
 }
