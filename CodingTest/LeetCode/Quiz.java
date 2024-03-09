@@ -1,46 +1,36 @@
 package CodingTest.LeetCode;
 
-import java.util.Comparator;
-import java.util.PriorityQueue;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.maxFrequencyElements(new int[]{1, 2, 2, 3, 1, 4}));
-        System.out.println(solution.maxFrequencyElements(new int[]{1, 2, 3, 4, 5}));
+        System.out.println(solution.getCommon(new int[]{1, 2, 3}, new int[]{2, 4}));
+        System.out.println(solution.getCommon(new int[]{1, 2, 3, 6}, new int[]{2, 3, 4, 5}));
     }
 }
 
 class Solution {
-    public int maxFrequencyElements(final int[] nums) {
-        final PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
+    public int getCommon(final int[] nums1, final int[] nums2) {
+        final int answer = -1;
 
-        final int[] arr = new int[101];
-        for (final int num : nums) {
-            arr[num]++;
-        }
+        int idx1 = 0;
+        int idx2 = 0;
 
-        for (final int count : arr) {
-            if (count == 0) {
-                continue;
+        while (idx1 < nums1.length && idx2 < nums2.length) {
+            final int val1 = nums1[idx1];
+            final int val2 = nums2[idx2];
+
+            if (val1 == val2) {
+                return val1;
             }
 
-            pq.add(count);
-        }
-
-        int sum = 0;
-        final int max = pq.peek();
-        while (!pq.isEmpty()) {
-            final int cur = pq.poll();
-
-            if (cur != max) {
-                break;
+            if (val1 < val2) {
+                idx1++;
+            } else {
+                idx2++;
             }
-
-            sum += cur;
         }
 
-        return sum;
+        return answer;
     }
 }
