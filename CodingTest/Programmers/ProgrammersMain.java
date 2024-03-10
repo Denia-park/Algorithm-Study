@@ -11,6 +11,7 @@ public class ProgrammersMain {
         System.out.println((Arrays.toString(ts.solution(new String[]{"UPDATE 1 1 apple", "MERGE 1 1 2 2", "MERGE 2 2 3 3", "UNMERGE 1 1", "UNMERGE 2 2", "PRINT 1 1", "PRINT 2 2", "PRINT 3 3"}))));
         System.out.println((Arrays.toString(ts.solution(new String[]{"MERGE 1 1 2 2", "MERGE 1 1 3 3", "UPDATE 3 3 A", "PRINT 1 1", "PRINT 2 2", "PRINT 3 3"}))));
         System.out.println((Arrays.toString(ts.solution(new String[]{"UPDATE 1 1 A", "UPDATE 2 2 B", "UPDATE 3 3 C", "UPDATE 4 4 D", "MERGE 1 1 2 2", "MERGE 3 3 4 4", "MERGE 1 1 3 3", "UNMERGE 1 1", "PRINT 1 1", "PRINT 2 2", "PRINT 3 3", "PRINT 4 4"}))));
+        System.out.println((Arrays.toString(ts.solution(new String[]{"MERGE 1 1 2 2", "UPDATE 1 1 A", "UNMERGE 1 1", "PRINT 1 1", "PRINT 2 2"}))));
     }
 }
 
