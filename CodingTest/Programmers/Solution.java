@@ -58,14 +58,16 @@ class Solution {
                     continue;
                 }
 
-                String saveVal = table[convert1];
-                if (table[convert1] == null && table[convert2] != null) {
-                    saveVal = table[convert2];
+                final int parent1 = getParent(parents, convert1);
+                final int parent2 = getParent(parents, convert2);
+
+                String saveVal = table[parent1];
+                if (table[parent1] == null && table[parent2] != null) {
+                    saveVal = table[parent2];
                 }
 
-                union(parents, convert1, convert2);
-                final int parent = getParent(parents, convert1);
-                table[parent] = saveVal;
+                final int unionParent = union(parents, convert1, convert2);
+                table[unionParent] = saveVal;
             } else if (com.equals("UNMERGE")) {
                 final int row = Integer.parseInt(split[1]);
                 final int col = Integer.parseInt(split[2]);
@@ -94,11 +96,14 @@ class Solution {
         return answer.toArray(String[]::new);
     }
 
-    private void union(final int[] parents, final int convert1, final int convert2) {
+    private int union(final int[] parents, final int convert1, final int convert2) {
         final int parent1 = getParent(parents, convert1);
         final int parent2 = getParent(parents, convert2);
 
-        parents[Math.max(parent1, parent2)] = Math.min(parent1, parent2);
+        final int min = Math.min(parent1, parent2);
+        parents[Math.max(parent1, parent2)] = min;
+
+        return min;
     }
 
     private int getParent(final int[] parents, final int idx) {
