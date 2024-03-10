@@ -72,7 +72,7 @@ class Solution {
                 final int row = Integer.parseInt(split[1]);
                 final int col = Integer.parseInt(split[2]);
                 final int convert = convert(row, col);
-                final int parent = getParent(parents, convert);
+                int parent = getParent(parents, convert);
                 final String saveVal = table[parent];
 
                 for (int i = 0; i < 51 * 51; i++) {
@@ -82,7 +82,8 @@ class Solution {
                     }
                 }
 
-                table[convert] = saveVal;
+                parent = getParent(parents, convert);
+                table[parent] = saveVal;
             } else if (com.equals("PRINT")) {
                 final int row = Integer.parseInt(split[1]);
                 final int col = Integer.parseInt(split[2]);
