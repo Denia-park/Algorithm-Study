@@ -1,8 +1,6 @@
 package CodingTest.LeetCode;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -23,13 +21,19 @@ class Solution {
         final int len1 = nums1.length;
         final int len2 = nums2.length;
 
-        final Set<Integer> list = new HashSet<>();
+        final int[] arr = new int[1000];
+
+        int count = 0;
         while (idx1 < len1 && idx2 < len2) {
             final int val1 = nums1[idx1];
             final int val2 = nums2[idx2];
 
             if (val1 == val2) {
-                list.add(val1);
+                if (arr[val1] == 0) {
+                    arr[val1]++;
+                    count++;
+                }
+
                 idx1++;
                 idx2++;
             } else if (val1 < val2) {
@@ -39,8 +43,17 @@ class Solution {
             }
         }
 
-        return list.stream()
-                .mapToInt(i -> i)
-                .toArray();
+        final int[] temp = new int[count];
+        int countIdx = 0;
+        for (int i = 0; i < arr.length; i++) {
+            final int val = arr[i];
+            if (val == 0) {
+                continue;
+            }
+
+            temp[countIdx++] = i;
+        }
+
+        return temp;
     }
 }
