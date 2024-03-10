@@ -75,17 +75,15 @@ class Solution {
                 final int parent = getParent(parents, convert);
                 final String saveVal = table[parent];
 
-                final List<Integer> resets = new ArrayList<>();
-
                 for (int i = 0; i < 51 * 51; i++) {
-                    if (parent == getParent(parents, i)) {
-                        resets.add(i);
-                    }
+                    getParent(parents, i);
                 }
 
-                for (final Integer idx : resets) {
-                    parents[idx] = idx;
-                    table[idx] = null;
+                for (int i = 0; i < 51 * 51; i++) {
+                    if (parents[i] == parent) {
+                        parents[i] = i;
+                        table[i] = null;
+                    }
                 }
 
                 table[convert] = saveVal;
