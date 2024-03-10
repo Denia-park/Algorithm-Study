@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
+    private static final int TOTAL_SIZE = 51 * 51;
+
     public String[] solution(final String[] commands) {
         final List<String> answer = new ArrayList<>();
 
-        final String[] table = new String[51 * 51];
-        final int[] parents = new int[51 * 51];
-        for (int i = 0; i < 51 * 51; i++) {
+        final String[] table = new String[TOTAL_SIZE];
+        final int[] parents = new int[TOTAL_SIZE];
+        for (int i = 0; i < TOTAL_SIZE; i++) {
             parents[i] = i;
         }
 
@@ -19,40 +21,25 @@ class Solution {
 
             final String com = split[0];
 
-            if (com.equals("UPDATE")) {
+            if (com.equals("UPDATE") && len == 4) {
                 //값 입력
-                if (len == 4) {
-                    final int row = Integer.parseInt(split[1]);
-                    final int col = Integer.parseInt(split[2]);
-                    final int parent = getParent(parents, convert(row, col));
-                    table[parent] = split[3];
-                }
-                //값 변경
-                else if (len == 3) {
-                    final String value1 = split[1];
-                    final String value2 = split[2];
+                final int parent = getParentByRowCol(parents, split[1], split[2]);
+                table[parent] = split[3];
+            } else if (com.equals("UPDATE") && len == 3) {
+                //값 수정
 
-                    for (int row = 0; row < 51; row++) {
-                        for (int col = 0; col < 51; col++) {
-                            final int parent = getParent(parents, convert(row, col));
-
-                            if (table[parent] == null) {
-                                continue;
-                            }
-
-                            if (table[parent].equals(value1)) {
-                                table[parent] = value2;
-                            }
-                        }
+                for (int idx = 0; idx < TOTAL_SIZE; idx++) {
+                    if (table[idx] != null && table[idx].equals(split[1])) {
+                        table[idx] = split[2];
                     }
                 }
             } else if (com.equals("MERGE")) {
                 final int row1 = Integer.parseInt(split[1]);
                 final int col1 = Integer.parseInt(split[2]);
-                final int convert1 = convert(row1, col1);
+                final int convert1 = getIdxByRowCol(row1, col1);
                 final int row2 = Integer.parseInt(split[3]);
                 final int col2 = Integer.parseInt(split[4]);
-                final int convert2 = convert(row2, col2);
+                final int convert2 = getIdxByRowCol(row2, col2);
 
                 if (convert1 == convert2) {
                     continue;
@@ -71,15 +58,15 @@ class Solution {
             } else if (com.equals("UNMERGE")) {
                 final int row = Integer.parseInt(split[1]);
                 final int col = Integer.parseInt(split[2]);
-                final int convert = convert(row, col);
+                final int convert = getIdxByRowCol(row, col);
                 final int parent = getParent(parents, convert);
                 final String saveVal = table[parent];
 
-                for (int i = 0; i < 51 * 51; i++) {
+                for (int i = 0; i < TOTAL_SIZE; i++) {
                     getParent(parents, i);
                 }
 
-                for (int i = 0; i < 51 * 51; i++) {
+                for (int i = 0; i < TOTAL_SIZE; i++) {
                     if (parents[i] == parent) {
                         parents[i] = i;
                         table[i] = null;
@@ -90,7 +77,7 @@ class Solution {
             } else if (com.equals("PRINT")) {
                 final int row = Integer.parseInt(split[1]);
                 final int col = Integer.parseInt(split[2]);
-                final int parent = getParent(parents, convert(row, col));
+                final int parent = getParent(parents, getIdxByRowCol(row, col));
                 final String val = table[parent];
 
                 answer.add(val == null ? "EMPTY" : val);
@@ -110,6 +97,18 @@ class Solution {
         return min;
     }
 
+
+    private int getParentByRowCol(final int[] parents, final String rowStr, final String colStr) {
+        final int row = Integer.parseInt(rowStr);
+        final int col = Integer.parseInt(colStr);
+
+        return getParent(parents, getIdxByRowCol(row, col));
+    }
+
+    private int getIdxByRowCol(final int row, final int col) {
+        return 50 * row + col;
+    }
+
     private int getParent(final int[] parents, final int idx) {
         if (parents[idx] == idx) {
             return idx;
@@ -118,9 +117,5 @@ class Solution {
         parents[idx] = getParent(parents, parents[idx]);
 
         return parents[idx];
-    }
-
-    private int convert(final int row, final int col) {
-        return 50 * row + col;
     }
 }
