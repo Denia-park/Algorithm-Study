@@ -1,59 +1,47 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.intersection(new int[]{1, 2, 2, 1}, new int[]{2, 2}));
-        System.out.println(solution.intersection(new int[]{4, 9, 5}, new int[]{9, 4, 9, 8, 4}));
+        System.out.println(solution.customSortString("cba", "abcd"));
+        System.out.println(solution.customSortString("bcafg", "abcd"));
     }
 }
 
 class Solution {
-    public int[] intersection(final int[] nums1, final int[] nums2) {
-        Arrays.sort(nums1);
-        Arrays.sort(nums2);
+    public String customSortString(final String order, final String s) {
+        final int[] chars = new int[26];
+        Arrays.fill(chars, 100);
 
-        int idx1 = 0;
-        int idx2 = 0;
-        final int len1 = nums1.length;
-        final int len2 = nums2.length;
+        final char[] charArray = order.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            final int ch = charArray[i] - 'a';
 
-        final int[] arr = new int[1000];
-
-        int count = 0;
-        while (idx1 < len1 && idx2 < len2) {
-            final int val1 = nums1[idx1];
-            final int val2 = nums2[idx2];
-
-            if (val1 == val2) {
-                if (arr[val1] == 0) {
-                    arr[val1]++;
-                    count++;
-                }
-
-                idx1++;
-                idx2++;
-            } else if (val1 < val2) {
-                idx1++;
-            } else {
-                idx2++;
-            }
+            chars[ch] = i;
         }
 
-        final int[] temp = new int[count];
-        int countIdx = 0;
-        for (int i = 0; i < arr.length; i++) {
-            final int val = arr[i];
-            if (val == 0) {
-                continue;
-            }
-
-            temp[countIdx++] = i;
+        final List<Character> answer = new ArrayList<>();
+        final char[] quiz = s.toCharArray();
+        for (final char c : quiz) {
+            answer.add(c);
         }
 
-        return temp;
+        final List<Character> collect = answer.stream()
+                .sorted(Comparator.comparingInt(ch -> chars[ch - 'a']))
+                .collect(Collectors.toList());
+
+        final StringBuilder sb = new StringBuilder();
+        for (final Character ch : collect) {
+            sb.append(ch);
+        }
+
+        return sb.toString();
     }
 }
