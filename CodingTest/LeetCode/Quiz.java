@@ -1,10 +1,6 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -17,27 +13,27 @@ public class Quiz {
 
 class Solution {
     public String customSortString(final String order, final String s) {
-        final int[] chars = new int[26];
-        Arrays.fill(chars, 100);
+        final Map<String, Integer> sortMap = new HashMap<>();
 
         final char[] charArray = order.toCharArray();
-        for (int i = 0; i < charArray.length; i++) {
-            final int ch = charArray[i] - 'a';
-
-            chars[ch] = i;
+        final int length = charArray.length;
+        for (int i = 0; i < length; i++) {
+            sortMap.put(String.valueOf(charArray[i]), i);
         }
 
-        final List<Character> answer = new ArrayList<>();
+        final List<String> answer = new ArrayList<>();
         final char[] quiz = s.toCharArray();
         for (final char c : quiz) {
-            answer.add(c);
+            answer.add(String.valueOf(c));
         }
 
-        answer.sort(Comparator.comparingInt(ch -> chars[ch - 'a']));
+        answer.sort(Comparator.comparingInt(ch -> sortMap.getOrDefault(ch, 100)));
 
-        return answer.stream()
-                .sorted(Comparator.comparingInt(ch -> chars[ch - 'a']))
-                .map(String::valueOf)
-                .collect(Collectors.joining());
+        String rtStr = "";
+        for (final String str : answer) {
+            rtStr += str;
+        }
+
+        return rtStr;
     }
 }
