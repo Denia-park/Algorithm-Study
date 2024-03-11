@@ -33,15 +33,11 @@ class Solution {
             answer.add(c);
         }
 
-        final List<Character> collect = answer.stream()
+        answer.sort(Comparator.comparingInt(ch -> chars[ch - 'a']));
+
+        return answer.stream()
                 .sorted(Comparator.comparingInt(ch -> chars[ch - 'a']))
-                .collect(Collectors.toList());
-
-        final StringBuilder sb = new StringBuilder();
-        for (final Character ch : collect) {
-            sb.append(ch);
-        }
-
-        return sb.toString();
+                .map(String::valueOf)
+                .collect(Collectors.joining());
     }
 }
