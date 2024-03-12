@@ -1,39 +1,53 @@
 package CodingTest.LeetCode;
 
-import java.util.*;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.customSortString("cba", "abcd"));
-        System.out.println(solution.customSortString("bcafg", "abcd"));
+//        System.out.println(solution.removeZeroSumSublists("cba", "abcd"));
+//        System.out.println(solution.removeZeroSumSublists("bcafg", "abcd"));
     }
 }
 
 class Solution {
-    public String customSortString(final String order, final String s) {
-        final Map<String, Integer> sortMap = new HashMap<>();
+    public ListNode removeZeroSumSublists(final ListNode head) {
+        final ListNode front = new ListNode(0, head);
+        ListNode start = front;
 
-        final char[] charArray = order.toCharArray();
-        final int length = charArray.length;
-        for (int i = 0; i < length; i++) {
-            sortMap.put(String.valueOf(charArray[i]), i);
+        while (start != null) {
+            int prefixSum = 0;
+            ListNode end = start.next;
+
+            while (end != null) {
+                // Add end's value to the prefix sum
+                prefixSum += end.val;
+                // Delete zero sum consecutive sequence
+                // by setting node before sequence to node after
+                if (prefixSum == 0) {
+                    start.next = end.next;
+                }
+                end = end.next;
+            }
+
+            start = start.next;
         }
+        return front.next;
+    }
+}
 
-        final List<String> answer = new ArrayList<>();
-        final char[] quiz = s.toCharArray();
-        for (final char c : quiz) {
-            answer.add(String.valueOf(c));
-        }
+class ListNode {
+    int val;
+    ListNode next;
 
-        answer.sort(Comparator.comparingInt(ch -> sortMap.getOrDefault(ch, 100)));
+    ListNode() {
+    }
 
-        String rtStr = "";
-        for (final String str : answer) {
-            rtStr += str;
-        }
+    ListNode(final int val) {
+        this.val = val;
+    }
 
-        return rtStr;
+    ListNode(final int val, final ListNode next) {
+        this.val = val;
+        this.next = next;
     }
 }
