@@ -4,50 +4,26 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-//        System.out.println(solution.removeZeroSumSublists("cba", "abcd"));
-//        System.out.println(solution.removeZeroSumSublists("bcafg", "abcd"));
+        System.out.println(solution.pivotInteger(8));
+        System.out.println(solution.pivotInteger(1));
+        System.out.println(solution.pivotInteger(4));
     }
 }
 
 class Solution {
-    public ListNode removeZeroSumSublists(final ListNode head) {
-        final ListNode front = new ListNode(0, head);
-        ListNode start = front;
+    public int pivotInteger(final int n) {
+        int totalSum = ((n + 1) * n) / 2;
 
-        while (start != null) {
-            int prefixSum = 0;
-            ListNode end = start.next;
-
-            while (end != null) {
-                // Add end's value to the prefix sum
-                prefixSum += end.val;
-                // Delete zero sum consecutive sequence
-                // by setting node before sequence to node after
-                if (prefixSum == 0) {
-                    start.next = end.next;
-                }
-                end = end.next;
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
+            totalSum -= i;
+            if (sum == totalSum) {
+                return i;
             }
 
-            start = start.next;
+            sum += i;
         }
-        return front.next;
-    }
-}
 
-class ListNode {
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(final int val) {
-        this.val = val;
-    }
-
-    ListNode(final int val, final ListNode next) {
-        this.val = val;
-        this.next = next;
+        return -1;
     }
 }
