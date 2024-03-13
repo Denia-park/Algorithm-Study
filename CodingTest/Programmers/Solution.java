@@ -6,7 +6,6 @@ package CodingTest.Programmers;
  */
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 class Solution {
     public int[] solution(final String[] genres, final int[] plays) {
@@ -24,39 +23,44 @@ class Solution {
             genreSongMap.computeIfAbsent(genre, k -> new ArrayList<>()).add(new Song(i, play));
         }
 
-        //장르, 노래 Map을 정렬
-        final List<String> topGenre = genreMap.entrySet().stream()
-                .sorted(Comparator.comparingInt(e -> -1 * e.getValue()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-
         final List<Integer> answer = new ArrayList<>();
 
-        int genreIdx = 0;
-        while (genreIdx < topGenre.size()) {
-            final var songs = genreSongMap.get(topGenre.get(genreIdx));
-            songs.sort(Comparator.comparingInt((Song s) -> -1 * s.playCount).thenComparingInt(s -> s.idx));
+        //장르, 노래 Map을 정렬
+        genreMap.entrySet().stream()
+                .sorted(Comparator.comparingInt(e -> -1 * e.getValue()))
+                .map(Map.Entry::getKey)
+                .forEach(
+                        genre -> {
+                            final List<Song> songs = genreSongMap.get(genre);
+                            songs.sort(null);
 
-            int idx = 0;
-            while (idx < songs.size() && idx < 2) {
-                answer.add(songs.get(idx).idx);
-                idx++;
-            }
-
-            genreIdx++;
-        }
+                            int idx = 0;
+                            while (idx < songs.size() && idx < 2) {
+                                answer.add(songs.get(idx).idx);
+                                idx++;
+                            }
+                        }
+                );
 
         return answer.stream().mapToInt(i -> i).toArray();
     }
 
-    static class Song {
+    static class Song implements Comparable<Song> {
         int idx;
         int playCount;
 
         public Song(final int idx, final int playCount) {
             this.idx = idx;
             this.playCount = playCount;
+        }
+
+        @Override
+        public int compareTo(final Song o) {
+            if (this.playCount == o.playCount) {
+                return Integer.compare(this.idx, o.idx);
+            } else {
+                return -1 * Integer.compare(this.playCount, o.playCount);
+            }
         }
     }
 }
