@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 class Solution {
     public int[] solution(final String[] genres, final int[] plays) {
         //장르와 노래 재생 수를 저장
-        final Map<String, Integer> genreMap = new HashMap<>();
+        final Map<String, Long> genreMap = new HashMap<>();
         //장르와 노래를 저장
         final Map<String, List<Song>> genreSongMap = new HashMap<>();
 
@@ -19,14 +19,14 @@ class Solution {
             final String genre = genres[i];
             final int play = plays[i];
 
-            genreMap.put(genre, genreMap.getOrDefault(genre, 0) + play);
+            genreMap.put(genre, genreMap.getOrDefault(genre, 0L) + play);
 
             genreSongMap.computeIfAbsent(genre, k -> new ArrayList<>()).add(new Song(i, play));
         }
 
         //장르, 노래 Map을 정렬
         final List<String> topGenre = genreMap.entrySet().stream()
-                .sorted(Comparator.comparingInt(e -> -1 * e.getValue()))
+                .sorted(Comparator.comparingLong(e -> -1 * e.getValue()))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
