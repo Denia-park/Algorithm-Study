@@ -34,7 +34,7 @@ class Solution {
         final List<Integer> answer = new ArrayList<>();
 
         int genreIdx = 0;
-        while (genreIdx < topGenre.size() && genreIdx < 2) {
+        while (genreIdx < topGenre.size()) {
             final var songs = genreSongMap.get(topGenre.get(genreIdx));
             songs.sort(Comparator.comparingInt((Song s) -> -1 * s.playCount).thenComparingInt(s -> s.idx));
 
