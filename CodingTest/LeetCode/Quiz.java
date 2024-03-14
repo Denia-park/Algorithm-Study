@@ -4,26 +4,32 @@ public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
-        System.out.println(solution.pivotInteger(8));
-        System.out.println(solution.pivotInteger(1));
-        System.out.println(solution.pivotInteger(4));
+        System.out.println(solution.numSubarraysWithSum(new int[]{1, 0, 1, 0, 1}, 2));
+        System.out.println(solution.numSubarraysWithSum(new int[]{0, 0, 0, 0, 0}, 0));
     }
 }
 
 class Solution {
-    public int pivotInteger(final int n) {
-        int totalSum = ((n + 1) * n) / 2;
+    public int numSubarraysWithSum(final int[] nums, final int goal) {
+        return slidingWindowAtMost(nums, goal) - slidingWindowAtMost(nums, goal - 1);
+    }
 
-        int sum = 0;
-        for (int i = 1; i <= n; i++) {
-            totalSum -= i;
-            if (sum == totalSum) {
-                return i;
+    private int slidingWindowAtMost(final int[] nums, final int goal) {
+        int start = 0;
+        int currentSum = 0;
+        int totalCount = 0;
+
+        for (int end = 0; end < nums.length; end++) {
+            currentSum += nums[end];
+
+            while (start <= end && currentSum > goal) {
+                currentSum -= nums[start];
+                start++;
             }
 
-            sum += i;
+            totalCount += (end - start + 1);
         }
 
-        return -1;
+        return totalCount;
     }
 }
