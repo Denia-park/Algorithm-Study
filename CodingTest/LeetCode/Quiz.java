@@ -40,7 +40,7 @@ class Solution {
     }
 
     private boolean isAble(final int[] piles, final int h, final int mid) {
-        int tempHour = 0;
+        long tempHour = 0L;
 
         for (final int pile : piles) {
             final int divideHour = pile / mid;
