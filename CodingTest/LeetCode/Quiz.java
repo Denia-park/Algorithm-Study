@@ -15,10 +15,19 @@ class Solution {
     public int[][] insert(final int[][] intervals, final int[] newInterval) {
         final List<int[]> ints = new ArrayList<>();
 
-        Collections.addAll(ints, intervals);
-        ints.add(newInterval);
+        boolean add = false;
 
-        ints.sort(Comparator.comparingInt(arr -> arr[0]));
+        for (final int[] interval : intervals) {
+            if (!add && interval[0] > newInterval[0]) {
+                ints.add(newInterval);
+                add = true;
+            }
+
+            ints.add(interval);
+        }
+        if (!add) {
+            ints.add(newInterval);
+        }
 
         final Deque<int[]> answer = new ArrayDeque<>();
         for (final int[] interval : ints) {
