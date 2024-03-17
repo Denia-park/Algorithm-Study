@@ -21,9 +21,7 @@ class Solution {
         ints.sort(Comparator.comparingInt(arr -> arr[0]));
 
         final Deque<int[]> answer = new ArrayDeque<>();
-        for (int i = 0; i < ints.size(); i++) {
-            final int[] interval = ints.get(i);
-
+        for (final int[] interval : ints) {
             //마지막에 등록된 인터벌의 종료시간보다 현재 인터벌의 시작시간이 빠르면 합쳐준다.
             if (!answer.isEmpty() && answer.peekLast()[1] >= interval[0]) {
                 final int[] last = answer.pollLast();
