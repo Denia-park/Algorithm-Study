@@ -1,6 +1,8 @@
 package CodingTest.LeetCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -13,35 +15,31 @@ public class Quiz {
 
 class Solution {
     public int[][] insert(final int[][] intervals, final int[] newInterval) {
-        final List<int[]> ints = new ArrayList<>();
+        final int n = intervals.length;
+        int i = 0;
+        final List<int[]> res = new ArrayList<>();
 
-        boolean add = false;
-
-        for (final int[] interval : intervals) {
-            if (!add && interval[0] > newInterval[0]) {
-                ints.add(newInterval);
-                add = true;
-            }
-
-            ints.add(interval);
-        }
-        if (!add) {
-            ints.add(newInterval);
+        // Case 1: No overlapping before merging intervals
+        while (i < n && intervals[i][1] < newInterval[0]) {
+            res.add(intervals[i]);
+            i++;
         }
 
-        final Deque<int[]> answer = new ArrayDeque<>();
-        for (final int[] interval : ints) {
-            //마지막에 등록된 인터벌의 종료시간보다 현재 인터벌의 시작시간이 빠르면 합쳐준다.
-            if (!answer.isEmpty() && answer.peekLast()[1] >= interval[0]) {
-                final int[] last = answer.pollLast();
+        // Case 2: Overlapping and merging intervals
+        while (i < n && newInterval[1] >= intervals[i][0]) {
+            newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
+            newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
+            i++;
+        }
+        res.add(newInterval);
 
-                answer.addLast(new int[]{Math.min(last[0], interval[0]), Math.max(last[1], interval[1])});
-                continue;
-            }
-
-            answer.add(interval);
+        // Case 3: No overlapping after merging newInterval
+        while (i < n) {
+            res.add(intervals[i]);
+            i++;
         }
 
-        return answer.toArray(int[][]::new);
+        // Convert List to array
+        return res.toArray(new int[res.size()][]);
     }
 }
