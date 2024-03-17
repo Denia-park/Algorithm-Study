@@ -1,7 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.Arrays;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -17,11 +15,8 @@ class Solution {
         //먹을 수 있는 값 중에 제일 작은 값이니까, 맥스로 값을 설정한다.
         int answer = Integer.MAX_VALUE;
 
-        //최대 바나나 개수를 찾는다
-        final int maxBanana = Arrays.stream(piles).max().getAsInt();
-
         int left = 1;
-        int right = maxBanana;
+        int right = (int) Math.pow(10, 9);
 
         //max값을 최대 바나나 개수로 두고, 이진 탐색을 통해 개수를 바꿔가면서
         //다 먹을 수 있는 개수를 찾는다.
