@@ -16,7 +16,7 @@ class Solution {
         int answer = Integer.MAX_VALUE;
 
         int left = 1;
-        int right = (int) Math.pow(10, 9);
+        int right = 1_000_000_000;
 
         //max값을 최대 바나나 개수로 두고, 이진 탐색을 통해 개수를 바꿔가면서
         //다 먹을 수 있는 개수를 찾는다.
