@@ -41,7 +41,6 @@ class Solution {
 
         final PriorityQueue<int[]> pq = new PriorityQueue<>(
                 Comparator.comparingInt((int[] arr) -> arr[1])
-                        .thenComparingInt(arr -> arr[0])
         );
 
         Collections.addAll(pq, points);
