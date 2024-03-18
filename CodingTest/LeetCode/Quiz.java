@@ -1,8 +1,7 @@
 package CodingTest.LeetCode;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.PriorityQueue;
 
 public class Quiz {
     public static void main(final String[] args) {
@@ -37,23 +36,19 @@ public class Quiz {
 
 class Solution {
     public int findMinArrowShots(final int[][] points) {
-        int count = 0;
+        int count = 1;
 
-        final PriorityQueue<int[]> pq = new PriorityQueue<>(
-                Comparator.comparingInt((int[] arr) -> arr[1])
-        );
+        Arrays.sort(points, Comparator.comparingInt((int[] arr) -> arr[1]));
 
-        Collections.addAll(pq, points);
-
-        while (!pq.isEmpty()) {
-            final int[] cur = pq.poll();
-
-            //현재의 끝나는 부분이 다음의 시작보다 크면 서로 겹치므로 해당 풍선은 제거한다.
-            while (!pq.isEmpty() && cur[1] >= pq.peek()[0]) {
-                pq.poll();
+        final int length = points.length;
+        int idx = 1;
+        int end = points[0][1];
+        for (; idx < length; idx++) {
+            final int[] curPoint = points[idx];
+            if (end < curPoint[0]) {
+                count++;
+                end = curPoint[1];
             }
-
-            count++;
         }
 
         return count;
