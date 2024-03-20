@@ -13,15 +13,8 @@ class Solution {
         dp1[0] = sticker[0];
         dp1[1] = sticker[0];
 
-        for (int i = 2; i < n; i++) {
-            int stickerVal = sticker[i];
-
-            //첫번째 스티커를 뜯으면, 마지막 sticker는 0이다. (뜯을 수 없으므로)
-            if (i == (n - 1)) {
-                stickerVal = 0;
-            }
-
-            dp1[i] = Math.max(dp1[i - 1], dp1[i - 2] + stickerVal);
+        for (int i = 2; i < n - 1; i++) {
+            dp1[i] = Math.max(dp1[i - 1], dp1[i - 2] + sticker[i]);
         }
 
         //첫번째 스티커를 뜯지 않았을 경우
@@ -32,6 +25,6 @@ class Solution {
             dp2[i] = Math.max(dp2[i - 1], dp2[i - 2] + sticker[i]);
         }
 
-        return Math.max(dp1[n - 1], dp2[n - 1]);
+        return Math.max(dp1[n - 2], dp2[n - 1]);
     }
 }
