@@ -14,34 +14,22 @@ public class Quiz {
 }
 
 class Solution {
-    public ListNode mergeInBetween(final ListNode list1, final int a, final int b, final ListNode list2) {
-        int idx = 0;
-
-        ListNode putStart = null;
-        ListNode putEnd = null;
-
-        ListNode search = list1;
-        while (search != null) {
-            if (idx == a - 1) {
-                putStart = search;
-            } else if (idx == b + 1) {
-                putEnd = search;
-            }
-
-            search = search.next;
-            idx++;
+    public ListNode reverseList(final ListNode head) {
+        if (head == null) {
+            return null;
         }
 
-        putStart.next = list2;
+        ListNode cur = head;
+        ListNode save = null;
 
-        search = list2;
-        while (search.next != null) {
-            search = search.next;
+        while (cur != null) {
+            final ListNode tempNext = cur.next;
+            cur.next = save;
+            save = cur;
+            cur = tempNext;
         }
 
-        search.next = putEnd;
-
-        return list1;
+        return save;
     }
 }
 
