@@ -1,5 +1,8 @@
 package CodingTest.LeetCode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -14,22 +17,27 @@ public class Quiz {
 }
 
 class Solution {
-    public ListNode reverseList(final ListNode head) {
-        if (head == null) {
-            return null;
-        }
+    public boolean isPalindrome(final ListNode head) {
+        final List<Integer> save = new ArrayList<>();
 
         ListNode cur = head;
-        ListNode save = null;
-
         while (cur != null) {
-            final ListNode tempNext = cur.next;
-            cur.next = save;
-            save = cur;
-            cur = tempNext;
+            save.add(cur.val);
+            cur = cur.next;
         }
 
-        return save;
+        final int len = save.size();
+
+        for (int i = 0; i < len / 2; i++) {
+            final int st = save.get(i);
+            final int ed = save.get(len - 1 - i);
+
+            if (st != ed) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 
