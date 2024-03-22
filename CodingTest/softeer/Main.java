@@ -105,6 +105,7 @@ public class Main {
                     continue;
                 }
 
+                isVisited[nextRow][nextCol] = true;
                 dq.addLast(new int[]{nextRow, nextCol, cur[2] + 1});
             }
         }
