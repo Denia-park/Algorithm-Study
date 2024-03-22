@@ -37,6 +37,7 @@ public class Main {
         //좌표
         final List<int[]> ghosts = new ArrayList<>();
         int[] namwoo = new int[2];
+        int[] goal = new int[2];
 
         for (int r = 0; r < map.length; r++) {
             final String line = map[r];
@@ -49,6 +50,8 @@ public class Main {
                     namwoo = new int[]{r, c};
                 } else if (ch == 'G') {
                     ghosts.add(new int[]{r, c});
+                } else if (ch == 'D') {
+                    goal = new int[]{r, c};
                 }
             }
         }
@@ -56,10 +59,19 @@ public class Main {
         //namwoo
         final int namwooTime = bfs(map, namwoo, false);
 
-        int ghostTime = Integer.MAX_VALUE;
-        for (final int[] ghost : ghosts) {
-            ghostTime = Math.min(ghostTime, bfs(map, ghost, true));
-        }
+        final int[] finalGoal = goal;
+        ghosts.sort(
+                Comparator.comparingInt(
+                        gh -> {
+                            final int absRow = Math.abs(finalGoal[0] - gh[0]);
+                            final int absCol = Math.abs(finalGoal[1] - gh[1]);
+
+                            return absRow + absCol;
+                        }
+                )
+        );
+
+        final int ghostTime = bfs(map, ghosts.get(0), true);
 
         if (namwooTime == -1) {
             System.out.println("No");
