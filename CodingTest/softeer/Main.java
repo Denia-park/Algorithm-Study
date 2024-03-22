@@ -2,55 +2,122 @@ package CodingTest.softeer;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
+/*
+유령은 먼저 입구로 가서, 입구를 막으면 됨
+-> 유령 도착시간이 남우보다 빠르면, 남우는 절대 탈출 못함
+
+4 6
+.....D
+......
+.GN#..
+G.....
+
+4 6
+...#.D
+...#..
+.GN#..
+G.....
+ */
 
 public class Main {
     public static void main(final String[] args) throws Exception {
-        final BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        final int[] split = Arrays.stream(bf.readLine().split(" "))
-                .mapToInt(Integer::parseInt).toArray();
+        final int[] split = convertInts(br.readLine().split(" "));
+        final int row = split[0];
+        final int col = split[1];
 
-        int totalWeight = split[0];
-        final int typeNumber = split[1];
-
-        final List<Gem> gems = new ArrayList<>();
-        for (int i = 0; i < typeNumber; i++) {
-            final String[] temp = bf.readLine().split(" ");
-            gems.add(new Gem(temp[0], temp[1]));
+        final String[] map = new String[row];
+        for (int i = 0; i < row; i++) {
+            map[i] = br.readLine();
         }
 
-        gems.sort(Comparator.comparingInt(g -> (-1 * g.pricePerWeight)));
+        //좌표
+        final List<int[]> ghosts = new ArrayList<>();
+        int[] namwoo = new int[2];
 
+        for (int r = 0; r < map.length; r++) {
+            final String line = map[r];
 
-        int answer = 0;
-        for (final Gem gem : gems) {
-            final int weight = gem.weight;
-            final int pricePerWeight = gem.pricePerWeight;
+            final char[] charArray = line.toCharArray();
 
-            if (weight > totalWeight) {
-                answer += (totalWeight * pricePerWeight);
-                break;
+            for (int c = 0; c < charArray.length; c++) {
+                final char ch = charArray[c];
+                if (ch == 'N') { //남우
+                    namwoo = new int[]{r, c};
+                } else if (ch == 'G') {
+                    ghosts.add(new int[]{r, c});
+                }
             }
-
-            totalWeight -= weight;
-            answer += (weight * pricePerWeight);
         }
 
-        System.out.println(answer);
+        //namwoo
+        final int namwooTime = bfs(map, namwoo, false);
+
+        int ghostTime = Integer.MAX_VALUE;
+        for (final int[] ghost : ghosts) {
+            ghostTime = Math.min(ghostTime, bfs(map, ghost, true));
+        }
+
+        if (namwooTime == -1) {
+            System.out.println("No");
+            return;
+        }
+
+        System.out.println(ghostTime <= namwooTime ? "No" : "Yes");
     }
 
-    static class Gem {
-        int weight;
-        int pricePerWeight;
+    private static int bfs(final String[] map, final int[] obj, final boolean isWallPass) {
+        final int[][] directions = new int[][]{
+                {-1, 0},
+                {0, 1},
+                {1, 0},
+                {0, -1},
+        };
 
-        Gem(final String weight, final String price) {
-            this.weight = Integer.parseInt(weight);
-            this.pricePerWeight = Integer.parseInt(price);
+        final boolean[][] isVisited = new boolean[map.length][map[0].length()];
+        final Deque<int[]> dq = new ArrayDeque<>();
+        dq.addLast(new int[]{obj[0], obj[1], 0});
+        isVisited[obj[0]][obj[1]] = true;
+
+        while (!dq.isEmpty()) {
+            final int[] cur = dq.pollFirst();
+            if (map[cur[0]].charAt(cur[1]) == 'D') {
+                return cur[2];
+            }
+
+            for (final int[] direction : directions) {
+                final int nextRow = cur[0] + direction[0];
+                final int nextCol = cur[1] + direction[1];
+
+                //범위를 벗어나는지,
+                if (isOut(map, nextRow, nextCol)) {
+                    continue;
+                }
+                //이미 방문했는지 검사
+                if (isVisited[nextRow][nextCol]) {
+                    continue;
+                }
+                //벽에 부딪히는지 검사
+                if (!isWallPass && map[nextRow].charAt(nextCol) == '#') {
+                    continue;
+                }
+
+                dq.addLast(new int[]{nextRow, nextCol, cur[2] + 1});
+            }
         }
+
+        return -1;
+    }
+
+    private static boolean isOut(final String[] map, final int row, final int col) {
+        return row < 0 || row >= map.length || col < 0 || col >= map[0].length();
+    }
+
+    private static int[] convertInts(final String[] s) {
+        return Arrays.stream(s).mapToInt(Integer::parseInt).toArray();
     }
 }
 
