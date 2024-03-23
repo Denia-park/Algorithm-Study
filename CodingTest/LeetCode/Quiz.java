@@ -1,8 +1,5 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
@@ -17,27 +14,65 @@ public class Quiz {
 }
 
 class Solution {
-    public boolean isPalindrome(final ListNode head) {
-        final List<Integer> save = new ArrayList<>();
+    public void reorderList(ListNode head) {
+        //reverse List
+        ListNode save = null;
+        ListNode curReverse = head;
+        ListNode normal = new ListNode(head.val);
+        ListNode curNormal = normal;
 
-        ListNode cur = head;
-        while (cur != null) {
-            save.add(cur.val);
-            cur = cur.next;
-        }
+        int length = 0;
+        while (curReverse != null) {
+            final ListNode tempNext = curReverse.next;
+            curReverse.next = save;
+            save = curReverse;
+            curReverse = tempNext;
 
-        final int len = save.size();
-
-        for (int i = 0; i < len / 2; i++) {
-            final int st = save.get(i);
-            final int ed = save.get(len - 1 - i);
-
-            if (st != ed) {
-                return false;
+            if (tempNext != null) {
+                curNormal.next = new ListNode(tempNext.val);
+            } else {
+                curNormal.next = null;
             }
+            curNormal = curNormal.next;
+            length++;
         }
 
-        return true;
+        ListNode reverse = save;
+
+        System.out.println("length");
+        System.out.println(length);
+        System.out.println("normal");
+        print(normal);
+        System.out.println("reverse");
+        print(reverse);
+
+        int count = 1;
+        final ListNode answer = normal;
+        ListNode curAnswer = answer;
+        normal = normal.next;
+        while (count != length) {
+            if (count % 2 == 0) {
+                curAnswer.next = new ListNode(normal.val);
+                normal = normal.next;
+            } else {
+                curAnswer.next = new ListNode(reverse.val);
+                reverse = reverse.next;
+            }
+
+            curAnswer = curAnswer.next;
+            count++;
+        }
+
+        head = answer;
+    }
+
+    private void print(final ListNode normal) {
+        ListNode temp = normal;
+
+        while (temp != null) {
+            System.out.println(temp.val);
+            temp = temp.next;
+        }
     }
 }
 
