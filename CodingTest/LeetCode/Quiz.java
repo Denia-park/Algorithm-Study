@@ -14,65 +14,43 @@ public class Quiz {
 }
 
 class Solution {
-    public void reorderList(ListNode head) {
-        //reverse List
-        ListNode save = null;
-        ListNode curReverse = head;
-        ListNode normal = new ListNode(head.val);
-        ListNode curNormal = normal;
-
-        int length = 0;
-        while (curReverse != null) {
-            final ListNode tempNext = curReverse.next;
-            curReverse.next = save;
-            save = curReverse;
-            curReverse = tempNext;
-
-            if (tempNext != null) {
-                curNormal.next = new ListNode(tempNext.val);
-            } else {
-                curNormal.next = null;
-            }
-            curNormal = curNormal.next;
-            length++;
+    public ListNode reverse(final ListNode head) {
+        if (head == null) return null;
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode nextNode = null;
+        while (curr != null) {
+            nextNode = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextNode;
         }
-
-        ListNode reverse = save;
-
-        System.out.println("length");
-        System.out.println(length);
-        System.out.println("normal");
-        print(normal);
-        System.out.println("reverse");
-        print(reverse);
-
-        int count = 1;
-        final ListNode answer = normal;
-        ListNode curAnswer = answer;
-        normal = normal.next;
-        while (count != length) {
-            if (count % 2 == 0) {
-                curAnswer.next = new ListNode(normal.val);
-                normal = normal.next;
-            } else {
-                curAnswer.next = new ListNode(reverse.val);
-                reverse = reverse.next;
-            }
-
-            curAnswer = curAnswer.next;
-            count++;
-        }
-
-        head = answer;
+        return prev;
     }
 
-    private void print(final ListNode normal) {
-        ListNode temp = normal;
-
-        while (temp != null) {
-            System.out.println(temp.val);
-            temp = temp.next;
+    public void merge(ListNode list1, ListNode list2) {
+        while (list2 != null) {
+            final ListNode nextNode = list1.next;
+            list1.next = list2;
+            list1 = list2;
+            list2 = nextNode;
         }
+    }
+
+    public void reorderList(final ListNode head) {
+        if (head == null || head.next == null) return;
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = head;
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        prev.next = null;
+        final ListNode list1 = head;
+        final ListNode list2 = reverse(slow);
+        merge(list1, list2);
     }
 }
 
