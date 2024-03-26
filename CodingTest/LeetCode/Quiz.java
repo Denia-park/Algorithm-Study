@@ -1,47 +1,51 @@
 package CodingTest.LeetCode;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
         System.out.println(
-                solution.findDuplicates(
-                        new int[]{4, 3, 2, 7, 8, 2, 3, 1}
+                solution.firstMissingPositive(
+                        new int[]{1, 2, 0}
                 )
         );
 
         System.out.println(
-                solution.findDuplicates(
-                        new int[]{1, 1, 2}
+                solution.firstMissingPositive(
+                        new int[]{3, 4, -1, 1}
                 )
         );
 
         System.out.println(
-                solution.findDuplicates(
-                        new int[]{1}
+                solution.firstMissingPositive(
+                        new int[]{7, 8, 9, 11, 12}
                 )
         );
     }
 }
 
 class Solution {
-    public List<Integer> findDuplicates(final int[] nums) {
-        final Set<Integer> set = new HashSet<>();
+    public int firstMissingPositive(final int[] nums) {
+        final int n = nums.length;
+        final boolean[] seen = new boolean[n + 1]; // Array for lookup
 
-        final List<Integer> result = new ArrayList<>();
+        // Mark the elements from nums in the lookup array
         for (final int num : nums) {
-            if (set.contains(num)) {
-                result.add(num);
-            } else {
-                set.add(num);
+            if (num > 0 && num <= n) {
+                seen[num] = true;
             }
         }
 
-        return result;
+        // Iterate through integers 1 to n
+        // return smallest missing positive integer
+        for (int i = 1; i <= n; i++) {
+            if (!seen[i]) {
+                return i;
+            }
+        }
+
+        // If seen contains all elements 1 to n
+        // the smallest missing positive number is n + 1
+        return n + 1;
     }
 }
