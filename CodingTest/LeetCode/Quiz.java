@@ -5,47 +5,38 @@ public class Quiz {
         final Solution solution = new Solution();
 
         System.out.println(
-                solution.firstMissingPositive(
-                        new int[]{1, 2, 0}
+                solution.numSubarrayProductLessThanK(
+                        new int[]{10, 5, 2, 6}, 100
                 )
         );
 
         System.out.println(
-                solution.firstMissingPositive(
-                        new int[]{3, 4, -1, 1}
-                )
-        );
-
-        System.out.println(
-                solution.firstMissingPositive(
-                        new int[]{7, 8, 9, 11, 12}
+                solution.numSubarrayProductLessThanK(
+                        new int[]{1, 2, 3}, 0
                 )
         );
     }
 }
 
 class Solution {
-    public int firstMissingPositive(final int[] nums) {
-        final int n = nums.length;
-        final boolean[] seen = new boolean[n + 1]; // Array for lookup
+    public int numSubarrayProductLessThanK(final int[] nums, final int k) {
+        if (k == 0) return 0;
 
-        // Mark the elements from nums in the lookup array
-        for (final int num : nums) {
-            if (num > 0 && num <= n) {
-                seen[num] = true;
+        int left = 0;
+        int product = 1;
+
+        int answer = 0;
+        for (int right = 0; right < nums.length; right++) {
+            product *= nums[right];
+
+            while (product >= k) {
+                product /= nums[left];
+                left++;
             }
+
+            answer += (right - left + 1);
         }
 
-        // Iterate through integers 1 to n
-        // return smallest missing positive integer
-        for (int i = 1; i <= n; i++) {
-            if (!seen[i]) {
-                return i;
-            }
-        }
-
-        // If seen contains all elements 1 to n
-        // the smallest missing positive number is n + 1
-        return n + 1;
+        return answer;
     }
 }
