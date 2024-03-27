@@ -20,7 +20,7 @@ public class Quiz {
 
 class Solution {
     public int numSubarrayProductLessThanK(final int[] nums, final int k) {
-        if (k == 0) return 0;
+        if (k == 0 || k == 1) return 0;
 
         int left = 0;
         int product = 1;
