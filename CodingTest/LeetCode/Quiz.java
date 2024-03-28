@@ -1,42 +1,46 @@
 package CodingTest.LeetCode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Quiz {
     public static void main(final String[] args) {
         final Solution solution = new Solution();
 
         System.out.println(
-                solution.numSubarrayProductLessThanK(
-                        new int[]{10, 5, 2, 6}, 100
+                solution.maxSubarrayLength(
+                        new int[]{1, 2, 3, 1, 2, 3, 1, 2}, 2
                 )
         );
 
         System.out.println(
-                solution.numSubarrayProductLessThanK(
-                        new int[]{1, 2, 3}, 0
+                solution.maxSubarrayLength(
+                        new int[]{1, 2, 1, 2, 1, 2, 1, 2}, 1
+                )
+        );
+
+        System.out.println(
+                solution.maxSubarrayLength(
+                        new int[]{5, 5, 5, 5, 5, 5, 5}, 4
                 )
         );
     }
 }
 
 class Solution {
-    public int numSubarrayProductLessThanK(final int[] nums, final int k) {
-        if (k == 0 || k == 1) return 0;
+    public int maxSubarrayLength(final int[] nums, final int k) {
+        int ans = 0, start = -1;
+        final Map<Integer, Integer> frequency = new HashMap();
 
-        int left = 0;
-        int product = 1;
-
-        int answer = 0;
-        for (int right = 0; right < nums.length; right++) {
-            product *= nums[right];
-
-            while (product >= k) {
-                product /= nums[left];
-                left++;
+        for (int end = 0; end < nums.length; end++) {
+            frequency.put(nums[end], frequency.getOrDefault(nums[end], 0) + 1);
+            while (frequency.get(nums[end]) > k) {
+                start++;
+                frequency.put(nums[start], frequency.get(nums[start]) - 1);
             }
-
-            answer += (right - left + 1);
+            ans = Math.max(ans, end - start);
         }
 
-        return answer;
+        return ans;
     }
 }
